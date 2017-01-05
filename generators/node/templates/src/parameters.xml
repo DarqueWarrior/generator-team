@@ -1,0 +1,9 @@
+﻿<parameters>
+  <parameter name="IIS Web Application Name" defaultValue="Default Web Site/AzureWebApp_deploy" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^c:\\agent\\_work\\2\\s\\AzureWebApp-master\\AzureWebApp\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^c:\\agent\\_work\\2\\s\\AzureWebApp-master\\AzureWebApp\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Data Source=(LocalDb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\aspnet-AzureWebApp-20160121033622.mdf;Initial Catalog=aspnet-AzureWebApp-20160121033622;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="c:\\agent\\_work\\2\\s\\AzureWebApp-master\\AzureWebApp\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

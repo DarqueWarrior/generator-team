@@ -1,0 +1,239 @@
+{
+   "version": "0.2.0",
+   "configurations": [
+         {
+         "name": "Launch Bad Token",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "stopOnEntry": false,
+         "args": [
+            "tfs",
+            "node",
+            "nodeDemo",
+            "[your vsts account]",
+            "this is not a real access token",
+            "Free Trial",
+            "Hosted",
+            "paas",
+            "false"
+         ],
+         "cwd": "${workspaceRoot}",
+         "preLaunchTask": null,
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development"
+         },
+         "externalConsole": false,
+         "sourceMaps": false,
+         "outDir": "${workspaceRoot}/temp"
+      },
+      {
+         "name": "Launch Docker release only",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "stopOnEntry": false,
+         "args": [
+            "tfs:release",
+            "java",
+            "javaDemo",
+            "http://localhost:8080/tfs/DefaultCollection",
+            "[YourPAT]",
+            "[YourAzureSubscriptionName]",
+            "[YourAzureSubscriptionID]",
+            "[YourAzureTenantID]",
+            "[YourAzureServiceKey]",
+            "[YourAzureServicePrincipalID]",
+            "Default",
+            "docker",
+            "tcp://[YourDockerHost]:2376",
+            "[PathToDockerHostCerts]",
+            "[DockerHubUserID]",
+            "[DockerHubPassword]",
+            "[DockerHubEmail]",
+            "8080:8080"
+         ],
+         "cwd": "${workspaceRoot}",
+         "preLaunchTask": null,
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development"
+         },
+         "externalConsole": false,
+         "sourceMaps": false,
+         "outDir": "${workspaceRoot}/temp"
+      },
+      {
+         "name": "Launch Pipeline",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "stopOnEntry": false,
+         "args": [
+            "tfs:pipeline",
+            "asp",
+            "aspDemo",
+            "http://localhost:8080/tfs/DefaultCollection",
+            "Default",
+            "docker",
+            "[YourAzureSubscriptionName]",
+            "[YourAzureSubscriptionID]",
+            "[YourAzureTenantID]",
+            "[YourAzureServicePrincipalID]",
+            "tcp://[YourDockerHost]:2376",
+            "[PathToDockerHostCerts]",
+            "[DockerHubUserID]",
+            "[DockerHubEmail]",
+            "80:80",
+            "[DockerHubPassword]",
+            "[YourAzureServiceKey]",
+            "[YourPAT]"
+         ],
+         "cwd": "${workspaceRoot}",
+         "preLaunchTask": null,
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development"
+         },
+         "externalConsole": false,
+         "sourceMaps": false,
+         "outDir": "${workspaceRoot}/temp"
+      },
+      {
+         "name": "Launch Docker",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "stopOnEntry": false,
+         "args": [
+            "tfs",
+            "java",
+            "javaDemo",
+            "http://localhost:8080/tfs/DefaultCollection",
+            "[YourAzureSubscriptionName]",
+            "[YourAzureSubscriptionID]",
+            "[YourAzureTenantID]",
+            "[YourAzureServicePrincipalID]",
+            "Default",
+            "docker",
+            "false",
+            "Demo",
+            "tcp://[YourDockerHost]:2376",
+            "[PathToDockerHostCerts]",
+            "[DockerHubUserID]",
+            "[DockerHubEmail]",
+            "80:80",
+            "[DockerHubPassword]",
+            "[YourAzureServiceKey]",
+            "[YourPAT]"
+         ],
+         "cwd": "${workspaceRoot}",
+         "preLaunchTask": null,
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development"
+         },
+         "externalConsole": false,
+         "sourceMaps": false,
+         "outDir": "${workspaceRoot}/temp"
+      },
+      {
+         "name": "Launch",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "stopOnEntry": false,
+         "args": [
+            "tfs",
+            "asp",
+            "aspDemo",
+            "http://localhost/tfs/DefaultCollection",
+            "[YourAzureSubscriptionName]",
+            "[YourAzureSubscriptionID]",
+            "[YourAzureTenantID]",
+            "[YourAzureServicePrincipalID]",
+            "Default",
+            "paas",
+            "false",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "[YourAzureServiceKey]",
+            "[YourPAT]"
+         ],
+         "cwd": "${workspaceRoot}",
+         "preLaunchTask": null,
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development"
+         },
+         "externalConsole": false,
+         "sourceMaps": false,
+         "outDir": "${workspaceRoot}/temp"
+      },
+      {
+         "name": "LaunchMocha",
+         "type": "node",
+         "request": "launch",
+         "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+         "stopOnEntry": false,
+         "args": [
+            "--debug-brk",
+            "--timeout",
+            "600000"
+         ],
+         "cwd": "${workspaceRoot}",
+         "preLaunchTask": null,
+         "runtimeExecutable": null,
+         "runtimeArgs": [
+            "--nolazy"
+         ],
+         "env": {
+            "NODE_ENV": "development"
+         },
+         "externalConsole": false,
+         "sourceMaps": false,
+         "outDir": "${workspaceRoot}/temp"
+      },
+      {
+         "name": "Attach",
+         "type": "node",
+         "request": "attach",
+         "port": 5858,
+         "address": "localhost",
+         "restart": false,
+         "sourceMaps": false,
+         "outDir": null,
+         "localRoot": "${workspaceRoot}",
+         "remoteRoot": null
+      },
+      {
+         "name": "Attach to Process",
+         "type": "node",
+         "request": "attach",
+         "processId": "${command.PickProcess}",
+         "port": 5858,
+         "sourceMaps": false,
+         "outDir": null
+      }
+   ]
+}

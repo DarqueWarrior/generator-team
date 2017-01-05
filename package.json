@@ -1,0 +1,62 @@
+{
+   "name": "generator-team",
+   "version": "0.1.0",
+   "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
+   "main": "./generators/app/index.js",
+   "scripts": {
+      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file"
+   },
+   "files": [
+      "generators/app",
+      "generators/asp",
+      "generators/azure",
+      "generators/build",
+      "generators/docker",
+      "generators/git",
+      "generators/java",
+      "generators/node",
+      "generators/pipeline",
+      "generators/project",
+      "generators/registry",
+      "generators/release"
+   ],
+   "keywords": [
+      "yeoman-generator",
+      "tfs",
+      "vsts",
+      "Team Foundation Server",
+      "Team Services",
+      "Visual Studio",
+      "DevOps",
+      "RubDevOpsOnIt",
+      "Blackshirt"
+   ],
+   "author": "@DonovanBrown",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/DarqueWarrior/generator-team"
+   },
+   "license": "ISC",
+   "dependencies": {
+      "async": "^2.0.1",
+      "request": "^2.74.0",
+      "yeoman-generator": "^0.24.1",
+      "yosay": "^1.2.0"
+   },
+   "devDependencies": {
+      "fs-extra": "^0.30.0",
+      "gulp": "^3.9.1",
+      "gulp-jshint": "^2.0.4",
+      "gulp-mocha": "^3.0.1",
+      "gulp-spawn-mocha": "^3.1.0",
+      "istanbul": "*",
+      "jshint": "^2.9.4",
+      "mocha": "*",
+      "proxyquire": "*",
+      "sinon": "*",
+      "supertest": "^2.0.0",
+      "xunit-file": "^1.0.0",
+      "yeoman-test": "*",
+      "yo": "^1.8.5"
+   }
+}
