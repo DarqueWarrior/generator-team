@@ -128,7 +128,7 @@ describe(`utility`, () => {
    });
 
    it(`validateTFS should return error`, () => {
-      assert.equal(`You must provide your TFS URL including collection`, util.validateTFS(null));
+      assert.equal(`You must provide your TFS URL or Team Service account name`, util.validateTFS(null));
    });
 
    it(`validateAzureSub should return error`, () => {

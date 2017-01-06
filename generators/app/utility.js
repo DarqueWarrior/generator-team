@@ -89,7 +89,7 @@ function validatePersonalAccessToken(input) {
 }
 
 function validateTFS(input) {
-   return validateRequired(input, `You must provide your TFS URL including collection`);
+   return validateRequired(input, `You must provide your TFS URL or Team Service account name`);
 }
 
 function validateAzureSub(input) {

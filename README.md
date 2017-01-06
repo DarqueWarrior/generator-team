@@ -1,4 +1,4 @@
-# generator-tfs
+# generator-team
 
 ## Build status
 ![](https://dlb.visualstudio.com/_apis/public/build/definitions/40202688-4713-4e5d-85ea-958146d71db6/53/badge)
@@ -7,7 +7,7 @@
 [Ignite New Zealand 2016](https://channel9.msdn.com/Events/Ignite/New-Zealand-2016/M328)
 
 ## Capabilities
-generator-tfs is a [Yeoman](http://yeoman.io/) generator that creates a complete CI/CD pipeline in [Visual Studio Team Services](https://www.visualstudio.com/tfs-test/) for the following languages:
+generator-team is a [Yeoman](http://yeoman.io/) generator that creates a complete CI/CD pipeline in [Team Foundation Server](https://www.visualstudio.com/downloads/) or [Visual Studio Team Services](https://www.visualstudio.com/tfs-test/) for the following languages:
 - Java using Tiles and bootstrap
 - Node using Pug and bootstrap
 - ASP.net Core using Razor and bootstrap
@@ -17,7 +17,7 @@ It allows you to deploy to the following platforms:
 - [Docker](https://www.docker.com/)
 
 ## Requirements
-- [Team Foundation Server 2017](https://www.visualstudio.com/downloads/)
+- [Team Foundation Server 2017](https://www.visualstudio.com/downloads/) or [Visual Studio Team Services Account](https://app.vsaex.visualstudio.com/profile/account)
    - [Personal Access Token](https://www.visualstudio.com/en-us/docs/setup-admin/team-services/use-personal-access-tokens-to-authenticate)
    - Install [Docker Integration](https://marketplace.visualstudio.com/items?itemName=ms-vscs-rm.docker) on tfs Account
 - [Azure Subscription](https://azure.microsoft.com/en-us/free/)
@@ -34,7 +34,7 @@ It allows you to deploy to the following platforms:
 - [Docker Toolbox](https://github.com/docker/toolbox/releases)
 
 ## Install
-You can read how to use it at [DonovanBrown.com](http://www.donovanbrown.com/post/yo-TFS). 
+You can read how to use it at [DonovanBrown.com](http://donovanbrown.com/post/yo-Team). 
 
 ## To test
 `npm test`
