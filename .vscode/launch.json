@@ -8,7 +8,7 @@
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "stopOnEntry": false,
          "args": [
-            "tfs",
+            "team",
             "node",
             "nodeDemo",
             "[your vsts account]",
@@ -38,7 +38,7 @@
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "stopOnEntry": false,
          "args": [
-            "tfs:release",
+            "team:release",
             "java",
             "javaDemo",
             "http://localhost:8080/tfs/DefaultCollection",
@@ -77,7 +77,7 @@
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "stopOnEntry": false,
          "args": [
-            "tfs:pipeline",
+            "team:pipeline",
             "asp",
             "aspDemo",
             "http://localhost:8080/tfs/DefaultCollection",
@@ -116,7 +116,7 @@
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "stopOnEntry": false,
          "args": [
-            "tfs",
+            "team",
             "java",
             "javaDemo",
             "http://localhost:8080/tfs/DefaultCollection",
@@ -157,7 +157,7 @@
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "stopOnEntry": false,
          "args": [
-            "tfs",
+            "team",
             "asp",
             "aspDemo",
             "http://localhost/tfs/DefaultCollection",
