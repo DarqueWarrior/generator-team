@@ -2,6 +2,7 @@ const fs = require(`fs`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
 const proxyquire = require(`proxyquire`);
+const package = require('../package.json');
 const util = require(`../generators/app/utility`);
 
 const BUILD_API_VERSION = `2.0`;
@@ -10,8 +11,35 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
-describe(`utility`, () => {
-   "use strict";
+describe(`utility`, () => {  
+
+   it(`addUserAgent`, () => {
+      // Arrange
+      let options = {
+                  method: 'GET',
+                  headers: { 'cache-control': 'no-cache', 'authorization': `Basic token` },
+                  url: `https://test.visualstudio.com/_apis/projects/test`,
+                  qs: { 'api-version': PROJECT_API_VERSION }
+               };
+      let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
+
+      // Act
+      let actual = util.addUserAgent(options);
+
+      // Assert
+      assert.equal(expected, actual.headers['user-agent']);
+   }); 
+
+   it(`getUserAgent`, () => {
+      // Arrange
+      let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
+
+      // Act
+      let actual = util.getUserAgent();
+
+      // Assert
+      assert.equal(expected, actual);
+   });
 
    it(`getPATPrompt should return generic message`, () => {
       // Arrange

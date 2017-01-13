@@ -155,14 +155,14 @@ function createRelease(args, gen, callback) {
 
    var contents = fs.readFileSync(args.template, 'utf8');
 
-   var options = {
+   var options = util.addUserAgent({
       method: 'POST',
       headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${args.token}` },
       json: true,
       url: `${util.getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
       qs: { 'api-version': RELEASE_API_VERSION },
       body: JSON.parse(util.tokenize(contents, tokens))
-   };
+   });
 
    // I have witnessed the release returning a 403 if you try 
    // to create it too quickly.  The release REST API appears

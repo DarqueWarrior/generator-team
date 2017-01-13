@@ -1,7 +1,9 @@
 // This is the code that deals with TFS
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const async = require('async');
+const process = require('process');
 const request = require('request');
 const util = require('../app/utility');
 
@@ -81,7 +83,7 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
       keyContents = results[1].toString();
       certContents = results[2].toString();
 
-      var options = {
+      var options = util.addUserAgent({
          method: 'POST',
          headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
          json: true,
@@ -103,7 +105,7 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
             type: 'dockerhost',
             url: dockerHost
          }
-      };
+      });
 
       request(options, function (error, response, body) {
          // Check the response for errors

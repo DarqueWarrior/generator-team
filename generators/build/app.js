@@ -115,14 +115,14 @@ function createBuild(account, teamProject, token, queueId,
    // Validates my contents is valid JSON and stripes all the new lines
    var payload = JSON.parse(contents);
 
-   var options = {
+   var options = util.addUserAgent({
       method: 'POST',
       headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
       json: true,
       url: `${util.getFullURL(account)}/${teamProject.id}/_apis/build/definitions`,
       qs: { 'api-version': BUILD_API_VERSION },
       body: payload
-   };
+   });
 
    request(options, function (error, response, body) {
       // Check the response for errors

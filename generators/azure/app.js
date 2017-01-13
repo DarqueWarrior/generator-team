@@ -88,7 +88,7 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
 
    let creationMode = util.isVSTS(account) ? `Automatic` : `Manual`;
 
-   var options = {
+   var options = util.addUserAgent({
       method: 'POST',
       headers: {
          'cache-control': 'no-cache',
@@ -118,7 +118,7 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
          type: 'azurerm',
          url: 'https://management.core.windows.net/'
       }
-   };
+   });
 
    request(options, function (err, response, obj) {
       if (err) {

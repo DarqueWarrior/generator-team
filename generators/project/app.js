@@ -67,12 +67,12 @@ function findOrCreateProject(gen, callback) {
                );
             },
             function (thisSeries) {
-               var options = {
+               var options = util.addUserAgent({
                   method: 'GET',
                   headers: { 'cache-control': 'no-cache', 'authorization': `Basic ${token}` },
                   url: `${util.getFullURL(gen.tfs)}/_apis/projects/${gen.applicationName}`,
                   qs: { 'api-version': PROJECT_API_VERSION }
-               };
+               });
 
                // Get the real id of the team project now that is exist.
                request(options, function (err, res, body) {
@@ -106,7 +106,7 @@ function findOrCreateProject(gen, callback) {
 function createProject(account, project, token, gen, callback) {
    "use strict";
 
-   var options = {
+   var options = util.addUserAgent({
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: `Basic ${token}` },
       json: true,
@@ -121,7 +121,7 @@ function createProject(account, project, token, gen, callback) {
             }
          }
       }
-   };
+   });
 
    request(options, function (err, res, body) {
       callback(err, body);

@@ -73,7 +73,7 @@ function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry,
 
    gen.log('+ Creating Docker Registry Service Endpoint');
 
-   var options = {
+   var options = util.addUserAgent({
       method: 'POST',
       headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
       json: true,
@@ -95,7 +95,7 @@ function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry,
          type: 'dockerregistry',
          url: 'http://hub.docker.com'
       }
-   };
+   });
 
    request(options, function (error, response, body) {
       // Check the response for errors

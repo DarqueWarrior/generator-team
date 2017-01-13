@@ -1,4 +1,5 @@
 const request = require(`request`);
+const package = require('../../package.json');
 
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
@@ -10,6 +11,15 @@ String.prototype.replaceAll = function (search, replacement) {
    var target = this;
    return target.split(search).join(replacement);
 };
+
+function addUserAgent(options) {
+   options.headers['user-agent'] = getUserAgent();
+   return options;
+}
+
+function getUserAgent() {
+   return `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
+}
 
 function reconcileValue(first, second, fallback) {
    return first ? first : (second ? second : fallback);
@@ -159,11 +169,11 @@ function checkStatus(uri, token, gen, callback) {
    // the body as JSON.  Call this when the action taken
    // requires time to process.
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": { "authorization": `Basic ${token}` },
       "url": `${uri}`
-   };
+   });
 
    request(options, function (err, res, body) {
       callback(err, JSON.parse(body));
@@ -194,12 +204,12 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
       return;
    }
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
       "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
       "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
-   };
+   });
 
    request(options, function (error, response, body) {
       var obj = JSON.parse(body);
@@ -241,12 +251,12 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
       return;
    }
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
       "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
       "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
-   };
+   });
 
    request(options, function (error, response, body) {
       // Check the response statusCode first. If it is not a 200
@@ -294,7 +304,7 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
       return;
    }
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": {
          "cache-control": `no-cache`,
@@ -304,7 +314,7 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
       "qs": {
          "api-version": SERVICE_ENDPOINTS_API_VERSION
       }
-   };
+   });
 
    request(options, function (error, response, body) {
       var obj = JSON.parse(body);
@@ -322,11 +332,11 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
 function findAzureSub(account, subName, token, gen, callback) {
    "use strict";
 
-   var options = {
+   var options = addUserAgent({
       method: 'GET',
       headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
       url: `${getFullURL(account)}/_apis/distributedtask/serviceendpointproxy/azurermsubscriptions`
-   };
+   });
 
    request(options, function (error, response, body) {
       var obj = JSON.parse(body);
@@ -359,12 +369,12 @@ function findProject(account, project, token, gen, callback) {
    // by code that requires a project and will stop execution if the
    // project is not found.
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
       "url": `${getFullURL(account)}/_apis/projects/${project}`,
       "qs": { "api-version": PROJECT_API_VERSION }
-   };
+   });
 
    request(options, function (err, res, body) {
 
@@ -401,14 +411,14 @@ function findProject(account, project, token, gen, callback) {
 function findQueue(name, account, teamProject, token, callback) {
    'use strict';
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": {
          "cache-control": `no-cache`, "authorization": `Basic ${token}`
       },
       "url": `${getFullURL(account)}/${teamProject.id}/_apis/distributedtask/queues`,
       "qs": { "api-version": DISTRIBUTED_TASK_API_VERSION, "queueName": name }
-   };
+   });
 
    request(options, function (err, res, body) {
       var obj = JSON.parse(body);
@@ -443,14 +453,14 @@ function findBuild(account, teamProject, token, target, callback) {
    'use strict';
 
    var name = target === `docker` ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": {
          "cache-control": `no-cache`, "authorization": `Basic ${token}`
       },
       "url": `${getFullURL(account)}/${teamProject.id}/_apis/build/definitions`,
       "qs": { "api-version": BUILD_API_VERSION }
-   };
+   });
 
    request(options, function (e, response, body) {
       var obj = JSON.parse(body);
@@ -482,14 +492,14 @@ function findRelease(args, callback) {
 
    var name = args.target === `docker` ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": {
          "cache-control": `no-cache`, "authorization": `Basic ${args.token}`
       },
       "url": `${getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
       "qs": { "api-version": RELEASE_API_VERSION }
-   };
+   });
 
    request(options, function (e, response, body) {
       var obj = JSON.parse(body);
@@ -509,11 +519,11 @@ function getAzureSubs(answers) {
 
    var token = encodePat(answers.pat);
 
-   var options = {
+   var options = addUserAgent({
       method: 'GET',
       headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
       url: `${getFullURL(answers.tfs)}/_apis/distributedtask/serviceendpointproxy/azurermsubscriptions`
-   };
+   });
 
    return new Promise(function (resolve, reject) {
       request(options, function (e, response, body) {
@@ -540,14 +550,14 @@ function getPools(answers) {
 
    var token = encodePat(answers.pat);
 
-   var options = {
+   var options = addUserAgent({
       "method": `GET`,
       "headers": {
          "cache-control": `no-cache`, "authorization": `Basic ${token}`
       },
       "url": `${getFullURL(answers.tfs)}/_apis/distributedtask/pools`,
       "qs": { "api-version": DISTRIBUTED_TASK_API_VERSION }
-   };
+   });
 
    return new Promise(function (resolve, reject) {
       request(options, function (e, response, body) {
@@ -632,6 +642,8 @@ module.exports = {
    findAzureSub: findAzureSub,
    getPATPrompt: getPATPrompt,
    tryFindBuild: tryFindBuild,
+   addUserAgent: addUserAgent,
+   getUserAgent: getUserAgent,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
    tryFindProject: tryFindProject,
