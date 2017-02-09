@@ -31,7 +31,7 @@ describe(`team:pipeline`, () => {
          .withGenerators(deps)
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/defaultcollection`,
             `default`, `paas`, `AzureSub`, `AzureSubId`, `TenantId`, `servicePrincipalId`,
-            ``, ``, ``, ``, ``, ``,
+            ``, ``, ``, ``, ``,
             `servicePrincipalKey`, `token`])
          .on(`error`, e => {
             cleanUp();
@@ -183,7 +183,7 @@ describe(`team:pipeline`, () => {
          .withGenerators(deps)
          .withArguments([`node`, `nodeDemo`, `http://localhost:8080/tfs/defaultcollection`,
             `default`, `docker`, ``, ``, ``, ``,
-            `DockerHost`, `DockerCert`, `DockerRegistry`, `DockerEmail`, `DockerPorts`, `DockerPassword`,
+            `DockerHost`, `DockerCert`, `DockerRegistry`, `DockerPorts`, `DockerPassword`,
             ``, `token`])
          .on(`error`, e => {
             assert.fail(e);

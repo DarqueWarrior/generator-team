@@ -122,10 +122,6 @@ function validateDockerHubPassword(input) {
    return validateRequired(input, `You must provide a Docker Hub Password`);
 }
 
-function validateDockerHubEmail(input) {
-   return validateRequired(input, `You must provide a Docker Hub Email`);
-}
-
 function validateAzureSubID(input) {
    return validateRequired(input, `You must provide an Azure Subscription ID`);
 }
@@ -657,7 +653,6 @@ module.exports = {
    validateDockerHubID: validateDockerHubID,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
-   validateDockerHubEmail: validateDockerHubEmail,
    validateApplicationName: validateApplicationName,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
    findDockerServiceEndpoint: findDockerServiceEndpoint,

@@ -14,7 +14,6 @@ function construct() {
    this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
    this.argument(`dockerCertPath`, { required: false, desc: `path to Docker certs folder` });
    this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
-   this.argument(`dockerRegistryEmail`, { required: false, desc: `email used with your Docker repository` });
    this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
    this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker repository` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
@@ -90,15 +89,6 @@ function input() {
       when: function () {
          return cmdLnInput.dockerRegistryPassword === undefined;
       }
-   }, {
-      type: `input`,
-      name: `dockerRegistryEmail`,
-      store: true,
-      message: `What is your Docker Hub email?`,
-      validate: util.validateDockerHubEmail,
-      when: function () {
-         return cmdLnInput.dockerRegistryEmail === undefined;
-      }
    }]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
@@ -108,7 +98,6 @@ function input() {
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId);
-      this.dockerRegistryEmail = util.reconcileValue(answers.dockerRegistryEmail, cmdLnInput.dockerRegistryEmail);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword);
    }.bind(this));
 }
@@ -130,7 +119,6 @@ function createServiceEndpoint() {
       project: this.applicationName,
       dockerCertPath: this.dockerCertPath,
       dockerRegistryId: this.dockerRegistryId,
-      dockerRegistryEmail: this.dockerRegistryEmail,
       dockerRegistryPassword: this.dockerRegistryPassword
    };
 

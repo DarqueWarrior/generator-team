@@ -179,10 +179,6 @@ describe(`utility`, () => {
       assert.equal(`You must provide a Docker Hub Password`, util.validateDockerHubPassword(null));
    });
 
-   it(`validateDockerHubEmail should return error`, () => {
-      assert.equal(`You must provide a Docker Hub Email`, util.validateDockerHubEmail(null));
-   });
-
    it(`validateAzureSubID should return error`, () => {
       assert.equal(`You must provide an Azure Subscription ID`, util.validateAzureSubID(null));
    });

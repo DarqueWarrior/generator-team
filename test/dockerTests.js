@@ -22,7 +22,6 @@ describe(`docker:index`, () => {
             dockerHost: `dockerHost`,
             dockerCertPath: `dockerCertPath`,
             dockerRegistryId: `dockerRegistryId`,
-            dockerRegistryEmail: `dockerRegistryEmail`,
             dockerRegistryPassword: `dockerRegistryPassword`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`
          })
@@ -55,7 +54,6 @@ describe(`docker:index`, () => {
             `dockerHost`,
             `dockerCerts`,
             `dockerRegistryId`,
-            `dockerRegistryEmail`,
             `dockerPorts`,
             `dockerRegistryPassword`,
             `token`])

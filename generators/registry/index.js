@@ -12,7 +12,6 @@ function construct() {
    this.argument(`applicationName`, { required: false, desc: `name of the application` });
    this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
    this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
-   this.argument(`dockerRegistryEmail`, { required: false, desc: `email used with your Docker repository` });
    this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker repository` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
 }
@@ -69,22 +68,12 @@ function input() {
       when: function () {
          return cmdLnInput.dockerRegistryPassword === undefined;
       }
-   }, {
-      type: `input`,
-      name: `dockerRegistryEmail`,
-      store: true,
-      message: `What is your Docker Hub email?`,
-      validate: util.validateDockerHubEmail,
-      when: function () {
-         return cmdLnInput.dockerRegistryEmail === undefined;
-      }
    }]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId);
-      this.dockerRegistryEmail = util.reconcileValue(answers.dockerRegistryEmail, cmdLnInput.dockerRegistryEmail);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword);
    }.bind(this));
 }
@@ -103,7 +92,6 @@ function createServiceEndpoint() {
       appName: this.applicationName,
       project: this.applicationName,
       dockerRegistryId: this.dockerRegistryId,
-      dockerRegistryEmail: this.dockerRegistryEmail,
       dockerRegistryPassword: this.dockerRegistryPassword
    };
 

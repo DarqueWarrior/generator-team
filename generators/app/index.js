@@ -26,7 +26,6 @@ function construct() {
    this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
    this.argument(`dockerCertPath`, { required: false, desc: `path to Docker certs folder` });
    this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
-   this.argument(`dockerRegistryEmail`, { required: false, desc: `email used with your Docker repository` });
    this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
    this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker repository` });
    this.argument(`servicePrincipalKey`, { required: false, desc: `Azure Service Principal Key` });
@@ -210,15 +209,6 @@ function input() {
       }
    }, {
       type: `input`,
-      name: `dockerRegistryEmail`,
-      store: true,
-      message: `What is your Docker Hub email?`,
-      validate: util.validateDockerHubEmail,
-      when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryEmail === undefined;
-      }
-   }, {
-      type: `input`,
       name: `dockerPorts`,
       default: util.getDefaultPortMapping,
       message: `What should the port mapping be?`,
@@ -273,7 +263,6 @@ function input() {
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
       this.servicePrincipalId = util.reconcileValue(answers.servicePrincipalId, cmdLnInput.servicePrincipalId, ``);
       this.servicePrincipalKey = util.reconcileValue(answers.servicePrincipalKey, cmdLnInput.servicePrincipalKey, ``);
-      this.dockerRegistryEmail = util.reconcileValue(answers.dockerRegistryEmail, cmdLnInput.dockerRegistryEmail, ``);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
    }.bind(this));
 }
@@ -298,13 +287,13 @@ function configGenerators() {
    if (this.target === `docker`) {
       this.composeWith(`team:docker`, {
          args: [this.applicationName, this.tfs,
-         this.dockerHost, this.dockerCertPath, this.dockerRegistryId, this.dockerRegistryEmail, this.dockerPorts, this.dockerRegistryPassword,
+         this.dockerHost, this.dockerCertPath, this.dockerRegistryId, this.dockerPorts, this.dockerRegistryPassword,
          this.pat]
       });
 
       this.composeWith(`team:registry`, {
          args: [this.applicationName, this.tfs,
-         this.dockerRegistryId, this.dockerRegistryEmail, this.dockerRegistryPassword,
+         this.dockerRegistryId, this.dockerRegistryPassword,
          this.pat]
       });
    }
