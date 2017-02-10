@@ -19,6 +19,7 @@ describe(`registry:index`, () => {
          .withPrompts({
             pat: `token`,
             applicationName: `aspDemo`,
+            dockerRegistry: `dockerRegistry`,
             dockerRegistryId: `dockerRegistryId`,
             dockerRegistryPassword: `dockerRegistryPassword`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`
@@ -49,6 +50,7 @@ describe(`registry:index`, () => {
          .withArguments([
             `aspDemo`,
             `http://localhost:8080/tfs/DefaultCollection`,
+            `dockerRegistry`,
             `dockerRegistryId`,
             `dockerRegistryPassword`,
             `token`])

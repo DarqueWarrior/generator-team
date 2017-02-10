@@ -27,12 +27,32 @@ describe(`team:pipeline`, () => {
          util.tryFindAzureServiceEndpoint.restore();
       };
 
+      // Defining the arguments this way and calling the function under test
+      // with them makes refactorying easier.
+      let type = `asp`;
+      let pat = `token`;
+      let target = `paas`;
+      let dockerHost = ``;
+      let dockerPorts = ``;
+      let queue = `default`;
+      let dockerCertPath = ``;
+      let dockerRegistry = ``;
+      let azureSub = `AzureSub`;
+      let tenantId = `TenantId`;
+      let dockerRegistryId = ``;
+      let azureSubId = `AzureSubId`;
+      let applicationName = `aspDemo`;
+      let dockerRegistryPassword = ``;
+      let servicePrincipalId = `servicePrincipalId`;
+      let servicePrincipalKey = `servicePrincipalKey`;
+      let tfs = `http://localhost:8080/tfs/defaultcollection`;
+
       return helpers.run(path.join(__dirname, `../generators/pipeline/index`))
          .withGenerators(deps)
-         .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/defaultcollection`,
-            `default`, `paas`, `AzureSub`, `AzureSubId`, `TenantId`, `servicePrincipalId`,
-            ``, ``, ``, ``, ``,
-            `servicePrincipalKey`, `token`])
+         .withArguments([type, applicationName, tfs,
+            queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,
+            dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, pat])
          .on(`error`, e => {
             cleanUp();
             assert.fail(e);
@@ -179,12 +199,32 @@ describe(`team:pipeline`, () => {
          [helpers.createDummyGenerator(), `team:registry`]
       ];
 
+      // Defining the arguments this way and calling the function under test
+      // with them makes refactorying easier.
+      let type = `node`;
+      let pat = `token`;
+      let azureSub = ``;
+      let tenantId = ``;
+      let azureSubId = ``;
+      let queue = `default`;
+      let target = `docker`;
+      let servicePrincipalId = ``;
+      let servicePrincipalKey = ``;
+      let dockerHost = `DockerHost`;
+      let dockerPorts = `DockerPorts`;
+      let applicationName = `nodeDemo`;
+      let dockerCertPath = `DockerCert`;
+      let dockerRegistry = `DockerRegistry`;
+      let dockerRegistryId = `DockerUsername`;
+      let dockerRegistryPassword = `DockerPassword`;
+      let tfs = `http://localhost:8080/tfs/defaultcollection`;
+
       return helpers.run(path.join(__dirname, `../generators/pipeline/index.js`))
          .withGenerators(deps)
-         .withArguments([`node`, `nodeDemo`, `http://localhost:8080/tfs/defaultcollection`,
-            `default`, `docker`, ``, ``, ``, ``,
-            `DockerHost`, `DockerCert`, `DockerRegistry`, `DockerPorts`, `DockerPassword`,
-            ``, `token`])
+         .withArguments([type, applicationName, tfs,
+            queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,
+            dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts, 
+            dockerRegistryPassword, servicePrincipalKey, pat])
          .on(`error`, e => {
             assert.fail(e);
          });

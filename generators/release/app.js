@@ -84,13 +84,13 @@ function run(args, gen, done) {
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
-            endpoint: azureEndpoint ? azureEndpoint.id : null,
+            dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             approverUniqueName: approverUniqueName,
             dockerRegistryId: args.dockerRegistryId,
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
-            dockerPorts: args.dockerPorts
+            endpoint: azureEndpoint ? azureEndpoint.id : null
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {
@@ -133,6 +133,10 @@ function createRelease(args, gen, callback) {
 
    gen.log(`+ Creating CD release definition`);
 
+   // Qualify the image name with the dockerRegistryId for docker hub
+   // or the server name for other registries. 
+   let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, args.dockerRegistryEndpoint);
+   
    // Load the template and replace values.
    var tokens = {
       '{{BuildId}}': args.build.id,
@@ -148,7 +152,7 @@ function createRelease(args, gen, callback) {
       '{{dockerPorts}}': args.dockerPorts ? args.dockerPorts : null,
       '{{ApproverUniqueName}}': args.approverUniqueName.replace("\\", "\\\\"),
       '{{dockerHostEndpoint}}': args.dockerHostEndpoint ? args.dockerHostEndpoint.id : null,
-      '{{dockerRegistryId}}': args.dockerRegistryId ? args.dockerRegistryId.toLowerCase() : null,
+      '{{dockerRegistryId}}': dockerNamespace,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
       '{{ReleaseDefName}}': args.target === 'docker' ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`
    };

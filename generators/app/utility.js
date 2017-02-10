@@ -1,3 +1,4 @@
+const url = require('url');
 const request = require(`request`);
 const package = require('../../package.json');
 
@@ -11,6 +12,22 @@ String.prototype.replaceAll = function (search, replacement) {
    var target = this;
    return target.split(search).join(replacement);
 };
+
+function getDockerRegisteryServer(server) {
+   let parts = url.parse(server);
+
+   return parts.host;
+}
+
+function getImageNamespace(registryId, endPoint) {
+   let dockerNamespace = registryId ? registryId.toLowerCase() : null;
+
+   if (endPoint && !isDockerHub(endPoint.authorization.parameters.registry)) {
+      dockerNamespace = getDockerRegisteryServer(endPoint.authorization.parameters.registry);
+   }
+
+   return dockerNamespace;
+}
 
 function addUserAgent(options) {
    options.headers['user-agent'] = getUserAgent();
@@ -49,7 +66,7 @@ function getAppTypes() {
 }
 
 function getPATPrompt(answers) {
-   if(!answers.tfs) {
+   if (!answers.tfs) {
       // The user passed in the tfs value on the
       // command line but we still need to prompt
       // for the pat.  answers will not have a tfs
@@ -115,11 +132,19 @@ function validateDockerCertificatePath(input) {
 }
 
 function validateDockerHubID(input) {
-   return validateRequired(input, `You must provide a Docker Hub ID`);
+   return validateRequired(input, `You must provide a Docker Registry username`);
 }
 
 function validateDockerHubPassword(input) {
-   return validateRequired(input, `You must provide a Docker Hub Password`);
+   return validateRequired(input, `You must provide a Docker Registry Password`);
+}
+
+function validateDockerRegistry(input) {
+   if (!input) {
+      return validateRequired(input, `You must provide a Docker Registry URL`);
+   }
+
+   return input.toLowerCase().match(/http/) === null ? `You must provide a Docker Registry URL including http(s)` : true;
 }
 
 function validateAzureSubID(input) {
@@ -218,8 +243,22 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
       if (endpoint === undefined) {
          callback({ "message": `x Could not find Docker Registry Service Endpoint`, "code": `NotFound` }, undefined);
       } else {
-         callback(error, endpoint);
+         // Down stream we need the full endpoint so call again with the ID. This will return more data
+         getServiceEndpoint(account, projectId, endpoint.id, token, callback);
       }
+   });
+}
+
+function getServiceEndpoint(account, projectId, id, token, callback) {
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints/${id}`,
+      "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
+   });
+
+   request(options, function (error, response, body) {
+      callback(error, JSON.parse(body));
    });
 }
 
@@ -568,6 +607,10 @@ function getPools(answers) {
    });
 }
 
+function isDockerHub(dockerRegistry) {
+   return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
+}
+
 function validateInstance(input) {
    // It was unclear if the user should provide the full URL or just 
    // the account name so I am adding validation to help.
@@ -629,11 +672,12 @@ module.exports = {
    findBuild: findBuild,
    getFullURL: getFullURL,
    getTargets: getTargets,
-   getAppTypes: getAppTypes,  
+   getAppTypes: getAppTypes,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,
    validateTFS: validateTFS,
+   isDockerHub: isDockerHub,
    getAzureSubs: getAzureSubs,
    findAzureSub: findAzureSub,
    getPATPrompt: getPATPrompt,
@@ -647,14 +691,17 @@ module.exports = {
    validateAzureSub: validateAzureSub,
    validateInstance: validateInstance,
    getInstancePrompt: getInstancePrompt,
+   getImageNamespace: getImageNamespace,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    validatePortMapping: validatePortMapping,
    validateDockerHubID: validateDockerHubID,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
+   validateDockerRegistry: validateDockerRegistry,
    validateApplicationName: validateApplicationName,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
+   getDockerRegisteryServer: getDockerRegisteryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
    validateServicePrincipalID: validateServicePrincipalID,

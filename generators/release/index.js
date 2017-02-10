@@ -16,7 +16,8 @@ function construct() {
    this.argument(`target`, { required: false, desc: `docker or Azure app service` });
    this.argument(`azureSub`, { required: false, desc: `Azure Subscription name` });
    this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
+   this.argument(`dockerRegistry`, { required: false, desc: `server of your Docker registry` });
+   this.argument(`dockerRegistryId`, { required: false, desc: `username for Docker registry` });
    this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
 }
@@ -127,9 +128,19 @@ function input() {
       }
    }, {
       type: `input`,
+      name: `dockerRegistry`,
+      default: `https://index.docker.io/v1/`,
+      store: true,
+      message: `What is your Docker Registry URL?`,
+      validate: util.validateDockerRegistry,
+      when: answers => {
+         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistry === undefined;
+      }
+   }, {
+      type: `input`,
       name: `dockerRegistryId`,
       store: true,
-      message: `What is your Docker Hub ID (case sensitive)?`,
+      message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: function (answers) {
          return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryId === undefined;
@@ -154,6 +165,7 @@ function input() {
       this.azureSub = util.reconcileValue(answers.azureSub, cmdLnInput.azureSub, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
+      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
    }.bind(this));
@@ -190,26 +202,22 @@ function configureRelase() {
    };
 
    if (this.target === `docker`) {
-      // We only support Docker Hub so set the dockerRegistry to 
-      // https://index.docker.io/v1/
-      var registry = `https://index.docker.io/v1/`;
-
-      args.dockerRegistry = registry;
       args.dockerHost = this.dockerHost;
       args.dockerPorts = this.dockerPorts;
+      args.dockerRegistry = this.dockerRegistry;
       args.dockerRegistryId = this.dockerRegistryId;
    }
-   
+
    app.run(args, this, done);
 }
 
 module.exports = generators.Base.extend({
    // The name `constructor` is important here
    constructor: construct,
-   
+
    // 2. Where you prompt users for options (where you`d call this.prompt())
    prompting: input,
-      
+
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing: configureRelase
 });

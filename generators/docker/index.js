@@ -13,9 +13,6 @@ function construct() {
    this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
    this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
    this.argument(`dockerCertPath`, { required: false, desc: `path to Docker certs folder` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
-   this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
-   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker repository` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
 }
 
@@ -71,55 +68,26 @@ function input() {
       when: function () {
          return cmdLnInput.dockerCertPath === undefined;
       }
-   }, {
-      type: `input`,
-      name: `dockerRegistryId`,
-      store: true,
-      message: `What is your Docker Hub ID (case sensitive)?`,
-      validate: util.validateDockerHubID,
-      when: function () {
-         return cmdLnInput.dockerRegistryId === undefined;
-      }
-   }, {
-      type: `password`,
-      name: `dockerRegistryPassword`,
-      store: false,
-      message: `What is your Docker Hub password?`,
-      validate: util.validateDockerHubPassword,
-      when: function () {
-         return cmdLnInput.dockerRegistryPassword === undefined;
-      }
    }]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost);
-      this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts);
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName);
-      this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId);
-      this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword);
    }.bind(this));
 }
 
 function createServiceEndpoint() {
    var done = this.async();
 
-   // We only support Docker Hub so set the dockerRegistry to 
-   // https://index.docker.io/v1/
-   var registry = "https://index.docker.io/v1/";
-
    var args = {
       pat: this.pat,
       tfs: this.tfs,
-      dockerRegistry: registry,
       dockerHost: this.dockerHost,
-      dockerPorts: this.dockerPorts,
       appName: this.applicationName,
       project: this.applicationName,
-      dockerCertPath: this.dockerCertPath,
-      dockerRegistryId: this.dockerRegistryId,
-      dockerRegistryPassword: this.dockerRegistryPassword
+      dockerCertPath: this.dockerCertPath
    };
 
    app.run(args, this, done);

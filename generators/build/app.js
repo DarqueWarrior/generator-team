@@ -97,6 +97,10 @@ function createBuild(account, teamProject, token, queueId,
 
    gen.log('+ Creating CI build definition');
 
+   // Qualify the image name with the dockerRegistryId for docker hub
+   // or the server name for other registries. 
+   let dockerNamespace = util.getImageNamespace(dockerRegistryId, dockerRegistryEndpoint);
+
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
    var tokens = {
@@ -106,7 +110,7 @@ function createBuild(account, teamProject, token, queueId,
       '{{QueueId}}': queueId,
       '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : null,
       '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : null,
-      '{{dockerRegistryId}}': dockerRegistryId ? dockerRegistryId.toLowerCase() : null,
+      '{{dockerRegistryId}}': dockerNamespace,
       '{{ProjectLowerCase}}': teamProject.name.toLowerCase()
    };
 

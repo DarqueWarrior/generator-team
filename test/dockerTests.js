@@ -21,6 +21,7 @@ describe(`docker:index`, () => {
             applicationName: `aspDemo`,
             dockerHost: `dockerHost`,
             dockerCertPath: `dockerCertPath`,
+            dockerRegistry: `dockerRegistry`,
             dockerRegistryId: `dockerRegistryId`,
             dockerRegistryPassword: `dockerRegistryPassword`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`
@@ -54,6 +55,7 @@ describe(`docker:index`, () => {
             `dockerHost`,
             `dockerCerts`,
             `dockerRegistryId`,
+            `dockerRegistry`,
             `dockerPorts`,
             `dockerRegistryPassword`,
             `token`])

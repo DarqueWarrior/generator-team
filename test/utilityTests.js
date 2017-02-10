@@ -11,16 +11,16 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
-describe(`utility`, () => {  
+describe(`utility`, () => {
 
    it(`addUserAgent`, () => {
       // Arrange
       let options = {
-                  method: 'GET',
-                  headers: { 'cache-control': 'no-cache', 'authorization': `Basic token` },
-                  url: `https://test.visualstudio.com/_apis/projects/test`,
-                  qs: { 'api-version': PROJECT_API_VERSION }
-               };
+         method: 'GET',
+         headers: { 'cache-control': 'no-cache', 'authorization': `Basic token` },
+         url: `https://test.visualstudio.com/_apis/projects/test`,
+         qs: { 'api-version': PROJECT_API_VERSION }
+      };
       let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 
       // Act
@@ -28,7 +28,7 @@ describe(`utility`, () => {
 
       // Assert
       assert.equal(expected, actual.headers['user-agent']);
-   }); 
+   });
 
    it(`getUserAgent`, () => {
       // Arrange
@@ -58,6 +58,75 @@ describe(`utility`, () => {
 
       // Act
       let actual = util.getPATPrompt({ tfs: `http://localhost:8080/tfs/DefaultCollection` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`isDockerHub true`, () => {
+      // Arrange
+      let expected = true;
+      let dockerRegistry = `https://Index.Docker.io/v1/`;
+
+      // Act
+      let actual = util.isDockerHub(dockerRegistry);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getDockerRegisteryServer`, () => {
+      // Arrange
+      let expected = `index.azure.io`;
+      let dockerRegistry = `https://index.azure.io/`;
+
+      // Act
+      let actual = util.getDockerRegisteryServer(dockerRegistry);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getImageNamespace with registryID`, () => {
+      // Arrange
+      let expected = "imagenamespace";
+
+      // Act
+      let actual = util.getImageNamespace(`imageNamespace`, undefined);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getImageNamespace with no registryID and ep`, () => {
+      // Arrange
+      let expected = "images.azure.io";
+
+      // Act
+      let actual = util.getImageNamespace(null, { authorization: { parameters: { registry: `http://images.azure.io` } } });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getImageNamespace with no registryID and ep`, () => {
+      // Arrange
+      let expected = "images.azure.io";
+
+      // Act
+      let actual = util.getImageNamespace(`imageNamespace`, { authorization: { parameters: { registry: `http://images.azure.io` } } });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`isDockerHub false`, () => {
+      // Arrange
+      let expected = false;
+      let dockerRegistry = `https://index.azure.io/`;
+
+      // Act
+      let actual = util.isDockerHub(dockerRegistry);
 
       // Assert
       assert.equal(expected, actual);
@@ -172,11 +241,19 @@ describe(`utility`, () => {
    });
 
    it(`validateDockerHubID should return error`, () => {
-      assert.equal(`You must provide a Docker Hub ID`, util.validateDockerHubID(null));
+      assert.equal(`You must provide a Docker Registry username`, util.validateDockerHubID(null));
    });
 
    it(`validateDockerHubPassword should return error`, () => {
-      assert.equal(`You must provide a Docker Hub Password`, util.validateDockerHubPassword(null));
+      assert.equal(`You must provide a Docker Registry Password`, util.validateDockerHubPassword(null));
+   });
+
+   it(`validateDockerRegistry should return error on null`, () => {
+      assert.equal(`You must provide a Docker Registry URL`, util.validateDockerRegistry(null));
+   });
+
+   it(`validateDockerRegistry should return error on missing http(s)`, () => {
+      assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`mydockerimages-microsoft.azurecr.io`));
    });
 
    it(`validateAzureSubID should return error`, () => {
@@ -334,7 +411,12 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ type: "dockerregistry" }] }));
+
+            if (options.url.endsWith(`serviceendpoints`)) {
+               callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ type: "dockerregistry" }] }));
+            } else {
+               callback(null, { statusCode: 200 }, JSON.stringify({ type: "dockerregistry" }));
+            }
          }
       });
 
