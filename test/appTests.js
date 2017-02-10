@@ -85,7 +85,7 @@ describe(`app:index`, () => {
          .withArguments([`node`, `demo`, `vsts`,
             ``, ``, ``, ``, `default`, `docker`,
             `false`, ``,
-            `dockerHost`, `dockerCertPath`, `dockerRegistryId`, `dockerRegistryEmail`, `dockerPorts`, `dockerRegistryPassword`,
+            `dockerHost`, `dockerCertPath`, `dockerRegistryId`, `dockerRegistry`, `dockerPorts`, `dockerRegistryPassword`,
             `servicePrincipalKey`, `token`])
          .on(`error`, e => {
             assert.fail(e);
@@ -123,8 +123,8 @@ describe(`app:index`, () => {
             dockerPorts: `dockerPorts`,
             applicationName: `javaDemo`,
             dockerCertPath: `dockerCertPath`,
+            dockerRegistry: `dockerRegistry`,
             dockerRegistryId: `dockerRegistryId`,
-            dockerRegistryEmail: `dockerRegistryEmail`,
             dockerRegistryPassword: `dockerRegistryPassword`
          })
          .on(`error`, e => {

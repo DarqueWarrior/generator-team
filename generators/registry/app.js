@@ -20,7 +20,7 @@ function run(args, gen, done) {
       },
       function (mainSeries) {
          findOrCreateDockerRegistryServiceEndpoint(args.tfs, teamProject.id,
-            args.dockerRegistry, args.dockerRegistryId, args.dockerRegistryPassword, args.dockerRegistryEmail, token, gen, mainSeries);
+            args.dockerRegistry, args.dockerRegistryId, args.dockerRegistryPassword, token, gen, mainSeries);
       }],
       function (err, results) {
          // This is just for test and will be undefined during normal use
@@ -42,7 +42,6 @@ function findOrCreateDockerRegistryServiceEndpoint(
    dockerRegistry,
    dockerRegistryId,
    dockerRegistryPassword,
-   dockerRegistryEmail,
    token,
    gen,
    callback) {
@@ -59,7 +58,7 @@ function findOrCreateDockerRegistryServiceEndpoint(
          callback(e, null);
       } else {
          if (!ep) {
-            createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, dockerRegistryEmail, token, gen, callback);
+            createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, token, gen, callback);
          } else {
             gen.log('+ Found Docker Registry Service Endpoint');
             callback(e, ep);
@@ -68,7 +67,7 @@ function findOrCreateDockerRegistryServiceEndpoint(
    });
 }
 
-function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, dockerRegistryEmail, token, gen, callback) {
+function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, token, gen, callback) {
    'use strict';
 
    gen.log('+ Creating Docker Registry Service Endpoint');
@@ -83,7 +82,7 @@ function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry,
          authorization:
          {
             parameters: {
-               email: dockerRegistryEmail,
+               email: '',
                password: dockerRegistryPassword,
                registry: dockerRegistry,
                username: dockerRegistryId

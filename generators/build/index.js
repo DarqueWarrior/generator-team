@@ -15,7 +15,8 @@ function construct() {
    this.argument(`queue`, { required: false, desc: `agent queue name to use` });
    this.argument(`target`, { required: false, desc: `docker or Azure app service` });
    this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
+   this.argument(`dockerRegistry`, { required: false, desc: `server of your Docker registry` });
+   this.argument(`dockerRegistryId`, { required: false, desc: `username for Docker registry` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
 }
 
@@ -27,8 +28,8 @@ function input() {
    let cmdLnInput = this;
 
    return this.prompt([{
-      type: `input`,
       name: `tfs`,
+      type: `input`,
       store: true,
       message: util.getInstancePrompt,
       validate: util.validateTFS,
@@ -36,8 +37,8 @@ function input() {
          return cmdLnInput.tfs === undefined;
       }
    }, {
-      type: `password`,
       name: `pat`,
+      type: `password`,
       store: false,
       message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
@@ -45,8 +46,8 @@ function input() {
          return cmdLnInput.pat === undefined;
       }
    }, {
-      type: `list`,
       name: `queue`,
+      type: `list`,
       store: true,
       message: `What agent queue would you like to use?`,
       default: `Default`,
@@ -61,8 +62,8 @@ function input() {
          return result;
       }
    }, {
-      type: `list`,
       name: `type`,
+      type: `list`,
       store: true,
       message: `What type of application do you want to create?`,
       choices: util.getAppTypes,
@@ -70,8 +71,8 @@ function input() {
          return cmdLnInput.type === undefined;
       }
    }, {
-      type: `input`,
       name: `applicationName`,
+      type: `input`,
       store: true,
       message: `What is the name of your application?`,
       validate: util.validateApplicationName,
@@ -79,8 +80,8 @@ function input() {
          return cmdLnInput.applicationName === undefined;
       }
    }, {
-      type: `list`,
       name: `target`,
+      type: `list`,
       store: true,
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
@@ -88,8 +89,8 @@ function input() {
          return cmdLnInput.target === undefined;
       }
    }, {
-      type: `input`,
       name: `dockerHost`,
+      type: `input`,
       store: true,
       message: `What is your Docker host url and port (tcp://host:2376)?`,
       validate: util.validateDockerHost,
@@ -99,10 +100,20 @@ function input() {
          return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerHost === undefined;
       }
    }, {
+      name: `dockerRegistry`,
       type: `input`,
-      name: `dockerRegistryId`,
+      default: `https://index.docker.io/v1/`,
       store: true,
-      message: `What is your Docker Hub ID (case sensitive)?`,
+      message: `What is your Docker Registry URL?`,
+      validate: util.validateDockerRegistry,
+      when: answers => {
+         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistry === undefined;
+      }
+   }, {
+      name: `dockerRegistryId`,
+      type: `input`,
+      store: true,
+      message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: function (answers) {
          return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryId === undefined;
@@ -119,6 +130,7 @@ function input() {
       this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
       this.target = util.reconcileValue(answers.target, cmdLnInput.target);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
+      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
    }.bind(this));
@@ -141,12 +153,8 @@ function configureBuild() {
    };
 
    if (this.target === `docker`) {
-      // We only support Docker Hub so set the dockerRegistry to 
-      // https://index.docker.io/v1/
-      var registry = `https://index.docker.io/v1/`;
-
-      args.dockerRegistry = registry;
       args.dockerHost = this.dockerHost;
+      args.dockerRegistry = this.dockerRegistry;
       args.dockerRegistryId = this.dockerRegistryId;
    }
 

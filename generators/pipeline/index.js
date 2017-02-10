@@ -24,10 +24,10 @@ function construct() {
    this.argument(`servicePrincipalId`, { required: false, desc: `Azure Service Principal Id` });
    this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
    this.argument(`dockerCertPath`, { required: false, desc: `path to Docker certs folder` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
-   this.argument(`dockerRegistryEmail`, { required: false, desc: `email used with your Docker repository` });
+   this.argument(`dockerRegistry`, { required: false, desc: `server of your Docker registry` });
+   this.argument(`dockerRegistryId`, { required: false, desc: `username for Docker registry` });
    this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
-   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker repository` });
+   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker registry` });
    this.argument(`servicePrincipalKey`, { required: false, desc: `Azure Service Principal Key` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
 }
@@ -183,9 +183,19 @@ function input() {
       }
    }, {
       type: `input`,
+      name: `dockerRegistry`,
+      default: `https://index.docker.io/v1/`,
+      store: true,
+      message: `What is your Docker Registry URL?`,
+      validate: util.validateDockerRegistry,
+      when: answers => {
+         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistry === undefined;
+      }
+   }, {
+      type: `input`,
       name: `dockerRegistryId`,
       store: true,
-      message: `What is your Docker Hub ID (case sensitive)?`,
+      message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: function (answers) {
          return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryId === undefined;
@@ -194,19 +204,10 @@ function input() {
       type: `password`,
       name: `dockerRegistryPassword`,
       store: false,
-      message: `What is your Docker Hub password?`,
+      message: `What is your Docker Registry password?`,
       validate: util.validateDockerHubPassword,
       when: function (answers) {
          return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryPassword === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `dockerRegistryEmail`,
-      store: true,
-      message: `What is your Docker Hub email?`,
-      validate: util.validateDockerHubEmail,
-      when: function (answers) {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryEmail === undefined;
       }
    }, {
       type: `input`,
@@ -230,12 +231,12 @@ function input() {
       this.azureSubId = util.reconcileValue(answers.azureSubId, cmdLnInput.azureSubId, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
+      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath, ``);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
       this.servicePrincipalId = util.reconcileValue(answers.servicePrincipalId, cmdLnInput.servicePrincipalId, ``);
       this.servicePrincipalKey = util.reconcileValue(answers.servicePrincipalKey, cmdLnInput.servicePrincipalKey, ``);
-      this.dockerRegistryEmail = util.reconcileValue(answers.dockerRegistryEmail, cmdLnInput.dockerRegistryEmail, ``);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
    }.bind(this));
 }
@@ -246,13 +247,13 @@ function configGenerators() {
    if (this.target === `docker`) {
       this.composeWith(`team:docker`, {
          args: [this.applicationName, this.tfs,
-         this.dockerHost, this.dockerCertPath, this.dockerRegistryId, this.dockerRegistryEmail, this.dockerPorts, this.dockerRegistryPassword,
+         this.dockerHost, this.dockerCertPath, 
          this.pat]
       });
 
       this.composeWith(`team:registry`, {
          args: [this.applicationName, this.tfs,
-         this.dockerRegistryId, this.dockerRegistryEmail, this.dockerRegistryPassword,
+         this.dockerRegistry, this.dockerRegistryId, this.dockerRegistryPassword,
          this.pat]
       });
    }
@@ -268,7 +269,7 @@ function configGenerators() {
    this.composeWith(`team:build`, {
       args: [this.type, this.applicationName, this.tfs,
       this.queue, this.target,
-      this.dockerHost, this.dockerRegistryId,
+      this.dockerHost, this.dockerRegistry, this.dockerRegistryId,
       this.pat]
    });
 
@@ -276,7 +277,7 @@ function configGenerators() {
       args: [this.type, this.applicationName, this.tfs,
       this.queue, this.target,
       this.azureSub,
-      this.dockerHost, this.dockerRegistryId, this.dockerPorts,
+      this.dockerHost, this.dockerRegistry, this.dockerRegistryId, this.dockerPorts,
       this.pat]
    });
 }

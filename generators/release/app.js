@@ -84,13 +84,13 @@ function run(args, gen, done) {
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
-            endpoint: azureEndpoint ? azureEndpoint.id : null,
+            dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             approverUniqueName: approverUniqueName,
             dockerRegistryId: args.dockerRegistryId,
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
-            dockerPorts: args.dockerPorts
+            endpoint: azureEndpoint ? azureEndpoint.id : null
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {

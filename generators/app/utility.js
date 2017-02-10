@@ -115,15 +115,15 @@ function validateDockerCertificatePath(input) {
 }
 
 function validateDockerHubID(input) {
-   return validateRequired(input, `You must provide a Docker Hub ID`);
+   return validateRequired(input, `You must provide a Docker Registry username`);
 }
 
 function validateDockerHubPassword(input) {
-   return validateRequired(input, `You must provide a Docker Hub Password`);
+   return validateRequired(input, `You must provide a Docker Registry Password`);
 }
 
-function validateDockerHubEmail(input) {
-   return validateRequired(input, `You must provide a Docker Hub Email`);
+function validateDockerRegistry(input) {
+   return validateRequired(input, `You must provide a Docker Registry URL`);
 }
 
 function validateAzureSubID(input) {
@@ -657,7 +657,7 @@ module.exports = {
    validateDockerHubID: validateDockerHubID,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
-   validateDockerHubEmail: validateDockerHubEmail,
+   validateDockerRegistry: validateDockerRegistry,
    validateApplicationName: validateApplicationName,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
    findDockerServiceEndpoint: findDockerServiceEndpoint,

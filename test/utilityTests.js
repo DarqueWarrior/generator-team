@@ -172,15 +172,15 @@ describe(`utility`, () => {
    });
 
    it(`validateDockerHubID should return error`, () => {
-      assert.equal(`You must provide a Docker Hub ID`, util.validateDockerHubID(null));
+      assert.equal(`You must provide a Docker Registry username`, util.validateDockerHubID(null));
    });
 
    it(`validateDockerHubPassword should return error`, () => {
-      assert.equal(`You must provide a Docker Hub Password`, util.validateDockerHubPassword(null));
+      assert.equal(`You must provide a Docker Registry Password`, util.validateDockerHubPassword(null));
    });
 
-   it(`validateDockerHubEmail should return error`, () => {
-      assert.equal(`You must provide a Docker Hub Email`, util.validateDockerHubEmail(null));
+   it(`validateDockerRegistry should return error`, () => {
+      assert.equal(`You must provide a Docker Registry URL`, util.validateDockerRegistry(null));
    });
 
    it(`validateAzureSubID should return error`, () => {

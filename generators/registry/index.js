@@ -11,9 +11,9 @@ function construct() {
    // Order is important 
    this.argument(`applicationName`, { required: false, desc: `name of the application` });
    this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `ID for Docker repository` });
-   this.argument(`dockerRegistryEmail`, { required: false, desc: `email used with your Docker repository` });
-   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker repository` });
+   this.argument(`dockerRegistry`, { required: false, desc: `Server of your Docker registry` });
+   this.argument(`dockerRegistryId`, { required: false, desc: `Username for Docker registry` });
+   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker registry` });
    this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
 }
 
@@ -53,9 +53,19 @@ function input() {
       }
    }, {
       type: `input`,
+      name: `dockerRegistry`,
+      default: `https://index.docker.io/v1/`,
+      store: true,
+      message: `What is your Docker Registry URL?`,
+      validate: util.validateDockerRegistry,
+      when: answers => {
+         return cmdLnInput.dockerRegistry === undefined;
+      }
+   }, {
+      type: `input`,
       name: `dockerRegistryId`,
       store: true,
-      message: `What is your Docker Hub ID (case sensitive)?`,
+      message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: function () {
          return cmdLnInput.dockerRegistryId === undefined;
@@ -64,27 +74,18 @@ function input() {
       type: `password`,
       name: `dockerRegistryPassword`,
       store: false,
-      message: `What is your Docker Hub password?`,
+      message: `What is your Docker Registry password?`,
       validate: util.validateDockerHubPassword,
       when: function () {
          return cmdLnInput.dockerRegistryPassword === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `dockerRegistryEmail`,
-      store: true,
-      message: `What is your Docker Hub email?`,
-      validate: util.validateDockerHubEmail,
-      when: function () {
-         return cmdLnInput.dockerRegistryEmail === undefined;
       }
    }]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
+      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId);
-      this.dockerRegistryEmail = util.reconcileValue(answers.dockerRegistryEmail, cmdLnInput.dockerRegistryEmail);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword);
    }.bind(this));
 }
@@ -92,18 +93,13 @@ function input() {
 function createServiceEndpoint() {
    var done = this.async();
 
-   // We only support Docker Hub so set the dockerRegistry to 
-   // https://index.docker.io/v1/
-   var registry = "https://index.docker.io/v1/";
-
    var args = {
       pat: this.pat,
       tfs: this.tfs,
-      dockerRegistry: registry,
       appName: this.applicationName,
       project: this.applicationName,
+      dockerRegistry: this.dockerRegistry,
       dockerRegistryId: this.dockerRegistryId,
-      dockerRegistryEmail: this.dockerRegistryEmail,
       dockerRegistryPassword: this.dockerRegistryPassword
    };
 

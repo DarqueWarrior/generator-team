@@ -19,8 +19,8 @@ describe(`registry:index`, () => {
          .withPrompts({
             pat: `token`,
             applicationName: `aspDemo`,
+            dockerRegistry: `dockerRegistry`,
             dockerRegistryId: `dockerRegistryId`,
-            dockerRegistryEmail: `dockerRegistryEmail`,
             dockerRegistryPassword: `dockerRegistryPassword`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`
          })
@@ -50,8 +50,8 @@ describe(`registry:index`, () => {
          .withArguments([
             `aspDemo`,
             `http://localhost:8080/tfs/DefaultCollection`,
+            `dockerRegistry`,
             `dockerRegistryId`,
-            `dockerRegistryEmail`,
             `dockerRegistryPassword`,
             `token`])
          .on(`error`, (error) => {
@@ -88,8 +88,7 @@ describe(`registry:app`, () => {
          project: `e2eDemo`,
          dockerRegistry: `dockerRegistry`,
          dockerRegistryId: `dockerRegistryId`,
-         dockerRegistryPassword: `dockerRegistryPassword`,
-         dockerRegistryEmail: `dockerRegistryEmail`
+         dockerRegistryPassword: `dockerRegistryPassword`
       };
 
       // Act
@@ -114,8 +113,7 @@ describe(`registry:app`, () => {
          project: `e2eDemo`,
          dockerRegistry: `dockerRegistry`,
          dockerRegistryId: `dockerRegistryId`,
-         dockerRegistryPassword: `dockerRegistryPassword`,
-         dockerRegistryEmail: `dockerRegistryEmail`
+         dockerRegistryPassword: `dockerRegistryPassword`
       };
 
       // Act
@@ -151,7 +149,7 @@ describe(`registry:app`, () => {
 
       // Act
       proxyApp.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
-         `dockerRegistry`, `dockerRegistryId`, `dockerRegistryPassword`, `dockerRegistryEmail`, `token`, logger, (e, ep) => {
+         `dockerRegistry`, `dockerRegistryId`, `dockerRegistryPassword`, `token`, logger, (e, ep) => {
             assert.equal(e, null);
             assert.equal(ep.name, `endpoint`);
 
@@ -187,7 +185,7 @@ describe(`registry:app`, () => {
       // because my method is async 
       assert.throws(() => {
          proxyApp.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
-            `dockerRegistry`, `dockerRegistryId`, `dockerRegistryPassword`, `dockerRegistryEmail`, `token`, logger, done);
+            `dockerRegistry`, `dockerRegistryId`, `dockerRegistryPassword`, `token`, logger, done);
       }, e => {
          done();
          return true;
@@ -202,7 +200,7 @@ describe(`registry:app`, () => {
 
       // Act
       registry.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
-         null, null, null, null, `token`, logger, (e, ep) => {
+         null, null, null, `token`, logger, (e, ep) => {
             assert.equal(e, null);
             assert.equal(ep, null);
 
