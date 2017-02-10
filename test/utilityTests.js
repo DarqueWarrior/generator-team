@@ -11,16 +11,16 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
-describe(`utility`, () => {  
+describe(`utility`, () => {
 
    it(`addUserAgent`, () => {
       // Arrange
       let options = {
-                  method: 'GET',
-                  headers: { 'cache-control': 'no-cache', 'authorization': `Basic token` },
-                  url: `https://test.visualstudio.com/_apis/projects/test`,
-                  qs: { 'api-version': PROJECT_API_VERSION }
-               };
+         method: 'GET',
+         headers: { 'cache-control': 'no-cache', 'authorization': `Basic token` },
+         url: `https://test.visualstudio.com/_apis/projects/test`,
+         qs: { 'api-version': PROJECT_API_VERSION }
+      };
       let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 
       // Act
@@ -28,7 +28,7 @@ describe(`utility`, () => {
 
       // Assert
       assert.equal(expected, actual.headers['user-agent']);
-   }); 
+   });
 
    it(`getUserAgent`, () => {
       // Arrange
@@ -58,6 +58,42 @@ describe(`utility`, () => {
 
       // Act
       let actual = util.getPATPrompt({ tfs: `http://localhost:8080/tfs/DefaultCollection` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it (`isDockerHub true`, () => {
+      // Arrange
+      let expected = true;
+      let dockerRegistry = `https://Index.Docker.io/v1/`;
+
+      // Act
+      let actual = util.isDockerHub(dockerRegistry);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getDockerRegisteryServer`, () => {
+      // Arrange
+      let expected = `index.azure.io`;
+      let dockerRegistry = `https://index.azure.io/`;
+
+      // Act
+      let actual = util.getDockerRegisteryServer(dockerRegistry);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it (`isDockerHub false`, () => {
+      // Arrange
+      let expected = false;
+      let dockerRegistry = `https://index.azure.io/`;
+
+      // Act
+      let actual = util.isDockerHub(dockerRegistry);
 
       // Assert
       assert.equal(expected, actual);

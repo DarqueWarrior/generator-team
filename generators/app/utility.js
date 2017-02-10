@@ -1,3 +1,4 @@
+const url = require('url');
 const request = require(`request`);
 const package = require('../../package.json');
 
@@ -11,6 +12,12 @@ String.prototype.replaceAll = function (search, replacement) {
    var target = this;
    return target.split(search).join(replacement);
 };
+
+function getDockerRegisteryServer(server) {
+   let parts = url.parse(server);
+
+   return parts.host;
+}
 
 function addUserAgent(options) {
    options.headers['user-agent'] = getUserAgent();
@@ -222,8 +229,22 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
       if (endpoint === undefined) {
          callback({ "message": `x Could not find Docker Registry Service Endpoint`, "code": `NotFound` }, undefined);
       } else {
-         callback(error, endpoint);
+         // Down stream we need the full endpoint so call again with the ID. This will return more data
+         getServiceEndpoint(account, projectId, endpoint.id, token, callback);
       }
+   });
+}
+
+function getServiceEndpoint(account, projectId, id, token, callback) {
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints/${id}`,
+      "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
+   });
+
+   request(options, function (error, response, body) {
+      callback(error, JSON.parse(body));
    });
 }
 
@@ -572,6 +593,10 @@ function getPools(answers) {
    });
 }
 
+function isDockerHub(dockerRegistry) {
+   return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
+}
+
 function validateInstance(input) {
    // It was unclear if the user should provide the full URL or just 
    // the account name so I am adding validation to help.
@@ -638,6 +663,7 @@ module.exports = {
    findProject: findProject,
    findRelease: findRelease,
    validateTFS: validateTFS,
+   isDockerHub: isDockerHub,
    getAzureSubs: getAzureSubs,
    findAzureSub: findAzureSub,
    getPATPrompt: getPATPrompt,
@@ -660,6 +686,7 @@ module.exports = {
    validateDockerRegistry: validateDockerRegistry,
    validateApplicationName: validateApplicationName,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
+   getDockerRegisteryServer: getDockerRegisteryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
    validateServicePrincipalID: validateServicePrincipalID,

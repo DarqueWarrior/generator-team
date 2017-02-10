@@ -133,6 +133,13 @@ function createRelease(args, gen, callback) {
 
    gen.log(`+ Creating CD release definition`);
 
+   // Qualify the image name with the dockerRegistryId for docker hub
+   // or the server name for other registries. 
+   let dockerNamespace = args.dockerRegistryId ? args.dockerRegistryId.toLowerCase() : null;
+   if (args.dockerRegistryEndpoint && !util.isDockerHub(args.dockerRegistryEndpoint.authorization.parameters.registry)) {
+      dockerNamespace = util.getDockerRegisteryServer(args.dockerRegistryEndpoint.authorization.parameters.registry);
+   }
+
    // Load the template and replace values.
    var tokens = {
       '{{BuildId}}': args.build.id,
@@ -148,7 +155,7 @@ function createRelease(args, gen, callback) {
       '{{dockerPorts}}': args.dockerPorts ? args.dockerPorts : null,
       '{{ApproverUniqueName}}': args.approverUniqueName.replace("\\", "\\\\"),
       '{{dockerHostEndpoint}}': args.dockerHostEndpoint ? args.dockerHostEndpoint.id : null,
-      '{{dockerRegistryId}}': args.dockerRegistryId ? args.dockerRegistryId.toLowerCase() : null,
+      '{{dockerRegistryId}}': dockerNamespace,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
       '{{ReleaseDefName}}': args.target === 'docker' ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`
    };
