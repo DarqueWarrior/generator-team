@@ -544,7 +544,9 @@ describe(`build:app`, () => {
 
       // Act
       proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, { name: `TeamProject`, id: 1 },
-         `token`, 1, `dockerHostEndpoint`, { name: `dockerRegistryEndpoint`, url: `` }, `dockerRegistryId`, `build.json`, `docker`, logger, function (e, bld) {
+         `token`, 1, `dockerHostEndpoint`,
+         { name: `dockerRegistryEndpoint`, url: ``, authorization: { parameters: { registry: `` } } },
+         `dockerRegistryId`, `build.json`, `docker`, logger, function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);
 

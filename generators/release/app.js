@@ -135,11 +135,8 @@ function createRelease(args, gen, callback) {
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
-   let dockerNamespace = args.dockerRegistryId ? args.dockerRegistryId.toLowerCase() : null;
-   if (args.dockerRegistryEndpoint && !util.isDockerHub(args.dockerRegistryEndpoint.authorization.parameters.registry)) {
-      dockerNamespace = util.getDockerRegisteryServer(args.dockerRegistryEndpoint.authorization.parameters.registry);
-   }
-
+   let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, args.dockerRegistryEndpoint);
+   
    // Load the template and replace values.
    var tokens = {
       '{{BuildId}}': args.build.id,

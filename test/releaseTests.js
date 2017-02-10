@@ -606,7 +606,7 @@ describe(`release:app`, () => {
          target: `docker`,
          dockerPorts: `80:80`,
          dockerRegistryId: `dockerRegistryId`,
-         dockerRegistryEndpoint: `dockerRegistryEndpoint`
+         dockerRegistryEndpoint: { name: `dockerRegistryEndpoint`, url: ``, authorization: { parameters: { registry: `` } } }
       };
 
       // Create release

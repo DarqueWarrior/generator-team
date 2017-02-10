@@ -63,7 +63,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it (`isDockerHub true`, () => {
+   it(`isDockerHub true`, () => {
       // Arrange
       let expected = true;
       let dockerRegistry = `https://Index.Docker.io/v1/`;
@@ -87,7 +87,40 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it (`isDockerHub false`, () => {
+   it(`getImageNamespace with registryID`, () => {
+      // Arrange
+      let expected = "imagenamespace";
+
+      // Act
+      let actual = util.getImageNamespace(`imageNamespace`, undefined);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getImageNamespace with no registryID and ep`, () => {
+      // Arrange
+      let expected = "images.azure.io";
+
+      // Act
+      let actual = util.getImageNamespace(null, { authorization: { parameters: { registry: `http://images.azure.io` } } });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getImageNamespace with no registryID and ep`, () => {
+      // Arrange
+      let expected = "images.azure.io";
+
+      // Act
+      let actual = util.getImageNamespace(`imageNamespace`, { authorization: { parameters: { registry: `http://images.azure.io` } } });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`isDockerHub false`, () => {
       // Arrange
       let expected = false;
       let dockerRegistry = `https://index.azure.io/`;
@@ -215,8 +248,12 @@ describe(`utility`, () => {
       assert.equal(`You must provide a Docker Registry Password`, util.validateDockerHubPassword(null));
    });
 
-   it(`validateDockerRegistry should return error`, () => {
+   it(`validateDockerRegistry should return error on null`, () => {
       assert.equal(`You must provide a Docker Registry URL`, util.validateDockerRegistry(null));
+   });
+
+   it(`validateDockerRegistry should return error on missing http(s)`, () => {
+      assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`mydockerimages-microsoft.azurecr.io`));
    });
 
    it(`validateAzureSubID should return error`, () => {
@@ -374,7 +411,12 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ type: "dockerregistry" }] }));
+
+            if (options.url.endsWith(`serviceendpoints`)) {
+               callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ type: "dockerregistry" }] }));
+            } else {
+               callback(null, { statusCode: 200 }, JSON.stringify({ type: "dockerregistry" }));
+            }
          }
       });
 

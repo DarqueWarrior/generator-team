@@ -19,6 +19,16 @@ function getDockerRegisteryServer(server) {
    return parts.host;
 }
 
+function getImageNamespace(registryId, endPoint) {
+   let dockerNamespace = registryId ? registryId.toLowerCase() : null;
+
+   if (endPoint && !isDockerHub(endPoint.authorization.parameters.registry)) {
+      dockerNamespace = getDockerRegisteryServer(endPoint.authorization.parameters.registry);
+   }
+
+   return dockerNamespace;
+}
+
 function addUserAgent(options) {
    options.headers['user-agent'] = getUserAgent();
    return options;
@@ -56,7 +66,7 @@ function getAppTypes() {
 }
 
 function getPATPrompt(answers) {
-   if(!answers.tfs) {
+   if (!answers.tfs) {
       // The user passed in the tfs value on the
       // command line but we still need to prompt
       // for the pat.  answers will not have a tfs
@@ -130,7 +140,11 @@ function validateDockerHubPassword(input) {
 }
 
 function validateDockerRegistry(input) {
-   return validateRequired(input, `You must provide a Docker Registry URL`);
+   if (!input) {
+      return validateRequired(input, `You must provide a Docker Registry URL`);
+   }
+
+   return input.toLowerCase().match(/http/) === null ? `You must provide a Docker Registry URL including http(s)` : true;
 }
 
 function validateAzureSubID(input) {
@@ -658,7 +672,7 @@ module.exports = {
    findBuild: findBuild,
    getFullURL: getFullURL,
    getTargets: getTargets,
-   getAppTypes: getAppTypes,  
+   getAppTypes: getAppTypes,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,
@@ -677,6 +691,7 @@ module.exports = {
    validateAzureSub: validateAzureSub,
    validateInstance: validateInstance,
    getInstancePrompt: getInstancePrompt,
+   getImageNamespace: getImageNamespace,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    validatePortMapping: validatePortMapping,

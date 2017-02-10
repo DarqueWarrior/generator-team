@@ -99,10 +99,7 @@ function createBuild(account, teamProject, token, queueId,
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
-   let dockerNamespace = dockerRegistryId ? dockerRegistryId.toLowerCase() : null;
-   if (dockerRegistryEndpoint && !util.isDockerHub(dockerRegistryEndpoint.authorization.parameters.registry)) {
-      dockerNamespace = util.getDockerRegisteryServer(dockerRegistryEndpoint.authorization.parameters.registry);
-   }
+   let dockerNamespace = util.getImageNamespace(dockerRegistryId, dockerRegistryEndpoint);
 
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
