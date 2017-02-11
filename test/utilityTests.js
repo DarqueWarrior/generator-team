@@ -253,7 +253,11 @@ describe(`utility`, () => {
    });
 
    it(`validateDockerRegistry should return error on missing http(s)`, () => {
-      assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`mydockerimages-microsoft.azurecr.io`));
+      assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`microsoft.azurecr.io`));
+   });
+
+   it(`validateDockerRegistry should return error on missing http(s)`, () => {
+      assert.equal(true, util.validateDockerRegistry(`https://microsoft.azurecr.io`));
    });
 
    it(`validateAzureSubID should return error`, () => {
@@ -554,7 +558,11 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ data: { subscriptionName: "AzureSub" } }] }));
+            if (options.url.endsWith(`serviceendpoints`)) {
+               callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ data: { subscriptionName: "AzureSub" } }] }));
+            } else {
+               callback(null, { statusCode: 200 }, JSON.stringify({ data: { subscriptionName: "AzureSub" } }));
+            }
          }
       });
 
