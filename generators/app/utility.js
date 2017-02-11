@@ -22,7 +22,7 @@ function getDockerRegisteryServer(server) {
 function getImageNamespace(registryId, endPoint) {
    let dockerNamespace = registryId ? registryId.toLowerCase() : null;
 
-   if (endPoint && !isDockerHub(endPoint.authorization.parameters.registry)) {
+   if (endPoint && endPoint.authorization && !isDockerHub(endPoint.authorization.parameters.registry)) {
       dockerNamespace = getDockerRegisteryServer(endPoint.authorization.parameters.registry);
    }
 
@@ -359,7 +359,8 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
       if (endpoint === undefined) {
          callback({ "message": `x Could not find Azure Service Endpoint`, "code": `NotFound` }, undefined);
       } else {
-         callback(error, endpoint);
+         // Down stream we need the full endpoint so call again with the ID. This will return more data
+         getServiceEndpoint(account, projectId, endpoint.id, token, callback);
       }
    });
 }
