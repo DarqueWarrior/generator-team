@@ -44,7 +44,7 @@
                "workflowTasks": [
                   {
                      "taskId": "b93c4522-5bea-4118-97ae-2b560628a157",
-                     "version": "*",
+                     "version": "0.*",
                      "name": "Remove running containers",
                      "enabled": true,
                      "alwaysRun": false,
@@ -81,7 +81,7 @@
                   },
                   {
                      "taskId": "b93c4522-5bea-4118-97ae-2b560628a157",
-                     "version": "*",
+                     "version": "0.*",
                      "name": "Run an image",
                      "enabled": true,
                      "alwaysRun": false,

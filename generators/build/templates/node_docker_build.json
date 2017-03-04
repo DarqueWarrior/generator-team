@@ -15,7 +15,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -33,7 +33,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "*",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -50,7 +50,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "*",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -67,7 +67,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
-            "versionSpec": "*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -88,7 +88,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "2a7ebc54-c13e-490e-81a5-d7561ab7cd97",
-            "versionSpec": "*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -106,7 +106,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "*",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -123,7 +123,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "b93c4522-5bea-4118-97ae-2b560628a157",
-            "versionSpec": "*",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -150,7 +150,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "b93c4522-5bea-4118-97ae-2b560628a157",
-            "versionSpec": "*",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {

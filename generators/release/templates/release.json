@@ -5,10 +5,9 @@
          "value": "false"
       }
    },
-   "environments": [
-      {
+   "environments": [{
          "name": "Dev",
-         "rank": 1,         
+         "rank": 1,
          "variables": {
             "ResourceGroupName": {
                "value": "{{WebAppName}}Dev"
@@ -24,91 +23,84 @@
             }
          },
          "preDeployApprovals": {
-            "approvals": [
-               {
-                  "rank": 1,
-                  "isAutomated": true,
-                  "isNotificationOn": false
-               }
-            ]
-         },
-         "deployStep": { },
-         "postDeployApprovals": {
-            "approvals": [
-               {
-                  "rank": 1,
-                  "isAutomated": true,
-                  "isNotificationOn": false
-               }
-            ]
-         },
-         "deployPhases": [
-            {
-               "deploymentInput": {
-                  "skipArtifactsDownload": false,
-                  "timeoutInMinutes": 0,
-                  "queueId": "{{QueueId}}",
-                  "demands": [],
-                  "enableAccessToken": false
-               },
+            "approvals": [{
                "rank": 1,
-               "phaseType": 1,
-               "name": "Run on agent",
-               "workflowTasks": [
-                  {
-                     "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                     "version": "*",
-                     "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "ConnectedServiceNameSelector": "ConnectedServiceName",
-                        "ConnectedServiceName": "{{ConnectedServiceID}}",
-                        "ConnectedServiceNameClassic": "",
-                        "action": "Create Or Update Resource Group",
-                        "actionClassic": "Select Resource Group",
-                        "resourceGroupName": "$(ResourceGroupName)",
-                        "cloudService": "",
-                        "location": "Central US",
-                        "csmFile": "**/drop/templates/website.json",
-                        "csmParametersFile": "**/drop/templates/WebSite.parameters.json",
-                        "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
-                        "enableDeploymentPrerequisitesForCreate": "false",
-                        "enableDeploymentPrerequisitesForSelect": "false",
-                        "outputVariable": ""
-                     }
-                  },
-                  {
-                     "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                     "version": "*",
-                     "name": "Deploy AzureRM Web App: {{WebAppName}}Dev",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "ConnectedServiceName": "{{ConnectedServiceID}}",
-                        "WebAppName": "{{WebAppName}}Dev",
-                        "DeployToSlotFlag": "false",
-                        "ResourceGroupName": "",
-                        "SlotName": "",
-                        "Package": "**/*.zip",
-                        "SetParametersFile": "",
-                        "RemoveAdditionalFilesFlag": "true",
-                        "ExcludeFilesFromAppDataFlag": "false",
-                        "TakeAppOfflineFlag": "false",
-                        "VirtualApplication": "",
-                        "AdditionalArguments": "",
-                        "WebAppUri": ""
-                     }
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "skipArtifactsDownload": false,
+               "timeoutInMinutes": 0,
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+                  "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
+                  "version": "1.*",
+                  "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceNameSelector": "ConnectedServiceName",
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "ConnectedServiceNameClassic": "",
+                     "action": "Create Or Update Resource Group",
+                     "actionClassic": "Select Resource Group",
+                     "resourceGroupName": "$(ResourceGroupName)",
+                     "cloudService": "",
+                     "location": "Central US",
+                     "csmFile": "**/drop/templates/website.json",
+                     "csmParametersFile": "**/drop/templates/WebSite.parameters.json",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "enableDeploymentPrerequisitesForCreate": "false",
+                     "enableDeploymentPrerequisitesForSelect": "false",
+                     "outputVariable": ""
                   }
-               ]
-            }
-         ],
+               },
+               {
+                  "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+                  "version": "2.*",
+                  "name": "Deploy AzureRM Web App: {{WebAppName}}Dev",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "WebAppName": "$(webSiteName)",
+                     "DeployToSlotFlag": "false",
+                     "ResourceGroupName": "",
+                     "SlotName": "",
+                     "Package": "**/*.zip",
+                     "SetParametersFile": "",
+                     "RemoveAdditionalFilesFlag": "true",
+                     "ExcludeFilesFromAppDataFlag": "false",
+                     "TakeAppOfflineFlag": "false",
+                     "VirtualApplication": "",
+                     "AdditionalArguments": "",
+                     "WebAppUri": ""
+                  }
+               }
+            ]
+         }],
          "environmentOptions": {
             "emailNotificationType": "OnlyOnFailure",
             "emailRecipients": "release.environment.owner;release.creator",
@@ -117,13 +109,11 @@
             "enableAccessToken": false
          },
          "demands": [],
-         "conditions": [
-            {
-               "name": "ReleaseStarted",
-               "conditionType": 1,
-               "value": ""
-            }
-         ],
+         "conditions": [{
+            "name": "ReleaseStarted",
+            "conditionType": 1,
+            "value": ""
+         }],
          "executionPolicy": {
             "concurrencyCount": 0,
             "queueDepthCount": 0
@@ -136,7 +126,7 @@
          }
       },
       {
-        "name": "QA",
+         "name": "QA",
          "rank": 2,
          "variables": {
             "ResourceGroupName": {
@@ -153,101 +143,113 @@
             }
          },
          "preDeployApprovals": {
-            "approvals": [
-               {
-                  "rank": 1,
-                  "isAutomated": false,
-                  "isNotificationOn": false,
-                  "approver": {
-                     "id": "{{ApproverId}}",
-                     "displayName": "{{ApproverDisplayName}}",
-                     "uniqueName": "{{ApproverUniqueName}}"
-                  }
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": false,
+               "isNotificationOn": false,
+               "approver": {
+                  "id": "{{ApproverId}}",
+                  "displayName": "{{ApproverDisplayName}}",
+                  "uniqueName": "{{ApproverUniqueName}}"
                }
-            ],
+            }],
             "approvalOptions": {
                "requiredApproverCount": 0,
                "releaseCreatorCanBeApprover": true
             }
          },
-         "deployStep": {
-         },
+         "deployStep": {},
          "postDeployApprovals": {
-            "approvals": [
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "skipArtifactsDownload": false,
+               "timeoutInMinutes": 0,
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+                  "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
+                  "version": "1.*",
+                  "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceNameSelector": "ConnectedServiceName",
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "ConnectedServiceNameClassic": "",
+                     "action": "Create Or Update Resource Group",
+                     "actionClassic": "Select Resource Group",
+                     "resourceGroupName": "$(ResourceGroupName)",
+                     "cloudService": "",
+                     "location": "Central US",
+                     "csmFile": "**/drop/templates/website.json",
+                     "csmParametersFile": "**/drop/templates/WebSite.parameters.json",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "enableDeploymentPrerequisitesForCreate": "false",
+                     "enableDeploymentPrerequisitesForSelect": "false",
+                     "outputVariable": ""
+                  }
+               },
                {
-                  "rank": 1,
-                  "isAutomated": true,
-                  "isNotificationOn": false
+                  "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+                  "version": "2.*",
+                  "name": "Deploy AzureRM Web App: {{WebAppName}}QA",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "WebAppName": "$(webSiteName)",
+                     "DeployToSlotFlag": "false",
+                     "ResourceGroupName": "",
+                     "SlotName": "",
+                     "Package": "**/*.zip",
+                     "SetParametersFile": "",
+                     "RemoveAdditionalFilesFlag": "true",
+                     "ExcludeFilesFromAppDataFlag": "false",
+                     "TakeAppOfflineFlag": "false",
+                     "VirtualApplication": "",
+                     "AdditionalArguments": "",
+                     "WebAppUri": "webSiteURL"
+                  }
+               },
+               {
+                  "taskId": "9648625c-1523-4eb5-b015-dfe7c685840c",
+                  "version": "1.*",
+                  "name": "Quick Web Performance Test Load Test",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "connectedServiceName": "",
+                     "websiteUrl": "$(webSiteURL)",
+                     "testName": "Load Test",
+                     "vuLoad": "25",
+                     "runDuration": "60",
+                     "geoLocation": "Default",
+                     "machineType": "0",
+                     "avgResponseTimeThreshold": "0"
+                  }
                }
             ]
-         },
-         "deployPhases": [
-            {
-               "deploymentInput": {
-                  "skipArtifactsDownload": false,
-                  "timeoutInMinutes": 0,
-                  "queueId": "{{QueueId}}",
-                  "demands": [],
-                  "enableAccessToken": false
-               },
-               "rank": 1,
-               "phaseType": 1,
-               "name": "Run on agent",
-               "workflowTasks": [
-                  {
-                     "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                     "version": "*",
-                     "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "ConnectedServiceNameSelector": "ConnectedServiceName",
-                        "ConnectedServiceName": "{{ConnectedServiceID}}",
-                        "ConnectedServiceNameClassic": "",
-                        "action": "Create Or Update Resource Group",
-                        "actionClassic": "Select Resource Group",
-                        "resourceGroupName": "$(ResourceGroupName)",
-                        "cloudService": "",
-                        "location": "Central US",
-                        "csmFile": "**/drop/templates/website.json",
-                        "csmParametersFile": "**/drop/templates/WebSite.parameters.json",
-                        "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
-                        "enableDeploymentPrerequisitesForCreate": "false",
-                        "enableDeploymentPrerequisitesForSelect": "false",
-                        "outputVariable": ""
-                     }
-                  },
-                  {
-                     "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                     "version": "*",
-                     "name": "Deploy AzureRM Web App: {{WebAppName}}QA",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "ConnectedServiceName": "{{ConnectedServiceID}}",
-                        "WebAppName": "{{WebAppName}}QA",
-                        "DeployToSlotFlag": "false",
-                        "ResourceGroupName": "",
-                        "SlotName": "",
-                        "Package": "**/*.zip",
-                        "SetParametersFile": "",
-                        "RemoveAdditionalFilesFlag": "true",
-                        "ExcludeFilesFromAppDataFlag": "false",
-                        "TakeAppOfflineFlag": "false",
-                        "VirtualApplication": "",
-                        "AdditionalArguments": "",
-                        "WebAppUri": ""
-                     }
-                  }
-               ]
-            }
-         ],
+         }],
          "environmentOptions": {
             "emailNotificationType": "OnlyOnFailure",
             "emailRecipients": "release.environment.owner;release.creator",
@@ -256,13 +258,11 @@
             "enableAccessToken": false
          },
          "demands": [],
-         "conditions": [
-            {
-               "name": "Dev",
-               "conditionType": 2,
-               "value": "4"
-            }
-         ],
+         "conditions": [{
+            "name": "Dev",
+            "conditionType": 2,
+            "value": "4"
+         }],
          "executionPolicy": {
             "concurrencyCount": 0,
             "queueDepthCount": 0
@@ -276,7 +276,7 @@
       },
       {
          "name": "Prod",
-         "rank": 3,         
+         "rank": 3,
          "variables": {
             "ResourceGroupName": {
                "value": "{{WebAppName}}Prod"
@@ -292,101 +292,93 @@
             }
          },
          "preDeployApprovals": {
-            "approvals": [
-               {
-                  "rank": 1,
-                  "isAutomated": false,
-                  "isNotificationOn": false,
-                  "approver": {
-                     "id": "{{ApproverId}}",
-                     "displayName": "{{ApproverDisplayName}}",
-                     "uniqueName": "{{ApproverUniqueName}}"
-                  }
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": false,
+               "isNotificationOn": false,
+               "approver": {
+                  "id": "{{ApproverId}}",
+                  "displayName": "{{ApproverDisplayName}}",
+                  "uniqueName": "{{ApproverUniqueName}}"
                }
-            ],
+            }],
             "approvalOptions": {
                "requiredApproverCount": 0,
                "releaseCreatorCanBeApprover": true
             }
          },
-         "deployStep": {
-         },
+         "deployStep": {},
          "postDeployApprovals": {
-            "approvals": [
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "skipArtifactsDownload": false,
+               "timeoutInMinutes": 0,
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+                  "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
+                  "version": "1.*",
+                  "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceNameSelector": "ConnectedServiceName",
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "ConnectedServiceNameClassic": "",
+                     "action": "Create Or Update Resource Group",
+                     "actionClassic": "Select Resource Group",
+                     "resourceGroupName": "$(ResourceGroupName)",
+                     "cloudService": "",
+                     "location": "East US",
+                     "csmFile": "**/drop/templates/website.json",
+                     "csmParametersFile": "**/drop/templates/WebSite.parameters.json",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "enableDeploymentPrerequisitesForCreate": "false",
+                     "enableDeploymentPrerequisitesForSelect": "false",
+                     "outputVariable": ""
+                  }
+               },
                {
-                  "rank": 1,
-                  "isAutomated": true,
-                  "isNotificationOn": false
+                  "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
+                  "version": "2.*",
+                  "name": "Deploy AzureRM Web App: {{WebAppName}}Prod",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "WebAppName": "$(webSiteName)",
+                     "DeployToSlotFlag": "false",
+                     "ResourceGroupName": "",
+                     "SlotName": "",
+                     "Package": "**/*.zip",
+                     "SetParametersFile": "",
+                     "RemoveAdditionalFilesFlag": "true",
+                     "ExcludeFilesFromAppDataFlag": "false",
+                     "TakeAppOfflineFlag": "false",
+                     "VirtualApplication": "",
+                     "AdditionalArguments": "",
+                     "WebAppUri": ""
+                  }
                }
             ]
-         },
-         "deployPhases": [
-            {
-               "deploymentInput": {
-                  "skipArtifactsDownload": false,
-                  "timeoutInMinutes": 0,
-                  "queueId": "{{QueueId}}",
-                  "demands": [],
-                  "enableAccessToken": false
-               },
-               "rank": 1,
-               "phaseType": 1,
-               "name": "Run on agent",
-               "workflowTasks": [
-                  {
-                     "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                     "version": "*",
-                     "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "ConnectedServiceNameSelector": "ConnectedServiceName",
-                        "ConnectedServiceName": "{{ConnectedServiceID}}",
-                        "ConnectedServiceNameClassic": "",
-                        "action": "Create Or Update Resource Group",
-                        "actionClassic": "Select Resource Group",
-                        "resourceGroupName": "$(ResourceGroupName)",
-                        "cloudService": "",
-                        "location": "East US",
-                        "csmFile": "**/drop/templates/website.json",
-                        "csmParametersFile": "**/drop/templates/WebSite.parameters.json",
-                        "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
-                        "enableDeploymentPrerequisitesForCreate": "false",
-                        "enableDeploymentPrerequisitesForSelect": "false",
-                        "outputVariable": ""
-                     }
-                  },
-                  {
-                     "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                     "version": "*",
-                     "name": "Deploy AzureRM Web App: {{WebAppName}}Prod",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "ConnectedServiceName": "{{ConnectedServiceID}}",
-                        "WebAppName": "{{WebAppName}}Prod",
-                        "DeployToSlotFlag": "false",
-                        "ResourceGroupName": "",
-                        "SlotName": "",
-                        "Package": "**/*.zip",
-                        "SetParametersFile": "",
-                        "RemoveAdditionalFilesFlag": "true",
-                        "ExcludeFilesFromAppDataFlag": "false",
-                        "TakeAppOfflineFlag": "false",
-                        "VirtualApplication": "",
-                        "AdditionalArguments": "",
-                        "WebAppUri": ""
-                     }
-                  }
-               ]
-            }
-         ],
+         }],
          "environmentOptions": {
             "emailNotificationType": "OnlyOnFailure",
             "emailRecipients": "release.environment.owner;release.creator",
@@ -395,13 +387,11 @@
             "enableAccessToken": false
          },
          "demands": [],
-         "conditions": [
-            {
-               "name": "QA",
-               "conditionType": 2,
-               "value": "4"
-            }
-         ],
+         "conditions": [{
+            "name": "QA",
+            "conditionType": 2,
+            "value": "4"
+         }],
          "executionPolicy": {
             "concurrencyCount": 0,
             "queueDepthCount": 0
@@ -414,28 +404,40 @@
          }
       }
    ],
-   "artifacts": [
-      {
-         "sourceId": "{{ProjectId}}:{{BuildId}}",
-         "type": "Build",
-         "alias": "{{BuildName}}",
-         "definitionReference": {
-            "definition": {
-               "id": "{{BuildId}}",
-               "name": "{{BuildName}}"
-            },
-            "project": {
-               "id": "{{ProjectId}}",
-               "name": "{{ProjectName}}"
-            }
+   "artifacts": [{
+      "sourceId": "{{ProjectId}}:{{BuildId}}",
+      "type": "Build",
+      "alias": "{{BuildName}}",
+      "definitionReference": {
+         "defaultVersionBranch": {
+            "id": "",
+            "name": ""
          },
-         "isPrimary": true
-      }
-   ],
-   "triggers": [
-      {
-         "artifactAlias": "{{BuildName}}",
-         "triggerType": 1
-      }
-   ]
+         "defaultVersionSpecific": {
+            "id": "",
+            "name": ""
+         },
+         "defaultVersionTags": {
+            "id": "",
+            "name": ""
+         },
+         "defaultVersionType": {
+            "id": "latestType",
+            "name": "Latest"
+         },
+         "definition": {
+            "id": "{{BuildId}}",
+            "name": "{{BuildName}}"
+         },
+         "project": {
+            "id": "{{ProjectId}}",
+            "name": "{{ProjectName}}"
+         }
+      },
+      "isPrimary": true
+   }],
+   "triggers": [{
+      "artifactAlias": "{{BuildName}}",
+      "triggerType": 1
+   }]
 }
