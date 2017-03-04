@@ -13,7 +13,7 @@
                "value": "{{WebAppName}}Dev"
             },
             "webSiteName": {
-               "value": "{{WebAppName}}Dev"
+               "value": "{{WebAppName}}Dev{{uuid}}"
             },
             "hostingPlanName": {
                "value": "{{WebAppName}}Dev"
@@ -133,7 +133,7 @@
                "value": "{{WebAppName}}QA"
             },
             "webSiteName": {
-               "value": "{{WebAppName}}QA"
+               "value": "{{WebAppName}}QA{{uuid}}"
             },
             "hostingPlanName": {
                "value": "{{WebAppName}}QA"
@@ -282,7 +282,7 @@
                "value": "{{WebAppName}}Prod"
             },
             "webSiteName": {
-               "value": "{{WebAppName}}Prod"
+               "value": "{{WebAppName}}Prod{{uuid}}"
             },
             "hostingPlanName": {
                "value": "{{WebAppName}}Prod"

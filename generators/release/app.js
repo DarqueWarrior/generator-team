@@ -1,6 +1,7 @@
 // This is the code that deals with TFS
 const fs = require('fs');
 const async = require('async');
+const uuidV4 = require('uuid/v4');
 const request = require('request');
 const util = require('../app/utility');
 
@@ -136,12 +137,19 @@ function createRelease(args, gen, callback) {
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
    let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, args.dockerRegistryEndpoint);
+
+   // Azure website names have to be unique.  So we gen a GUID and addUserAgent
+   // a portion to the site name to help with that.
+   let uuid = uuidV4(); 
+
+
    
    // Load the template and replace values.
    var tokens = {
       '{{BuildId}}': args.build.id,
       '"{{QueueId}}"': args.queueId,
       '{{WebAppName}}': args.appName,
+      '{{uuid}}': uuid.substring(0, 8),
       '{{BuildName}}': args.build.name,
       '{{ApproverId}}': args.approverId,
       '{{ProjectId}}': args.teamProject.id,
