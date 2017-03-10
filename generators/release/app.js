@@ -140,9 +140,7 @@ function createRelease(args, gen, callback) {
 
    // Azure website names have to be unique.  So we gen a GUID and addUserAgent
    // a portion to the site name to help with that.
-   let uuid = uuidV4(); 
-
-
+   let uuid = uuidV4();
    
    // Load the template and replace values.
    var tokens = {

@@ -9,6 +9,7 @@
   "files": [
     "generators/app",
     "generators/asp",
+    "generators/aspFull",
     "generators/azure",
     "generators/build",
     "generators/docker",
