@@ -57,6 +57,9 @@ function getAppTypes() {
       name: `.NET Core`,
       value: `asp`
    }, {
+      name: `.NET Full`,
+      value: `aspFull`
+   },{
       name: `Node.js`,
       value: `node`
    }, {

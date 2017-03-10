@@ -1,0 +1,236 @@
+{
+   "name": "{{BuildDefName}}",
+   "type": "build",
+   "quality": "definition",
+   "buildNumberFormat": "$(BuildDefinitionName)-$(BuildID)",
+   "queue": {
+      "id": "{{QueueId}}"
+   },
+   "build": [{
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "NuGet restore",
+      "timeoutInMinutes": 0,
+      "task": {
+         "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+         "versionSpec": "0.*",
+         "definitionType": "task"
+      },
+      "inputs": {
+         "solution": "$(Parameters.solution)",
+         "restoreMode": "restore",
+         "nugetConfigPath": "",
+         "noCache": "false",
+         "nuGetRestoreArgs": "",
+         "verbosity": "-",
+         "nuGetVersion": "3.3.0",
+         "nuGetPath": ""
+      }
+   }, {
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Build solution",
+      "timeoutInMinutes": 0,
+      "task": {
+         "id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+         "versionSpec": "1.*",
+         "definitionType": "task"
+      },
+      "inputs": {
+         "solution": "$(Parameters.solution)",
+         "msbuildArgs": "/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation=\"$(build.artifactstagingdirectory)\\\\\"",
+         "platform": "$(BuildPlatform)",
+         "configuration": "$(BuildConfiguration)",
+         "clean": "false",
+         "restoreNugetPackages": "false",
+         "maximumCpuCount": "false",
+         "vsVersion": "15.0",
+         "msbuildArchitecture": "x86",
+         "logProjectEvents": "true",
+         "createLogFile": "false"
+      }
+   }, {
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Test Assemblies",
+      "timeoutInMinutes": 0,
+      "task": {
+         "id": "ef087383-ee5e-42c7-9a53-ab56c98420f9",
+         "versionSpec": "2.*",
+         "definitionType": "task"
+      },
+      "inputs": {
+         "testAssembly": "$(Parameters.testAssembly)",
+         "platform": "$(BuildPlatform)",
+         "configuration": "$(BuildConfiguration)",
+         "testFiltercriteria": "",
+         "runSettingsFile": "",
+         "overrideTestrunParameters": "",
+         "codeCoverageEnabled": "true",
+         "runInParallel": "true",
+         "vstestLocationMethod": "version",
+         "vsTestVersion": "15.0",
+         "vstestLocation": "",
+         "pathtoCustomTestAdapters": "",
+         "otherConsoleOptions": "",
+         "testRunTitle": "",
+         "publishRunAttachments": "true",
+         "testSelector": "testAssemblies",
+         "testAssemblyVer2": "**\\*test*.dll\n!**\\obj\\**",
+         "testPlan": "",
+         "testSuite": "",
+         "testConfiguration": "",
+         "tcmTestRun": "$(test.RunId)",
+         "searchFolder": "$(System.DefaultWorkingDirectory)",
+         "runOnlyImpactedTests": "true",
+         "runAllTestsAfterXBuilds": "50",
+         "uiTests": "false",
+         "runTestsInIsolation": "False"
+      }
+   }, {
+      "enabled": true,
+      "continueOnError": true,
+      "alwaysRun": false,
+      "displayName": "Publish symbols path",
+      "timeoutInMinutes": 0,
+      "task": {
+         "id": "0675668a-7bba-4ccb-901d-5ad6554ca653",
+         "versionSpec": "1.*",
+         "definitionType": "task"
+      },
+      "inputs": {
+         "SearchPattern": "**\\bin\\**\\*.pdb",
+         "SymbolsArtifactName": "Symbols_$(BuildConfiguration)",
+         "SymbolsPath": "",
+         "SymbolsFolder": "",
+         "SkipIndexing": "false",
+         "TreatNotIndexedAsWarning": "false",
+         "SymbolsMaximumWaitTime": "",
+         "SymbolsProduct": "",
+         "SymbolsVersion": ""
+      }
+   }, {
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": true,
+      "displayName": "Publish Artifact",
+      "timeoutInMinutes": 0,
+      "task": {
+         "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+         "versionSpec": "1.*",
+         "definitionType": "task"
+      },
+      "inputs": {
+         "PathtoPublish": "$(build.artifactstagingdirectory)",
+         "ArtifactName": "$(Parameters.ArtifactName)",
+         "ArtifactType": "Container",
+         "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+      }
+   }],
+   "options": [{
+      "enabled": false,
+      "definition": {
+         "id": "7c555368-ca64-4199-add6-9ebaf0b0137d"
+      },
+      "inputs": {
+         "multipliers": "[]",
+         "parallel": "false",
+         "continueOnError": "true",
+         "additionalFields": "{}"
+      }
+   }, {
+      "enabled": false,
+      "definition": {
+         "id": "a9db38f9-9fdc-478c-b0f9-464221e58316"
+      },
+      "inputs": {
+         "additionalFields": "{}"
+      }
+   }, {
+      "enabled": false,
+      "definition": {
+         "id": "57578776-4c22-4526-aeb0-86b6da17ee9c"
+      },
+      "inputs": {}
+   }],
+   "triggers": [{
+      "branchFilters": ["+refs/heads/master"],
+      "pathFilters": ["+/"],
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "triggerType": "continuousIntegration"
+   }],
+   "variables": {
+      "system.debug": {
+         "value": "false",
+         "allowOverride": true
+      },
+      "BuildConfiguration": {
+         "value": "release",
+         "allowOverride": true
+      },
+      "BuildPlatform": {
+         "value": "any cpu",
+         "allowOverride": true
+      }
+   },
+   "jobAuthorizationScope": "projectCollection",
+   "repository": {
+      "properties": {
+         "cleanOptions": "0",
+         "labelSources": "0",
+         "labelSourcesFormat": "$(build.buildNumber)",
+         "fetchDepth": "0",
+         "gitLfsSupport": "false",
+         "skipSyncSource": "false",
+         "reportBuildStatus": "true"
+      },
+      "type": "TfsGit",
+      "name": "{{Project}}",
+      "url": "https://{{VSTS}}.visualstudio.com/_git/{{Project}}",
+      "defaultBranch": "refs/heads/master",
+      "clean": "false",
+      "checkoutSubmodules": false
+   },
+   "processParameters": {
+      "inputs": [{
+         "options": {},
+         "properties": {},
+         "name": "solution",
+         "label": "Path to solution or packages.config",
+         "defaultValue": "**\\*.sln",
+         "required": true,
+         "type": "filePath",
+         "helpMarkDown": "The path to the Visual Studio solution file or NuGet packages.config",
+         "visibleRule": "",
+         "groupName": ""
+      }, {
+         "options": {},
+         "properties": {},
+         "name": "testAssembly",
+         "label": "Test Assembly",
+         "defaultValue": "**\\$(BuildConfiguration)\\*test*.dll;-:**\\obj\\**",
+         "required": true,
+         "type": "string",
+         "helpMarkDown": "Test binaries to run tests on.  Wildcards can be used.  For example, `**\\*test*.dll;-:**\\obj\\**` for all dlls with test in name while excluding files in any sub-directory named obj.",
+         "visibleRule": "",
+         "groupName": ""
+      }, {
+         "options": {},
+         "properties": {},
+         "name": "ArtifactName",
+         "label": "Artifact Name",
+         "defaultValue": "drop",
+         "required": true,
+         "type": "string",
+         "helpMarkDown": "The name of the artifact to create.",
+         "visibleRule": "",
+         "groupName": ""
+      }]
+   },
+   "path": "\\",
+   "url": "https://{{VSTS}}.visualstudio.com/_git/{{Project}}"
+}
