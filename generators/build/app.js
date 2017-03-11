@@ -168,7 +168,11 @@ function getBuild(args) {
          break;
 
       case `aspFull`:
-         build = `vsts_aspFull_build.json`;
+         if (util.isVSTS(args.tfs)) {
+            build = `vsts_aspFull_build.json`;
+         } else {
+            build = `tfs_aspFull_build.json`;
+         }
          break;
 
       case `node`:
