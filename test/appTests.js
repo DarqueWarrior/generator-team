@@ -28,6 +28,29 @@ describe(`app:index`, () => {
          });
    });
 
+   it(`arguments using fake dependencies aspFull paas`, () => {
+      let deps = [
+         [helpers.createDummyGenerator(), `team:aspFull`],
+         [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:azure`],
+         [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:project`],
+         [helpers.createDummyGenerator(), `team:release`]
+      ];
+
+      return helpers.run(path.join(__dirname, `../generators/app/index`))
+         .withGenerators(deps)
+         .withArguments([`aspFull`, `aspDemo`, `vsts`,
+            `AzureSub`, `AzureSubId`, `TenantId`, `servicePrincipalId`,
+            `default`, `paas`,
+            `false`, ``,
+            ``, ``, ``, ``, ``, ``,
+            `servicePrincipalKey`, `token`])
+         .on(`error`, e => {
+            assert.fail(e);
+         });
+   });
+
    it(`prompts using fake dependencies paas`, () => {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],

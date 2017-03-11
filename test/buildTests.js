@@ -47,6 +47,45 @@ describe(`build:index`, function () {
          });
    });
 
+   it(`test prompts aspFull:paas should not return error`, () => {
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../generators/build/index`))
+         .withPrompts({
+            type: `aspFull`,
+            applicationName: `aspDemo`,
+            target: `paas`,
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            queue: `Default`,
+            pat: `token`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            assert.fail(e);
+         })
+         .on(`ready`, generator => {
+            // This is called right before `generator.run()` is called
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
+            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+         })
+         .on(`end`, () => {
+            // Using the yeoman helpers and sinon.test did not play nice
+            // so clean up your stubs
+            cleanUp();
+         });
+   });
+
    it(`test prompts java:paas should not return error`, () => {
       let cleanUp = () => {
          util.getPools.restore();

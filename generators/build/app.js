@@ -168,19 +168,7 @@ function getBuild(args) {
          break;
 
       case `aspFull`:
-         if (args.target === `docker`) {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_aspFull_docker_build.json`;
-            } else {
-               build = `tfs_aspFull_docker_build.json`;
-            }
-         } else {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_aspFull_build.json`;
-            } else {
-               build = `tfs_aspFull_build.json`;
-            }
-         }
+         build = `vsts_aspFull_build.json`;
          break;
 
       case `node`:
