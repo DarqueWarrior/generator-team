@@ -12,25 +12,82 @@ function construct() {
    // Order is important
    // These are position based arguments for this generator. If they are not provided
    // via the command line they will be queried during the prompting priority
-   this.argument(`type`, { required: false, desc: `project type to create (asp, node or java)` });
-   this.argument(`applicationName`, { required: false, desc: `name of the application` });
-   this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
-   this.argument(`azureSub`, { required: false, desc: `Azure Subscription name` });
-   this.argument(`azureSubId`, { required: false, desc: `Azure Subscription ID` });
-   this.argument(`tenantId`, { required: false, desc: `Azure Tenant ID` });
-   this.argument(`servicePrincipalId`, { required: false, desc: `Azure Service Principal Id` });
-   this.argument(`queue`, { required: false, desc: `agent queue name to use` });
-   this.argument(`target`, { required: false, desc: `docker or Azure app service` });
-   this.argument(`installDep`, { required: false, desc: `if true dependencies are installed` });
-   this.argument(`groupId`, { required: false, desc: `groupId of Java project` });
-   this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
-   this.argument(`dockerCertPath`, { required: false, desc: `path to Docker certs folder` });
-   this.argument(`dockerRegistry`, { required: false, desc: `server of your Docker registry` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `username for Docker registry` });
-   this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
-   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker registry` });
-   this.argument(`servicePrincipalKey`, { required: false, desc: `Azure Service Principal Key` });
-   this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
+   this.argument(`type`, {
+      required: false,
+      desc: `project type to create (asp, node or java)`
+   });
+   this.argument(`applicationName`, {
+      required: false,
+      desc: `name of the application`
+   });
+   this.argument(`tfs`, {
+      required: false,
+      desc: `full tfs URL including collection or Team Services account name`
+   });
+   this.argument(`azureSub`, {
+      required: false,
+      desc: `Azure Subscription name`
+   });
+   this.argument(`azureSubId`, {
+      required: false,
+      desc: `Azure Subscription ID`
+   });
+   this.argument(`tenantId`, {
+      required: false,
+      desc: `Azure Tenant ID`
+   });
+   this.argument(`servicePrincipalId`, {
+      required: false,
+      desc: `Azure Service Principal Id`
+   });
+   this.argument(`queue`, {
+      required: false,
+      desc: `agent queue name to use`
+   });
+   this.argument(`target`, {
+      required: false,
+      desc: `docker or Azure app service`
+   });
+   this.argument(`installDep`, {
+      required: false,
+      desc: `if true dependencies are installed`
+   });
+   this.argument(`groupId`, {
+      required: false,
+      desc: `groupId of Java project`
+   });
+   this.argument(`dockerHost`, {
+      required: false,
+      desc: `Docker host url including port`
+   });
+   this.argument(`dockerCertPath`, {
+      required: false,
+      desc: `path to Docker certs folder`
+   });
+   this.argument(`dockerRegistry`, {
+      required: false,
+      desc: `server of your Docker registry`
+   });
+   this.argument(`dockerRegistryId`, {
+      required: false,
+      desc: `username for Docker registry`
+   });
+   this.argument(`dockerPorts`, {
+      required: false,
+      desc: `port mapping for container and host`
+   });
+   this.argument(`dockerRegistryPassword`, {
+      required: false,
+      desc: `password for your Docker registry`
+   });
+   this.argument(`servicePrincipalKey`, {
+      required: false,
+      desc: `Azure Service Principal Key`
+   });
+   this.argument(`pat`, {
+      required: false,
+      desc: `Personal Access Token to TFS/VSTS`
+   });
 }
 
 function init() {
@@ -242,8 +299,7 @@ function input() {
       store: true,
       message: "Install dependencies?",
       default: `false`,
-      choices: [
-         {
+      choices: [{
             name: `Yes`,
             value: `true`
          },
@@ -253,7 +309,7 @@ function input() {
          }
       ],
       when: answers => {
-         return cmdLnInput.installDep === undefined;
+         return answers.type !== `aspFull` && cmdLnInput.installDep === undefined;
       }
    }]).then(function (answers) {
       // Transfer answers to global object for use in the rest of the generator
@@ -281,61 +337,77 @@ function input() {
 
 function configGenerators() {
    // Based on the users answers compose all the required generators.
-
-   if (this.type === `asp`) {
-      this.composeWith(`team:asp`, { args: [this.applicationName, this.installDep] });
-   } else if (this.type === `java`) {
-      this.composeWith(`team:java`, { args: [this.applicationName, this.groupId, this.installDep] });
-   } else {
-      this.composeWith(`team:node`, { args: [this.applicationName, this.installDep] });
-   }
-
    this.composeWith(`team:git`, {
       args: [this.applicationName, this.tfs,
          `all`,
-      this.pat]
+         this.pat
+      ]
    });
+
+   if (this.type === `asp`) {
+      this.composeWith(`team:asp`, {
+         args: [this.applicationName, this.installDep]
+      });
+   } else if (this.type === `aspFull`) {
+      this.composeWith(`team:aspFull`, {
+         args: [this.applicationName]
+      });
+   } else if (this.type === `java`) {
+      this.composeWith(`team:java`, {
+         args: [this.applicationName, this.groupId, this.installDep]
+      });
+   } else {
+      this.composeWith(`team:node`, {
+         args: [this.applicationName, this.installDep]
+      });
+   }
 
    if (this.target === `docker`) {
       this.composeWith(`team:docker`, {
          args: [this.applicationName, this.tfs,
-         this.dockerHost, this.dockerCertPath,
-         this.pat]
+            this.dockerHost, this.dockerCertPath,
+            this.pat
+         ]
       });
 
       this.composeWith(`team:registry`, {
          args: [this.applicationName, this.tfs,
-         this.dockerRegistry, this.dockerRegistryId, this.dockerRegistryPassword,
-         this.pat]
+            this.dockerRegistry, this.dockerRegistryId, this.dockerRegistryPassword,
+            this.pat
+         ]
       });
    }
 
    if (this.target === `paas`) {
       this.composeWith(`team:azure`, {
          args: [this.applicationName, this.tfs,
-         this.azureSub, this.azureSubId, this.tenantId, this.servicePrincipalId, this.servicePrincipalKey,
-         this.pat]
+            this.azureSub, this.azureSubId, this.tenantId, this.servicePrincipalId, this.servicePrincipalKey,
+            this.pat
+         ]
       });
    }
 
    this.composeWith(`team:build`, {
       args: [this.type, this.applicationName, this.tfs,
-      this.queue, this.target,
-      this.dockerHost, this.dockerRegistry, this.dockerRegistryId,
-      this.pat]
+         this.queue, this.target,
+         this.dockerHost, this.dockerRegistry, this.dockerRegistryId,
+         this.pat
+      ]
    });
 
    this.composeWith(`team:release`, {
       args: [this.type, this.applicationName, this.tfs,
-      this.queue, this.target,
-      this.azureSub,
-      this.dockerHost, this.dockerRegistry, this.dockerRegistryId, this.dockerPorts,
-      this.pat]
+         this.queue, this.target,
+         this.azureSub,
+         this.dockerHost, this.dockerRegistry, this.dockerRegistryId, this.dockerPorts,
+         this.pat
+      ]
    });
 
    this.composeWith(`team:project`, {
       args: [this.applicationName, this.tfs,
-      this.pat]
+         this.pat
+      ]
    });
 }
 

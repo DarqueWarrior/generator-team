@@ -42,7 +42,15 @@ function reconcileValue(first, second, fallback) {
    return first ? first : (second ? second : fallback);
 }
 
-function getTargets() {
+function getTargets(answers) {
+
+   if (answers.type === `aspFull`) {
+      return [{
+         name: `Azure App Service`,
+         value: `paas`
+      }];
+   }
+
    return [{
       name: `Azure App Service`,
       value: `paas`
@@ -59,7 +67,7 @@ function getAppTypes() {
    }, {
       name: `.NET Full`,
       value: `aspFull`
-   },{
+   }, {
       name: `Node.js`,
       value: `node`
    }, {
@@ -195,7 +203,9 @@ function checkStatus(uri, token, gen, callback) {
 
    var options = addUserAgent({
       "method": `GET`,
-      "headers": { "authorization": `Basic ${token}` },
+      "headers": {
+         "authorization": `Basic ${token}`
+      },
       "url": `${uri}`
    });
 
@@ -230,9 +240,14 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
 
    var options = addUserAgent({
       "method": `GET`,
-      "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
       "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
-      "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
    });
 
    request(options, function (error, response, body) {
@@ -241,10 +256,15 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
       // TODO: Test that authorization.parameters.registry === dockerHost.  But that requires
       // a second REST call once you know the ID of the dockerregistry type service endpoint.
       // For now assume any dockerregistry service endpoint is safe to use.
-      var endpoint = obj.value.find(function (i) { return i.type === `dockerregistry`; });
+      var endpoint = obj.value.find(function (i) {
+         return i.type === `dockerregistry`;
+      });
 
       if (endpoint === undefined) {
-         callback({ "message": `x Could not find Docker Registry Service Endpoint`, "code": `NotFound` }, undefined);
+         callback({
+            "message": `x Could not find Docker Registry Service Endpoint`,
+            "code": `NotFound`
+         }, undefined);
       } else {
          // Down stream we need the full endpoint so call again with the ID. This will return more data
          getServiceEndpoint(account, projectId, endpoint.id, token, callback);
@@ -255,9 +275,14 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
 function getServiceEndpoint(account, projectId, id, token, callback) {
    var options = addUserAgent({
       "method": `GET`,
-      "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
       "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints/${id}`,
-      "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
    });
 
    request(options, function (error, response, body) {
@@ -291,9 +316,14 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
 
    var options = addUserAgent({
       "method": `GET`,
-      "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
       "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
-      "qs": { "api-version": SERVICE_ENDPOINTS_API_VERSION }
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
    });
 
    request(options, function (error, response, body) {
@@ -308,10 +338,15 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
 
       // The i.url is returned with a trailing / so just use starts with just in case
       // the dockerHost is passed in without it
-      var endpoint = obj.value.find(function (i) { return i.url.startsWith(dockerHost); });
+      var endpoint = obj.value.find(function (i) {
+         return i.url.startsWith(dockerHost);
+      });
 
       if (endpoint === undefined) {
-         callback({ "message": `x Could not find Docker Service Endpoint`, "code": `NotFound` }, undefined);
+         callback({
+            "message": `x Could not find Docker Service Endpoint`,
+            "code": `NotFound`
+         }, undefined);
       } else {
          callback(error, endpoint);
       }
@@ -357,10 +392,15 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
    request(options, function (error, response, body) {
       var obj = JSON.parse(body);
 
-      var endpoint = obj.value.find(function (i) { return i.data.subscriptionName === sub.name; });
+      var endpoint = obj.value.find(function (i) {
+         return i.data.subscriptionName === sub.name;
+      });
 
       if (endpoint === undefined) {
-         callback({ "message": `x Could not find Azure Service Endpoint`, "code": `NotFound` }, undefined);
+         callback({
+            "message": `x Could not find Azure Service Endpoint`,
+            "code": `NotFound`
+         }, undefined);
       } else {
          // Down stream we need the full endpoint so call again with the ID. This will return more data
          getServiceEndpoint(account, projectId, endpoint.id, token, callback);
@@ -373,14 +413,20 @@ function findAzureSub(account, subName, token, gen, callback) {
 
    var options = addUserAgent({
       method: 'GET',
-      headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
+      headers: {
+         'cache-control': 'no-cache',
+         'content-type': 'application/json',
+         'authorization': `Basic ${token}`
+      },
       url: `${getFullURL(account)}/_apis/distributedtask/serviceendpointproxy/azurermsubscriptions`
    });
 
    request(options, function (error, response, body) {
       var obj = JSON.parse(body);
 
-      var sub = obj.value.find(function (i) { return i.displayName === subName; });
+      var sub = obj.value.find(function (i) {
+         return i.displayName === subName;
+      });
 
       callback(error, sub);
    });
@@ -410,9 +456,14 @@ function findProject(account, project, token, gen, callback) {
 
    var options = addUserAgent({
       "method": `GET`,
-      "headers": { "cache-control": `no-cache`, "authorization": `Basic ${token}` },
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
       "url": `${getFullURL(account)}/_apis/projects/${project}`,
-      "qs": { "api-version": PROJECT_API_VERSION }
+      "qs": {
+         "api-version": PROJECT_API_VERSION
+      }
    });
 
    request(options, function (err, res, body) {
@@ -431,13 +482,18 @@ function findProject(account, project, token, gen, callback) {
          // You get this when the site tries to send you to the
          // login page.
          gen.log.error(`x Unable to authenticate with Team Services. Check account name and personal access token.`);
-         callback({ "message": `Unable to authenticate with Team Services. Check account name and personal access token.` });
+         callback({
+            "message": `Unable to authenticate with Team Services. Check account name and personal access token.`
+         });
          return;
       }
 
       if (res.statusCode === 404) {
          // Returning a undefined project indicates it was not found
-         callback({ "message": `x Project ${project} not found`, "code": `NotFound` }, undefined);
+         callback({
+            "message": `x Project ${project} not found`,
+            "code": `NotFound`
+         }, undefined);
       } else {
          var obj = JSON.parse(body);
 
@@ -453,10 +509,14 @@ function findQueue(name, account, teamProject, token, callback) {
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
-         "cache-control": `no-cache`, "authorization": `Basic ${token}`
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
       },
       "url": `${getFullURL(account)}/${teamProject.id}/_apis/distributedtask/queues`,
-      "qs": { "api-version": DISTRIBUTED_TASK_API_VERSION, "queueName": name }
+      "qs": {
+         "api-version": DISTRIBUTED_TASK_API_VERSION,
+         "queueName": name
+      }
    });
 
    request(options, function (err, res, body) {
@@ -495,19 +555,27 @@ function findBuild(account, teamProject, token, target, callback) {
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
-         "cache-control": `no-cache`, "authorization": `Basic ${token}`
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
       },
       "url": `${getFullURL(account)}/${teamProject.id}/_apis/build/definitions`,
-      "qs": { "api-version": BUILD_API_VERSION }
+      "qs": {
+         "api-version": BUILD_API_VERSION
+      }
    });
 
    request(options, function (e, response, body) {
       var obj = JSON.parse(body);
 
-      var bld = obj.value.find(function (i) { return i.name === name; });
+      var bld = obj.value.find(function (i) {
+         return i.name === name;
+      });
 
       if (!bld) {
-         callback({ "message": `x Build ${name} not found`, "code": `NotFound` }, undefined);
+         callback({
+            "message": `x Build ${name} not found`,
+            "code": `NotFound`
+         }, undefined);
       } else {
          callback(e, bld);
       }
@@ -534,19 +602,27 @@ function findRelease(args, callback) {
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
-         "cache-control": `no-cache`, "authorization": `Basic ${args.token}`
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${args.token}`
       },
       "url": `${getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
-      "qs": { "api-version": RELEASE_API_VERSION }
+      "qs": {
+         "api-version": RELEASE_API_VERSION
+      }
    });
 
    request(options, function (e, response, body) {
       var obj = JSON.parse(body);
 
-      var rel = obj.value.find(function (i) { return i.name === name; });
+      var rel = obj.value.find(function (i) {
+         return i.name === name;
+      });
 
       if (!rel) {
-         callback({ "message": `x Release ${name} not found`, "code": `NotFound` }, undefined);
+         callback({
+            "message": `x Release ${name} not found`,
+            "code": `NotFound`
+         }, undefined);
       } else {
          callback(e, rel);
       }
@@ -560,7 +636,11 @@ function getAzureSubs(answers) {
 
    var options = addUserAgent({
       method: 'GET',
-      headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
+      headers: {
+         'cache-control': 'no-cache',
+         'content-type': 'application/json',
+         'authorization': `Basic ${token}`
+      },
       url: `${getFullURL(answers.tfs)}/_apis/distributedtask/serviceendpointproxy/azurermsubscriptions`
    });
 
@@ -576,7 +656,9 @@ function getAzureSubs(answers) {
          var result = [];
 
          obj.value.forEach((sub) => {
-            result.push({ name: sub.displayName });
+            result.push({
+               name: sub.displayName
+            });
          });
 
          resolve(result);
@@ -592,10 +674,13 @@ function getPools(answers) {
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
-         "cache-control": `no-cache`, "authorization": `Basic ${token}`
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
       },
       "url": `${getFullURL(answers.tfs)}/_apis/distributedtask/pools`,
-      "qs": { "api-version": DISTRIBUTED_TASK_API_VERSION }
+      "qs": {
+         "api-version": DISTRIBUTED_TASK_API_VERSION
+      }
    });
 
    return new Promise(function (resolve, reject) {

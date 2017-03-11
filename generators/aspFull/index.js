@@ -1,7 +1,7 @@
 const path = require('path');
+const mkdirp = require('mkdirp');
 const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
-var mkdirp = require('mkdirp');
 const generators = require('yeoman-generator');
 
 function construct() {
@@ -12,10 +12,6 @@ function construct() {
    this.argument(`applicationName`, {
       required: false,
       desc: `name of the application`
-   });
-   this.argument('installDep', {
-      required: false,
-      desc: 'if true dependencies are installed'
    });
 }
 
@@ -34,43 +30,19 @@ function input() {
       when: function () {
          return cmdLnInput.applicationName === undefined;
       }
-   }, {
-      type: `list`,
-      name: `installDep`,
-      store: true,
-      message: "Install dependencies?",
-      default: `false`,
-      choices: [{
-            name: `Yes`,
-            value: `true`
-         },
-         {
-            name: `No`,
-            value: `false`
-         }
-      ],
-      when: function () {
-         return cmdLnInput.installDep === undefined;
-      }
    }]).then(function (a) {
       // Transfer answers to local object for use in the rest of the generator
-      this.installDep = util.reconcileValue(a.installDep, cmdLnInput.installDep);
       this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
    }.bind(this));
 }
 
 function writeFiles() {
-   // Azure website names have to be unique.  So we gen a GUID and addUserAgent
-   // a portion to the site name to help with that.
-   let uuid1 = uuidV4();
-   let uuid2 = uuidV4();
-   let uuid3 = uuidV4();
-
+ 
    var tokens = {
       name: this.applicationName,
-      uuid1: uuid1,
-      uuid2: uuid2,
-      uuid3: uuid3,
+      uuid1: uuidV4(),
+      uuid2: uuidV4(),
+      uuid3: uuidV4(),
       name_lowercase: this.applicationName.toLowerCase()
    };
 
@@ -139,23 +111,6 @@ function writeFiles() {
    this.fs.copyTpl(`${src}/webapp.Tests.csproj`, `${root}/${this.applicationName}.Tests.csproj`, tokens);
 }
 
-function install() {
-   if (this.installDep === 'true') {
-      process.chdir(`${this.applicationName}`);
-
-      this.log(`+ Running bower install`);
-      // I don't want to see the output of this command
-      this.spawnCommandSync('bower', ['install'], {
-         stdio: ['pipe', 'pipe', process.stderr]
-      });
-
-      this.log(`+ Running dotnet restore`);
-      this.spawnCommandSync('dotnet', ['restore'], {
-         stdio: ['pipe', 'pipe', process.stderr]
-      });
-   }
-}
-
 module.exports = generators.Base.extend({
    // The name `constructor` is important here
    constructor: construct,
@@ -164,8 +119,5 @@ module.exports = generators.Base.extend({
    prompting: input,
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
-   writing: writeFiles,
-
-   // 7. Where installation are run (npm, bower)
-   install: install
+   writing: writeFiles
 });
