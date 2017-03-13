@@ -9,17 +9,50 @@ function construct() {
    generators.Base.apply(this, arguments);
 
    // Order is important 
-   this.argument(`type`, { required: false, desc: `project type to create (asp, node or java)` });
-   this.argument(`applicationName`, { required: false, desc: `name of the application` });
-   this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
-   this.argument(`queue`, { required: false, desc: `agent queue name to use` });
-   this.argument(`target`, { required: false, desc: `docker or Azure app service` });
-   this.argument(`azureSub`, { required: false, desc: `Azure Subscription name` });
-   this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
-   this.argument(`dockerRegistry`, { required: false, desc: `server of your Docker registry` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `username for Docker registry` });
-   this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
-   this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
+   this.argument(`type`, {
+      required: false,
+      desc: `project type to create (asp, node or java)`
+   });
+   this.argument(`applicationName`, {
+      required: false,
+      desc: `name of the application`
+   });
+   this.argument(`tfs`, {
+      required: false,
+      desc: `full tfs URL including collection or Team Services account name`
+   });
+   this.argument(`queue`, {
+      required: false,
+      desc: `agent queue name to use`
+   });
+   this.argument(`target`, {
+      required: false,
+      desc: `docker or Azure app service`
+   });
+   this.argument(`azureSub`, {
+      required: false,
+      desc: `Azure Subscription name`
+   });
+   this.argument(`dockerHost`, {
+      required: false,
+      desc: `Docker host url including port`
+   });
+   this.argument(`dockerRegistry`, {
+      required: false,
+      desc: `server of your Docker registry`
+   });
+   this.argument(`dockerRegistryId`, {
+      required: false,
+      desc: `username for Docker registry`
+   });
+   this.argument(`dockerPorts`, {
+      required: false,
+      desc: `port mapping for container and host`
+   });
+   this.argument(`pat`, {
+      required: false,
+      desc: `Personal Access Token to TFS/VSTS`
+   });
 }
 
 function input() {
@@ -174,19 +207,17 @@ function input() {
 function configureRelase() {
    var done = this.async();
 
-   var release = this.templatePath(`release.json`);
+   var release = this.templatePath(`tfs_release.json`);
 
-   if (this.type === `asp`) {
-      if (this.target === `docker`) {
-         release = this.templatePath(`release_docker.json`);
-      }
-   } else if (this.type === `node`) {
-      if (this.target === `docker`) {
-         release = this.templatePath(`release_docker.json`);
-      }
-   } else {
-      if (this.target === `docker`) {
-         release = this.templatePath(`release_docker.json`);
+   if (util.isVSTS(this.tfs)) {
+      release = this.templatePath(`vsts_release.json`);
+   }
+
+   if (this.target === `docker`) {
+      if (util.isVSTS(this.tfs)) {
+         release = this.templatePath(`vsts_release_docker.json`);
+      } else {
+         release = this.templatePath(`tfs_release_docker.json`);
       }
    }
 

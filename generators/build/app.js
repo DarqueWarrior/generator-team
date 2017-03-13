@@ -185,9 +185,17 @@ function getBuild(args) {
 
       default: // Java
          if (args.target === `docker`) {
-            build = `java_docker_build.json`;
+            if (util.isVSTS(args.tfs)) {
+               build = `vsts_java_docker_build.json`;
+            } else {
+               build = `tfs_java_docker_build.json`;
+            }
          } else {
-            build = `java_build.json`;
+            if (util.isVSTS(args.tfs)) {
+               build = `vsts_java_build.json`;
+            } else {
+               build = `tfs_java_build.json`;
+            }
          }
          break;
    }
