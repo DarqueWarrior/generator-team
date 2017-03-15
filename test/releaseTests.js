@@ -10,7 +10,7 @@ const release = require(`../generators/release/app`);
 describe(`release:index`, () => {
    "use strict";
 
-   it(`test prompts node docker`, () => {
+   it(`test prompts node docker vsts`, () => {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
@@ -27,6 +27,96 @@ describe(`release:index`, () => {
       return helpers.run(path.join(__dirname, `../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
+            pat: `token`,
+            queue: `Default`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `docker`,
+            dockerHost: `dockerHost`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+
+            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+               assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
+               assert.equal(`nodeDemo`, project, `findProject - Project is wrong`);
+               assert.equal(expectedToken, token, `findProject - Token is wrong`);
+
+               callback(null, { value: "TeamProject", id: 1 });
+            });
+
+            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+               assert.equal(`Default`, name, `findQueue - name is wrong`);
+               assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
+               assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
+               assert.equal(expectedToken, token, `findQueue - token is wrong`);
+
+               callback(null, 1);
+            });
+
+            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+               assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
+               assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
+               assert.equal(expectedToken, token, `findBuild - token is wrong`);
+               assert.equal(`docker`, target, `findBuild - target is wrong`);
+
+               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+            });
+
+            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
+               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
+               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
+               assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
+
+               callback(null, { value: "I`m a release." });
+            });
+
+            sinon.stub(util, `findDockerServiceEndpoint`, (account, projectId, dockerHost, token, gen, callback) => {
+               assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
+
+               callback(null, { name: `endpoint`, id: 1 });
+            });
+
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`, (account, projectId, dockerRegistry, token, callback) => {
+               assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
+
+               callback(null, { name: `endpoint`, id: 1 });
+            });
+         })
+         .on(`end`, e => {
+            cleanUp();
+         });
+   });
+
+   it(`test prompts node docker tfs`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.tryFindRelease.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../generators/release/index`))
+         .withPrompts({
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
             pat: `token`,
             queue: `Default`,
             type: `node`,
@@ -354,7 +444,7 @@ describe(`release:index`, () => {
          });
    });
 
-   it(`test prompts asp docker`, () => {
+   it(`test prompts asp docker vsts`, () => {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
@@ -572,7 +662,7 @@ describe(`release:app`, () => {
       });
    }));
 
-   it(`findOrCreateRelease should create release docker`, sinon.test(function (done) {
+   it(`findOrCreateRelease should create release docker vsts`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -596,7 +686,7 @@ describe(`release:app`, () => {
          queueId: `1`,
          appName: `e2eDemo`,
          approverId: `aid`,
-         account: `http://localhost:8080/tfs/DefaultCollection`,
+         account: `vsts`,
          pat: `token`,
          project: `e2eDemo`,
          endpoint: `endpoint`,

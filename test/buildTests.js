@@ -445,6 +445,17 @@ describe(`build:app`, () => {
       assert.equal(expected, actual);
    });
 
+   it(`getBuild aspFull vsts pass`, () => {
+      // Arrange 
+      let expected = `vsts_aspFull_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `aspFull`, target: `paas`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
    it(`getBuild asp tfs docker`, () => {
       // Arrange 
       let expected = `tfs_asp_docker_build.json`;
@@ -462,6 +473,28 @@ describe(`build:app`, () => {
 
       // Act
       let actual = build.getBuild({ type: `asp`, target: `docker`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild java vsts docker`, () => {
+      // Arrange 
+      let expected = `vsts_java_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `java`, target: `docker`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild java vsts pass`, () => {
+      // Arrange 
+      let expected = `vsts_java_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `java`, target: `paas`, tfs: `vsts` });
 
       // Assert
       assert.equal(expected, actual);
