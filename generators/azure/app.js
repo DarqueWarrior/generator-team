@@ -116,7 +116,7 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
          },
          name: sub.name,
          type: 'azurerm',
-         url: 'https://management.core.windows.net/'
+         url: 'https://management.azure.com/'
       }
    });
 
