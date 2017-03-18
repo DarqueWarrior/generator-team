@@ -110,7 +110,7 @@ function input() {
       store: true,
       message: util.getInstancePrompt,
       validate: util.validateTFS,
-      when: answers => {
+      when: () => {
          return cmdLnInput.tfs === undefined;
       }
    }, {
@@ -119,7 +119,7 @@ function input() {
       store: false,
       message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
-      when: answers => {
+      when: () => {
          return cmdLnInput.pat === undefined;
       }
    }, {
@@ -154,7 +154,7 @@ function input() {
       store: true,
       message: `What is the name of your application?`,
       validate: util.validateApplicationName,
-      when: answers => {
+      when: () => {
          return cmdLnInput.applicationName === undefined;
       }
    }, {

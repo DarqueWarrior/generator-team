@@ -7,67 +7,91 @@ function construct() {
    generators.Base.apply(this, arguments);
 
    // Order is important 
-   this.argument(`applicationName`, { required: false, desc: `name of the application` });
-   this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
-   this.argument(`azureSub`, { required: false, desc: `Azure Subscription name` });
-   this.argument(`azureSubId`, { required: false, desc: `Azure Subscription ID` });
-   this.argument(`tenantId`, { required: false, desc: `Azure Tenant ID` });
-   this.argument(`servicePrincipalId`, { required: false, desc: `Azure Service Principal Id` });
-   this.argument(`servicePrincipalKey`, { required: false, desc: `Azure Service Principal Key` });
-   this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
+   this.argument(`applicationName`, {
+      required: false,
+      desc: `name of the application`
+   });
+   this.argument(`tfs`, {
+      required: false,
+      desc: `full tfs URL including collection or Team Services account name`
+   });
+   this.argument(`azureSub`, {
+      required: false,
+      desc: `Azure Subscription name`
+   });
+   this.argument(`azureSubId`, {
+      required: false,
+      desc: `Azure Subscription ID`
+   });
+   this.argument(`tenantId`, {
+      required: false,
+      desc: `Azure Tenant ID`
+   });
+   this.argument(`servicePrincipalId`, {
+      required: false,
+      desc: `Azure Service Principal Id`
+   });
+   this.argument(`servicePrincipalKey`, {
+      required: false,
+      desc: `Azure Service Principal Key`
+   });
+   this.argument(`pat`, {
+      required: false,
+      desc: `Personal Access Token to TFS/VSTS`
+   });
 }
 
 function input() {
-    // Collect any missing data from the user.
-    // This gives me access to the generator in the
-    // when callbacks of prompt
-    let cmdLnInput = this;
+   // Collect any missing data from the user.
+   // This gives me access to the generator in the
+   // when callbacks of prompt
+   let cmdLnInput = this;
 
    return this.prompt([{
       type: `input`,
       name: `tfs`,
       store: true,
-      message: `What is your TFS URL including collection\n  i.e. http://tfs:8080/tfs/DefaultCollection?`,
+      message: util.getInstancePrompt,
       validate: util.validateTFS,
-      when: function () {
+      when: () => {
          return cmdLnInput.tfs === undefined;
       }
    }, {
-      type: `password`,
       name: `pat`,
+      type: `password`,
       store: false,
-      message: `What is your TFS Access Token?`,
+      message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
-      when: function () {
+      when: () => {
          return cmdLnInput.pat === undefined;
       }
    }, {
-      type: `input`,
       name: `applicationName`,
+      type: `input`,
       store: true,
       message: `What is the name of your application?`,
       validate: util.validateApplicationName,
-      when: function () {
+      when: () => {
          return cmdLnInput.applicationName === undefined;
       }
    }, {
-      type: `input`,
       name: `azureSub`,
+      type: `input`,
       store: true,
       message: `What is your Azure subscription name?`,
       validate: util.validateAzureSub,
-      when: function (a) {
-         return cmdLnInput.azureSub === undefined && !util.isVSTS(a.tfs);
+      when: answers => {
+         return cmdLnInput.azureSub === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
-      type: `list`,
       name: `azureSub`,
+      type: `list`,
       store: true,
       message: `Which Azure subscription would you like to use?`,
       choices: util.getAzureSubs,
       validate: util.validateAzureSub,
-      when: function (a) {
-         var result = cmdLnInput.azureSub === undefined && util.isVSTS(a.tfs);
+      when: answers => {
+         var result = cmdLnInput.azureSub === undefined && util.isVSTS(answers.tfs);
 
          if (result) {
             cmdLnInput.log(`  Getting Azure subscriptions...`);
@@ -76,13 +100,13 @@ function input() {
          return result;
       }
    }, {
-      type: `input`,
       name: `azureSubId`,
+      type: `input`,
       store: true,
       message: `What is your Azure subscription ID?`,
       validate: util.validateAzureSubID,
-      when: function () {
-         return cmdLnInput.azureSubId === undefined;
+      when: (answers) => {
+         return cmdLnInput.azureSubId === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       type: `input`,
@@ -90,8 +114,8 @@ function input() {
       store: true,
       message: `What is your Azure Tenant ID?`,
       validate: util.validateAzureTenantID,
-      when: function () {
-         return cmdLnInput.tenantId === undefined;
+      when: (answers) => {
+         return cmdLnInput.tenantId === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       type: `input`,
@@ -99,8 +123,8 @@ function input() {
       store: true,
       message: `What is your Service Principal ID?`,
       validate: util.validateServicePrincipalID,
-      when: function () {
-         return cmdLnInput.servicePrincipalId === undefined;
+      when: (answers) => {
+         return cmdLnInput.servicePrincipalId === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       type: `password`,
@@ -108,8 +132,8 @@ function input() {
       store: false,
       message: `What is your Service Principal Key?`,
       validate: util.validateServicePrincipalKey,
-      when: function () {
-         return cmdLnInput.servicePrincipalKey === undefined;
+      when: (answers) => {
+         return cmdLnInput.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
       }
    }]).then(function (a) {
       // Transfer answers to local object for use in the rest of the generator
@@ -146,7 +170,7 @@ function createServiceEndpoint() {
 module.exports = generators.Base.extend({
    // The name `constructor` is important here
    constructor: construct,
-    
+
    // 2. Where you prompt users for options (where you'd call this.prompt())
    prompting: input,
 
