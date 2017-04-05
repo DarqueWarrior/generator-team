@@ -55,12 +55,29 @@ function getTargets(answers) {
       name: `Azure App Service`,
       value: `paas`
    }, {
-      name: `Docker`,
+      name: `Azure App Service Docker (Linux)`,
+      value: `dockerpaas`
+   }, {
+      name: `Docker Host`,
       value: `docker`
    }];
 }
 
-function getAppTypes() {
+function getAppTypes(answers) {
+
+   if (answers.queue.indexOf(`Linux`) !== -1) {
+      return [{
+         name: `.NET Core`,
+         value: `asp`
+      }, {
+         name: `Node.js`,
+         value: `node`
+      }, {
+         name: `Java`,
+         value: `java`
+      }];
+   }
+
    return [{
       name: `.NET Core`,
       value: `asp`
@@ -97,12 +114,22 @@ function getInstancePrompt() {
 }
 
 function getDefaultPortMapping(answers) {
-   if (answers.type === `java`) {
-      return `8080:8080`;
-   } else if (answers.type === `node`) {
-      return `3000:3000`;
+   if (answers.target === `docker`) {
+      if (answers.type === `java`) {
+         return `8080:8080`;
+      } else if (answers.type === `node`) {
+         return `3000:3000`;
+      } else {
+         return `80:80`;
+      }
    } else {
-      return `80:80`;
+      if (answers.type === `java`) {
+         return `8080`;
+      } else if (answers.type === `node`) {
+         return `3000`;
+      } else {
+         return `80`;
+      }
    }
 }
 
@@ -717,6 +744,18 @@ function validateInstance(input) {
    return "Only provide your account name ({account}.visualstudio.com) not the entire URL. Just the portion before .visualstudio.com.";
 }
 
+function needsRegistry(answers, cmdLnInput) {
+   if (cmdLnInput !== undefined) {
+      return (answers.target === `docker` || cmdLnInput.target === `docker` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
+   } else {
+      return (answers.target === `docker` || answers.target === `dockerpaas`);
+   }
+}
+
+function isPaaS(answers, cmdLnInput) {
+   return (answers.target === `paas` || cmdLnInput.target === `paas` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
+}
+
 function isVSTS(instance) {
    return instance.toLowerCase().match(/http/) === null;
 }
@@ -754,6 +793,7 @@ module.exports = {
    // it.
 
    isVSTS: isVSTS,
+   isPaaS: isPaaS,
    getPools: getPools,
    tokenize: tokenize,
    encodePat: encodePat,
@@ -773,6 +813,7 @@ module.exports = {
    tryFindBuild: tryFindBuild,
    addUserAgent: addUserAgent,
    getUserAgent: getUserAgent,
+   needsRegistry: needsRegistry,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
    tryFindProject: tryFindProject,

@@ -173,7 +173,7 @@ function input() {
       message: `What is your Azure subscription name?`,
       validate: util.validateAzureSub,
       when: answers => {
-         return (answers.target === `paas` || cmdLnInput.target === `paas`) && cmdLnInput.azureSub === undefined && !util.isVSTS(answers.tfs);
+         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.azureSub === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       name: `azureSub`,
@@ -183,7 +183,7 @@ function input() {
       choices: util.getAzureSubs,
       validate: util.validateAzureSub,
       when: answers => {
-         var result = (answers.target === `paas` || cmdLnInput.target === `paas`) && cmdLnInput.azureSub === undefined && util.isVSTS(answers.tfs);
+         var result = util.isPaaS(answers, cmdLnInput) && cmdLnInput.azureSub === undefined && util.isVSTS(answers.tfs);
 
          if (result) {
             cmdLnInput.log(`  Getting Azure subscriptions...`);
@@ -198,7 +198,7 @@ function input() {
       message: `What is your Azure subscription ID?`,
       validate: util.validateAzureSubID,
       when: answers => {
-         return (answers.target === `paas` || cmdLnInput.target === `paas`) && cmdLnInput.azureSubId === undefined && !util.isVSTS(answers.tfs);
+         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.azureSubId === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       name: `tenantId`,
@@ -207,7 +207,7 @@ function input() {
       message: `What is your Azure Tenant ID?`,
       validate: util.validateAzureTenantID,
       when: answers => {
-         return (answers.target === `paas` || cmdLnInput.target === `paas`) && cmdLnInput.tenantId === undefined && !util.isVSTS(answers.tfs);
+         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.tenantId === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       name: `servicePrincipalId`,
@@ -216,7 +216,7 @@ function input() {
       message: `What is your Service Principal ID?`,
       validate: util.validateServicePrincipalID,
       when: answers => {
-         return (answers.target === `paas` || cmdLnInput.target === `paas`) && cmdLnInput.servicePrincipalId === undefined && !util.isVSTS(answers.tfs);
+         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.servicePrincipalId === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       name: `servicePrincipalKey`,
@@ -225,7 +225,7 @@ function input() {
       message: `What is your Service Principal Key?`,
       validate: util.validateServicePrincipalKey,
       when: answers => {
-         return (answers.target === `paas` || cmdLnInput.target === `paas`) && cmdLnInput.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
+         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
       }
    }, {
       name: `dockerHost`,
@@ -255,7 +255,7 @@ function input() {
       message: `What is your Docker Registry URL?`,
       validate: util.validateDockerRegistry,
       when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistry === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistry === undefined;
       }
    }, {
       name: `dockerRegistryId`,
@@ -264,7 +264,7 @@ function input() {
       message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryId === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryId === undefined;
       }
    }, {
       name: `dockerRegistryPassword`,
@@ -273,7 +273,7 @@ function input() {
       message: `What is your Docker Registry password?`,
       validate: util.validateDockerHubPassword,
       when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryPassword === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryPassword === undefined;
       }
    }, {
       name: `dockerPorts`,
@@ -282,7 +282,7 @@ function input() {
       message: `What should the port mapping be?`,
       validate: util.validatePortMapping,
       when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerPorts === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerPorts === undefined;
       }
    }, {
       name: `groupId`,
@@ -369,7 +369,9 @@ function configGenerators() {
             this.pat
          ]
       });
+   }
 
+   if (this.target === `docker` || this.target === `dockerpaas`) {
       this.composeWith(`team:registry`, {
          args: [this.applicationName, this.tfs,
             this.dockerRegistry, this.dockerRegistryId, this.dockerRegistryPassword,
@@ -378,7 +380,7 @@ function configGenerators() {
       });
    }
 
-   if (this.target === `paas`) {
+   if (this.target === `paas` || this.target === `dockerpaas`) {
       this.composeWith(`team:azure`, {
          args: [this.applicationName, this.tfs,
             this.azureSub, this.azureSubId, this.tenantId, this.servicePrincipalId, this.servicePrincipalKey,

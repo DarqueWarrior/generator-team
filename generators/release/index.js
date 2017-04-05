@@ -213,7 +213,7 @@ function configureRelase() {
       release = this.templatePath(`vsts_release.json`);
    }
 
-   if (this.target === `docker`) {
+   if (this.target === `docker` || this.target === `dockerpaas`) {
       if (util.isVSTS(this.tfs)) {
          release = this.templatePath(`vsts_release_docker.json`);
       } else {
@@ -232,7 +232,7 @@ function configureRelase() {
       project: this.applicationName
    };
 
-   if (this.target === `docker`) {
+   if (this.target === `docker` || this.target === `dockerpaas`) {
       args.dockerHost = this.dockerHost;
       args.dockerPorts = this.dockerPorts;
       args.dockerRegistry = this.dockerRegistry;

@@ -41,7 +41,7 @@ function run(args, gen, done) {
                   }
                },
                function (inParallel) {
-                  if (args.target === `docker`) {
+                  if (util.needsRegistry(args)) {
                      util.findDockerRegistryServiceEndpoint(args.tfs, teamProject.id, args.dockerRegistry, token, function (err, ep) {
                         dockerRegistryEndpoint = ep;
                         inParallel(err, dockerRegistryEndpoint);
@@ -158,6 +158,12 @@ function getBuild(args) {
             } else {
                build = `tfs_asp_docker_build.json`;
             }
+         } else if (args.target === `dockerpaas`) {
+            if (util.isVSTS(args.tfs)) {
+               build = `vsts_asp_dockerpaas_build.json`;
+            } else {
+               build = `tfs_asp_dockerpaas_build.json`;
+            }
          } else {
             if (util.isVSTS(args.tfs)) {
                build = `vsts_asp_build.json`;
@@ -178,6 +184,8 @@ function getBuild(args) {
       case `node`:
          if (args.target === `docker`) {
             build = `node_docker_build.json`;
+         } else if (args.target === `docker`) {
+            build = `node_dockerpaas_build.json`;
          } else {
             build = `node_build.json`;
          }
@@ -189,6 +197,12 @@ function getBuild(args) {
                build = `vsts_java_docker_build.json`;
             } else {
                build = `tfs_java_docker_build.json`;
+            }
+         } else if (args.target === `dockerpaas`) {
+            if (util.isVSTS(args.tfs)) {
+               build = `vsts_java_dockerpaas_build.json`;
+            } else {
+               build = `tfs_java_dockerpaas_build.json`;
             }
          } else {
             if (util.isVSTS(args.tfs)) {

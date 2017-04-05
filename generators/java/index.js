@@ -111,9 +111,13 @@ function writeFiles() {
    src = `${this.sourceRoot()}/templates`;
    root = `${this.applicationName}/templates`;
 
-   this.copy(`${src}/java_arm.json`, `${root}/website.json`);
    this.copy(`${src}/parameters.xml`, `${root}/parameters.xml`);
-   this.copy(`${src}/arm.parameters.json`, `${root}/website.parameters.json`);
+
+   this.copy(`${src}/java_arm.json`, `${root}/website.json`);
+   this.copy(`${src}/java_arm.parameters.json`, `${root}/website.parameters.json`);
+
+   this.copy(`${src}/docker_arm.json`, `${root}/docker.json`);
+   this.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);
 }
 
 function install() {

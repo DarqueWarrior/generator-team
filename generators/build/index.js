@@ -107,7 +107,7 @@ function input() {
       message: `What is your Docker Registry URL?`,
       validate: util.validateDockerRegistry,
       when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistry === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistry === undefined;
       }
    }, {
       name: `dockerRegistryId`,
@@ -116,7 +116,7 @@ function input() {
       message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: function (answers) {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryId === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryId === undefined;
       }
    }]).then(function (answers) {
       // Transfer answers (a) to global object (cmdLnInput) for use in the rest
@@ -152,7 +152,7 @@ function configureBuild() {
       project: this.applicationName
    };
 
-   if (this.target === `docker`) {
+   if (this.target === `docker` || this.target === `dockerpaas`) {
       args.dockerHost = this.dockerHost;
       args.dockerRegistry = this.dockerRegistry;
       args.dockerRegistryId = this.dockerRegistryId;
