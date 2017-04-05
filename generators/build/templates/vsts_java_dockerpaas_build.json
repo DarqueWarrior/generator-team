@@ -115,7 +115,7 @@
             "dockerHostEndpoint": "",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Push an image",
-            "dockerFile": "dockerfile",
+            "dockerFile": "Dockerfile",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
             "context": "$(Build.StagingDirectory)",
             "containerName": "",
