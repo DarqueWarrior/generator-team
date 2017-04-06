@@ -10,7 +10,7 @@ function addRelease(obj) {
       // Inform user that if they selected Hosted Linux agent Hosted will be used
       // for release. The release requires AZPowerShell which is not on the Linux
       // build machine
-      obj.log(`* Hosted Linux will be used for build and Hosted for release.`);
+      obj.log(`* Hosted Linux will be used for build and Hosted for release. *`);
    }
 
    obj.composeWith(`team:release`, {

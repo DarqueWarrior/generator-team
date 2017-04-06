@@ -184,8 +184,15 @@ function getBuild(args) {
       case `node`:
          if (args.target === `docker`) {
             build = `node_docker_build.json`;
-         } else if (args.target === `docker`) {
-            build = `node_dockerpaas_build.json`;
+         } else if (args.target === `dockerpaas`) {
+            if (args.queue.indexOf(`Linux`) !== -1) {
+               // On the hosted linux I can't seem to get access to the 
+               // reports folder so this build does not even try but
+               // still publishes code coverage.
+               build = `node_dockerpaas_hostedlinux_build.json`;
+            } else {
+               build = `node_dockerpaas_build.json`;
+            }
          } else {
             build = `node_build.json`;
          }
