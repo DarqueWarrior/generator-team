@@ -61,7 +61,7 @@ function run(args, gen, done) {
                });
             },
             function (inParallel) {
-               if (args.target === `paas`) {
+               if (util.isPaaS(args)) {
                   util.findAzureServiceEndpoint(args.tfs, teamProject.id, azureSub, token, gen, function (err, ep) {
                      azureEndpoint = ep;
                      inParallel(err, azureEndpoint);
@@ -87,11 +87,13 @@ function run(args, gen, done) {
             template: args.releaseJson,
             dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
+            dockerRegistry: args.dockerRegistry,
             approverUniqueName: approverUniqueName,
             dockerRegistryId: args.dockerRegistryId,
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
-            endpoint: azureEndpoint ? azureEndpoint.id : null
+            endpoint: azureEndpoint ? azureEndpoint.id : null,
+            dockerRegistryPassword: args.dockerRegistryPassword
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {
@@ -159,6 +161,9 @@ function createRelease(args, gen, callback) {
       '{{ApproverUniqueName}}': args.approverUniqueName.replace("\\", "\\\\"),
       '{{dockerHostEndpoint}}': args.dockerHostEndpoint ? args.dockerHostEndpoint.id : null,
       '{{dockerRegistryId}}': dockerNamespace,
+      '{{containerregistry}}': args.dockerRegistry,
+      '{{containerregistry_username}}': args.dockerRegistryId,
+      '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
       '{{ReleaseDefName}}': args.target === 'docker' ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`
    };

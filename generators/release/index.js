@@ -49,6 +49,10 @@ function construct() {
       required: false,
       desc: `port mapping for container and host`
    });
+   this.argument(`dockerRegistryPassword`, {
+      required: false,
+      desc: `password for your Docker registry`
+   });
    this.argument(`pat`, {
       required: false,
       desc: `Personal Access Token to TFS/VSTS`
@@ -167,7 +171,7 @@ function input() {
       message: `What is your Docker Registry URL?`,
       validate: util.validateDockerRegistry,
       when: answers => {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistry === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistry === undefined;
       }
    }, {
       type: `input`,
@@ -176,7 +180,16 @@ function input() {
       message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: function (answers) {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerRegistryId === undefined;
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryId === undefined;
+      }
+   }, {
+      name: `dockerRegistryPassword`,
+      type: `password`,
+      store: false,
+      message: `What is your Docker Registry password?`,
+      validate: util.validateDockerHubPassword,
+      when: answers => {
+         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryPassword === undefined;
       }
    }, {
       type: `input`,
@@ -201,6 +214,7 @@ function input() {
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
+      this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
    }.bind(this));
 }
 
@@ -213,11 +227,19 @@ function configureRelase() {
       release = this.templatePath(`vsts_release.json`);
    }
 
-   if (this.target === `docker` || this.target === `dockerpaas`) {
+   if (this.target === `docker`) {
       if (util.isVSTS(this.tfs)) {
          release = this.templatePath(`vsts_release_docker.json`);
       } else {
          release = this.templatePath(`tfs_release_docker.json`);
+      }
+   }
+
+   if (this.target === `dockerpaas`) {
+      if (util.isVSTS(this.tfs)) {
+         release = this.templatePath(`vsts_release_dockerpaas.json`);
+      } else {
+         release = this.templatePath(`tfs_release_dockerpaas.json`);
       }
    }
 
@@ -232,11 +254,12 @@ function configureRelase() {
       project: this.applicationName
    };
 
-   if (this.target === `docker` || this.target === `dockerpaas`) {
+   if (util.needsRegistry(this)) {
       args.dockerHost = this.dockerHost;
       args.dockerPorts = this.dockerPorts;
       args.dockerRegistry = this.dockerRegistry;
       args.dockerRegistryId = this.dockerRegistryId;
+      args.dockerRegistryPassword = this.dockerRegistryPassword;
    }
 
    app.run(args, this, done);

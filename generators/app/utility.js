@@ -753,7 +753,11 @@ function needsRegistry(answers, cmdLnInput) {
 }
 
 function isPaaS(answers, cmdLnInput) {
-   return (answers.target === `paas` || cmdLnInput.target === `paas` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
+   if (cmdLnInput !== undefined) {
+      return (answers.target === `paas` || cmdLnInput.target === `paas` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
+   } else {
+      return (answers.target === `paas` || answers.target === `dockerpaas`);
+   }
 }
 
 function isVSTS(instance) {

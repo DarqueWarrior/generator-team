@@ -4,6 +4,7 @@
 const url = require(`url`);
 const yosay = require(`yosay`);
 const util = require(`../app/utility`);
+const compose = require(`../app/compose`);
 const generators = require(`yeoman-generator`);
 
 function construct() {
@@ -243,48 +244,11 @@ function input() {
 
 function configGenerators() {
    // Based on the users answers compose all the required generators.
-
-   if (this.target === `docker`) {
-      this.composeWith(`team:docker`, {
-         args: [this.applicationName, this.tfs,
-            this.dockerHost, this.dockerCertPath,
-            this.pat
-         ]
-      });
-   }
-
-   if (this.target === `docker` || this.target === `dockerpaas`) {
-      this.composeWith(`team:registry`, {
-         args: [this.applicationName, this.tfs,
-            this.dockerRegistry, this.dockerRegistryId, this.dockerRegistryPassword,
-            this.pat
-         ]
-      });
-   }
-
-   if (this.target === `paas` || this.target === `dockerpaas`) {
-      this.composeWith(`team:azure`, {
-         args: [this.applicationName, this.tfs,
-            this.azureSub, this.azureSubId, this.tenantId, this.servicePrincipalId, this.servicePrincipalKey,
-            this.pat
-         ]
-      });
-   }
-
-   this.composeWith(`team:build`, {
-      args: [this.type, this.applicationName, this.tfs,
-      this.queue, this.target,
-      this.dockerHost, this.dockerRegistry, this.dockerRegistryId,
-      this.pat]
-   });
-
-   this.composeWith(`team:release`, {
-      args: [this.type, this.applicationName, this.tfs,
-      this.queue, this.target,
-      this.azureSub,
-      this.dockerHost, this.dockerRegistry, this.dockerRegistryId, this.dockerPorts,
-      this.pat]
-   });
+   compose.addDockerHost(this);
+   compose.addRegistry(this);
+   compose.addAzure(this);
+   compose.addBuild(this);
+   compose.addRelease(this);
 }
 
 module.exports = generators.Base.extend({

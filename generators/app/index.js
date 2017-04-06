@@ -3,6 +3,7 @@
 const url = require(`url`);
 const yosay = require(`yosay`);
 const util = require(`./utility`);
+const compose = require(`../app/compose`);
 const generators = require(`yeoman-generator`);
 
 function construct() {
@@ -313,6 +314,7 @@ function input() {
       }
    }]).then(function (answers) {
       // Transfer answers to global object for use in the rest of the generator
+
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
       this.type = util.reconcileValue(answers.type, cmdLnInput.type);
@@ -337,80 +339,14 @@ function input() {
 
 function configGenerators() {
    // Based on the users answers compose all the required generators.
-   this.composeWith(`team:git`, {
-      args: [this.applicationName, this.tfs,
-         `all`,
-         this.pat
-      ]
-   });
-
-   if (this.type === `asp`) {
-      this.composeWith(`team:asp`, {
-         args: [this.applicationName, this.installDep]
-      });
-   } else if (this.type === `aspFull`) {
-      this.composeWith(`team:aspFull`, {
-         args: [this.applicationName]
-      });
-   } else if (this.type === `java`) {
-      this.composeWith(`team:java`, {
-         args: [this.applicationName, this.groupId, this.installDep]
-      });
-   } else {
-      this.composeWith(`team:node`, {
-         args: [this.applicationName, this.installDep]
-      });
-   }
-
-   if (this.target === `docker`) {
-      this.composeWith(`team:docker`, {
-         args: [this.applicationName, this.tfs,
-            this.dockerHost, this.dockerCertPath,
-            this.pat
-         ]
-      });
-   }
-
-   if (this.target === `docker` || this.target === `dockerpaas`) {
-      this.composeWith(`team:registry`, {
-         args: [this.applicationName, this.tfs,
-            this.dockerRegistry, this.dockerRegistryId, this.dockerRegistryPassword,
-            this.pat
-         ]
-      });
-   }
-
-   if (this.target === `paas` || this.target === `dockerpaas`) {
-      this.composeWith(`team:azure`, {
-         args: [this.applicationName, this.tfs,
-            this.azureSub, this.azureSubId, this.tenantId, this.servicePrincipalId, this.servicePrincipalKey,
-            this.pat
-         ]
-      });
-   }
-
-   this.composeWith(`team:build`, {
-      args: [this.type, this.applicationName, this.tfs,
-         this.queue, this.target,
-         this.dockerHost, this.dockerRegistry, this.dockerRegistryId,
-         this.pat
-      ]
-   });
-
-   this.composeWith(`team:release`, {
-      args: [this.type, this.applicationName, this.tfs,
-         this.queue, this.target,
-         this.azureSub,
-         this.dockerHost, this.dockerRegistry, this.dockerRegistryId, this.dockerPorts,
-         this.pat
-      ]
-   });
-
-   this.composeWith(`team:project`, {
-      args: [this.applicationName, this.tfs,
-         this.pat
-      ]
-   });
+   compose.addGit(this);
+   compose.addLanguage(this);
+   compose.addDockerHost(this);
+   compose.addRegistry(this);
+   compose.addAzure(this);
+   compose.addBuild(this);
+   compose.addRelease(this);
+   compose.addProject(this);
 }
 
 module.exports = generators.Base.extend({
