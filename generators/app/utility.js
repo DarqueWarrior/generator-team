@@ -727,21 +727,24 @@ function isDockerHub(dockerRegistry) {
    return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
 }
 
-function validateInstance(input) {
-   // It was unclear if the user should provide the full URL or just 
-   // the account name so I am adding validation to help.
-   if (!input) {
-      return `You must provide a Team Services account name`;
-   }
+function extractInstance(input) {
+   // When using VSTS we only want the account name but
+   // people continue to give the entire url which will
+   // cause issues later. So check to see if the value
+   // provided contains visualstudio.com and if so extract
+   // the account name and simply return that.
 
-   // If you find http or visualstudio.com in the name the user most
+   // If you find visualstudio.com in the name the user most
    // likely entered the entire URL instead of just the account name
-   // so let them know.  Otherwise, just return true.
-   if (input.toLowerCase().match(/visualstudio.com|http/) === null) {
-      return true;
+   // so lets extract it.
+   if (input.toLowerCase().match(/visualstudio.com/) === null) {
+      return input;
    }
 
-   return "Only provide your account name ({account}.visualstudio.com) not the entire URL. Just the portion before .visualstudio.com.";
+   var myRegexp = /([^/]+)\.visualstudio.com/;
+   var match = myRegexp.exec(input);
+
+   return match[1];
 }
 
 function needsRegistry(answers, cmdLnInput) {
@@ -822,8 +825,8 @@ module.exports = {
    reconcileValue: reconcileValue,
    tryFindProject: tryFindProject,
    validateGroupID: validateGroupID,
+   extractInstance: extractInstance,
    validateAzureSub: validateAzureSub,
-   validateInstance: validateInstance,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
    validateDockerHost: validateDockerHost,

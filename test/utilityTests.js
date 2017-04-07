@@ -133,23 +133,43 @@ describe(`utility`, () => {
    });
 
    it(`getDefaultPortMapping java`, () => {
-      var actual = util.getDefaultPortMapping({ type: `java` });
+      var actual = util.getDefaultPortMapping({ type: `java`, target: `docker` });
       assert.equal(`8080:8080`, actual);
    });
 
    it(`getDefaultPortMapping asp`, () => {
-      var actual = util.getDefaultPortMapping({ type: `asp` });
+      var actual = util.getDefaultPortMapping({ type: `asp`, target: `docker` });
       assert.equal(`80:80`, actual);
    });
 
    it(`getDefaultPortMapping node`, () => {
-      var actual = util.getDefaultPortMapping({ type: `node` });
+      var actual = util.getDefaultPortMapping({ type: `node`, target: `docker` });
       assert.equal(`3000:3000`, actual);
    });
 
-   it(`getDefaultPortMapping default`, () => {
-      var actual = util.getDefaultPortMapping({ type: `unknown` });
-      assert.equal(`80:80`, actual);
+   it(`getDefaultPortMapping default paas`, () => {
+      var actual = util.getDefaultPortMapping({ type: `unknown`, target: `dockerpaas` });
+      assert.equal(`80`, actual);
+   });
+
+   it(`getDefaultPortMapping java paas`, () => {
+      var actual = util.getDefaultPortMapping({ type: `java`, target: `dockerpaas` });
+      assert.equal(`8080`, actual);
+   });
+
+   it(`getDefaultPortMapping asp paas`, () => {
+      var actual = util.getDefaultPortMapping({ type: `asp`, target: `dockerpaas` });
+      assert.equal(`80`, actual);
+   });
+
+   it(`getDefaultPortMapping node paas`, () => {
+      var actual = util.getDefaultPortMapping({ type: `node`, target: `dockerpaas` });
+      assert.equal(`3000`, actual);
+   });
+
+   it(`getDefaultPortMapping default paas`, () => {
+      var actual = util.getDefaultPortMapping({ type: `unknown`, target: `dockerpaas` });
+      assert.equal(`80`, actual);
    });
 
    it(`getPools has error`, function (done) {
@@ -801,34 +821,23 @@ describe(`utility`, () => {
       });
    }));
 
-   it(`validateInstance good`, () => {
+   it(`extractInstance good`, () => {
       // Arrange
-      var expected = true;
+      var expected = `vsts`;
 
       // Act
-      var actual = util.validateInstance(`vsts`);
+      var actual = util.extractInstance(`vsts`);
 
       // Assert
       assert.equal(expected, actual);
    });
 
-   it(`validateInstance is required`, () => {
+   it(`extractInstance account only`, () => {
       // Arrange
-      var expected = `You must provide a Team Services account name`;
+      var expected = `vsts`;
 
       // Act
-      var actual = util.validateInstance(``);
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`validateInstance account only`, () => {
-      // Arrange
-      var expected = `Only provide your account name ({account}.visualstudio.com) not the entire URL. Just the portion before .visualstudio.com.`;
-
-      // Act
-      var actual = util.validateInstance(`https://vsts.visualstudio.com`);
+      var actual = util.extractInstance(`https://vsts.visualstudio.com`);
 
       // Assert
       assert.equal(expected, actual);

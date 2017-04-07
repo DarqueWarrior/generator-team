@@ -7,12 +7,7 @@ function tfs(obj) {
       store: true,
       message: util.getInstancePrompt,
       validate: util.validateTFS,
-      filter: value => {
-         // If the value was passed on the commandline it will
-         // not be set in answers which other prompts expect.
-         // So, place it in answers now.
-         return value;
-      },
+      filter: util.extractInstance,
       when: answers => {
          // If the value was passed on the commandline it will
          // not be set in answers which other prompts expect.
