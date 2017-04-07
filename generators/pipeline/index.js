@@ -3,7 +3,9 @@
 // setup for it.  Or you ran yo tfs once and want to add an additional pipeline.
 const url = require(`url`);
 const yosay = require(`yosay`);
+const args = require(`../app/args`);
 const util = require(`../app/utility`);
+const prompts = require(`../app/prompt`);
 const compose = require(`../app/compose`);
 const generators = require(`yeoman-generator`);
 
@@ -14,23 +16,23 @@ function construct() {
    // Order is important
    // These are position based arguments for this generator. If they are not provided
    // via the command line they will be queried during the prompting priority
-   this.argument(`type`, { required: false, desc: `project type to create (asp, node or java)` });
-   this.argument(`applicationName`, { required: false, desc: `name of the application` });
-   this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
-   this.argument(`queue`, { required: false, desc: `agent queue name to use` });
-   this.argument(`target`, { required: false, desc: `docker or Azure app service` });
-   this.argument(`azureSub`, { required: false, desc: `Azure Subscription name` });
-   this.argument(`azureSubId`, { required: false, desc: `Azure Subscription ID` });
-   this.argument(`tenantId`, { required: false, desc: `Azure Tenant ID` });
-   this.argument(`servicePrincipalId`, { required: false, desc: `Azure Service Principal Id` });
-   this.argument(`dockerHost`, { required: false, desc: `Docker host url including port` });
-   this.argument(`dockerCertPath`, { required: false, desc: `path to Docker certs folder` });
-   this.argument(`dockerRegistry`, { required: false, desc: `server of your Docker registry` });
-   this.argument(`dockerRegistryId`, { required: false, desc: `username for Docker registry` });
-   this.argument(`dockerPorts`, { required: false, desc: `port mapping for container and host` });
-   this.argument(`dockerRegistryPassword`, { required: false, desc: `password for your Docker registry` });
-   this.argument(`servicePrincipalKey`, { required: false, desc: `Azure Service Principal Key` });
-   this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
+   args.applicationType(this);
+   args.applicationName(this);
+   args.tfs(this);
+   args.queue(this);
+   args.target(this);
+   args.azureSub(this);
+   args.azureSubId(this);
+   args.tenantId(this);
+   args.servicePrincipalId(this);
+   args.dockerHost(this);
+   args.dockerCertPath(this);
+   args.dockerRegistry(this);
+   args.dockerRegistryId(this);
+   args.dockerPorts(this);
+   args.dockerRegistryPassword(this);
+   args.servicePrincipalKey(this);
+   args.pat(this);
 }
 
 function input() {
@@ -39,187 +41,26 @@ function input() {
    // when callbacks of prompt
    let cmdLnInput = this;
 
-   return this.prompt([{
-      type: `input`,
-      name: `tfs`,
-      store: true,
-      message: util.getInstancePrompt,
-      validate: util.validateTFS,
-      when: answers => {
-         return cmdLnInput.tfs === undefined;
-      }
-   }, {
-      type: `password`,
-      name: `pat`,
-      store: false,
-      message: util.getPATPrompt,
-      validate: util.validatePersonalAccessToken,
-      when: answers => {
-         return cmdLnInput.pat === undefined;
-      }
-   }, {
-      type: `list`,
-      name: `queue`,
-      store: true,
-      message: `What agent queue would you like to use?`,
-      default: `Default`,
-      choices: util.getPools,
-      when: answers => {
-         var result = cmdLnInput.queue === undefined;
-
-         if (result) {
-            cmdLnInput.log(`  Getting Agent Queues...`);
-         }
-
-         return result;
-      }
-   }, {
-      type: `list`,
-      name: `type`,
-      store: true,
-      message: `What type of application do you want to create?`,
-      default: cmdLnInput.type,
-      choices: util.getAppTypes,
-      when: answers => {
-         return cmdLnInput.type === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `applicationName`,
-      store: true,
-      message: `What is the name of your application?`,
-      validate: util.validateApplicationName,
-      when: answers => {
-         return cmdLnInput.applicationName === undefined;
-      }
-   }, {
-      type: `list`,
-      name: `target`,
-      store: true,
-      message: `Where would you like to deploy?`,
-      choices: util.getTargets,
-      when: answers => {
-         return cmdLnInput.target === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `azureSub`,
-      store: true,
-      message: `What is your Azure subscription name?`,
-      validate: util.validateAzureSub,
-      when: answers => {
-         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.azureSub === undefined && !util.isVSTS(answers.tfs);
-      }
-   }, {
-      type: `list`,
-      name: `azureSub`,
-      store: true,
-      message: `Which Azure subscription would you like to use?`,
-      choices: util.getAzureSubs,
-      validate: util.validateAzureSub,
-      when: answers => {
-         var result = util.isPaaS(answers, cmdLnInput) && cmdLnInput.azureSub === undefined && util.isVSTS(answers.tfs);
-
-         if (result) {
-            cmdLnInput.log(`  Getting Azure subscriptions...`);
-         }
-
-         return result;
-      }
-   }, {
-      type: `input`,
-      name: `azureSubId`,
-      store: true,
-      message: `What is your Azure subscription ID?`,
-      validate: util.validateAzureSubID,
-      when: answers => {
-         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.azureSubId === undefined && !util.isVSTS(answers.tfs);
-      }
-   }, {
-      type: `input`,
-      name: `tenantId`,
-      store: true,
-      message: `What is your Azure Tenant ID?`,
-      validate: util.validateAzureTenantID,
-      when: answers => {
-         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.tenantId === undefined && !util.isVSTS(answers.tfs);
-      }
-   }, {
-      type: `input`,
-      name: `servicePrincipalId`,
-      store: true,
-      message: `What is your Service Principal ID?`,
-      validate: util.validateServicePrincipalID,
-      when: answers => {
-         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.servicePrincipalId === undefined && !util.isVSTS(answers.tfs);
-      }
-   }, {
-      type: `password`,
-      name: `servicePrincipalKey`,
-      store: false,
-      message: `What is your Service Principal Key?`,
-      validate: util.validateServicePrincipalKey,
-      when: answers => {
-         return util.isPaaS(answers, cmdLnInput) && cmdLnInput.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
-      }
-   }, {
-      type: `input`,
-      name: `dockerHost`,
-      store: true,
-      message: `What is your Docker host url and port (tcp://host:2376)?`,
-      validate: util.validateDockerHost,
-      when: function (answers) {
-         // If you pass in the target on the command line 
-         // answers.target will be undefined so test cmdLnInput
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerHost === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `dockerCertPath`,
-      store: true,
-      message: `What is your Docker Certificate Path?`,
-      validate: util.validateDockerCertificatePath,
-      when: function (answers) {
-         return (answers.target === `docker` || cmdLnInput.target === `docker`) && cmdLnInput.dockerCertPath === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `dockerRegistry`,
-      default: `https://index.docker.io/v1/`,
-      store: true,
-      message: `What is your Docker Registry URL?`,
-      validate: util.validateDockerRegistry,
-      when: answers => {
-         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistry === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `dockerRegistryId`,
-      store: true,
-      message: `What is your Docker Registry username (case sensitive)?`,
-      validate: util.validateDockerHubID,
-      when: function (answers) {
-         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryId === undefined;
-      }
-   }, {
-      type: `password`,
-      name: `dockerRegistryPassword`,
-      store: false,
-      message: `What is your Docker Registry password?`,
-      validate: util.validateDockerHubPassword,
-      when: function (answers) {
-         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerRegistryPassword === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `dockerPorts`,
-      default: util.getDefaultPortMapping,
-      message: `What should the port mapping be?`,
-      validate: util.validatePortMapping,
-      when: function (answers) {
-         return util.needsRegistry(answers, cmdLnInput) && cmdLnInput.dockerPorts === undefined;
-      }
-   }]).then(function (answers) {
+   return this.prompt([
+      prompts.tfs(this),
+      prompts.pat(this),
+      prompts.queue(this),
+      prompts.applicationType(this),
+      prompts.applicationName(this),
+      prompts.target(this),
+      prompts.azureSubInput(this),
+      prompts.azureSubList(this),
+      prompts.azureSubId(this),
+      prompts.tenantId(this),
+      prompts.servicePrincipalId(this),
+      prompts.servicePrincipalKey(this),
+      prompts.dockerHost(this),
+      prompts.dockerCertPath(this),
+      prompts.dockerRegistry(this),
+      prompts.dockerRegistryUsername(this),
+      prompts.dockerRegistryPassword(this),
+      prompts.dockerPorts(this),
+   ]).then(function (answers) {
       // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
       // of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);

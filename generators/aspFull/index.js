@@ -1,7 +1,9 @@
 const path = require('path');
 const mkdirp = require('mkdirp');
 const uuidV4 = require('uuid/v4');
+const args = require(`../app/args`);
 const util = require(`../app/utility`);
+const prompts = require(`../app/prompt`);
 const generators = require('yeoman-generator');
 
 function construct() {
@@ -9,10 +11,7 @@ function construct() {
    generators.Base.apply(this, arguments);
 
    // Order is important 
-   this.argument(`applicationName`, {
-      required: false,
-      desc: `name of the application`
-   });
+   args.applicationName(this);
 }
 
 function input() {
@@ -21,23 +20,16 @@ function input() {
    // when callbacks of prompt
    let cmdLnInput = this;
 
-   return this.prompt([{
-      type: `input`,
-      name: `applicationName`,
-      store: true,
-      message: `What is the name of your application?`,
-      validate: util.validateApplicationName,
-      when: function () {
-         return cmdLnInput.applicationName === undefined;
-      }
-   }]).then(function (a) {
+   return this.prompt([
+      prompts.applicationName(this)
+   ]).then(function (a) {
       // Transfer answers to local object for use in the rest of the generator
       this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
    }.bind(this));
 }
 
 function writeFiles() {
- 
+
    var tokens = {
       name: this.applicationName,
       uuid1: uuidV4(),

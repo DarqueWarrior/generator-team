@@ -1,6 +1,8 @@
 const path = require(`path`);
 const app = require(`./app`);
+const args = require(`../app/args`);
 const util = require(`../app/utility`);
+const prompts = require(`../app/prompt`);
 const generators = require(`yeoman-generator`);
 
 function construct() {
@@ -8,9 +10,9 @@ function construct() {
    generators.Base.apply(this, arguments);
 
    // Order is important 
-   this.argument(`applicationName`, { required: false, desc: `name of the application` });
-   this.argument(`tfs`, { required: false, desc: `full tfs URL including collection or Team Services account name` });
-   this.argument(`pat`, { required: false, desc: `Personal Access Token to TFS/VSTS` });
+   args.applicationName(this);
+   args.tfs(this);
+   args.pat(this);
 }
 
 function input() {
@@ -19,34 +21,11 @@ function input() {
    // when callbacks of prompt
    let cmdLnInput = this;
 
-   return this.prompt([{
-      type: `input`,
-      name: `tfs`,
-      store: true,
-      message: util.getInstancePrompt,
-      validate: util.validateTFS,
-      when: () => {
-         return cmdLnInput.tfs === undefined;
-      }
-   }, {
-      type: `password`,
-      name: `pat`,
-      store: false,
-      message: util.getPATPrompt,
-      validate: util.validatePersonalAccessToken,
-      when: () => {
-         return cmdLnInput.pat === undefined;
-      }
-   }, {
-      type: `input`,
-      name: `applicationName`,
-      store: true,
-      message: `What is the name of your application?`,
-      validate: util.validateApplicationName,
-      when: () => {
-         return cmdLnInput.applicationName === undefined;
-      }
-   }]).then(function (answers) {
+   return this.prompt([
+      prompts.tfs(this),
+      prompts.pat(this),
+      prompts.applicationName(this)
+   ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);

@@ -1,5 +1,7 @@
 const path = require('path');
+const args = require(`../app/args`);
 const util = require(`../app/utility`);
+const prompts = require(`../app/prompt`);
 const generators = require('yeoman-generator');
 
 function construct() {
@@ -7,8 +9,8 @@ function construct() {
    generators.Base.apply(this, arguments);
 
    // Order is important 
-   this.argument(`applicationName`, { required: false, desc: `name of the application` });
-   this.argument('installDep', { required: false, desc: 'if true dependencies are installed' });
+   args.applicationName(this);
+   args.installDep(this);
 }
 
 function input() {
@@ -17,35 +19,10 @@ function input() {
    // when callbacks of prompt
    let cmdLnInput = this;
 
-   return this.prompt([{
-      type: `input`,
-      name: `applicationName`,
-      store: true,
-      message: `What is the name of your application?`,
-      validate: util.validateApplicationName,
-      when: function () {
-         return cmdLnInput.applicationName === undefined;
-      }
-   }, {
-      type: `list`,
-      name: `installDep`,
-      store: true,
-      message: "Install dependencies?",
-      default: `false`,
-      choices: [
-         {
-            name: `Yes`,
-            value: `true`
-         },
-         {
-            name: `No`,
-            value: `false`
-         }
-      ],
-      when: function () {
-         return cmdLnInput.installDep === undefined;
-      }
-   }]).then(function (a) {
+   return this.prompt([
+      prompts.applicationName(this),
+      prompts.installDep(this)
+   ]).then(function (a) {
       // Transfer answers to local object for use in the rest of the generator
       this.installDep = util.reconcileValue(a.installDep, cmdLnInput.installDep);
       this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
@@ -111,10 +88,14 @@ function install() {
 
       this.log(`+ Running bower install`);
       // I don't want to see the output of this command
-      this.spawnCommandSync('bower', ['install'], { stdio: ['pipe', 'pipe', process.stderr] });
+      this.spawnCommandSync('bower', ['install'], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      });
 
       this.log(`+ Running npm install`);
-      this.spawnCommandSync('npm', ['install'], { stdio: ['pipe', 'pipe', process.stderr] });
+      this.spawnCommandSync('npm', ['install'], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      });
    }
 }
 
@@ -124,10 +105,10 @@ module.exports = generators.Base.extend({
 
    // 2. Where you prompt users for options (where you'd call this.prompt())
    prompting: input,
-   
+
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing: writeFiles,
-   
+
    // 7. Where installation are run (npm, bower)
    install: install
 });
