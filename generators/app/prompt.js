@@ -97,6 +97,8 @@ function target(obj) {
    };
 }
 
+// Azure
+
 function azureSubInput(obj) {
    return {
       name: `azureSub`,
@@ -169,6 +171,20 @@ function tenantId(obj) {
    };
 }
 
+function servicePrincipalKey(obj) {
+   return {
+      type: `password`,
+      name: `servicePrincipalKey`,
+      store: false,
+      message: `What is your Service Principal Key?`,
+      validate: util.validateServicePrincipalKey,
+      when: answers => {
+         return util.isPaaS(answers, obj) && obj.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
+      }
+   };
+}
+
+// Docker
 function dockerHost(obj) {
    return {
       name: `dockerHost`,
@@ -177,9 +193,7 @@ function dockerHost(obj) {
       message: `What is your Docker host url and port (tcp://host:2376)?`,
       validate: util.validateDockerHost,
       when: answers => {
-         // If you pass in the target on the command line 
-         // answers.target will be undefined so test obj
-         return (answers.target === `docker` || obj.target === `docker`) && obj.dockerHost === undefined;
+         return util.needsDockerHost(answers, obj) && obj.dockerHost === undefined;
       }
    };
 }
@@ -192,7 +206,7 @@ function dockerCertPath(obj) {
       message: `What is your Docker Certificate Path?`,
       validate: util.validateDockerCertificatePath,
       when: answers => {
-         return (answers.target === `docker` || obj.target === `docker`) && obj.dockerCertPath === undefined;
+         return util.needsDockerHost(answers, obj) && obj.dockerCertPath === undefined;
       }
    };
 }
@@ -250,6 +264,7 @@ function dockerPorts(obj) {
    };
 }
 
+// Java
 function groupId(obj) {
    return {
       name: `groupId`,
@@ -281,19 +296,6 @@ function installDep(obj) {
       ],
       when: answers => {
          return answers.type !== `aspFull` && obj.installDep === undefined;
-      }
-   };
-}
-
-function servicePrincipalKey(obj) {
-   return {
-      type: `password`,
-      name: `servicePrincipalKey`,
-      store: false,
-      message: `What is your Service Principal Key?`,
-      validate: util.validateServicePrincipalKey,
-      when: answers => {
-         return util.isPaaS(answers, obj) && obj.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
       }
    };
 }

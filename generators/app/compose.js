@@ -4,7 +4,7 @@ function addRelease(obj) {
 
    var queue = obj.queue;
 
-   if(util.isPaaS(obj) && queue.indexOf(`Linux`) !== -1){
+   if (util.isPaaS(obj) && queue.indexOf(`Linux`) !== -1) {
       queue = `Hosted`;
 
       // Inform user that if they selected Hosted Linux agent Hosted will be used
@@ -34,7 +34,7 @@ function addBuild(obj) {
 }
 
 function addAzure(obj) {
-   if (obj.target === `paas` || obj.target === `dockerpaas`) {
+   if (util.isPaaS(obj)) {
       obj.composeWith(`team:azure`, {
          args: [obj.applicationName, obj.tfs,
             obj.azureSub, obj.azureSubId, obj.tenantId, obj.servicePrincipalId, obj.servicePrincipalKey,
@@ -53,7 +53,7 @@ function addProject(obj) {
 }
 
 function addRegistry(obj) {
-   if (obj.target === `docker` || obj.target === `dockerpaas`) {
+   if (util.needsRegistry(obj)) {
       obj.composeWith(`team:registry`, {
          args: [obj.applicationName, obj.tfs,
             obj.dockerRegistry, obj.dockerRegistryId, obj.dockerRegistryPassword,
@@ -64,7 +64,7 @@ function addRegistry(obj) {
 }
 
 function addDockerHost(obj) {
-   if (obj.target === `docker`) {
+   if (util.needsDockerHost(obj)) {
       obj.composeWith(`team:docker`, {
          args: [obj.applicationName, obj.tfs,
             obj.dockerHost, obj.dockerCertPath,

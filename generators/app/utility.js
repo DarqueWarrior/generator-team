@@ -755,6 +755,29 @@ function needsRegistry(answers, cmdLnInput) {
    }
 }
 
+function needsDockerHost(answers, cmdLnInput) {
+   if (cmdLnInput !== undefined) {
+      // If you pass in the target on the command line 
+      // answers.target will be undefined so test cmdLnInput
+      let isDocker = (answers.target === `docker` || cmdLnInput.target === `docker`);
+
+      // This will be true the user did not select the Hosted Linux queue
+      let paasRequiresHost = (answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`) &&
+         (answers.queue !== undefined && answers.queue.indexOf(`Linux`) === -1);
+
+      return (isDocker || paasRequiresHost);
+   } else {
+      // If you pass in the target on the command line 
+      // answers.target will be undefined so test cmdLnInput
+      let isDocker = answers.target === `docker`;
+
+      // This will be true the user did not select the Hosted Linux queue
+      let paasRequiresHost = answers.target === `dockerpaas` && answers.queue.indexOf(`Linux`) === -1;
+
+      return (isDocker || paasRequiresHost);
+   }
+}
+
 function isPaaS(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       return (answers.target === `paas` || cmdLnInput.target === `paas` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
@@ -826,6 +849,7 @@ module.exports = {
    tryFindProject: tryFindProject,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
+   needsDockerHost: needsDockerHost,
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,

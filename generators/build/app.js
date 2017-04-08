@@ -31,7 +31,7 @@ function run(args, gen, done) {
                   });
                },
                function (inParallel) {
-                  if (args.target === `docker`) {
+                  if (util.needsDockerHost(args)) {
                      util.findDockerServiceEndpoint(args.tfs, teamProject.id, args.dockerHost, token, gen, function (err, ep) {
                         dockerEndpoint = ep;
                         inParallel(err, dockerEndpoint);
@@ -182,22 +182,19 @@ function getBuild(args) {
          break;
 
       case `node`:
-         if (args.target === `docker`) {
-            build = `node_docker_build.json`;
-         } else if (args.target === `dockerpaas`) {
+         if (args.target === `docker` || args.target === `dockerpaas`) {
             if (args.queue.indexOf(`Linux`) !== -1) {
                // On the hosted linux I can't seem to get access to the 
                // reports folder so this build does not even try but
                // still publishes code coverage.
                build = `node_dockerpaas_hostedlinux_build.json`;
             } else {
-               build = `node_dockerpaas_build.json`;
+               build = `node_docker_build.json`;
             }
          } else {
             build = `node_build.json`;
          }
          break;
-
       default: // Java
          if (args.target === `docker`) {
             if (util.isVSTS(args.tfs)) {

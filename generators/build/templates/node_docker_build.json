@@ -168,6 +168,25 @@
             "containerCommand": "",
             "cwd": "$(System.DefaultWorkingDirectory)"
          }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Copy Publish Artifact: drop",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "1d341bb0-2106-458c-8422-d00bcea6512a",
+            "versionSpec": "*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "CopyRoot": "",
+            "Contents": "**/templates/*.*",
+            "ArtifactName": "drop",
+            "ArtifactType": "Container",
+            "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+         }
       }
    ],
    "triggers": [
