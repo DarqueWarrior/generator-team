@@ -162,7 +162,7 @@ function getBuild(args) {
             if (util.isVSTS(args.tfs)) {
                build = `vsts_asp_dockerpaas_build.json`;
             } else {
-               build = `tfs_asp_dockerpaas_build.json`;
+               build = `tfs_asp_docker_build.json`;
             }
          } else {
             if (util.isVSTS(args.tfs)) {
@@ -206,7 +206,7 @@ function getBuild(args) {
             if (util.isVSTS(args.tfs)) {
                build = `vsts_java_dockerpaas_build.json`;
             } else {
-               build = `tfs_java_dockerpaas_build.json`;
+               build = `tfs_java_docker_build.json`;
             }
          } else {
             if (util.isVSTS(args.tfs)) {
