@@ -39,8 +39,10 @@
   },
   "license": "ISC",
   "dependencies": {
-    "async": "^2.0.1",
-    "request": "^2.74.0",
+    "async": "^2.3.0",
+    "gulp-spawn-mocha": "^3.3.0",
+    "request": "^2.81.0",
+    "sinon": "^2.1.0",
     "uuid": "^3.0.1",
     "yeoman-generator": "^0.24.1",
     "yosay": "^1.2.0"
@@ -56,6 +58,7 @@
     "mocha": "*",
     "proxyquire": "*",
     "sinon": "*",
+    "sinon-test": "^1.0.1",
     "supertest": "^2.0.0",
     "xunit-file": "^1.0.0",
     "yeoman-test": "*",

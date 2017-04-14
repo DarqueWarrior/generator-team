@@ -1,10 +1,13 @@
 const path = require(`path`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
+const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
 const util = require(`../generators/app/utility`);
 const azure = require(`../generators/azure/app`);
+
+sinon.test = sinonTest.configureTest(sinon);
 
 describe(`azure:index`, () => {
    it(`prompts vsts`, () => {
