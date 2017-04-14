@@ -3,9 +3,12 @@ const path = require(`path`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
 const helpers = require(`yeoman-test`);
+const sinonTest = require(`sinon-test`);
 const proxyquire = require(`proxyquire`);
 const build = require(`../generators/build/app`);
 const util = require(`../generators/app/utility`);
+
+sinon.test = sinonTest.configureTest(sinon);
 
 describe(`build:index`, function () {
    it(`test prompts asp:paas should not return error`, () => {

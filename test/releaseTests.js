@@ -2,10 +2,13 @@ const fs = require(`fs`);
 const path = require(`path`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
+const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
 const util = require(`../generators/app/utility`);
 const release = require(`../generators/release/app`);
+
+sinon.test = sinonTest.configureTest(sinon);
 
 describe(`release:index`, () => {
    "use strict";
@@ -44,15 +47,18 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
 
-            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`nodeDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
-               callback(null, { value: "TeamProject", id: 1 });
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
                assert.equal(`Default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -61,38 +67,53 @@ describe(`release:index`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
                assert.equal(`docker`, target, `findBuild - target is wrong`);
 
-               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
             });
 
-            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
                assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
 
-               callback(null, { value: "I`m a release." });
+               callback(null, {
+                  value: "I`m a release."
+               });
             });
 
-            sinon.stub(util, `findDockerServiceEndpoint`, (account, projectId, dockerHost, token, gen, callback) => {
+            sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findDockerRegistryServiceEndpoint`, (account, projectId, dockerRegistry, token, callback) => {
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
                assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
          })
          .on(`end`, e => {
@@ -134,15 +155,18 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
 
-            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`nodeDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
-               callback(null, { value: "TeamProject", id: 1 });
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
                assert.equal(`Default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -151,38 +175,53 @@ describe(`release:index`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
                assert.equal(`docker`, target, `findBuild - target is wrong`);
 
-               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
             });
 
-            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
                assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
 
-               callback(null, { value: "I`m a release." });
+               callback(null, {
+                  value: "I`m a release."
+               });
             });
 
-            sinon.stub(util, `findDockerServiceEndpoint`, (account, projectId, dockerHost, token, gen, callback) => {
+            sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findDockerRegistryServiceEndpoint`, (account, projectId, dockerRegistry, token, callback) => {
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
                assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
          })
          .on(`end`, e => {
@@ -223,15 +262,18 @@ describe(`release:index`, () => {
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
 
-            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`nodeDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
-               callback(null, { value: "TeamProject", id: 1 });
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
                assert.equal(`Default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -240,31 +282,43 @@ describe(`release:index`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
                assert.equal(`paas`, target, `findBuild - target is wrong`);
 
-               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
             });
 
-            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
                assert.equal(`paas`, args.target, `tryFindRelease - target is wrong`);
 
-               callback(null, { value: "I`m a release." });
+               callback(null, {
+                  value: "I`m a release."
+               });
             });
 
-            sinon.stub(util, `findAzureServiceEndpoint`, (account, projectId, sub, token, gen, callback) => {
+            sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findAzureServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findAzureServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findAzureServiceEndpoint - token is wrong`);
                assert.equal(`azureSub`, sub.name, `findAzureServiceEndpoint - sub is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
          })
          .on(`end`, e => {
@@ -306,15 +360,18 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
 
-            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`javaDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
-               callback(null, { value: "TeamProject", id: 1 });
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
                assert.equal(`Default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -323,38 +380,53 @@ describe(`release:index`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
                assert.equal(`docker`, target, `findBuild - target is wrong`);
 
-               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
             });
 
-            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
                assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
 
-               callback(null, { value: "I`m a release." });
+               callback(null, {
+                  value: "I`m a release."
+               });
             });
 
-            sinon.stub(util, `findDockerServiceEndpoint`, (account, projectId, dockerHost, token, gen, callback) => {
+            sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findDockerRegistryServiceEndpoint`, (account, projectId, dockerRegistry, token, callback) => {
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
                assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
          })
          .on(`end`, (e) => {
@@ -395,15 +467,18 @@ describe(`release:index`, () => {
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
 
-            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`javaDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
-               callback(null, { value: "TeamProject", id: 1 });
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
                assert.equal(`Default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -412,31 +487,43 @@ describe(`release:index`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
                assert.equal(`paas`, target, `findBuild - target is wrong`);
 
-               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
             });
 
-            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
                assert.equal(`paas`, args.target, `tryFindRelease - target is wrong`);
 
-               callback(null, { value: "I`m a release." });
+               callback(null, {
+                  value: "I`m a release."
+               });
             });
 
-            sinon.stub(util, `findAzureServiceEndpoint`, (account, projectId, sub, token, gen, callback) => {
+            sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findAzureServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findAzureServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findAzureServiceEndpoint - token is wrong`);
                assert.equal(`azureSub`, sub.name, `findAzureServiceEndpoint - sub is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
          })
          .on(`end`, (e) => {
@@ -478,15 +565,18 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
 
-            sinon.stub(util, `findProject`, (tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`aspDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
-               callback(null, { value: "TeamProject", id: 1 });
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findQueue`, (name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
                assert.equal(`Default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -495,38 +585,53 @@ describe(`release:index`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`, (account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
                assert.equal(`docker`, target, `findBuild - target is wrong`);
 
-               callback(null, { value: "I`m a build.", authoredBy: { id: 1, uniqueName: `uniqueName`, displayName: `displayName` } });
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
             });
 
-            sinon.stub(util, `tryFindRelease`, (args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
                assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
 
-               callback(null, { value: "I`m a release." });
+               callback(null, {
+                  value: "I`m a release."
+               });
             });
 
-            sinon.stub(util, `findDockerServiceEndpoint`, (account, projectId, dockerHost, token, gen, callback) => {
+            sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
 
-            sinon.stub(util, `findDockerRegistryServiceEndpoint`, (account, projectId, dockerRegistry, token, callback) => {
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
                assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
                assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
                assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
 
-               callback(null, { name: `endpoint`, id: 1 });
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
             });
          })
          .on(`end`, e => {
@@ -545,13 +650,29 @@ describe(`release:app`, () => {
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `tryFindRelease`).callsArgWith(1, null, { value: "I`m a release." });
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-      this.stub(util, `findBuild`).callsArgWith(4, null, { value: "I`m a build.", id: 1, authoredBy: { id: 1, displayName: `displayName`, uniqueName: `uniqueName` } });
-      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, { value: "I`m an endpoint.", id: 1 });
+      this.stub(util, `tryFindRelease`).callsArgWith(1, null, {
+         value: "I`m a release."
+      });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
+      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, {
+         value: "I`m an endpoint.",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -580,12 +701,23 @@ describe(`release:app`, () => {
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `tryFindRelease`).callsArgWith(1, new Error("boom"), null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-      this.stub(util, `findBuild`).callsArgWith(4, null, { value: "I`m a build.", id: 1, authoredBy: { id: 1, displayName: `displayName`, uniqueName: `uniqueName` } });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
       this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, null);
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -621,25 +753,48 @@ describe(`release:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/release/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../generators/release/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-      this.stub(util, `findBuild`).callsArgWith(4, null, { value: "I`m a build.", id: 1, authoredBy: { id: 1, displayName: `displayName`, uniqueName: `uniqueName` } });
-      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, { value: "I`m an endpoint.", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
+      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, {
+         value: "I`m an endpoint.",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Create release
-      requestStub.onCall(0).yields(null, { statusCode: 200 }, { name: `release` });
+      requestStub.onCall(0).yields(null, {
+         statusCode: 200
+      }, {
+         name: `release`
+      });
 
       var args = {
-         build: { id: 1, name: `e2eDemo-CI` },
+         build: {
+            id: 1,
+            name: `e2eDemo-CI`
+         },
          queueId: `1`,
          appName: `e2eDemo`,
          approverId: `aid`,
@@ -647,7 +802,10 @@ describe(`release:app`, () => {
          pat: `token`,
          project: `e2eDemo`,
          endpoint: `endpoint`,
-         teamProject: { name: `teamProject`, id: 1 },
+         teamProject: {
+            name: `teamProject`,
+            id: 1
+         },
          approverUniqueName: `approverUniqueName`,
          approverDisplayName: `approverDisplayName`,
          target: `paas`
@@ -667,22 +825,38 @@ describe(`release:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/release/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../generators/release/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-      this.stub(util, `findBuild`).callsArgWith(4, null, { value: "I`m a build.", id: 1, authoredBy: { id: 1, displayName: `displayName`, uniqueName: `uniqueName` } });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
       this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, null);
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       var args = {
-         build: { id: 1, name: `e2eDemo-CI` },
+         build: {
+            id: 1,
+            name: `e2eDemo-CI`
+         },
          queueId: `1`,
          appName: `e2eDemo`,
          approverId: `aid`,
@@ -690,18 +864,35 @@ describe(`release:app`, () => {
          pat: `token`,
          project: `e2eDemo`,
          endpoint: `endpoint`,
-         teamProject: { name: `teamProject`, id: 1 },
+         teamProject: {
+            name: `teamProject`,
+            id: 1
+         },
          approverUniqueName: `approverUniqueName`,
          approverDisplayName: `approverDisplayName`,
          target: `docker`,
          dockerPorts: `80:80`,
          dockerRegistryId: `dockerRegistryId`,
-         dockerRegistryEndpoint: { name: `dockerRegistryEndpoint`, url: ``, authorization: { parameters: { registry: `` } } }
+         dockerRegistryEndpoint: {
+            name: `dockerRegistryEndpoint`,
+            url: ``,
+            authorization: {
+               parameters: {
+                  registry: ``
+               }
+            }
+         }
       };
 
       // Create release
-      requestStub.onCall(0).yields(null, { statusCode: 403 }, undefined);
-      requestStub.onCall(1).yields(null, { statusCode: 200 }, { name: `release` });
+      requestStub.onCall(0).yields(null, {
+         statusCode: 403
+      }, undefined);
+      requestStub.onCall(1).yields(null, {
+         statusCode: 200
+      }, {
+         name: `release`
+      });
 
       // Act
       proxyApp.findOrCreateRelease(args, logger, (e, rel) => {
@@ -717,25 +908,46 @@ describe(`release:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/release/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../generators/release/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-      this.stub(util, `findBuild`).callsArgWith(4, null, { value: "I`m a build.", id: 1, authoredBy: { id: 1, displayName: `displayName`, uniqueName: `uniqueName` } });
-      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, { value: "I`m an endpoint.", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
+      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, {
+         value: "I`m an endpoint.",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Create release
-      requestStub.onCall(0).yields(null, { statusCode: 400 }, undefined);
+      requestStub.onCall(0).yields(null, {
+         statusCode: 400
+      }, undefined);
 
       var args = {
-         build: { id: 1, name: `e2eDemo-CI` },
+         build: {
+            id: 1,
+            name: `e2eDemo-CI`
+         },
          queueId: `1`,
          appName: `e2eDemo`,
          approverId: `aid`,
@@ -743,12 +955,17 @@ describe(`release:app`, () => {
          pat: `token`,
          project: `e2eDemo`,
          endpoint: `endpoint`,
-         teamProject: { name: `teamProject`, id: 1 },
+         teamProject: {
+            name: `teamProject`,
+            id: 1
+         },
          approverUniqueName: `approverUniqueName`,
          approverDisplayName: `approverDisplayName`,
          target: `docker`,
          dockerPorts: `80:80`,
-         dockerHostEndpoint: { id: 1 },
+         dockerHostEndpoint: {
+            id: 1
+         },
          dockerRegistryId: `dockerRegistryId`,
          dockerRegistryEndpoint: `dockerRegistryEndpoint`
       };

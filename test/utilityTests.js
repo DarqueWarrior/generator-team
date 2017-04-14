@@ -1,6 +1,7 @@
 const fs = require(`fs`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
+const sinonTest = require(`sinon-test`);
 const proxyquire = require(`proxyquire`);
 const package = require('../package.json');
 const util = require(`../generators/app/utility`);
@@ -10,6 +11,8 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+
+sinon.test = sinonTest.configureTest(sinon);
 
 describe(`utility`, () => {
 

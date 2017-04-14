@@ -2,10 +2,13 @@ const path = require(`path`);
 const fs = require(`fs-extra`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
+const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
 const util = require(`../generators/app/utility`);
 const registry = require(`../generators/registry/app`);
+
+sinon.test = sinonTest.configureTest(sinon);
 
 describe(`registry:index`, () => {
    "use strict";
@@ -30,8 +33,14 @@ describe(`registry:index`, () => {
          })
          .on(`ready`, (generator) => {
             // This is called right before `generator.run()` is called
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-            sinon.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, { name: `endpoint`, id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
+            sinon.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, {
+               name: `endpoint`,
+               id: 1
+            });
          })
          .on(`end`, () => {
             // Using the yeoman helpers and sinon.test did not play nice
@@ -53,15 +62,22 @@ describe(`registry:index`, () => {
             `dockerRegistry`,
             `dockerRegistryId`,
             `dockerRegistryPassword`,
-            `token`])
+            `token`
+         ])
          .on(`error`, (error) => {
             cleanUp();
             assert.fail(error);
          })
          .on(`ready`, (generator) => {
             // This is called right before `generator.run()` is called
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-            sinon.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, { name: `endpoint`, id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
+            sinon.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, {
+               name: `endpoint`,
+               id: 1
+            });
          })
          .on(`end`, () => {
             // Using the yeoman helpers and sinon.test did not play nice
@@ -76,11 +92,17 @@ describe(`registry:app`, () => {
 
    it(`run with existing endpoint should run without error`, sinon.test(function (done) {
       // Arrange
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
-      this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, { name: `endpoint`, id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, {
+         name: `endpoint`,
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -101,11 +123,14 @@ describe(`registry:app`, () => {
 
    it(`run with error should return error`, sinon.test(function (done) {
       // Arrange
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
       this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, new Error("boom"), null);
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -137,15 +162,21 @@ describe(`registry:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/registry/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../generators/registry/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, undefined);
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Create Project
-      requestStub.onCall(0).yields(null, { statusCode: 200 }, { name: `endpoint` });
+      requestStub.onCall(0).yields(null, {
+         statusCode: 200
+      }, {
+         name: `endpoint`
+      });
 
       // Act
       proxyApp.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
@@ -162,11 +193,13 @@ describe(`registry:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/registry/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../generators/registry/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, undefined);
 
-      this.stub(fs, `readFile`, (files, options, cb) => {
+      this.stub(fs, `readFile`).callsFake((files, options, cb) => {
          if (cb === undefined) {
             cb = options;
          }
@@ -175,10 +208,12 @@ describe(`registry:app`, () => {
       });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Create Project
-      requestStub.onCall(0).yields(null, { statusCode: 400 }, null);
+      requestStub.onCall(0).yields(null, {
+         statusCode: 400
+      }, null);
 
       // Act
       // I use the custom error validation method to call done
@@ -196,7 +231,7 @@ describe(`registry:app`, () => {
       // Arrange
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Act
       registry.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
