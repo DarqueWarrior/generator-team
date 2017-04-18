@@ -4,6 +4,7 @@
   <Property Name="sonar.cobertura.reportPath">generator-team/coverage/cobertura-coverage.xml</Property>
   <Property Name="sonar.javascript.jstestdriver.reportsPath">generator-team/xunit.xml</Property>
   <Property Name="sonar.javascript.lcov.reportPaths">generator-team/coverage/lcov-report</Property> 
+  <Property Name="sonar.junit.reportsPath">generator-team/xunit.xml</Property> 
   <Property Name="sonar.scm.provider">Git</Property>
 
 </SonarQubeAnalysisProperties>
