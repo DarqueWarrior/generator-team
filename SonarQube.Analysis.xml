@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  
+  <Property Name="sonar.cobertura.reportPath">generator-team/coverage/cobertura-coverage.xml</Property>
+  <Property Name="sonar.javascript.jstestdriver.reportsPath">generator-team/xunit.xml</Property>
+  <Property Name="sonar.javascript.lcov.reportPaths">generator-team/coverage/lcov-report</Property> 
+
+</SonarQubeAnalysisProperties>
