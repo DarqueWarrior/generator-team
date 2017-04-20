@@ -8,7 +8,7 @@
   },
   "config": {
     "mocha-sonar-reporter": {
-      "outputfile": "$process.cwd()/xunit.xml"
+      "outputfile": "./xunit.xml"
     }
   },
   "files": [
