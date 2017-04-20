@@ -4,12 +4,7 @@
   "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
   "main": "./generators/app/index.js",
   "scripts": {
-    "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R mocha-sonar-reporter"
-  },
-  "config": {
-    "mocha-sonar-reporter": {
-      "outputfile": "./xunit.xml"
-    }
+    "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file"
   },
   "files": [
     "generators/app",
@@ -61,7 +56,6 @@
     "istanbul": "*",
     "jshint": "^2.9.4",
     "mocha": "*",
-    "mocha-sonar-reporter": "^0.1.6",
     "proxyquire": "*",
     "sinon": "*",
     "sinon-test": "^1.0.1",
