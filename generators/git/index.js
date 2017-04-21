@@ -41,14 +41,6 @@ function cloneRepository() {
       // and commit.
       this.log(`+ Cloning repository ${util.getFullURL(this.tfs)}/_git/${this.applicationName}`);
 
-      this.spawnCommandSync(`git`, [`config`, `user.email`, `yo team`], {
-         stdio: ['pipe', 'pipe', process.stderr]
-      });
-
-      this.spawnCommandSync(`git`, [`config`, `user.name`, `yo team`], {
-         stdio: ['pipe', 'pipe', process.stderr]
-      });
-
       // By adding the PAT right after https:// I can clone a repo without 
       // asking user for creds
       let url = `${util.getFullURL(this.tfs)}/_git/${this.applicationName}`;
@@ -67,6 +59,15 @@ function commitCode() {
       this.log(`+ Adding initial files`);
       // I don`t want to see the output of this command
       this.spawnCommandSync(`git`, [`add`, `--a`], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      });
+
+      this.log(`+ Configuring email and name as yo team`);
+      this.spawnCommandSync(`git`, [`config`, `user.email`, `yo team`], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      });
+
+      this.spawnCommandSync(`git`, [`config`, `user.name`, `yo team`], {
          stdio: ['pipe', 'pipe', process.stderr]
       });
 
