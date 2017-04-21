@@ -1,16 +1,14 @@
 Describe 'Project' {
+   $projectName = "project" + (New-Guid).Guid.SubString(0, 5)
+
    Context 'Create' {
 
-      node $env:YO team:project unitTest demonstrations $env:PAT
+      node $env:YO team:project $projectName demonstrations $env:PAT
       
       It 'Should create project' {
-         Get-Project | Where-Object {$_.Name -eq 'unitTest'} | Should not be $Null
+         Get-Project | Where-Object {$_.Name -eq $projectName} | Should not be $Null
       }
 
-      It 'Should not create project' {
-         Get-Project | Where-Object {$_.Name -eq 'unitTest'} | Should be $Null
-      }
-
-      AfterAll { Get-Project | Where-Object {$_.Name -eq 'unitTest'} | Remove-Project -Force }
+      AfterAll { Get-Project | Where-Object {$_.Name -eq $projectName} | Remove-Project -Force }
    }
 }
