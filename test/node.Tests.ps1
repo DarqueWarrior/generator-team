@@ -2,7 +2,7 @@ Describe 'Node' {
    $projectName = "project" + (New-Guid).Guid.SubString(0, 5)
 
    Context 'PaaS' {
-      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default paas false " " " " " " " " " " " " " " " " $env:PAT
+      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default paas false " " " " " " " " " " " " " " " " $env:PAT *> .\nodeProject.log
       
       It 'Should create project' {
          Get-Project | Where-Object {$_.Name -eq $projectName} | Should not be $Null

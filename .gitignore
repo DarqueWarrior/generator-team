@@ -3,5 +3,5 @@ temp/
 *.lck
 /coverage
 xunit.xml
-javac*.log
+*.log
 /.vs

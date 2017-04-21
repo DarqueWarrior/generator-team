@@ -3,7 +3,7 @@ Describe 'Project' {
 
    Context 'Create' {
 
-      node $env:YO team:project $projectName demonstrations $env:PAT
+      node $env:YO team:project $projectName demonstrations $env:PAT *> .\projectCreate.log
       
       It 'Should create project' {
          Get-Project | Where-Object {$_.Name -eq $projectName} | Should not be $Null
