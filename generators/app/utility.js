@@ -39,7 +39,12 @@ function getUserAgent() {
 }
 
 function reconcileValue(first, second, fallback) {
-   return first ? first : (second ? second : fallback);
+   // The only way I found to get the CLI to work when I need
+   // to skip values is to enter " ". That space throws off 
+   // other portions of the code that test for the exisitence 
+   // of a value.  Triming the strings will only leave non
+   // whitespace.
+   return first ? first.trim() : (second ? second.trim() : fallback);
 }
 
 function getTargets(answers) {
