@@ -11,7 +11,7 @@
       "**/temp": true,
       "**/.vscode": true,
       "**/.DS_Store": true,
-      "**/*.log": true
+      "**/*.log": false
    },
    "editor.tabSize": 3,
    "editor.detectIndentation": false,
