@@ -63,7 +63,7 @@ function input() {
    }.bind(this));
 }
 
-function configureRelase() {
+function configureRelease() {
    var done = this.async();
 
    var release = this.templatePath(`tfs_release.json`);
@@ -118,5 +118,5 @@ module.exports = generators.Base.extend({
    prompting: input,
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
-   writing: configureRelase
+   writing: configureRelease
 });
