@@ -69,26 +69,10 @@ function getTargets(answers) {
 }
 
 function getAppTypes(answers) {
-
-   if (answers.queue.indexOf(`Linux`) !== -1) {
-      return [{
-         name: `.NET Core`,
-         value: `asp`
-      }, {
-         name: `Node.js`,
-         value: `node`
-      }, {
-         name: `Java`,
-         value: `java`
-      }];
-   }
-
-   return [{
+   // Default to languages tha work on all agents
+   let types = [{
       name: `.NET Core`,
       value: `asp`
-   }, {
-      name: `.NET Full`,
-      value: `aspFull`
    }, {
       name: `Node.js`,
       value: `node`
@@ -96,6 +80,17 @@ function getAppTypes(answers) {
       name: `Java`,
       value: `java`
    }];
+
+   // If this is not a Linux based agent also show
+   // .NET Full
+   if (answers.queue.indexOf(`Linux`) === -1) {
+      types.splice(1, 0, {
+         name: `.NET Full`,
+         value: `aspFull`
+      });
+   }
+
+   return types;
 }
 
 function getPATPrompt(answers) {

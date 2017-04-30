@@ -16,13 +16,46 @@ sinon.test = sinonTest.configureTest(sinon);
 
 describe(`utility`, () => {
 
+   it(`getAppTypes linux`, () => {
+
+      // Arrange
+      let answers = {
+         queue: 'Hosted Linux Preview'
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(3, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes default`, () => {
+
+      // Arrange
+      let answers = {
+         queue: 'Default'
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(4, actual.length, `Wrong number of items returned`);
+   });
+
    it(`addUserAgent`, () => {
       // Arrange
       let options = {
          method: 'GET',
-         headers: { 'cache-control': 'no-cache', 'authorization': `Basic token` },
+         headers: {
+            'cache-control': 'no-cache',
+            'authorization': `Basic token`
+         },
          url: `https://test.visualstudio.com/_apis/projects/test`,
-         qs: { 'api-version': PROJECT_API_VERSION }
+         qs: {
+            'api-version': PROJECT_API_VERSION
+         }
       };
       let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 
@@ -60,7 +93,9 @@ describe(`utility`, () => {
       let expected = `What is your TFS Personal Access Token?`;
 
       // Act
-      let actual = util.getPATPrompt({ tfs: `http://localhost:8080/tfs/DefaultCollection` });
+      let actual = util.getPATPrompt({
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
+      });
 
       // Assert
       assert.equal(expected, actual);
@@ -106,7 +141,13 @@ describe(`utility`, () => {
       let expected = "images.azure.io";
 
       // Act
-      let actual = util.getImageNamespace(null, { authorization: { parameters: { registry: `http://images.azure.io` } } });
+      let actual = util.getImageNamespace(null, {
+         authorization: {
+            parameters: {
+               registry: `http://images.azure.io`
+            }
+         }
+      });
 
       // Assert
       assert.equal(expected, actual);
@@ -117,7 +158,13 @@ describe(`utility`, () => {
       let expected = "images.azure.io";
 
       // Act
-      let actual = util.getImageNamespace(`imageNamespace`, { authorization: { parameters: { registry: `http://images.azure.io` } } });
+      let actual = util.getImageNamespace(`imageNamespace`, {
+         authorization: {
+            parameters: {
+               registry: `http://images.azure.io`
+            }
+         }
+      });
 
       // Assert
       assert.equal(expected, actual);
@@ -136,42 +183,66 @@ describe(`utility`, () => {
    });
 
    it(`getDefaultPortMapping java`, () => {
-      var actual = util.getDefaultPortMapping({ type: `java`, target: `docker` });
+      var actual = util.getDefaultPortMapping({
+         type: `java`,
+         target: `docker`
+      });
       assert.equal(`8080:8080`, actual);
    });
 
    it(`getDefaultPortMapping asp`, () => {
-      var actual = util.getDefaultPortMapping({ type: `asp`, target: `docker` });
+      var actual = util.getDefaultPortMapping({
+         type: `asp`,
+         target: `docker`
+      });
       assert.equal(`80:80`, actual);
    });
 
    it(`getDefaultPortMapping node`, () => {
-      var actual = util.getDefaultPortMapping({ type: `node`, target: `docker` });
+      var actual = util.getDefaultPortMapping({
+         type: `node`,
+         target: `docker`
+      });
       assert.equal(`3000:3000`, actual);
    });
 
    it(`getDefaultPortMapping default paas`, () => {
-      var actual = util.getDefaultPortMapping({ type: `unknown`, target: `dockerpaas` });
+      var actual = util.getDefaultPortMapping({
+         type: `unknown`,
+         target: `dockerpaas`
+      });
       assert.equal(`80`, actual);
    });
 
    it(`getDefaultPortMapping java paas`, () => {
-      var actual = util.getDefaultPortMapping({ type: `java`, target: `dockerpaas` });
+      var actual = util.getDefaultPortMapping({
+         type: `java`,
+         target: `dockerpaas`
+      });
       assert.equal(`8080`, actual);
    });
 
    it(`getDefaultPortMapping asp paas`, () => {
-      var actual = util.getDefaultPortMapping({ type: `asp`, target: `dockerpaas` });
+      var actual = util.getDefaultPortMapping({
+         type: `asp`,
+         target: `dockerpaas`
+      });
       assert.equal(`80`, actual);
    });
 
    it(`getDefaultPortMapping node paas`, () => {
-      var actual = util.getDefaultPortMapping({ type: `node`, target: `dockerpaas` });
+      var actual = util.getDefaultPortMapping({
+         type: `node`,
+         target: `dockerpaas`
+      });
       assert.equal(`3000`, actual);
    });
 
    it(`getDefaultPortMapping default paas`, () => {
-      var actual = util.getDefaultPortMapping({ type: `unknown`, target: `dockerpaas` });
+      var actual = util.getDefaultPortMapping({
+         type: `unknown`,
+         target: `dockerpaas`
+      });
       assert.equal(`80`, actual);
    });
 
@@ -192,7 +263,10 @@ describe(`utility`, () => {
       });
 
       // Act
-      proxyApp.getPools({ tfs: `http://localhost:8080/tfs/DefaultCollection`, pat: `token` }).then(() => {
+      proxyApp.getPools({
+         tfs: `http://localhost:8080/tfs/DefaultCollection`,
+         pat: `token`
+      }).then(() => {
          assert.fail();
          done();
       }, (e) => {
@@ -213,12 +287,17 @@ describe(`utility`, () => {
             assert.equal(`http://localhost:8080/tfs/DefaultCollection/_apis/distributedtask/pools`, options.url, `wrong url`);
 
             // Respond
-            callback(null, null, JSON.stringify({ value: "UnitTest" }));
+            callback(null, null, JSON.stringify({
+               value: "UnitTest"
+            }));
          }
       });
 
       // Act
-      proxyApp.getPools({ tfs: `http://localhost:8080/tfs/DefaultCollection`, pat: `token` }).then((x) => {
+      proxyApp.getPools({
+         tfs: `http://localhost:8080/tfs/DefaultCollection`,
+         pat: `token`
+      }).then((x) => {
          assert.equal(`UnitTest`, x);
          done();
       }, (e) => {
@@ -311,12 +390,20 @@ describe(`utility`, () => {
             assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
 
             // Respond
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ id: 420 }, { id: 311 }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  id: 420
+               }, {
+                  id: 311
+               }]
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
@@ -338,15 +425,24 @@ describe(`utility`, () => {
             assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
 
             // Respond
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ id: 420 }, { id: 311 }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  id: 420
+               }, {
+                  id: 311
+               }]
+            }));
          }
       });
 
       // Act
       proxyApp.findQueue(
          `Hosted`,
-         `http://localhost:8080/tfs/DefaultCollection`,
-         { id: 1 },
+         `http://localhost:8080/tfs/DefaultCollection`, {
+            id: 1
+         },
          `token`,
          (err, data) => {
             // Assert
@@ -362,15 +458,18 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 302 }, JSON.stringify("{ error: `some error` }"));
+            callback(null, {
+               statusCode: 302
+            }, JSON.stringify("{ error: `some error` }"));
          }
       });
 
       // Act
       proxyApp.findQueue(
          `Hosted`,
-         `http://localhost:8080/tfs/DefaultCollection`,
-         { id: 1 },
+         `http://localhost:8080/tfs/DefaultCollection`, {
+            id: 1
+         },
          `token`,
          (err, data) => {
             // Assert
@@ -386,15 +485,18 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 400 }, null);
+            callback(null, {
+               statusCode: 400
+            }, null);
          }
       });
 
       // Act
       proxyApp.findQueue(
          `Hosted`,
-         `http://localhost:8080/tfs/DefaultCollection`,
-         { id: 1 },
+         `http://localhost:8080/tfs/DefaultCollection`, {
+            id: 1
+         },
          `token`,
          (err, data) => {
             // Assert
@@ -419,7 +521,11 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: []
+            }));
          }
       });
 
@@ -440,9 +546,19 @@ describe(`utility`, () => {
          "request": (options, callback) => {
 
             if (options.url.endsWith(`serviceendpoints`)) {
-               callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ type: "dockerregistry" }] }));
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  value: [{
+                     type: "dockerregistry"
+                  }]
+               }));
             } else {
-               callback(null, { statusCode: 200 }, JSON.stringify({ type: "dockerregistry" }));
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  type: "dockerregistry"
+               }));
             }
          }
       });
@@ -471,12 +587,16 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: []
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -493,12 +613,18 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ url: "DockerHub" }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  url: "DockerHub"
+               }]
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -515,12 +641,14 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 400 }, undefined);
+            callback(null, {
+               statusCode: 400
+            }, undefined);
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -537,15 +665,21 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: []
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, { name: `` }, `token`, logger, (err, obj) => {
+         `e2eDemo`, {
+            name: ``
+         }, `token`, logger, (err, obj) => {
             assert.equal(obj, null);
             assert.equal(err, null);
 
@@ -559,15 +693,21 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: []
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, { name: `AzureSub` }, `token`, logger, (err, obj) => {
+         `e2eDemo`, {
+            name: `AzureSub`
+         }, `token`, logger, (err, obj) => {
             assert.equal(obj, undefined);
             assert.equal(err, null);
 
@@ -582,18 +722,34 @@ describe(`utility`, () => {
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
             if (options.url.endsWith(`serviceendpoints`)) {
-               callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ data: { subscriptionName: "AzureSub" } }] }));
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  value: [{
+                     data: {
+                        subscriptionName: "AzureSub"
+                     }
+                  }]
+               }));
             } else {
-               callback(null, { statusCode: 200 }, JSON.stringify({ data: { subscriptionName: "AzureSub" } }));
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  data: {
+                     subscriptionName: "AzureSub"
+                  }
+               }));
             }
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, { name: `AzureSub` }, `token`, logger, (err, obj) => {
+         `e2eDemo`, {
+            name: `AzureSub`
+         }, `token`, logger, (err, obj) => {
             assert.equal(obj.data.subscriptionName, `AzureSub`);
             assert.equal(err, null);
 
@@ -607,12 +763,16 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: "I`m a project!" }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: "I`m a project!"
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -629,12 +789,14 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 404 }, "{}");
+            callback(null, {
+               statusCode: 404
+            }, "{}");
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -651,12 +813,14 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback("boom", { statusCode: 500 }, "{}");
+            callback("boom", {
+               statusCode: 500
+            }, "{}");
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -673,13 +837,15 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 203 }, "{}");
+            callback(null, {
+               statusCode: 203
+            }, "{}");
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
-      logger.log.error = () => { };
+      logger.log = () => {};
+      logger.log.error = () => {};
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -695,17 +861,24 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ name: "e2eDemo-CI" }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-CI"
+               }]
+            }));
          }
       });
 
-      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`,
-         { name: "e2eDemo" }, `token`, "paas", (err, obj) => {
-            assert.equal(err, null);
-            assert.equal(obj.name, "e2eDemo-CI");
+      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+         name: "e2eDemo"
+      }, `token`, "paas", (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj.name, "e2eDemo-CI");
 
-            done();
-         });
+         done();
+      });
    }));
 
    it(`tryFindBuild should return build docker`, sinon.test(function (done) {
@@ -714,17 +887,24 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ name: "e2eDemo-Docker-CI" }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-Docker-CI"
+               }]
+            }));
          }
       });
 
-      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`,
-         { name: "e2eDemo" }, `token`, "docker", (err, obj) => {
-            assert.equal(err, null);
-            assert.equal(obj.name, "e2eDemo-Docker-CI");
+      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+         name: "e2eDemo"
+      }, `token`, "docker", (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj.name, "e2eDemo-Docker-CI");
 
-            done();
-         });
+         done();
+      });
    }));
 
    it(`tryFindBuild should return undefined`, sinon.test(function (done) {
@@ -733,17 +913,22 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 404 }, JSON.stringify({ value: [] }));
+            callback(null, {
+               statusCode: 404
+            }, JSON.stringify({
+               value: []
+            }));
          }
       });
 
-      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`,
-         { name: "e2eDemo" }, `token`, "paas", (err, obj) => {
-            assert.equal(err, null);
-            assert.equal(obj, undefined);
+      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+         name: "e2eDemo"
+      }, `token`, "paas", (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj, undefined);
 
-            done();
-         });
+         done();
+      });
    }));
 
    it(`tryFindRelease should return release paas`, sinon.test(function (done) {
@@ -752,7 +937,13 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ name: "e2eDemo-CD" }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-CD"
+               }]
+            }));
          }
       });
 
@@ -761,7 +952,9 @@ describe(`utility`, () => {
          appName: `e2eDemo`,
          token: `token`,
          account: `http://localhost:8080/tfs/DefaultCollection`,
-         teamProject: { name: `e2eDemo` }
+         teamProject: {
+            name: `e2eDemo`
+         }
       };
 
       proxyApp.tryFindRelease(args, (err, obj) => {
@@ -778,7 +971,13 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ name: "e2eDemo-Docker-CD" }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-Docker-CD"
+               }]
+            }));
          }
       });
 
@@ -786,7 +985,9 @@ describe(`utility`, () => {
          token: `token`,
          target: `docker`,
          appName: `e2eDemo`,
-         teamProject: { name: `e2eDemo` },
+         teamProject: {
+            name: `e2eDemo`
+         },
          account: `http://localhost:8080/tfs/DefaultCollection`
       };
 
@@ -804,7 +1005,11 @@ describe(`utility`, () => {
       // without this there would be no way to stub the request calls
       const proxyApp = proxyquire(`../generators/app/utility`, {
          "request": (options, callback) => {
-            callback(null, { statusCode: 404 }, JSON.stringify({ value: [] }));
+            callback(null, {
+               statusCode: 404
+            }, JSON.stringify({
+               value: []
+            }));
          }
       });
 
@@ -812,7 +1017,9 @@ describe(`utility`, () => {
          token: `token`,
          target: `paas`,
          appName: `e2eDemo`,
-         teamProject: { name: `e2eDemo` },
+         teamProject: {
+            name: `e2eDemo`
+         },
          account: `http://localhost:8080/tfs/DefaultCollection`
       };
 
@@ -912,12 +1119,20 @@ describe(`utility`, () => {
             assert.equal('https://vsts.visualstudio.com/_apis/distributedtask/serviceendpointproxy/azurermsubscriptions', options.url, 'wrong url');
 
             // Respond
-            callback(null, { statusCode: 200 }, JSON.stringify({ value: [{ displayName: 'NotMySub' }, { displayName: 'AzureSub' }] }));
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  displayName: 'NotMySub'
+               }, {
+                  displayName: 'AzureSub'
+               }]
+            }));
          }
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Act
       proxyApp.findAzureSub(
@@ -950,7 +1165,10 @@ describe(`utility`, () => {
       });
 
       // Act
-      proxyApp.getAzureSubs({ tfs: `vsts`, pat: `token` }).then(() => {
+      proxyApp.getAzureSubs({
+         tfs: `vsts`,
+         pat: `token`
+      }).then(() => {
          assert.fail();
          done();
       }, (e) => {
@@ -961,7 +1179,11 @@ describe(`utility`, () => {
 
    it(`getAzureSubs had no error`, function (done) {
       // Arrange
-      var expected = JSON.stringify([{ name: `One` }, { name: `two` }]);
+      var expected = JSON.stringify([{
+         name: `One`
+      }, {
+         name: `two`
+      }]);
 
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -973,12 +1195,21 @@ describe(`utility`, () => {
             assert.equal(`https://vsts.visualstudio.com/_apis/distributedtask/serviceendpointproxy/azurermsubscriptions`, options.url, `wrong url`);
 
             // Respond
-            callback(null, null, JSON.stringify({ value: [{ displayName: `One` }, { displayName: `two` }] }));
+            callback(null, null, JSON.stringify({
+               value: [{
+                  displayName: `One`
+               }, {
+                  displayName: `two`
+               }]
+            }));
          }
       });
 
       // Act
-      proxyApp.getAzureSubs({ tfs: `vsts`, pat: `token` }).then((x) => {
+      proxyApp.getAzureSubs({
+         tfs: `vsts`,
+         pat: `token`
+      }).then((x) => {
          assert.equal(expected, JSON.stringify(x));
          done();
       }, (e) => {
