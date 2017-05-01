@@ -95,7 +95,7 @@
             "codeCoverageTool": "Cobertura",
             "summaryFileLocation": "$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml",
             "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
-            "additionalCodeCoverageFiles": "$(Build.SourcesDirectory)/coverage/lcov-report"
+            "additionalCodeCoverageFiles": ""
          }
       },
       {

@@ -110,7 +110,7 @@
          "inputs": {
             "codeCoverageTool": "Cobertura",
             "summaryFileLocation": "$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml",
-            "reportDirectory": "",
+            "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
             "additionalCodeCoverageFiles": ""
          }
       },
