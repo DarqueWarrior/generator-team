@@ -2,6 +2,19 @@ const sinon = require(`sinon`);
 const assert = require(`yeoman-assert`);
 const util = require(`../generators/app/utility`);
 
+function tryFindRelease(expectedAccount, expectedTarget, expectedToken) {
+   sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
+      assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
+      assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
+      assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
+      assert.equal(expectedTarget, args.target, `tryFindRelease - target is wrong`);
+
+      callback(null, {
+         value: "I`m a release."
+      });
+   });
+}
+
 function findBuild(expectedAccount, expectedTarget, expectedToken) {
    sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
       assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
@@ -51,5 +64,6 @@ module.exports = {
 
    findBuild: findBuild,
    findQueue: findQueue,
-   findProject: findProject
+   findProject: findProject,
+   tryFindRelease: tryFindRelease
 };

@@ -52,21 +52,10 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
-
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `dockerpaas`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`dockerpaas`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `dockerpaas`, expectedToken);
 
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
                assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
@@ -134,21 +123,10 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
-
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `dockerpaas`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`dockerpaas`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `dockerpaas`, expectedToken);
 
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
                assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
@@ -211,21 +189,10 @@ describe(`release:index`, () => {
          .on(`ready`, (generator) => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
-
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `docker`, expectedToken);
 
             sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
@@ -287,22 +254,10 @@ describe(`release:index`, () => {
          .on(`ready`, (generator) => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
-
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
-
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `docker`, expectedToken);
 
             sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
@@ -363,21 +318,10 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
-
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `paas`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`paas`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `paas`, expectedToken);
 
             sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findAzureServiceEndpoint - Account is wrong`);
@@ -429,21 +373,10 @@ describe(`release:index`, () => {
          .on(`ready`, (generator) => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
-
             stubs.findProject(expectedAccount, `javaDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `docker`, expectedToken);
 
             sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
@@ -504,21 +437,10 @@ describe(`release:index`, () => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
-
             stubs.findProject(expectedAccount, `javaDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `paas`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`paas`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `paas`, expectedToken);
 
             sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findAzureServiceEndpoint - Account is wrong`);
@@ -570,21 +492,10 @@ describe(`release:index`, () => {
          .on(`ready`, generator => {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
-
             stubs.findProject(expectedAccount, `aspDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
-
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
-               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
-               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
-               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
-               assert.equal(`docker`, args.target, `tryFindRelease - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a release."
-               });
-            });
+            stubs.tryFindRelease(expectedAccount, `docker`, expectedToken);          
 
             sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
                assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
