@@ -636,28 +636,16 @@ describe(`release:app`, () => {
          "request": requestStub
       });
 
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
-      this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
-      this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-      this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, {
-         value: "TeamProject",
-         id: 1
-      });
-      this.stub(util, `findBuild`).callsArgWith(4, null, {
-         value: "I`m a build.",
-         id: 1,
-         authoredBy: {
-            id: 1,
-            displayName: `displayName`,
-            uniqueName: `uniqueName`
-         }
-      });
-      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, {
-         value: "I`m an endpoint.",
-         id: 1
-      });
+      
+      this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
+      
+      stubs.findBuild(expectedAccount, `docker`, expectedToken, this);
+      stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
+      stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
+      stubs.findDockerServiceEndpoint(expectedAccount, expectedToken, this);
+      stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken, this);
+      stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
       logger.log = () => {};
