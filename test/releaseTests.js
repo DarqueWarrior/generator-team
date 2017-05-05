@@ -422,13 +422,22 @@ describe(`release:app`, () => {
    }));
 
    it(`run with error should return error`, sinon.test(function (done) {
-      // Arrange    
+      // Arrange
+      this.stub(util, `tryFindRelease`).callsArgWith(1, new Error("boom"), null);
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
+
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
       stubs.findDockerServiceEndpoint(expectedAccount, expectedToken, this);
       stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken, this);
-      stubs.tryFindRelease(expectedAccount, `paas`, expectedToken, this);
       stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
-      stubs.findBuild(expectedAccount, `paas`, expectedToken, this);
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
@@ -472,18 +481,28 @@ describe(`release:app`, () => {
          "request": requestStub
       });
 
-      this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
-
-      // callsArgWith uses the first argument as the index of the callback function
-      // to call and calls it with the rest of the arguments provided.
+      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
-
-      stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
-      stubs.findDockerServiceEndpoint(expectedAccount, expectedToken, this);
-      stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken, this);
-      stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
-      stubs.findBuild(expectedAccount, `paas`, expectedToken, this);
-      stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
+      this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
+      this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
+      this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
+      this.stub(util, `findBuild`).callsArgWith(4, null, {
+         value: "I`m a build.",
+         id: 1,
+         authoredBy: {
+            id: 1,
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
+         }
+      });
+      this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, {
+         value: "I`m an endpoint.",
+         id: 1
+      });
 
       var logger = sinon.stub();
       logger.log = () => {};
@@ -539,7 +558,10 @@ describe(`release:app`, () => {
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
       this.stub(util, `findBuild`).callsArgWith(4, null, {
          value: "I`m a build.",
          id: 1,
@@ -614,12 +636,15 @@ describe(`release:app`, () => {
          "request": requestStub
       });
 
-      stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
+      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
       this.stub(util, `findBuild`).callsArgWith(4, null, {
          value: "I`m a build.",
          id: 1,

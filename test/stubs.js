@@ -32,10 +32,11 @@ function findBuild(expectedAccount, expectedTarget, expectedToken, context) {
 
       callback(null, {
          value: "I`m a build.",
+         id: 1,
          authoredBy: {
             id: 1,
-            uniqueName: `uniqueName`,
-            displayName: `displayName`
+            displayName: `displayName`,
+            uniqueName: `uniqueName`
          }
       });
    });
