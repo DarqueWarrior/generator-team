@@ -544,7 +544,7 @@ describe(`release:app`, () => {
       });
    }));
 
-   it(`findOrCreateRelease should create release docker vsts`, sinon.test(function (done) {
+   it.only(`findOrCreateRelease should create release docker vsts`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -553,25 +553,15 @@ describe(`release:app`, () => {
          "request": requestStub
       });
 
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, {
-         value: "TeamProject",
-         id: 1
-      });
-      this.stub(util, `findBuild`).callsArgWith(4, null, {
-         value: "I`m a build.",
-         id: 1,
-         authoredBy: {
-            id: 1,
-            displayName: `displayName`,
-            uniqueName: `uniqueName`
-         }
-      });
+
       this.stub(util, `findAzureServiceEndpoint`).callsArgWith(5, null, null);
+
+      stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
+      stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
 
       var logger = sinon.stub();
       logger.log = () => {};
@@ -637,9 +627,9 @@ describe(`release:app`, () => {
       });
 
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
-      
+
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
-      
+
       stubs.findBuild(expectedAccount, `docker`, expectedToken, this);
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
       stubs.findProject(expectedAccount, `e2eDemo`, expectedToken, this);
