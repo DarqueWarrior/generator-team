@@ -614,7 +614,6 @@ describe(`release:app`, () => {
          "request": requestStub
       });
 
-      //this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
       this.stub(util, `tryFindRelease`).callsArgWith(1, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{ReleaseDefName}}"}`);
