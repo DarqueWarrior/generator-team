@@ -761,7 +761,7 @@ function needsDockerHost(answers, cmdLnInput) {
       // answers.target will be undefined so test cmdLnInput
       let isDocker = (answers.target === `docker` || cmdLnInput.target === `docker`);
 
-      // This will be true the user did not select the Hosted Linux queue
+      // This will be true if the user did not select the Hosted Linux queue
       let paasRequiresHost = (answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`) &&
          (answers.queue !== undefined && answers.queue.indexOf(`Linux`) === -1);
 

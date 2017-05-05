@@ -13,6 +13,258 @@ sinon.test = sinonTest.configureTest(sinon);
 describe(`release:index`, () => {
    "use strict";
 
+   it(`test prompts node dockerpaas vsts`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `vsts`;
+
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.findAzureServiceEndpoint.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../generators/release/index`))
+         .withPrompts({
+            tfs: `vsts`,
+            pat: `token`,
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `dockerpaas`,
+            azureSub: `azureSub`,
+            dockerHost: `dockerHost`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getAzureSubs`);
+
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
+               assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
+               assert.equal(`nodeDemo`, project, `findProject - Project is wrong`);
+               assert.equal(expectedToken, token, `findProject - Token is wrong`);
+
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
+            });
+
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
+               assert.equal(`Hosted Linux Preview`, name, `findQueue - name is wrong`);
+               assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
+               assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
+               assert.equal(expectedToken, token, `findQueue - token is wrong`);
+
+               callback(null, 1);
+            });
+
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
+               assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
+               assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
+               assert.equal(expectedToken, token, `findBuild - token is wrong`);
+               assert.equal(`dockerpaas`, target, `findBuild - target is wrong`);
+
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
+            });
+
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
+               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
+               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
+               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
+               assert.equal(`dockerpaas`, args.target, `tryFindRelease - target is wrong`);
+
+               callback(null, {
+                  value: "I`m a release."
+               });
+            });
+
+            sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
+               assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
+
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
+            });
+
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
+               assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
+
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
+            });
+
+            sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
+               assert.equal(expectedAccount, account, `findAzureServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findAzureServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findAzureServiceEndpoint - token is wrong`);
+               assert.equal(`azureSub`, sub.name, `findAzureServiceEndpoint - sub is wrong`);
+
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
+            });
+         })
+         .on(`end`, e => {
+            cleanUp();
+         });
+   });
+
+   it(`test prompts node dockerpaas tfs`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.findAzureServiceEndpoint.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../generators/release/index`))
+         .withPrompts({
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            pat: `token`,
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `dockerpaas`,
+            azureSub: `azureSub`,
+            dockerHost: `dockerHost`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getAzureSubs`);
+
+            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
+               assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
+               assert.equal(`nodeDemo`, project, `findProject - Project is wrong`);
+               assert.equal(expectedToken, token, `findProject - Token is wrong`);
+
+               callback(null, {
+                  value: "TeamProject",
+                  id: 1
+               });
+            });
+
+            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
+               assert.equal(`Hosted Linux Preview`, name, `findQueue - name is wrong`);
+               assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
+               assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
+               assert.equal(expectedToken, token, `findQueue - token is wrong`);
+
+               callback(null, 1);
+            });
+
+            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
+               assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
+               assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
+               assert.equal(expectedToken, token, `findBuild - token is wrong`);
+               assert.equal(`dockerpaas`, target, `findBuild - target is wrong`);
+
+               callback(null, {
+                  value: "I`m a build.",
+                  authoredBy: {
+                     id: 1,
+                     uniqueName: `uniqueName`,
+                     displayName: `displayName`
+                  }
+               });
+            });
+
+            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
+               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
+               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
+               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
+               assert.equal(`dockerpaas`, args.target, `tryFindRelease - target is wrong`);
+
+               callback(null, {
+                  value: "I`m a release."
+               });
+            });
+
+            sinon.stub(util, `findDockerServiceEndpoint`).callsFake((account, projectId, dockerHost, token, gen, callback) => {
+               assert.equal(expectedAccount, account, `findDockerServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findDockerServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findDockerServiceEndpoint - token is wrong`);
+
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
+            });
+
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsFake((account, projectId, dockerRegistry, token, callback) => {
+               assert.equal(expectedAccount, account, `findDockerRegistryServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findDockerRegistryServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findDockerRegistryServiceEndpoint - token is wrong`);
+
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
+            });
+
+            sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
+               assert.equal(expectedAccount, account, `findAzureServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `findAzureServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `findAzureServiceEndpoint - token is wrong`);
+               assert.equal(`azureSub`, sub.name, `findAzureServiceEndpoint - sub is wrong`);
+
+               callback(null, {
+                  name: `endpoint`,
+                  id: 1
+               });
+            });
+         })
+         .on(`end`, e => {
+            cleanUp();
+         });
+   });
+
    it(`test prompts node docker vsts`, () => {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;

@@ -15,6 +15,27 @@ const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 sinon.test = sinonTest.configureTest(sinon);
 
 describe(`utility`, () => {
+   it(`needsDockerHost default queue`, () => {
+
+      // Arrange
+      let expected = true;
+
+      let answers = {
+         queue: `Default`
+      };
+
+      let cmdLnInput = {
+         queue: `Default`,
+         target: `dockerpaas`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, cmdLnInput);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
 
    it(`getAppTypes linux`, () => {
 

@@ -27,15 +27,9 @@ function input() {
 
    // When this generator is called alone as in team:azure
    // we have to make sure the prompts below realize they
-   // need to get a subscription. It we don't setup everything
+   // need to get a subscription. If we don't setup everything
    // right now the user will not be asked for a subscription.
-   // If this is called by another generator by this point the
-   // cmdLnInput.target will be defined.  Therefore, if we are here
-   // and cmdLnInput.target is undefined default it to paas because
-   // this generator was called alone.
-   if (cmdLnInput.target === undefined) {
-      cmdLnInput.target = `paas`;
-   }
+   cmdLnInput.target = `paas`;
 
    return this.prompt([
       prompts.tfs(this),
