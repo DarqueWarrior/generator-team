@@ -2,6 +2,17 @@
 function _cleanUp {
    param($name)
 
+   # Delete all the service endpoints of the team project
+   # To call Remove-ServiceEndpoint we have to build an object
+   # with the Project Name and an array of IDs to remove.
+   Get-Project | Where-Object { $_.Name -eq $name } |
+      Select-Object @{Name = 'ProjectName'; Expression = {$_.Name}}, 
+                    @{Name = 'Id'; Expression = {Get-ServiceEndpoint -ProjectName $_.Name | Select-Object -ExpandProperty id }} |
+      Remove-ServiceEndpoint -Force
+
+   # Delete the team project if it exists
+   # Using where-object will not error if the project
+   # is not found.
    Get-Project | Where-Object {$_.Name -eq $name} | Remove-Project -Force
    Remove-Item -Recurse -Force -Path $name
 }
@@ -11,7 +22,8 @@ Describe 'Node_PaaS' {
    $projectName = "project" + (New-Guid).Guid.SubString(0, 5)
 
    Context 'Default Agent' {
-      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default paas false " " " " " " " " " " " " " " " " $env:PAT *> .\testresults\nodePaaS.log
+      Write-Host "   Working with project $projectName"
+      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default paas false " " " " " " " " " " " " " " " " $env:PAT *> .\testresults\$projectName.log
       
       It 'Should create project' {
          Get-Project | Where-Object {$_.Name -eq $projectName} | Should not be $Null
@@ -44,8 +56,8 @@ Describe 'Node_Docker' {
    $projectName = "project" + (New-Guid).Guid.SubString(0, 5)
       
    Context 'Default Agent' {
-      
-      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default docker false " " "tcp://my2016dockerhost.westus.cloudapp.azure.com:2376" ".\test" "https://index.docker.io/v1/" "unittest" "3000:3000" "unittests" " " $env:PAT *> .\testresults\nodeDocker.log
+      Write-Host "    Working with project $projectName"
+      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default docker false " " "tcp://my2016dockerhost.westus.cloudapp.azure.com:2376" ".\test" "https://index.docker.io/v1/" "unittest" "3000:3000" "unittests" " " $env:PAT *> .\testresults\$projectName.log
       
       It 'Should create project' {
          # I can't use Get-Project -Name because Name if validated against existing 
@@ -87,8 +99,8 @@ Describe 'Node_DockerPaaS' {
    $projectName = "project" + (New-Guid).Guid.SubString(0, 5)
       
    Context 'Default Agent' {
-      
-      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default dockerpaas false " " "tcp://my2016dockerhost.westus.cloudapp.azure.com:2376" ".\test" "https://index.docker.io/v1/" "registryUsername" "3000:3000" "registryPassword" " " $env:PAT *> .\testresults\nodeDockerPaaSDefault.log
+      Write-Host "    Working with project $projectName"
+      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " Default dockerpaas false " " "tcp://my2016dockerhost.westus.cloudapp.azure.com:2376" ".\test" "https://index.docker.io/v1/" "registryUsername" "3000:3000" "registryPassword" " " $env:PAT *> .\testresults\$projectName.log
       
       It 'Should create project' {
          # I can't use Get-Project -Name because Name if validated against existing 
@@ -130,7 +142,8 @@ Describe 'Node_DockerPaaS' {
    $projectName = "project" + (New-Guid).Guid.SubString(0, 5)
       
    Context 'Linux Agent' {
-            node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " "Hosted Linux Preview" dockerpaas false " " " " " " "https://index.docker.io/v1/" "registryUsername" "3000:3000" "registryPassword" " " $env:PAT *> .\testresults\nodeDockerPaaSLinux.log
+      Write-Host "    Working with project $projectName"
+      node $env:YO team node $projectName demonstrations PM_DonovanBrown " " " " " " "Hosted Linux Preview" dockerpaas false " " " " " " "https://index.docker.io/v1/" "registryUsername" "3000:3000" "registryPassword" " " $env:PAT *> .\testresults\$projectName.log
       
       It 'Should create project' {
          # I can't use Get-Project -Name because Name if validated against existing 

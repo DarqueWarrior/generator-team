@@ -5,3 +5,4 @@ temp/
 xunit.xml
 *.log
 /.vs
+localtest.ps1
