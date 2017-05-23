@@ -544,7 +544,7 @@ describe(`release:app`, () => {
       });
    }));
 
-   it.only(`findOrCreateRelease should create release docker vsts`, sinon.test(function (done) {
+   it(`findOrCreateRelease should create release docker vsts`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
