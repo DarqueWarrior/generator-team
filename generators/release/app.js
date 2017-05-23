@@ -165,7 +165,7 @@ function createRelease(args, gen, callback) {
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
-      '{{ReleaseDefName}}': args.target === 'docker' ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`
+      '{{ReleaseDefName}}': (args.target === `docker` || args.target === `dockerpaas`) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');

@@ -578,7 +578,7 @@ function tryFindBuild(account, teamProject, token, target, callback) {
 function findBuild(account, teamProject, token, target, callback) {
    'use strict';
 
-   var name = target === `docker` ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
+   var name = (target === `docker` || target === `dockerpaas`) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -624,7 +624,7 @@ function tryFindRelease(args, callback) {
 function findRelease(args, callback) {
    "use strict";
 
-   var name = args.target === `docker` ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
+   var name = (args.target === `docker` || args.target === `dockerpaas`) ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
 
    var options = addUserAgent({
       "method": `GET`,

@@ -10,9 +10,9 @@ function run(args, gen, done) {
    'use strict';
 
    var queueId = 0;
-   var teamProject = {};
-   var dockerEndpoint = {};
-   var dockerRegistryEndpoint = {};
+   var teamProject;
+   var dockerEndpoint;
+   var dockerRegistryEndpoint;
    var token = util.encodePat(args.pat);
 
    async.series([
@@ -105,12 +105,12 @@ function createBuild(account, teamProject, token, queueId,
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
    var tokens = {
-      '{{BuildDefName}}': target === 'docker' ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`,
+      '{{BuildDefName}}': (target === `docker` || target === `dockerpaas`) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`,
       '{{TFS}}': account,
       '{{Project}}': teamProject.name,
       '{{QueueId}}': queueId,
-      '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : null,
-      '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : null,
+      '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : ``,
+      '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : ``,
       '{{dockerRegistryId}}': dockerNamespace,
       '{{ProjectLowerCase}}': teamProject.name.toLowerCase()
    };

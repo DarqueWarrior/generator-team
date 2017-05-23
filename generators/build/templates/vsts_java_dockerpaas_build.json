@@ -85,7 +85,7 @@
             "definitionType": "task"
          },
          "inputs": {
-            "dockerHostEndpoint": "",
+            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Build an image",
             "dockerFile": "Dockerfile",
@@ -112,7 +112,7 @@
             "definitionType": "task"
          },
          "inputs": {
-            "dockerHostEndpoint": "",
+            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Push an image",
             "dockerFile": "Dockerfile",
