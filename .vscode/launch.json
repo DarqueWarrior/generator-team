@@ -15,6 +15,17 @@
          "internalConsoleOptions": "neverOpen"        
       },
       {
+         "type": "node",
+         "request": "launch",
+         "name": "yo team:pipeline",
+         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "args": ["team:pipeline"],
+         "stopOnEntry": true,
+         "cwd": "${workspaceRoot}",
+         "console": "integratedTerminal",
+         "internalConsoleOptions": "neverOpen"        
+      },
+      {
          "name": "LaunchMocha",
          "type": "node",
          "request": "launch",
