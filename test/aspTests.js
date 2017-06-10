@@ -33,12 +33,10 @@ describe(`team:asp docker`, () => {
          `aspUnitTest/README.md`,
          `aspUnitTest/.gitignore`,
          `aspUnitTest/bower.json`,
-         `aspUnitTest/global.json`,
          `aspUnitTest/aspUnitTest.sln`,
          `aspUnitTest/src/aspUnitTest/aspUnitTest.csproj`,
          `aspUnitTest/src/aspUnitTest/web.config`,
          `aspUnitTest/src/aspUnitTest/Dockerfile`,
-         `aspUnitTest/src/aspUnitTest/project.json`,
          `aspUnitTest/src/aspUnitTest/appsettings.json`,
          `aspUnitTest/test/aspUnitTest.Tests/aspUnitTest.Tests.csproj`
       ]);
@@ -82,7 +80,6 @@ describe(`team:asp paas`, () => {
          `aspUnitTest.sln`,
          `.gitignore`,
          `./bower.json`,
-         `./global.json`,
          `./templates/website.json`,
          `./templates/parameters.xml`,
          `./src/aspUnitTest/web.config`,

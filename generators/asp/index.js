@@ -1,4 +1,5 @@
 const path = require('path');
+const uuidV4 = require('uuid/v4');
 const args = require(`../app/args`);
 const util = require(`../app/utility`);
 const prompts = require(`../app/prompt`);
@@ -32,7 +33,11 @@ function input() {
 function writeFiles() {
    var tokens = {
       name: this.applicationName,
-      name_lowercase: this.applicationName.toLowerCase()
+      name_lowercase: this.applicationName.toLowerCase(),
+      appGuid: uuidV4(),
+      testsGuid: uuidV4(),
+      srcFolderGuid: uuidV4(),
+      testFolderGuid: uuidV4()
    };
 
    var src = this.sourceRoot();
@@ -41,9 +46,9 @@ function writeFiles() {
    // Root files
    this.copy(`${src}/README.md`, `${root}/README.md`);
    this.copy(`${src}/gitignore`, `${root}/.gitignore`);
-   this.copy(`${src}/global.json`, `${root}/global.json`);
    this.fs.copyTpl(`${src}/.bowerrc`, `${root}/.bowerrc`, tokens);
    this.fs.copyTpl(`${src}/bower.json`, `${root}/bower.json`, tokens);
+   this.fs.copyTpl(`${src}/app.sln`, `${root}/${this.applicationName}.sln`, tokens);
 
    // Web App project
    src = `${this.sourceRoot()}/src/app`;
@@ -61,7 +66,7 @@ function writeFiles() {
    this.fs.copyTpl(`${src}/Dockerfile`, `${root}/Dockerfile`, tokens);
    this.fs.copyTpl(`${src}/Program.cs`, `${root}/Program.cs`, tokens);
    this.fs.copyTpl(`${src}/Startup.cs`, `${root}/Startup.cs`, tokens);
-   this.fs.copyTpl(`${src}/project.json`, `${root}/project.json`, tokens);
+   this.fs.copyTpl(`${src}/app.csproj`, `${root}/${this.applicationName}.csproj`, tokens);   
    this.fs.copyTpl(`${src}/Views/_ViewImports.cshtml`, `${root}/Views/_ViewImports.cshtml`, tokens);
    this.fs.copyTpl(`${src}/Views/Shared/_Layout.cshtml`, `${root}/Views/Shared/_Layout.cshtml`, tokens);
    this.fs.copyTpl(`${src}/Controllers/HomeController.cs`, `${root}/Controllers/HomeController.cs`, tokens);
@@ -71,7 +76,7 @@ function writeFiles() {
    src = `${this.sourceRoot()}/test/app.tests`;
    root = `${this.applicationName}/test/${this.applicationName}.Tests`;
 
-   this.fs.copyTpl(`${src}/project.json`, `${root}/project.json`, tokens);
+   this.fs.copyTpl(`${src}/app.Tests.csproj`, `${root}/${this.applicationName}.Tests.csproj`, tokens);
    this.fs.copyTpl(`${src}/HomeControllerTest.cs`, `${root}/HomeControllerTest.cs`, tokens);
 
    // ARM Templates
