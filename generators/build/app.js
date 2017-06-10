@@ -149,73 +149,19 @@ function createBuild(account, teamProject, token, queueId,
 
 function getBuild(args) {
    var build = ``;
-
-   switch (args.type) {
-      case `asp`:
-         if (args.target === `docker`) {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_asp_docker_build.json`;
-            } else {
-               build = `tfs_asp_docker_build.json`;
-            }
-         } else if (args.target === `dockerpaas`) {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_asp_dockerpaas_build.json`;
-            } else {
-               build = `tfs_asp_docker_build.json`;
-            }
-         } else {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_asp_build.json`;
-            } else {
-               build = `tfs_asp_build.json`;
-            }
-         }
-         break;
-
-      case `aspFull`:
-         if (util.isVSTS(args.tfs)) {
-            build = `vsts_aspFull_build.json`;
-         } else {
-            build = `tfs_aspFull_build.json`;
-         }
-         break;
-
-      case `node`:
-         if (args.target === `docker` || args.target === `dockerpaas`) {
-            if (args.queue.indexOf(`Linux`) !== -1) {
-               // On the hosted linux I can't seem to get access to the 
-               // reports folder so this build does not even try but
-               // still publishes code coverage.
-               build = `node_dockerpaas_hostedlinux_build.json`;
-            } else {
-               build = `node_docker_build.json`;
-            }
-         } else {
-            build = `node_build.json`;
-         }
-         break;
-      default: // Java
-         if (args.target === `docker`) {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_java_docker_build.json`;
-            } else {
-               build = `tfs_java_docker_build.json`;
-            }
-         } else if (args.target === `dockerpaas`) {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_java_dockerpaas_build.json`;
-            } else {
-               build = `tfs_java_docker_build.json`;
-            }
-         } else {
-            if (util.isVSTS(args.tfs)) {
-               build = `vsts_java_build.json`;
-            } else {
-               build = `tfs_java_build.json`;
-            }
-         }
-         break;
+   
+   if (args.target === `docker` || args.target === `dockerpaas`) {
+      if (util.isVSTS(args.tfs)) {
+         build = `vsts_${args.type}_docker_build.json`;
+      } else {
+         build = `tfs_${args.type}_docker_build.json`;
+      }
+   } else {
+      if (util.isVSTS(args.tfs)) {
+         build = `vsts_${args.type}_build.json`;
+      } else {
+         build = `tfs_${args.type}_build.json`;
+      }
    }
 
    return build;

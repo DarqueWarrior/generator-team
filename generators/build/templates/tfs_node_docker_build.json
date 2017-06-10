@@ -6,7 +6,8 @@
    "queue": {
       "id": "{{QueueId}}"
    },
-   "build": [{
+   "build": [
+      {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
@@ -146,7 +147,7 @@
             "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Build an image",
-            "dockerFile": "src/Dockerfile",
+            "dockerFile": "src/dockerfile",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
             "context": "src",
             "containerName": "",
@@ -205,15 +206,17 @@
          }
       }
    ],
-   "triggers": [{
-      "branchFilters": [
-         "+refs/heads/master"
-      ],
-      "pathFilters": [],
-      "batchChanges": false,
-      "maxConcurrentBuildsPerBranch": 1,
-      "triggerType": "continuousIntegration"
-   }],
+   "triggers": [
+      {
+         "branchFilters": [
+            "+refs/heads/master"
+         ],
+         "pathFilters": [],
+         "batchChanges": false,
+         "maxConcurrentBuildsPerBranch": 1,
+         "triggerType": "continuousIntegration"
+      }
+   ],
    "variables": {
       "system.debug": {
          "value": "false",

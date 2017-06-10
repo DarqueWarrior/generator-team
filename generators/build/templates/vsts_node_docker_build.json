@@ -11,7 +11,7 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Install bower",
+         "displayName": "npm install bower",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -46,38 +46,34 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Restore",
+         "displayName": "npm install for test",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "command": "restore",
-            "publishWebProjects": "true",
-            "projects": "*.sln",
-            "arguments": "--no-cache",
-            "zipAfterPublish": "true"
+            "command": "install",
+            "arguments": "",
+            "cwd": ""
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Test",
+         "displayName": "npm test",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
             "command": "test",
-            "publishWebProjects": "true",
-            "projects": "**/*.Tests.csproj",
-            "arguments": "-l trx",
-            "zipAfterPublish": "true"
+            "arguments": "-- --grep unit*",
+            "cwd": ""
          }
       },
       {
@@ -92,55 +88,51 @@
             "definitionType": "task"
          },
          "inputs": {
-            "testRunner": "VSTest",
-            "testResultsFiles": "**/*.trx",
-            "searchFolder": "$(System.DefaultWorkingDirectory)",
+            "testRunner": "JUnit",
+            "testResultsFiles": "**/xunit.xml",
             "mergeTestResults": "false",
             "testRunTitle": "Unit",
             "platform": "$(BuildPlatform)",
             "configuration": "$(BuildConfiguration)",
-            "publishRunAttachments": "false"
+            "publishRunAttachments": "true"
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Publish",
+         "displayName": "Publish Code Coverage Results",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
+            "id": "2a7ebc54-c13e-490e-81a5-d7561ab7cd97",
             "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "command": "publish",
-            "publishWebProjects": "true",
-            "projects": "",
-            "arguments": "--configuration $(BuildConfiguration) --output $(Build.StagingDirectory)/pub",
-            "zipAfterPublish": "false"
+            "codeCoverageTool": "Cobertura",
+            "summaryFileLocation": "$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml",
+            "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
+            "additionalCodeCoverageFiles": ""
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Copy Dockerfile",
+         "displayName": "npm install",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
-            "versionSpec": "2.*",
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "SourceFolder": "src/{{Project}}",
-            "Contents": "Dockerfile",
-            "TargetFolder": "$(Build.StagingDirectory)/pub/{{Project}}",
-            "CleanTargetFolder": "false",
-            "OverWrite": "false"
+            "command": "install",
+            "arguments": "",
+            "cwd": "src"
          }
       },
-      {
+       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
@@ -157,10 +149,10 @@
             "azureSubscriptionEndpoint": "",
             "azureContainerRegistry": "",
             "action": "Build an image",
-            "dockerFile": "$(Build.StagingDirectory)/pub/{{Project}}/Dockerfile",
+            "dockerFile": "src/Dockerfile",
             "buildArguments": "",
             "defaultContext": "false",
-            "context": "$(Build.StagingDirectory)/pub/{{Project}}",
+            "context": "src",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
             "qualifyImageName": "false",
             "additionalImageTags": "",
@@ -179,7 +171,7 @@
             "restartMaxRetries": "",
             "customCommand": "",
             "dockerHostEndpoint": "{{dockerHostEndpoint}}",
-            "cwd": "$(Build.StagingDirectory)/pub/{{Project}}"
+            "cwd": ""
          }
       },
       {
@@ -263,17 +255,15 @@
          }
       }
    ],
-   "triggers": [
-      {
-         "branchFilters": [
-            "+refs/heads/master"
-         ],
-         "pathFilters": [],
-         "batchChanges": false,
-         "maxConcurrentBuildsPerBranch": 1,
-         "triggerType": "continuousIntegration"
-      }
-   ],
+   "triggers": [{
+      "branchFilters": [
+         "+refs/heads/master"
+      ],
+      "pathFilters": [],
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "triggerType": "continuousIntegration"
+   }],
    "variables": {
       "system.debug": {
          "value": "false",
@@ -286,14 +276,6 @@
       "BuildPlatform": {
          "value": "any cpu",
          "allowOverride": true
-      },
-      "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": {
-         "value": "true",
-         "allowOverride": false
-      },
-      "NUGET_XMLDOC_MODE": {
-         "value": "skip",
-         "allowOverride": false
       }
    },
    "repository": {

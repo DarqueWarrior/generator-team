@@ -11,6 +11,23 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
+         "displayName": "Install bower",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "cwd": "",
+            "command": "install",
+            "arguments": "bower --allow-root"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
          "displayName": "Run bower",
          "timeoutInMinutes": 0,
          "task": {
@@ -20,7 +37,7 @@
          },
          "inputs": {
             "filename": "bower",
-            "arguments": "install",
+            "arguments": "install --allow-root",
             "workingFolder": "",
             "failOnStandardError": "false"
          }
@@ -67,17 +84,17 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
             "testRunner": "JUnit",
             "testResultsFiles": "**/xunit.xml",
             "mergeTestResults": "false",
-            "testRunTitle": "",
-            "platform": "",
-            "configuration": "",
-            "publishRunAttachments": "true"
+            "testRunTitle": "Unit",
+            "platform": "$(BuildPlatform)",
+            "configuration": "$(BuildConfiguration)",
+            "publishRunAttachments": "false"
          }
       },
       {
@@ -119,54 +136,20 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Build an image",
+         "displayName": "Archive files",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
-            "versionSpec": "0.*",
+            "id": "d8b84976-e99a-4b86-b885-4849694435b0",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
-            "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
-            "action": "Build an image",
-            "dockerFile": "src/dockerfile",
-            "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
-            "context": "src",
-            "containerName": "",
-            "ports": "",
-            "envVars": "",
-            "removeImageAfterPush": "false",
-            "customCommand": "",
-            "containerCommand": "",
-            "cwd": ""
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Push an image",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
-            "versionSpec": "0.*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
-            "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
-            "action": "Push an image",
-            "dockerFile": "**/Dockerfile",
-            "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
-            "context": "$(Build.StagingDirectory)",
-            "containerName": "",
-            "ports": "",
-            "envVars": "",
-            "removeImageAfterPush": "false",
-            "customCommand": "",
-            "containerCommand": "",
-            "cwd": "$(System.DefaultWorkingDirectory)"
+            "rootFolder": "src",
+            "includeRootFolder": "false",
+            "archiveType": "default",
+            "tarCompression": "gz",
+            "archiveFile": "website.zip",
+            "replaceExistingArchive": "true"
          }
       },
       {
@@ -177,12 +160,12 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "1d341bb0-2106-458c-8422-d00bcea6512a",
-            "versionSpec": "*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
             "CopyRoot": "",
-            "Contents": "**/templates/*.*",
+            "Contents": "**/website.zip\n**/templates/website.json\n**/templates/WebSite.parameters.json",
             "ArtifactName": "drop",
             "ArtifactType": "Container",
             "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"

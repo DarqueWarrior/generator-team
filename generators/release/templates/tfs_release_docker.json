@@ -152,6 +152,10 @@
          "type": "Build",
          "alias": "{{BuildName}}",
          "definitionReference": {
+            "defaultVersionType": {
+            "id": "latestType",
+            "name": "Latest"
+            },
             "definition": {
                "id": "{{BuildId}}",
                "name": "{{BuildName}}"

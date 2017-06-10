@@ -494,7 +494,7 @@ describe(`build:app`, () => {
 
    it(`getBuild asp vsts dockerpaas`, () => {
       // Arrange 
-      let expected = `vsts_asp_dockerpaas_build.json`;
+      let expected = `vsts_asp_docker_build.json`;
 
       // Act
       let actual = build.getBuild({ type: `asp`, target: `dockerpaas`, tfs: `vsts` });
@@ -516,21 +516,10 @@ describe(`build:app`, () => {
 
    it(`getBuild java vsts dockerpaas`, () => {
       // Arrange 
-      let expected = `vsts_java_dockerpaas_build.json`;
+      let expected = `vsts_java_docker_build.json`;
 
       // Act
       let actual = build.getBuild({ type: `java`, target: `dockerpaas`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild node vsts linux dockerpaas`, () => {
-      // Arrange 
-      let expected = `node_dockerpaas_hostedlinux_build.json`;
-
-      // Act
-      let actual = build.getBuild({ type: `node`, target: `dockerpaas`, tfs: `vsts`, queue: `Hosted Linux Preview` });
 
       // Assert
       assert.equal(expected, actual);
@@ -553,6 +542,72 @@ describe(`build:app`, () => {
 
       // Act
       let actual = build.getBuild({ type: `java`, target: `paas`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node vsts dockerpaas`, () => {
+      // Arrange 
+      let expected = `vsts_node_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `dockerpaas`, tfs: `vsts`, queue: `Hosted Linux Preview` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node vsts docker`, () => {
+      // Arrange 
+      let expected = `vsts_node_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `docker`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node vsts paas`, () => {
+      // Arrange 
+      let expected = `vsts_node_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `paas`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node tfs dockerpaas`, () => {
+      // Arrange 
+      let expected = `tfs_node_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `dockerpaas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node tfs docker`, () => {
+      // Arrange 
+      let expected = `tfs_node_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `docker`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node tfs paas`, () => {
+      // Arrange 
+      let expected = `tfs_node_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `paas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
 
       // Assert
       assert.equal(expected, actual);
