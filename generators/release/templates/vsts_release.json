@@ -50,7 +50,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "1.*",
+                  "version": "2.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -68,7 +68,7 @@
                      "location": "Central US",
                      "csmFile": "**/website.json",
                      "csmParametersFile": "**/WebSite.parameters.json",
-                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation \"$(aiLocation)\"",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""
@@ -179,7 +179,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "1.*",
+                  "version": "2.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -197,7 +197,7 @@
                      "location": "Central US",
                      "csmFile": "**/website.json",
                      "csmParametersFile": "**/WebSite.parameters.json",
-                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation \"$(aiLocation)\"",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""
@@ -328,7 +328,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "1.*",
+                  "version": "2.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -346,7 +346,7 @@
                      "location": "Central US",
                      "csmFile": "**/website.json",
                      "csmParametersFile": "**/WebSite.parameters.json",
-                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation \"$(aiLocation)\"",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""

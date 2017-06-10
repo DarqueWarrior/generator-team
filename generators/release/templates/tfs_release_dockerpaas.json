@@ -81,7 +81,7 @@
                   "location": "West US",
                   "csmFile": "**/docker.json",
                   "csmParametersFile": "**/docker.parameters.json",
-                  "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectName}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
+                  "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
                   "enableDeploymentPrerequisitesForCreate": "false",
                   "enableDeploymentPrerequisitesForSelect": "false",
                   "outputVariable": ""
@@ -184,7 +184,7 @@
                      "location": "West US",
                      "csmFile": "**/docker.json",
                      "csmParametersFile": "**/docker.parameters.json",
-                     "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectName}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
+                     "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""
@@ -305,7 +305,7 @@
                      "location": "West US",
                      "csmFile": "**/docker.json",
                      "csmParametersFile": "**/docker.parameters.json",
-                     "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectName}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
+                     "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""

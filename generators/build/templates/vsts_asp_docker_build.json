@@ -11,16 +11,33 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
+         "displayName": "Install bower",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "cwd": "",
+            "command": "install",
+            "arguments": "bower --allow-root"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
          "displayName": "Run bower",
          "timeoutInMinutes": 0,
          "task": {
             "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
             "filename": "bower",
-            "arguments": "install",
+            "arguments": "install --allow-root",
             "workingFolder": "",
             "failOnStandardError": "false"
          }
@@ -29,72 +46,38 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run dotnet restore",
+         "displayName": "Restore",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
+            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "dotnet",
-            "arguments": "restore --no-cache",
-            "workingFolder": "",
-            "failOnStandardError": "false"
+            "command": "restore",
+            "publishWebProjects": "true",
+            "projects": "*.sln",
+            "arguments": "--no-cache",
+            "zipAfterPublish": "true"
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run Tests",
+         "displayName": "Test",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
+            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "%userprofile%\\.nuget\\packages\\OpenCover\\4.6.519\\tools\\OpenCover.Console.exe",
-            "arguments": "-target:dotnet.exe -targetargs:\"test -c $(BuildConfiguration) -o $(Build.StagingDirectory)/reports -xml test-results.xml\" -output:OpenCover.xml -returntargetcode -hideskipped:All -filter:+[{{Project}}]* -register:user -oldStyle",
-            "workingFolder": "test/{{Project}}.Tests",
-            "failOnStandardError": "false"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Convert coverage results",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "filename": "%userprofile%\\.nuget\\packages\\OpenCoverToCoberturaConverter\\0.2.4\\tools\\OpenCoverToCoberturaConverter.exe",
-            "arguments": "\"-input:OpenCover.xml\" \"-output:Cobertura.xml\"",
-            "workingFolder": "test/{{Project}}.Tests",
-            "failOnStandardError": "false"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Generate Test Reports",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "filename": "%userprofile%\\.nuget\\packages\\ReportGenerator\\2.4.5\\tools\\ReportGenerator.exe",
-            "arguments": "-reports:OpenCover.xml -targetdir:.\\reports -reporttypes:Html;Xml;XmlSummary",
-            "workingFolder": "test/{{Project}}.Tests",
-            "failOnStandardError": "false"
+            "command": "test",
+            "publishWebProjects": "true",
+            "projects": "**/*.Tests.csproj",
+            "arguments": "-l trx",
+            "zipAfterPublish": "true"
          }
       },
       {
@@ -105,53 +88,37 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
-            "versionSpec": "*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
-            "testRunner": "XUnit",
-            "testResultsFiles": "**/TEST-*.xml",
+            "testRunner": "VSTest",
+            "testResultsFiles": "**/*.trx",
+            "searchFolder": "$(System.DefaultWorkingDirectory)",
             "mergeTestResults": "false",
-            "testRunTitle": "",
-            "platform": "",
-            "configuration": "",
-            "publishRunAttachments": "true"
+            "testRunTitle": "Unit",
+            "platform": "$(BuildPlatform)",
+            "configuration": "$(BuildConfiguration)",
+            "publishRunAttachments": "false"
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Publish Code Coverage Results",
+         "displayName": "Publish",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "2a7ebc54-c13e-490e-81a5-d7561ab7cd97",
-            "versionSpec": "*",
+            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "codeCoverageTool": "Cobertura",
-            "summaryFileLocation": "$(Build.SourcesDirectory)/test/{{Project}}.Tests/Cobertura.xml",
-            "reportDirectory": "$(Build.SourcesDirectory)/test/{{Project}}.Tests/reports",
-            "additionalCodeCoverageFiles": ""
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Run dotnet publish",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "filename": "dotnet",
-            "arguments": "publish -c $(BuildConfiguration) -o $(Build.StagingDirectory)/pub",
-            "workingFolder": "src/{{Project}}",
-            "failOnStandardError": "false"
+            "command": "publish",
+            "publishWebProjects": "true",
+            "projects": "",
+            "arguments": "--configuration $(BuildConfiguration) --output $(Build.StagingDirectory)/pub",
+            "zipAfterPublish": "false"
          }
       },
       {
@@ -162,13 +129,13 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
-            "versionSpec": "*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
             "SourceFolder": "src/{{Project}}",
             "Contents": "Dockerfile",
-            "TargetFolder": "$(Build.StagingDirectory)/pub",
+            "TargetFolder": "$(Build.StagingDirectory)/pub/{{Project}}",
             "CleanTargetFolder": "false",
             "OverWrite": "false"
          }
@@ -180,24 +147,39 @@
          "displayName": "Build an image",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
             "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
+            "containerregistrytype": "Container Registry",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
+            "azureSubscriptionEndpoint": "",
+            "azureContainerRegistry": "",
             "action": "Build an image",
-            "dockerFile": "$(Build.StagingDirectory)/pub/dockerfile",
+            "dockerFile": "$(Build.StagingDirectory)/pub/{{Project}}/Dockerfile",
+            "buildArguments": "",
+            "defaultContext": "false",
+            "context": "$(Build.StagingDirectory)/pub/{{Project}}",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
-            "context": "$(Build.StagingDirectory)/pub",
+            "qualifyImageName": "false",
+            "additionalImageTags": "",
+            "includeSourceTags": "false",
+            "includeLatestTag": "false",
+            "imageDigestFile": "",
             "containerName": "",
             "ports": "",
+            "volumes": "",
             "envVars": "",
-            "removeImageAfterPush": "false",
-            "customCommand": "",
+            "workDir": "",
+            "entrypoint": "",
             "containerCommand": "",
-            "cwd": "$(Build.StagingDirectory)/pub"
+            "detached": "true",
+            "restartPolicy": "no",
+            "restartMaxRetries": "",
+            "customCommand": "",
+            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
+            "cwd": "$(Build.StagingDirectory)/pub/{{Project}}"
          }
       },
       {
@@ -207,24 +189,77 @@
          "displayName": "Push an image",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
             "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
+            "containerregistrytype": "Container Registry",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
+            "azureSubscriptionEndpoint": "",
+            "azureContainerRegistry": "",
             "action": "Push an image",
             "dockerFile": "**/Dockerfile",
+            "buildArguments": "",
+            "defaultContext": "true",
+            "context": "",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
-            "context": "$(Build.StagingDirectory)",
+            "qualifyImageName": "false",
+            "additionalImageTags": "",
+            "includeSourceTags": "false",
+            "includeLatestTag": "false",
+            "imageDigestFile": "",
             "containerName": "",
             "ports": "",
+            "volumes": "",
             "envVars": "",
-            "removeImageAfterPush": "false",
-            "customCommand": "",
+            "workDir": "",
+            "entrypoint": "",
             "containerCommand": "",
+            "detached": "true",
+            "restartPolicy": "no",
+            "restartMaxRetries": "",
+            "customCommand": "",
+            "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "cwd": "$(System.DefaultWorkingDirectory)"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Copy ARM template files to publish folder",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+            "versionSpec": "2.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "SourceFolder": "templates/",
+            "Contents": "**/*.json",
+            "TargetFolder": "$(Build.StagingDirectory)/pub/templates/",
+            "CleanTargetFolder": "false",
+            "OverWrite": "true",
+            "flattenFolders": "false"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Publish Artifact: drop",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+            "versionSpec": "1.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "PathtoPublish": "$(Build.StagingDirectory)/pub/templates",
+            "ArtifactName": "drop",
+            "ArtifactType": "Container",
+            "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
          }
       }
    ],
