@@ -11,6 +11,23 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
+         "displayName": "Install bower",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "cwd": "",
+            "command": "install",
+            "arguments": "bower --allow-root"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
          "displayName": "Run bower",
          "timeoutInMinutes": 0,
          "task": {
@@ -20,7 +37,7 @@
          },
          "inputs": {
             "filename": "bower",
-            "arguments": "install",
+            "arguments": "install --allow-root",
             "workingFolder": "",
             "failOnStandardError": "false"
          }
@@ -33,13 +50,13 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
             "command": "restore",
             "publishWebProjects": "true",
-            "projects": "**/project.json",
+            "projects": "*.sln",
             "arguments": "--no-cache",
             "zipAfterPublish": "true"
          }
@@ -48,54 +65,19 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run Tests",
+         "displayName": "Test",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
+            "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
             "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "%userprofile%\\.nuget\\packages\\OpenCover\\4.6.519\\tools\\OpenCover.Console.exe",
-            "arguments": "-target:dotnet.exe -targetargs:\"test -c $(BuildConfiguration) -o $(Build.StagingDirectory)/reports -xml test-results.xml\" -output:OpenCover.xml -returntargetcode -hideskipped:All -filter:+[{{Project}}]* -register:user -oldStyle",
-            "workingFolder": "test/{{Project}}.Tests",
-            "failOnStandardError": "false"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Convert coverage results",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "1.*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "filename": "%userprofile%\\.nuget\\packages\\OpenCoverToCoberturaConverter\\0.2.4\\tools\\OpenCoverToCoberturaConverter.exe",
-            "arguments": "\"-input:OpenCover.xml\" \"-output:Cobertura.xml\"",
-            "workingFolder": "test/{{Project}}.Tests",
-            "failOnStandardError": "false"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Generate Test Reports",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "1.*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "filename": "%userprofile%\\.nuget\\packages\\ReportGenerator\\2.4.5\\tools\\ReportGenerator.exe",
-            "arguments": "-reports:OpenCover.xml -targetdir:.\\reports -reporttypes:Html;Xml;XmlSummary",
-            "workingFolder": "test/{{Project}}.Tests",
-            "failOnStandardError": "false"
+            "command": "test",
+            "publishWebProjects": "true",
+            "projects": "**/*.Tests.csproj",
+            "arguments": "-l trx",
+            "zipAfterPublish": "true"
          }
       },
       {
@@ -106,35 +88,18 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
-            "testRunner": "XUnit",
-            "testResultsFiles": "**/TEST-*.xml",
+            "testRunner": "VSTest",
+            "testResultsFiles": "**/*.trx",
+            "searchFolder": "$(System.DefaultWorkingDirectory)",
             "mergeTestResults": "false",
-            "testRunTitle": "",
-            "platform": "",
-            "configuration": "",
-            "publishRunAttachments": "true"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Publish Code Coverage Results",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "2a7ebc54-c13e-490e-81a5-d7561ab7cd97",
-            "versionSpec": "1.*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "codeCoverageTool": "Cobertura",
-            "summaryFileLocation": "$(Build.SourcesDirectory)/test/{{Project}}.Tests/Cobertura.xml",
-            "reportDirectory": "$(Build.SourcesDirectory)/test/{{Project}}.Tests/reports",
-            "additionalCodeCoverageFiles": ""
+            "testRunTitle": "Unit",
+            "platform": "$(BuildPlatform)",
+            "configuration": "$(BuildConfiguration)",
+            "publishRunAttachments": "false"
          }
       },
       {
@@ -145,7 +110,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -172,23 +137,23 @@
             "Contents": "**/*.json",
             "TargetFolder": "$(Build.StagingDirectory)/pub/templates/",
             "CleanTargetFolder": "false",
-            "OverWrite": "true"
+            "OverWrite": "true",
+            "flattenFolders": "false"
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Copy Publish Artifact: drop",
+         "displayName": "Publish Artifact: drop",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "1d341bb0-2106-458c-8422-d00bcea6512a",
+            "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
             "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "CopyRoot": "$(Build.StagingDirectory)/pub",
-            "Contents": "**/*.zip\n**/templates/*.*",
+            "PathtoPublish": "$(Build.StagingDirectory)/pub",
             "ArtifactName": "drop",
             "ArtifactType": "Container",
             "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
