@@ -148,7 +148,7 @@
             "includeRootFolder": "false",
             "archiveType": "default",
             "tarCompression": "gz",
-            "archiveFile": "website.zip",
+            "archiveFile": "{{Project}}.zip",
             "replaceExistingArchive": "true"
          }
       },
@@ -165,7 +165,7 @@
          },
          "inputs": {
             "SourceFolder": "",
-            "Contents": "**/website.zip\n**/templates/website.json\n**/templates/website.parameters.json",
+            "Contents": "**/{{Project}}.zip\n**/templates/website.json\n**/templates/website.parameters.json",
             "TargetFolder": "$(build.artifactstagingdirectory)",
             "CleanTargetFolder": "true",
             "OverWrite": "false",
