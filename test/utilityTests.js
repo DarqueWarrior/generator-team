@@ -15,6 +15,224 @@ const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 sinon.test = sinonTest.configureTest(sinon);
 
 describe(`utility`, () => {
+   it(`getTargets Default queue, node app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Default`,
+         type: `node`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted queue, node app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted`,
+         type: `node`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted VS2017 queue, node app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted VS2017`,
+         type: `node`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted Linux Preview queue, node app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted Linux Preview`,
+         type: `node`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Default queue, asp app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Default`,
+         type: `asp`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted queue, asp app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted`,
+         type: `asp`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted VS2017 queue, asp app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted VS2017`,
+         type: `asp`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted Linux Preview queue, asp app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted Linux Preview`,
+         type: `asp`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Default queue, java app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Default`,
+         type: `java`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted queue, java app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted`,
+         type: `java`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted VS2017 queue, java app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted VS2017`,
+         type: `java`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[2].name, `Docker Host`);
+      assert.equal(actual.length, 3, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted Linux Preview queue, java app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted Linux Preview`,
+         type: `java`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service Docker (Linux)`);
+      assert.equal(actual[1].name, `Docker Host`);
+      assert.equal(actual.length, 2, `Wrong number of entries`);
+   });
+
+   it(`getTargets Default queue, aspFull app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Default`,
+         type: `aspFull`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `Azure App Service`);
+      assert.equal(actual.length, 1, `Wrong number of entries`);
+   });
+
    it(`needsDockerHost default queue`, () => {
 
       // Arrange
@@ -35,7 +253,6 @@ describe(`utility`, () => {
       // Assert
       assert.equal(expected, actual);
    });
-
 
    it(`getAppTypes linux`, () => {
 

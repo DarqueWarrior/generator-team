@@ -47,6 +47,9 @@ function reconcileValue(first, second, fallback) {
    return first ? first.trim() : (second ? second.trim() : fallback);
 }
 
+// If the user has selected Java and Hosted Linux Preview you
+// can't select App Service because you have to use PowerShell
+// to convert the war file into a zip file.
 function getTargets(answers) {
 
    if (answers.type === `aspFull`) {
@@ -56,7 +59,7 @@ function getTargets(answers) {
       }];
    }
 
-   return [{
+   let result = [{
       name: `Azure App Service`,
       value: `paas`
    }, {
@@ -66,6 +69,14 @@ function getTargets(answers) {
       name: `Docker Host`,
       value: `docker`
    }];
+
+   if (answers.type === `java` &&
+      answers.queue === `Hosted Linux Preview`) {
+      // Remove Azure App Service
+      result.splice(0, 1);
+   }
+
+   return result;
 }
 
 function getAppTypes(answers) {
