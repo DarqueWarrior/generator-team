@@ -95,7 +95,7 @@
             "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Build an image",
-            "dockerFile": "dockerfile",
+            "dockerFile": "Dockerfile",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
             "context": "$(Build.SourcesDirectory)",
             "containerName": "",
@@ -133,7 +133,7 @@
             "containerCommand": "",
             "cwd": "$(System.DefaultWorkingDirectory)"
          }
-      }
+      },
       {
          "enabled": true,
          "continueOnError": false,
