@@ -21,7 +21,8 @@
          "isSecret": true
       }
    },
-   "environments": [{
+   "environments": [
+      {
          "name": "Dev",
          "rank": 1,
          "variables": {
@@ -164,9 +165,10 @@
             "rank": 1,
             "phaseType": 1,
             "name": "Run on agent",
-            "workflowTasks": [{
+            "workflowTasks": [
+               {
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "2.*",
+                  "version": "1.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -287,7 +289,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "2.*",
+                  "version": "1.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
