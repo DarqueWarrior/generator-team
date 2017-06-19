@@ -44,7 +44,7 @@
     "request": "^2.81.0",
     "uuid": "^3.1.0",
     "yeoman-generator": "^0.24.1",
-    "yosay": "^1.2.0"
+    "yosay": "^2.0.0"
   },
   "devDependencies": {
     "fs-extra": "^0.30.0",
@@ -61,6 +61,6 @@
     "supertest": "^2.0.0",
     "xunit-file": "^1.0.0",
     "yeoman-test": "*",
-    "yo": "^1.8.5"
+    "yo": "^2.0.0"
   }
 }
