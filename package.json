@@ -50,7 +50,7 @@
     "fs-extra": "^0.30.0",
     "gulp": "^3.9.1",
     "gulp-jshint": "^2.0.4",
-    "gulp-mocha": "^3.0.1",
+    "gulp-mocha": "^4.3.1",
     "gulp-spawn-mocha": "^3.1.0",
     "istanbul": "*",
     "jshint": "^2.9.4",
