@@ -47,7 +47,7 @@
     "yosay": "^2.0.0"
   },
   "devDependencies": {
-    "fs-extra": "^0.30.0",
+    "fs-extra": "^3.0.1",
     "gulp": "^3.9.1",
     "gulp-jshint": "^2.0.4",
     "gulp-mocha": "^4.3.1",
