@@ -58,7 +58,7 @@
     "proxyquire": "*",
     "sinon": "^2.3.4",
     "sinon-test": "^1.0.1",
-    "supertest": "^2.0.0",
+    "supertest": "^3.0.0",
     "xunit-file": "^1.0.0",
     "yeoman-test": "*",
     "yo": "^2.0.0"
