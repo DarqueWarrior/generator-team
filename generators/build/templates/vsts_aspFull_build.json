@@ -46,7 +46,7 @@
          "clean": "false",
          "restoreNugetPackages": "false",
          "maximumCpuCount": "false",
-         "vsVersion": "15.0",
+         "vsVersion": "latest",
          "msbuildArchitecture": "x86",
          "logProjectEvents": "true",
          "createLogFile": "false"
@@ -72,7 +72,7 @@
          "codeCoverageEnabled": "true",
          "runInParallel": "true",
          "vstestLocationMethod": "version",
-         "vsTestVersion": "15.0",
+         "vsTestVersion": "latest",
          "vstestLocation": "",
          "pathtoCustomTestAdapters": "",
          "otherConsoleOptions": "",
