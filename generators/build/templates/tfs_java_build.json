@@ -10,18 +10,17 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Install bower",
+         "displayName": "npm install bower",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "*",
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "npm",
-            "arguments": "install bower --allow-root",
-            "workingFolder": "",
-            "failOnStandardError": "false"
+            "cwd": "",
+            "command": "install",
+            "arguments": "bower --allow-root"
          }
       },
       {
