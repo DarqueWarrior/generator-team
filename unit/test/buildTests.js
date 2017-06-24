@@ -5,8 +5,8 @@ const assert = require(`assert`);
 const helpers = require(`yeoman-test`);
 const sinonTest = require(`sinon-test`);
 const proxyquire = require(`proxyquire`);
-const build = require(`../generators/build/app`);
-const util = require(`../generators/app/utility`);
+const build = require(`../../generators/build/app`);
+const util = require(`../../generators/app/utility`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
@@ -21,7 +21,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `asp`,
             applicationName: `aspDemo`,
@@ -60,7 +60,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `aspFull`,
             applicationName: `aspDemo`,
@@ -99,7 +99,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `java`,
             applicationName: `javaDemo`,
@@ -138,7 +138,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `node`,
             applicationName: `nodeDemo`,
@@ -177,7 +177,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `node`,
             applicationName: `nodeDemo`,
@@ -216,7 +216,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `asp`,
             applicationName: `aspDemo`,
@@ -255,7 +255,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withPrompts({
             type: `java`,
             applicationName: `javaDemo`,
@@ -295,7 +295,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`node`, `nodeDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -328,7 +328,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`java`, `javaDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -362,7 +362,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -397,7 +397,7 @@ describe(`build:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -682,7 +682,7 @@ describe(`build:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/build/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/build/app`, { "request": requestStub });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
@@ -712,7 +712,7 @@ describe(`build:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/build/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/build/app`, { "request": requestStub });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
@@ -744,7 +744,7 @@ describe(`build:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/build/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/build/app`, { "request": requestStub });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);

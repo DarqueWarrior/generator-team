@@ -1,43 +1,45 @@
 const path = require(`path`);
-const fs = require(`fs-extra`);
+const fs = require(`fs`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
 const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
-const util = require(`../generators/app/utility`);
-const registry = require(`../generators/registry/app`);
+const util = require(`../../generators/app/utility`);
+const docker = require(`../../generators/docker/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
-describe(`registry:index`, () => {
+describe(`docker:index`, () => {
    "use strict";
-   it(`test prompts registry should not return error`, () => {
+   it(`test prompts docker should not return error`, () => {
       let cleanUp = () => {
-         util.tryFindDockerRegistryServiceEndpoint.restore();
+         util.tryFindDockerServiceEndpoint.restore();
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/registry/index`))
+      return helpers.run(path.join(__dirname, `../../generators/docker/index`))
          .withPrompts({
             pat: `token`,
             applicationName: `aspDemo`,
+            dockerHost: `dockerHost`,
+            dockerCertPath: `dockerCertPath`,
             dockerRegistry: `dockerRegistry`,
             dockerRegistryId: `dockerRegistryId`,
             dockerRegistryPassword: `dockerRegistryPassword`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`
          })
-         .on(`error`, (error) => {
+         .on(`error`, e => {
             cleanUp();
-            assert.fail(error);
+            assert.fail(e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, generator => {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `findProject`).callsArgWith(4, null, {
                value: "TeamProject",
                id: 1
             });
-            sinon.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, {
+            sinon.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, null, {
                name: `endpoint`,
                id: 1
             });
@@ -49,22 +51,25 @@ describe(`registry:index`, () => {
          });
    });
 
-   it(`test cmd line registry should not return error`, () => {
+   it(`test cmd line docker should not return error`, () => {
       let cleanUp = () => {
-         util.tryFindDockerRegistryServiceEndpoint.restore();
+         util.tryFindDockerServiceEndpoint.restore();
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/registry/index`))
+      return helpers.run(path.join(__dirname, `../../generators/docker/index`))
          .withArguments([
             `aspDemo`,
             `http://localhost:8080/tfs/DefaultCollection`,
-            `dockerRegistry`,
+            `dockerHost`,
+            `dockerCerts`,
             `dockerRegistryId`,
+            `dockerRegistry`,
+            `dockerPorts`,
             `dockerRegistryPassword`,
             `token`
          ])
-         .on(`error`, (error) => {
+         .on(`error`, error => {
             cleanUp();
             assert.fail(error);
          })
@@ -74,7 +79,7 @@ describe(`registry:index`, () => {
                value: "TeamProject",
                id: 1
             });
-            sinon.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, {
+            sinon.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, null, {
                name: `endpoint`,
                id: 1
             });
@@ -87,7 +92,7 @@ describe(`registry:index`, () => {
    });
 });
 
-describe(`registry:app`, () => {
+describe(`docker:app`, () => {
    "use strict";
 
    it(`run with existing endpoint should run without error`, sinon.test(function (done) {
@@ -96,7 +101,7 @@ describe(`registry:app`, () => {
          value: "TeamProject",
          id: 1
       });
-      this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, {
+      this.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, null, {
          name: `endpoint`,
          id: 1
       });
@@ -108,13 +113,12 @@ describe(`registry:app`, () => {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`,
          project: `e2eDemo`,
-         dockerRegistry: `dockerRegistry`,
-         dockerRegistryId: `dockerRegistryId`,
-         dockerRegistryPassword: `dockerRegistryPassword`
+         dockerHost: `dockerHost`,
+         dockerCertPath: `dockerCertPath`
       };
 
       // Act
-      registry.run(args, logger, (e, ep) => {
+      docker.run(args, logger, (e, ep) => {
          assert.ok(!e);
 
          done();
@@ -127,7 +131,7 @@ describe(`registry:app`, () => {
          value: "TeamProject",
          id: 1
       });
-      this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, new Error("boom"), null);
+      this.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, new Error("boom"), null);
 
       var logger = sinon.stub();
       logger.log = () => {};
@@ -136,9 +140,8 @@ describe(`registry:app`, () => {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`,
          project: `e2eDemo`,
-         dockerRegistry: `dockerRegistry`,
-         dockerRegistryId: `dockerRegistryId`,
-         dockerRegistryPassword: `dockerRegistryPassword`
+         dockerHost: `dockerHost`,
+         dockerCertPath: `dockerCertPath`
       };
 
       // Act
@@ -150,23 +153,31 @@ describe(`registry:app`, () => {
       // I use the custom error validation method to call done
       // because my method is async 
       assert.throws(() => {
-         registry.run(args, logger);
+         docker.run(args, logger);
       }, e => {
          done();
          return true;
       });
    }));
 
-   it(`findOrCreateDockerRegistryServiceEndpoint should create endpoint`, sinon.test(function (done) {
+   it(`findOrCreateDockerServiceEndpoint should create endpoint`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/registry/app`, {
+      const proxyApp = proxyquire(`../../generators/docker/app`, {
          "request": requestStub
       });
 
-      this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, undefined);
+      this.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, null, undefined);
+
+      this.stub(fs, `readFile`).callsFake((files, options, cb) => {
+         if (cb === undefined) {
+            cb = options;
+         }
+
+         cb(null, `contents`);
+      });
 
       var logger = sinon.stub();
       logger.log = () => {};
@@ -179,8 +190,8 @@ describe(`registry:app`, () => {
       });
 
       // Act
-      proxyApp.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
-         `dockerRegistry`, `dockerRegistryId`, `dockerRegistryPassword`, `token`, logger, (e, ep) => {
+      proxyApp.findOrCreateDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
+         `DockerHost`, `dockerCertPath`, `token`, logger, (e, ep) => {
             assert.equal(e, null);
             assert.equal(ep.name, `endpoint`);
 
@@ -188,16 +199,16 @@ describe(`registry:app`, () => {
          });
    }));
 
-   it(`findOrCreateDockerRegistryServiceEndpoint should create endpoint`, sinon.test(function (done) {
+   it(`findOrCreateDockerServiceEndpoint should throw error`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/registry/app`, {
+      const proxyApp = proxyquire(`../../generators/docker/app`, {
          "request": requestStub
       });
 
-      this.stub(util, `tryFindDockerRegistryServiceEndpoint`).callsArgWith(4, null, undefined);
+      this.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, null, undefined);
 
       this.stub(fs, `readFile`).callsFake((files, options, cb) => {
          if (cb === undefined) {
@@ -219,23 +230,23 @@ describe(`registry:app`, () => {
       // I use the custom error validation method to call done
       // because my method is async 
       assert.throws(() => {
-         proxyApp.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
-            `dockerRegistry`, `dockerRegistryId`, `dockerRegistryPassword`, `token`, logger, done);
+         proxyApp.findOrCreateDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
+            `DockerHost`, `dockerCertPath`, `token`, logger, done);
       }, e => {
          done();
          return true;
       });
    }));
 
-   it(`findOrCreateDockerRegistryServiceEndpoint should short circuit`, sinon.test(function (done) {
+   it(`findOrCreateDockerServiceEndpoint should short circuit`, sinon.test(function (done) {
       // Arrange
 
       var logger = sinon.stub();
       logger.log = () => {};
 
       // Act
-      registry.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
-         null, null, null, `token`, logger, (e, ep) => {
+      docker.findOrCreateDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
+         null, null, `token`, logger, (e, ep) => {
             assert.equal(e, null);
             assert.equal(ep, null);
 

@@ -1,6 +1,6 @@
 const sinon = require(`sinon`);
 const assert = require(`yeoman-assert`);
-const util = require(`../generators/app/utility`);
+const util = require(`../../generators/app/utility`);
 
 function tryFindRelease(expectedAccount, expectedTarget, expectedToken, context) {
    if (context === undefined) {

@@ -4,8 +4,8 @@ const helpers = require(`yeoman-test`);
 const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
-const util = require(`../generators/app/utility`);
-const project = require(`../generators/project/app`);
+const util = require(`../../generators/app/utility`);
+const project = require(`../../generators/project/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
@@ -16,7 +16,7 @@ describe(`project:index cmdLine`, () => {
       var spy;
       var utilTryFindProject;
 
-      return helpers.run(path.join(__dirname, `../generators/project/index`))
+      return helpers.run(path.join(__dirname, `../../generators/project/index`))
          .withArguments([`unitTest`, `http://localhost:8080/tfs/DefaultCollection`, `token`])
          .on(`error`, (error) => {
             util.tryFindProject.restore();
@@ -83,7 +83,7 @@ describe(`project:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/project/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/project/app`, { "request": requestStub });
 
       // Setup the stub. This stub will be called with two arguments.
       // The first is an options object and the second is a callback
@@ -131,7 +131,7 @@ describe(`project:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/project/app.js`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/project/app.js`, { "request": requestStub });
 
       // Setup the stub. This stub will be called with two arguments.
       // The first is an options object and the second is a callback
@@ -180,7 +180,7 @@ describe(`project:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/project/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/project/app`, { "request": requestStub });
 
       // Setup the stub. This stub will be called with two arguments.
       // The first is an options object and the second is a callback
