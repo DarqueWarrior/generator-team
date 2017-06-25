@@ -40,6 +40,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.3.0",
+    "node-env-file": "^0.1.8",
     "request": "^2.81.0",
     "uuid": "^3.1.0",
     "yeoman-generator": "^0.24.1",
