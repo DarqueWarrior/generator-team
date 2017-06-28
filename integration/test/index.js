@@ -51,14 +51,32 @@ function getFullURL(instance, includeCollection, forRM) {
    return vstsURL;
 }
 
-function findProject(account, project, pat, userAgent, callback) {
+function deleteProject(account, projectId, pat, userAgent, callback) {
    'use strict';
 
    let token = encodePat(pat);
 
-   // Will throw an error if the project is not found. This is used
-   // by code that requires a project and will stop execution if the
-   // project is not found.
+   let options = addUserAgent({
+      "method": `Delete`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/_apis/projects/${projectId}`,
+      "qs": {
+         "api-version": PROJECT_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (err, res, body) {
+      callback(err, null);
+   });
+}
+
+function findProject(account, project, pat, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
 
    let options = addUserAgent({
       "method": `GET`,
@@ -95,10 +113,9 @@ function findProject(account, project, pat, userAgent, callback) {
 
       if (res.statusCode === 404) {
          // Returning a undefined project indicates it was not found
-         callback({
-            "message": `x Project ${project} not found`,
-            "code": `NotFound`
-         }, undefined);
+         // But this is not an error. Only server errors should be 
+         // returned as an error to the caller.
+         callback(null, undefined);
       } else {
          let obj = JSON.parse(body);
 
@@ -111,5 +128,6 @@ function findProject(account, project, pat, userAgent, callback) {
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
-   findProject: findProject
+   findProject: findProject,
+   deleteProject: deleteProject
 };
