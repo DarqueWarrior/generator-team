@@ -28,16 +28,14 @@ describe(`project:index cmdLine`, () => {
    });
 
    it(`project should be created`, (done) => {
-      // Arrange
+      // Act
       helpers.run(path.join(__dirname, `../../generators/project/index`))
          .withArguments([expectedProjectName, acct, pat])
          .on(`error`, (error) => {
             assert.fail(error);
          })
-         .on(`ready`, (generator) => {
-            // This is called right before generator.run() is called
-         })
          .on(`end`, () => {
+            // Assert
             // Test to see if project was created
             vsts.findProject(acct, expectedProjectName, pat, `yo Team`, (e, project) => {
                assert.ifError(e);
