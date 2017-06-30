@@ -1,6 +1,6 @@
 {
   "name": "generator-team",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
   "main": "./generators/app/index.js",
   "scripts": {
