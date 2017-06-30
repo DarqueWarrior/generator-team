@@ -1,3 +1,4 @@
+const async = require('async');
 const request = require('request');
 const package = require('../../package.json');
 
@@ -49,6 +50,26 @@ function getFullURL(instance, includeCollection, forRM) {
    }
 
    return vstsURL;
+}
+
+function checkStatus(uri, token, userAgent, callback) {
+   'use strict';
+
+   // Simply issues a get to the provided URI and returns
+   // the body as JSON.  Call this when the action taken
+   // requires time to process.
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "authorization": `Basic ${token}`
+      },
+      "url": `${uri}`
+   }, userAgent);
+
+   request(options, function (err, res, body) {
+      callback(err, JSON.parse(body));
+   });
 }
 
 function deleteProject(account, projectId, pat, userAgent, callback) {
@@ -125,9 +146,108 @@ function findProject(account, project, pat, userAgent, callback) {
    });
 }
 
+// TODO: Add sourceControl type and template as options.
+function createProject(account, project, pat, userAgent, callback) {
+   "use strict";
+
+   var teamProject = {};
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      method: 'POST',
+      headers: {
+         'content-type': 'application/json',
+         authorization: `Basic ${token}`
+      },
+      json: true,
+      url: `${getFullURL(account)}/_apis/projects`,
+      qs: {
+         'api-version': PROJECT_API_VERSION
+      },
+      body: {
+         name: project,
+         capabilities: {
+            versioncontrol: {
+               sourceControlType: 'Git'
+            },
+            processTemplate: {
+               templateTypeId: '6b724908-ef14-45cf-84f8-768b5384da45'
+            }
+         }
+      }
+   }, userAgent);
+
+   async.series([
+      function (thisSeries) {
+         request(options, function (err, res, body) {
+            teamProject = body;
+            thisSeries(err);
+         });
+      },
+      function (thisSeries) {
+         var status = '';
+
+         // Wait for Team Services to report that the project was created.
+         // Use whilst to keep calling the the REST API until the status is
+         // either failed or succeeded.
+         async.whilst(
+            function () {
+               return status !== 'failed' && status !== 'succeeded';
+            },
+            function (finished) {
+               checkStatus(teamProject.url, token, userAgent, function (err, stat) {
+                  status = stat.status;
+                  finished(err);
+               });
+            },
+            thisSeries
+         );
+      },
+      function (thisSeries) {
+         var options = addUserAgent({
+            method: 'GET',
+            headers: {
+               'cache-control': 'no-cache',
+               'authorization': `Basic ${token}`
+            },
+            url: `${getFullURL(account)}/_apis/projects/${project}`,
+            qs: {
+               'api-version': PROJECT_API_VERSION
+            }
+         }, userAgent);
+
+         // Get the real id of the team project now that is exist.
+         request(options, function (err, res, body) {
+            if (err) {
+               thisSeries(err);
+               return;
+            }
+
+            if (res.statusCode !== 200) {
+               thisSeries({
+                  message: 'Unable to find newly created project.'
+               });
+               return;
+            }
+
+            var project = JSON.parse(body);
+            thisSeries(err, project);
+         });
+      }
+   ], function (err, result) {
+      // By the time I get there the series would have completed and
+      // the first two entries in result would be null.  I only want
+      // to return the team project and not the array because when we
+      // find the team project if it already exist we only return the
+      // team project.
+      callback(err, result[2]);
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    findProject: findProject,
-   deleteProject: deleteProject
+   deleteProject: deleteProject,
+   createProject: createProject
 };
