@@ -6,6 +6,7 @@ const args = require(`./args`);
 const util = require(`./utility`);
 const prompts = require(`./prompt`);
 const compose = require(`../app/compose`);
+const package = require('../../package.json');
 const generators = require(`yeoman-generator`);
 
 function construct() {
@@ -41,7 +42,7 @@ function init() {
    // sub generators. I also use this to determine which data I still need to
    // prompt for.
 
-   this.log(yosay(`Welcome to DevOps powered by Microsoft`));
+   this.log(yosay(`Welcome to DevOps powered by Microsoft verson ${package.version}`));
 }
 
 function input() {
