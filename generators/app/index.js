@@ -42,7 +42,7 @@ function init() {
    // sub generators. I also use this to determine which data I still need to
    // prompt for.
 
-   this.log(yosay(`Welcome to DevOps powered by Microsoft verson ${package.version}`));
+   this.log(yosay(`Welcome to DevOps powered by Microsoft version ${package.version}`));
 }
 
 function input() {
