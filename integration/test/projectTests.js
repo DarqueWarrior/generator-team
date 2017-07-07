@@ -1,10 +1,12 @@
 const path = require(`path`);
 const vsts = require(`./index.js`);
 const request = require('request');
-const env  =  require('node-env-file');
+const env = require('node-env-file');
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 
+// Try to read values from .env. If that fails
+// simply use the environment vars on the machine.
 env(__dirname  +  '/.env', {
    raise: false,
    overwrite: true

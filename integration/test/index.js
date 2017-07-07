@@ -2,6 +2,7 @@ const async = require('async');
 const request = require('request');
 const package = require('../../package.json');
 
+const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = '1.0';
 
 function encodePat(pat) {
@@ -69,6 +70,28 @@ function checkStatus(uri, token, userAgent, callback) {
 
    request(options, function (err, res, body) {
       callback(err, JSON.parse(body));
+   });
+}
+
+function deleteBuildDefinition(account, projectId, buildDefinitionId, pat, userAgent, callback) {
+    'use strict';
+
+   let token = encodePat(pat);
+
+   let options = addUserAgent({
+      "method": `Delete`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, true)}/${projectId}/_apis/build/definitions/${buildDefinitionId}`,
+      "qs": {
+         "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (err, res, body) {
+      callback(err, null);
    });
 }
 
@@ -244,10 +267,40 @@ function createProject(account, project, pat, userAgent, callback) {
    });
 }
 
+function findBuildDefinition(account, projectId, pat, name, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, true)}/${projectId}/_apis/build/definitions`,
+      "qs": {
+         "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      var obj = JSON.parse(body);
+
+      var bld = obj.value.find(function (i) {
+         return i.name === name;
+      });
+
+      callback(e, bld);
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    findProject: findProject,
    deleteProject: deleteProject,
-   createProject: createProject
+   createProject: createProject,
+   findBuildDefinition: findBuildDefinition,
+   deleteBuildDefinition: deleteBuildDefinition,
 };
