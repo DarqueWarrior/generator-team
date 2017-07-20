@@ -87,7 +87,7 @@
          "displayName": "Build an image",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
             "versionSpec": "0.*",
             "definitionType": "task"
          },
@@ -114,11 +114,12 @@
          "displayName": "Push an image",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
             "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
+            "containerregistrytype": "Container Registry",
             "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Push an image",
