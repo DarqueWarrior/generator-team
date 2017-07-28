@@ -63,6 +63,9 @@ function getTargets(answers) {
       name: `Azure App Service`,
       value: `paas`
    }, {
+      name: `Azure Container Instances (Linux)`,
+      value: `acilinux`
+   }, {
       name: `Azure App Service Docker (Linux)`,
       value: `dockerpaas`
    }, {

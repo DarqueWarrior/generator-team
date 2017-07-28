@@ -14,6 +14,26 @@ const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
 sinon.test = sinonTest.configureTest(sinon);
 
+assert.linuxTargets = (a) => {
+   assert.equal(a[0].name, `Azure Container Instances (Linux)`);
+   assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
+   assert.equal(a[2].name, `Docker Host`);
+   assert.equal(a.length, 3, `Wrong number of entries`);
+}
+
+assert.allTargets = (a) => {
+   assert.equal(a[0].name, `Azure App Service`);
+   assert.equal(a[1].name, `Azure Container Instances (Linux)`);
+   assert.equal(a[2].name, `Azure App Service Docker (Linux)`);
+   assert.equal(a[3].name, `Docker Host`);
+   assert.equal(a.length, 4, `Wrong number of entries`);
+}
+
+assert.windowsTargets = (a) => {
+   assert.equal(a[0].name, `Azure App Service`);
+   assert.equal(a.length, 1, `Wrong number of entries`);
+}
+
 describe(`utility`, () => {
    it(`getTargets Default queue, node app type`, () => {
       // Arrange
@@ -26,10 +46,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted queue, node app type`, () => {
@@ -43,10 +60,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted VS2017 queue, node app type`, () => {
@@ -60,10 +74,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted Linux Preview queue, node app type`, () => {
@@ -77,10 +88,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Default queue, asp app type`, () => {
@@ -94,10 +102,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted queue, asp app type`, () => {
@@ -111,10 +116,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted VS2017 queue, asp app type`, () => {
@@ -128,10 +130,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted Linux Preview queue, asp app type`, () => {
@@ -145,10 +144,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Default queue, java app type`, () => {
@@ -162,10 +158,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted queue, java app type`, () => {
@@ -179,10 +172,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted VS2017 queue, java app type`, () => {
@@ -196,10 +186,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual[1].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[2].name, `Docker Host`);
-      assert.equal(actual.length, 3, `Wrong number of entries`);
+      assert.allTargets(actual);
    });
 
    it(`getTargets Hosted Linux Preview queue, java app type`, () => {
@@ -213,9 +200,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service Docker (Linux)`);
-      assert.equal(actual[1].name, `Docker Host`);
-      assert.equal(actual.length, 2, `Wrong number of entries`);
+      assert.linuxTargets(actual);
    });
 
    it(`getTargets Default queue, aspFull app type`, () => {
@@ -229,8 +214,7 @@ describe(`utility`, () => {
       let actual = util.getTargets(answers);
 
       // Assert
-      assert.equal(actual[0].name, `Azure App Service`);
-      assert.equal(actual.length, 1, `Wrong number of entries`);
+      assert.windowsTargets(actual);
    });
 
    it(`needsDockerHost default queue`, () => {
@@ -641,7 +625,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
@@ -834,7 +818,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -862,7 +846,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -886,7 +870,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -912,7 +896,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -940,7 +924,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -982,7 +966,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1010,7 +994,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1034,7 +1018,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1058,7 +1042,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1082,8 +1066,8 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
-      logger.log.error = () => {};
+      logger.log = () => { };
+      logger.log.error = () => { };
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1291,7 +1275,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isVSTS true`, () => {
+   it(`isVSTS false`, () => {
       // Arrange
       var expected = false;
 
@@ -1370,7 +1354,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = () => { };
 
       // Act
       proxyApp.findAzureSub(
@@ -1454,5 +1438,49 @@ describe(`utility`, () => {
          assert.fail();
          done();
       });
+   });
+
+   it(`isDocker paas`, () => {
+      // Arrange
+      var expected = false;
+
+      // Act
+      var actual = util.isDocker(`paas`);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`isDocker acilinux`, () => {
+      // Arrange
+      var expected = true;
+
+      // Act
+      var actual = util.isDocker(`acilinux`);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`isDocker docker`, () => {
+      // Arrange
+      var expected = true;
+
+      // Act
+      var actual = util.isDocker(`docker`);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`isDocker dockerpaas`, () => {
+      // Arrange
+      var expected = true;
+
+      // Act
+      var actual = util.isDocker(`dockerpaas`);
+
+      // Assert
+      assert.equal(expected, actual);
    });
 });
