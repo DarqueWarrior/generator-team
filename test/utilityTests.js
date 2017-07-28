@@ -19,7 +19,7 @@ assert.linuxTargets = (a) => {
    assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[2].name, `Docker Host`);
    assert.equal(a.length, 3, `Wrong number of entries`);
-}
+};
 
 assert.allTargets = (a) => {
    assert.equal(a[0].name, `Azure App Service`);
@@ -27,12 +27,12 @@ assert.allTargets = (a) => {
    assert.equal(a[2].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[3].name, `Docker Host`);
    assert.equal(a.length, 4, `Wrong number of entries`);
-}
+};
 
 assert.windowsTargets = (a) => {
    assert.equal(a[0].name, `Azure App Service`);
    assert.equal(a.length, 1, `Wrong number of entries`);
-}
+};
 
 describe(`utility`, () => {
    it(`getTargets Default queue, node app type`, () => {

@@ -503,6 +503,28 @@ describe(`build:app`, () => {
       assert.equal(expected, actual);
    });
 
+   it(`getBuild asp tfs acilinux`, () => {
+      // Arrange 
+      let expected = `tfs_asp_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `asp`, target: `acilinux`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild asp vsts acilinux`, () => {
+      // Arrange 
+      let expected = `vsts_asp_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `asp`, target: `acilinux`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
    it(`getBuild java tfs dockerpaas`, () => {
       // Arrange 
       let expected = `tfs_java_docker_build.json`;
@@ -520,6 +542,28 @@ describe(`build:app`, () => {
 
       // Act
       let actual = build.getBuild({ type: `java`, target: `dockerpaas`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild java tfs acilinux`, () => {
+      // Arrange 
+      let expected = `tfs_java_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `java`, target: `acilinux`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild java vsts acilinux`, () => {
+      // Arrange 
+      let expected = `vsts_java_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `java`, target: `acilinux`, tfs: `vsts` });
 
       // Assert
       assert.equal(expected, actual);
@@ -558,6 +602,17 @@ describe(`build:app`, () => {
       assert.equal(expected, actual);
    });
 
+   it(`getBuild node vsts acilinux`, () => {
+      // Arrange 
+      let expected = `vsts_node_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `acilinux`, tfs: `vsts`, queue: `Hosted Linux Preview` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
    it(`getBuild node vsts docker`, () => {
       // Arrange 
       let expected = `vsts_node_docker_build.json`;
@@ -575,6 +630,17 @@ describe(`build:app`, () => {
 
       // Act
       let actual = build.getBuild({ type: `node`, target: `paas`, tfs: `vsts` });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getBuild node tfs acilinux`, () => {
+      // Arrange 
+      let expected = `tfs_node_docker_build.json`;
+
+      // Act
+      let actual = build.getBuild({ type: `node`, target: `acilinux`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
 
       // Assert
       assert.equal(expected, actual);

@@ -13,6 +13,10 @@ String.prototype.replaceAll = function (search, replacement) {
    return target.split(search).join(replacement);
 };
 
+function isDocker(value) {
+   return value === `docker` || value === `dockerpaas` || value === `acilinux`;
+}
+
 function getDockerRegisteryServer(server) {
    let parts = url.parse(server);
 
@@ -840,6 +844,7 @@ module.exports = {
    isPaaS: isPaaS,
    getPools: getPools,
    tokenize: tokenize,
+   isDocker: isDocker,
    encodePat: encodePat,
    findQueue: findQueue,
    findBuild: findBuild,

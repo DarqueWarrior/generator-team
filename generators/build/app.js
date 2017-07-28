@@ -150,7 +150,7 @@ function createBuild(account, teamProject, token, queueId,
 function getBuild(args) {
    var build = ``;
    
-   if (args.target === `docker` || args.target === `dockerpaas`) {
+   if (util.isDocker(args.target)) {
       if (util.isVSTS(args.tfs)) {
          build = `vsts_${args.type}_docker_build.json`;
       } else {
