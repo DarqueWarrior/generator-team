@@ -96,7 +96,9 @@ function createBuild(account, teamProject, token, queueId,
    filename, target, gen, callback) {
    'use strict';
 
-   gen.log('+ Creating CI build definition');
+   let buildDefName = util.isDocker(target) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
+
+   gen.log(`+ Creating ${buildDefName} build definition`);
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
@@ -105,7 +107,7 @@ function createBuild(account, teamProject, token, queueId,
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
    var tokens = {
-      '{{BuildDefName}}': (target === `docker` || target === `dockerpaas`) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`,
+      '{{BuildDefName}}': buildDefName,
       '{{TFS}}': account,
       '{{Project}}': teamProject.name,
       '{{QueueId}}': queueId,

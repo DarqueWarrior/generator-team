@@ -596,7 +596,7 @@ function tryFindBuild(account, teamProject, token, target, callback) {
 function findBuild(account, teamProject, token, target, callback) {
    'use strict';
 
-   var name = (target === `docker` || target === `dockerpaas`) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
+   var name = isDocker(target) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -767,9 +767,16 @@ function extractInstance(input) {
 
 function needsRegistry(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
-      return (answers.target === `docker` || cmdLnInput.target === `docker` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
+      return (answers.target === `docker` ||
+         cmdLnInput.target === `docker` ||
+         answers.target === `acilinux` ||
+         cmdLnInput.target === `acilinux` ||
+         answers.target === `dockerpaas` ||
+         cmdLnInput.target === `dockerpaas`);
    } else {
-      return (answers.target === `docker` || answers.target === `dockerpaas`);
+      return (answers.target === `docker` ||
+         answers.target === `acilinux` ||
+         answers.target === `dockerpaas`);
    }
 }
 
@@ -780,7 +787,10 @@ function needsDockerHost(answers, cmdLnInput) {
       let isDocker = (answers.target === `docker` || cmdLnInput.target === `docker`);
 
       // This will be true if the user did not select the Hosted Linux queue
-      let paasRequiresHost = (answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`) &&
+      let paasRequiresHost = (answers.target === `dockerpaas` ||
+            cmdLnInput.target === `dockerpaas` ||
+            answers.target === `acilinux` ||
+            cmdLnInput.target === `acilinux`) &&
          (answers.queue !== undefined && answers.queue.indexOf(`Linux`) === -1);
 
       return (isDocker || paasRequiresHost);
@@ -790,7 +800,7 @@ function needsDockerHost(answers, cmdLnInput) {
       let isDocker = answers.target === `docker`;
 
       // This will be true the user did not select the Hosted Linux queue
-      let paasRequiresHost = answers.target === `dockerpaas` && answers.queue.indexOf(`Linux`) === -1;
+      let paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux`) && answers.queue.indexOf(`Linux`) === -1;
 
       return (isDocker || paasRequiresHost);
    }
@@ -798,9 +808,16 @@ function needsDockerHost(answers, cmdLnInput) {
 
 function isPaaS(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
-      return (answers.target === `paas` || cmdLnInput.target === `paas` || answers.target === `dockerpaas` || cmdLnInput.target === `dockerpaas`);
+      return (answers.target === `paas` ||
+         cmdLnInput.target === `paas` ||
+         answers.target === `acilinux` ||
+         cmdLnInput.target === `acilinux` ||
+         answers.target === `dockerpaas` ||
+         cmdLnInput.target === `dockerpaas`);
    } else {
-      return (answers.target === `paas` || answers.target === `dockerpaas`);
+      return (answers.target === `paas` ||
+         answers.target === `acilinux` ||
+         answers.target === `dockerpaas`);
    }
 }
 

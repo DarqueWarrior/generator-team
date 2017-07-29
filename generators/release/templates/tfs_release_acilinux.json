@@ -1,0 +1,357 @@
+{
+   "name": "{{ReleaseDefName}}",
+   "variables": {
+      "system.debug": {
+         "value": "false"
+      },
+      "aiLocation": {
+         "value": "South Central US"
+      },
+      "image_port": {
+         "value": "{{dockerPorts}}"
+      },
+      "containerregistry": {
+         "value": "{{containerregistry}}"
+      },
+      "containerregistry_username": {
+         "value": "{{containerregistry_username}}"
+      },
+      "containerregistry_password": {
+         "value": "{{containerregistry_password}}",
+         "isSecret": true
+      }
+   },
+   "environments": [{
+         "name": "Dev",
+         "rank": 1,
+         "variables": {
+            "ResourceGroupName": {
+               "value": "{{WebAppName}}Dev"
+            },
+            "webSiteName": {
+               "value": "{{WebAppName}}Dev{{uuid}}"
+            },
+            "hostingPlanName": {
+               "value": "{{WebAppName}}Dev"
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "skipArtifactsDownload": false,
+               "timeoutInMinutes": 0,
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+               "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
+               "version": "1.*",
+               "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "inputs": {
+                  "ConnectedServiceNameSelector": "ConnectedServiceName",
+                  "ConnectedServiceName": "{{ConnectedServiceID}}",
+                  "ConnectedServiceNameClassic": "",
+                  "action": "Create Or Update Resource Group",
+                  "actionClassic": "Select Resource Group",
+                  "resourceGroupName": "$(ResourceGroupName)",
+                  "cloudService": "",
+                  "location": "West US",
+                  "csmFile": "**/docker.json",
+                  "csmParametersFile": "**/docker.parameters.json",
+                  "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
+                  "enableDeploymentPrerequisitesForCreate": "false",
+                  "enableDeploymentPrerequisitesForSelect": "false",
+                  "outputVariable": ""
+               }
+            }]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false
+         },
+         "demands": [],
+         "conditions": [{
+            "name": "ReleaseStarted",
+            "conditionType": 1,
+            "value": ""
+         }],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      },
+      {
+         "name": "QA",
+         "rank": 2,
+         "variables": {
+            "ResourceGroupName": {
+               "value": "{{WebAppName}}QA"
+            },
+            "webSiteName": {
+               "value": "{{WebAppName}}QA{{uuid}}"
+            },
+            "hostingPlanName": {
+               "value": "{{WebAppName}}QA"
+            },
+            "webSiteURL": {
+               "value": "http://{{WebAppName}}QA{{uuid}}.azurewebsites.net/"
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": false,
+               "isNotificationOn": false,
+               "approver": {
+                  "id": "{{ApproverId}}",
+                  "displayName": "{{ApproverDisplayName}}",
+                  "uniqueName": "{{ApproverUniqueName}}"
+               }
+            }],
+            "approvalOptions": {
+               "requiredApproverCount": 0,
+               "releaseCreatorCanBeApprover": true
+            }
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "skipArtifactsDownload": false,
+               "timeoutInMinutes": 0,
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+                  "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
+                  "version": "1.*",
+                  "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceNameSelector": "ConnectedServiceName",
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "ConnectedServiceNameClassic": "",
+                     "action": "Create Or Update Resource Group",
+                     "actionClassic": "Select Resource Group",
+                     "resourceGroupName": "$(ResourceGroupName)",
+                     "cloudService": "",
+                     "location": "West US",
+                     "csmFile": "**/docker.json",
+                     "csmParametersFile": "**/docker.parameters.json",
+                     "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
+                     "enableDeploymentPrerequisitesForCreate": "false",
+                     "enableDeploymentPrerequisitesForSelect": "false",
+                     "outputVariable": ""
+                  }
+               }
+            ]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false
+         },
+         "demands": [],
+         "conditions": [{
+            "name": "Dev",
+            "conditionType": 2,
+            "value": "4"
+         }],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      },
+      {
+         "name": "Prod",
+         "rank": 3,
+         "variables": {
+            "ResourceGroupName": {
+               "value": "{{WebAppName}}Prod"
+            },
+            "webSiteName": {
+               "value": "{{WebAppName}}Prod{{uuid}}"
+            },
+            "hostingPlanName": {
+               "value": "{{WebAppName}}Prod"
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": false,
+               "isNotificationOn": false,
+               "approver": {
+                  "id": "{{ApproverId}}",
+                  "displayName": "{{ApproverDisplayName}}",
+                  "uniqueName": "{{ApproverUniqueName}}"
+               }
+            }],
+            "approvalOptions": {
+               "requiredApproverCount": 0,
+               "releaseCreatorCanBeApprover": true
+            }
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [{
+               "rank": 1,
+               "isAutomated": true,
+               "isNotificationOn": false
+            }]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "skipArtifactsDownload": false,
+               "timeoutInMinutes": 0,
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+                  "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
+                  "version": "1.*",
+                  "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
+                  "enabled": true,
+                  "alwaysRun": false,
+                  "continueOnError": false,
+                  "timeoutInMinutes": 0,
+                  "definitionType": "task",
+                  "inputs": {
+                     "ConnectedServiceNameSelector": "ConnectedServiceName",
+                     "ConnectedServiceName": "{{ConnectedServiceID}}",
+                     "ConnectedServiceNameClassic": "",
+                     "action": "Create Or Update Resource Group",
+                     "actionClassic": "Select Resource Group",
+                     "resourceGroupName": "$(ResourceGroupName)",
+                     "cloudService": "",
+                     "location": "West US",
+                     "csmFile": "**/docker.json",
+                     "csmParametersFile": "**/docker.parameters.json",
+                     "overrideParameters": "-image_tag {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -image_port $(image_port) -hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)' -containerregistry $(containerregistry) -containerregistry_username $(containerregistry_username) -containerregistry_password $(containerregistry_password)",
+                     "enableDeploymentPrerequisitesForCreate": "false",
+                     "enableDeploymentPrerequisitesForSelect": "false",
+                     "outputVariable": ""
+                  }
+               }
+            ]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false
+         },
+         "demands": [],
+         "conditions": [{
+            "name": "QA",
+            "conditionType": 2,
+            "value": "4"
+         }],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      }
+   ],
+   "artifacts": [{
+      "sourceId": "{{ProjectId}}:{{BuildId}}",
+      "type": "Build",
+      "alias": "{{BuildName}}",
+      "definitionReference": {
+         "defaultVersionBranch": {
+            "id": "",
+            "name": ""
+         },
+         "defaultVersionSpecific": {
+            "id": "",
+            "name": ""
+         },
+         "defaultVersionTags": {
+            "id": "",
+            "name": ""
+         },
+         "defaultVersionType": {
+            "id": "latestType",
+            "name": "Latest"
+         },
+         "definition": {
+            "id": "{{BuildId}}",
+            "name": "{{BuildName}}"
+         },
+         "project": {
+            "id": "{{ProjectId}}",
+            "name": "{{ProjectName}}"
+         }
+      },
+      "isPrimary": true
+   }],
+   "triggers": [{
+      "artifactAlias": "{{BuildName}}",
+      "triggerType": 1
+   }]
+}

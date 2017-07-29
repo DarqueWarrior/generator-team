@@ -35,6 +35,58 @@ assert.windowsTargets = (a) => {
 };
 
 describe(`utility`, () => {
+   it(`needsRegistry paas`, () => {
+      // Arrange
+      let cmdLnInput = {};
+      const expected = false;
+      let answers = { target: `paas`};
+
+      // Act
+      let actual = util.needsRegistry(answers, cmdLnInput);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsRegistry docker`, () => {
+      // Arrange
+      let cmdLnInput = {};
+      const expected = true;
+      let answers = { target: `docker` };
+
+      // Act
+      let actual = util.needsRegistry(answers, cmdLnInput);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsRegistry dockerpaas`, () => {
+      // Arrange
+      let cmdLnInput = {};
+      const expected = true;
+      let answers = { target: `dockerpaas` };
+
+      // Act
+      let actual = util.needsRegistry(answers, cmdLnInput);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsRegistry acilinux`, () => {
+      // Arrange
+      let cmdLnInput = {};
+      const expected = true;
+      let answers = { target: `acilinux` };
+
+      // Act
+      let actual = util.needsRegistry(answers, cmdLnInput);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
    it(`getTargets Default queue, node app type`, () => {
       // Arrange
       let answers = {
@@ -625,7 +677,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
@@ -818,7 +870,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -846,7 +898,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -870,7 +922,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -896,7 +948,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -924,7 +976,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -966,7 +1018,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -994,7 +1046,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1018,7 +1070,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1042,7 +1094,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1066,8 +1118,8 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
-      logger.log.error = () => { };
+      logger.log = () => {};
+      logger.log.error = () => {};
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1354,7 +1406,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => { };
+      logger.log = () => {};
 
       // Act
       proxyApp.findAzureSub(

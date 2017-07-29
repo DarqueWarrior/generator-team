@@ -88,6 +88,14 @@ function configureRelease() {
       }
    }
 
+   if (this.target === `acilinux`) {
+      if (util.isVSTS(this.tfs)) {
+         release = this.templatePath(`vsts_release_acilinux.json`);
+      } else {
+         release = this.templatePath(`tfs_release_acilinux.json`);
+      }
+   }
+
    var args = {
       pat: this.pat,
       tfs: this.tfs,

@@ -134,7 +134,9 @@ function findOrCreateRelease(args, gen, callback) {
 function createRelease(args, gen, callback) {
    'use strict';
 
-   gen.log(`+ Creating CD release definition`);
+   let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
+
+   gen.log(`+ Creating ${releaseDefName} release definition`);
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
@@ -165,7 +167,7 @@ function createRelease(args, gen, callback) {
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
-      '{{ReleaseDefName}}': (args.target === `docker` || args.target === `dockerpaas`) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`
+      '{{ReleaseDefName}}': releaseDefName
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');
