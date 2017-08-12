@@ -78,6 +78,9 @@ function writeFiles() {
    this.copy(`${src}/node_arm.json`, `${root}/website.json`);
    this.copy(`${src}/arm.parameters.json`, `${root}/website.parameters.json`);
 
+   this.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);
+   this.copy(`${src}/acilinux_arm.parameters.json`, `${root}/acilinux.parameters.json`);
+
    this.copy(`${src}/docker_arm.json`, `${root}/docker.json`);
    this.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);
 }

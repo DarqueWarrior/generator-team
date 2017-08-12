@@ -73,7 +73,7 @@ function configureBuild() {
       project: this.applicationName
    };
 
-   if (this.target === `docker` || this.target === `dockerpaas`) {
+   if (util.isDocker(this.target)) {
       args.dockerHost = this.dockerHost;
       args.dockerRegistry = this.dockerRegistry;
       args.dockerRegistryId = this.dockerRegistryId;
