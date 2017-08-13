@@ -83,7 +83,7 @@
       {
          "enabled": true,
          "continueOnError": false,
-         "alwaysRun": false,
+         "alwaysRun": true,
          "displayName": "Publish Test Results",
          "timeoutInMinutes": 0,
          "task": {

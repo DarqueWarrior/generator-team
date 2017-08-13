@@ -11,7 +11,7 @@
          "value": "{{dockerPorts}}"
       },
       "containerregistry": {
-         "value": "{{containerregistry}}"
+         "value": "{{containerregistry_noprotocol}}"
       },
       "containerregistry_username": {
          "value": "{{containerregistry_username}}"
