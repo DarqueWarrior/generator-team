@@ -7,9 +7,6 @@
       },
       "osType": {
          "value": "Linux"
-      },
-      "containerType": {
-         "value": "privateImage-publicIP"
       }
    }
 }
