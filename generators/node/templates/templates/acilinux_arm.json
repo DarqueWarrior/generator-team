@@ -39,30 +39,16 @@
       "ports": {
          "defaultValue": "80",
          "type": "string"
-      },
-      "locationCheck": {
-         "type": "string",
-         "defaultValue": "eastus",
-         "AllowedValues": [
-            "westus",
-            "eastus",
-            "westeurope"
-         ]
       }
    },
    "variables": {
       "containerName": "[concat(parameters('containerName'),'-',uniquestring(parameters('containerName')))]",
-      "containerURI": "[parameters('containerURI')]",
-      "imageRegistryLoginServer": "[parameters('imageRegistryLoginServer')]",
-      "imageUsername": "[parameters('imageUsername')]",
-      "imagePassword": "[parameters('imagePassword')]",
-      "osType": "[parameters('osType')]",
       "numberCores": "[int(parameters('numberCores'))]",
       "memory": "[float(parameters('memory'))]",
       "port": "[parameters('ports')]"
    },
    "resources": [{
-      "name": "[concat(variables('containerName'),'4')]",
+      "name": "[variables('containerName')]",
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2017-08-01-preview",
       "location": "[resourceGroup().location]",
@@ -70,7 +56,7 @@
          "containers": [{
             "name": "[variables('containerName')]",
             "properties": {
-               "image": "[variables('containerURI')]",
+               "image": "[parameters('containerURI')]",
                "ports": [{
                   "port": "[variables('port')]"
                }],
@@ -86,7 +72,7 @@
                }
             }
          }],
-         "osType": "[variables('osType')]",
+         "osType": "[parameters('osType')]",
          "ipAddress": {
             "type": "Public",
             "ports": [{
@@ -101,5 +87,10 @@
          }]
       }
    }],
-   "outputs": {}
+   "outputs": {
+      "containerIPv4Address": {
+         "type": "string",
+         "value": "[reference(resourceId('Microsoft.ContainerInstance/containerGroups/', variables('containerName'))).ipAddress.ip]"
+      }
+   }
 }
