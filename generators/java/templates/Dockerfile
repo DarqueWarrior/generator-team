@@ -1,4 +1,4 @@
-FROM tomcat:8
+FROM tomcat:alpine
 
 # We have to remove all the contents of webapps so our app is the default
 RUN rm -rf /usr/local/tomcat/webapps/*
