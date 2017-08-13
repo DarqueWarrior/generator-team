@@ -100,7 +100,7 @@
       {
          "enabled": true,
          "continueOnError": false,
-         "alwaysRun": false,
+         "alwaysRun": true,
          "displayName": "Publish Code Coverage Results",
          "timeoutInMinutes": 0,
          "task": {
