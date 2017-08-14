@@ -12,6 +12,7 @@ function construct() {
    // Order is important 
    args.applicationName(this);
    args.installDep(this);
+   args.dockerPorts(this);
 }
 
 function input() {
@@ -22,10 +23,12 @@ function input() {
 
    return this.prompt([
       prompts.applicationName(this),
-      prompts.installDep(this)
+      prompts.installDep(this),
+      prompts.dockerPorts(this)
    ]).then(function (a) {
       // Transfer answers to local object for use in the rest of the generator
-      this.installDep = util.reconcileValue(a.installDep, cmdLnInput.installDep);
+      this.installDep = util.reconcileValue(a.installDep, cmdLnInput.installDep); 
+      this.dockerPorts = util.reconcileValue(a.dockerPorts, cmdLnInput.dockerPorts, ``);
       this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
    }.bind(this));
 }
@@ -33,6 +36,7 @@ function input() {
 function writeFiles() {
    var tokens = {
       name: this.applicationName,
+      port: this.dockerPorts.split(':')[0],
       name_lowercase: this.applicationName.toLowerCase(),
       appGuid: uuidV4(),
       testsGuid: uuidV4(),
@@ -89,7 +93,7 @@ function writeFiles() {
    this.copy(`${src}/arm.parameters.json`, `${root}/website.parameters.json`);
  
    this.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);
-   this.copy(`${src}/acilinux_arm.parameters.json`, `${root}/acilinux.parameters.json`);
+   this.fs.copyTpl(`${src}/acilinux_arm.parameters.json`, `${root}/acilinux.parameters.json`, tokens);
 
    this.copy(`${src}/docker_arm.json`, `${root}/docker.json`);
    this.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);

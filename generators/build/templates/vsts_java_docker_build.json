@@ -167,7 +167,7 @@
             "definitionType": "task"
          },
          "inputs": {
-            "PathtoPublish": "$(build.artifactstagingdirectory)",
+            "PathtoPublish": "$(build.artifactstagingdirectory)/templates",
             "ArtifactName": "drop",
             "ArtifactType": "Container",
             "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"

@@ -37,7 +37,7 @@
          "defaultValue": "1.5"
       },
       "ports": {
-         "defaultValue": "80",
+         "defaultValue": "3000",
          "type": "string"
       }
    },

@@ -7,9 +7,6 @@
       "aiLocation": {
          "value": "South Central US"
       },
-      "image_port": {
-         "value": "{{dockerPorts}}"
-      },
       "containerregistry": {
          "value": "{{containerregistry_noprotocol}}"
       },
@@ -104,9 +101,9 @@
                   "resourceGroupName": "$(ResourceGroupName)",
                   "cloudService": "",
                   "location": "West US",
-                  "csmFile": "**/acilinux.json",
-                  "csmParametersFile": "**/acilinux.parameters.json",
-                  "overrideParameters": "-containerURI {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -ports $(image_port) -imageRegistryLoginServer $(containerregistry) -imageUsername $(containerregistry_username) -imagePassword $(containerregistry_password) -containerName {{ProjectLowerCase}}",
+                  "csmFile": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/acilinux.json",
+                  "csmParametersFile": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/acilinux.parameters.json",
+                  "overrideParameters": "-containerName {{ProjectLowerCase}}-$(Build.BuildId) -containerURI {{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId) -imageRegistryLoginServer $(containerregistry) -imageUsername $(containerregistry_username) -imagePassword $(containerregistry_password)",
                   "enableDeploymentPrerequisitesForCreate": "false",
                   "enableDeploymentPrerequisitesForSelect": "false",
                   "outputVariable": ""

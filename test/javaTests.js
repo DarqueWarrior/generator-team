@@ -50,9 +50,9 @@ describe(`team:java paas`, () => {
 
    before(() => {
       return helpers.run(path.join(__dirname, `../generators/java/index`))
-         .withArguments([`javaUnitTest`, `testGroupID`, `true`])
+         .withArguments([`javaUnitTest`, `testGroupID`, `true`, `80`])
          .on(`error`, e => {
-            assert.faile(e);
+            assert.fail(e);
          })
          .on(`ready`, (generator) => {
             // This is called right before `generator.run()` is called
@@ -73,10 +73,18 @@ describe(`team:java paas`, () => {
          `README.md`,
          `.gitignore`,
          `bower.json`,
-         `Dockerfile`
+         `Dockerfile`,
+         `templates/parameters.xml`,
+         `templates/website.json`,
+         `templates/website.parameters.json`,
+         `templates/docker.json`,
+         `templates/docker.parameters.json`,
+         `templates/acilinux.json`,
+         `templates/acilinux.parameters.json`
       ]);
 
       assert.fileContent(`bower.json`, `"name": "javaunittest"`);
+      assert.fileContent(`templates/acilinux.parameters.json`, `"value": "80"`);
       assert.fileContent(`Dockerfile`, `ADD target/javaUnitTest.war /usr/local/tomcat/webapps/ROOT.war`);
    });
 });

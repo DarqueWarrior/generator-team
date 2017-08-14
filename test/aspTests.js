@@ -80,18 +80,19 @@ describe(`team:asp paas`, () => {
          `aspUnitTest.sln`,
          `.gitignore`,
          `./bower.json`,
-         `./templates/website.json`,
-         `./templates/parameters.xml`,
          `./src/aspUnitTest/web.config`,
          `./src/aspUnitTest/Dockerfile`,
          `./src/aspUnitTest/aspUnitTest.csproj`,
-         `./test/aspUnitTest.Tests/aspUnitTest.Tests.csproj`,
          `./src/aspUnitTest/appsettings.json`,
+         `./test/aspUnitTest.Tests/aspUnitTest.Tests.csproj`,
+         `./templates/website.json`,
+         `./templates/parameters.xml`,
          `./templates/website.parameters.json`
       ]);
 
       assert.fileContent(`./bower.json`, `"name": "aspunittest"`);
       assert.fileContent(`./templates/website.json`, `"name": "appsettings"`);
+      assert.fileContent(`./templates/acilinux.parameters.json`, `"value": "80"`);
       assert.fileContent(`./src/aspUnitTest/Dockerfile`, `ENTRYPOINT dotnet aspUnitTest.dll`);
       assert.fileContent(`./src/aspUnitTest/aspUnitTest.csproj`, `<AssemblyName>aspUnitTest</AssemblyName>`);
    });

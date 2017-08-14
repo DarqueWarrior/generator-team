@@ -77,7 +77,7 @@ function addDockerHost(obj) {
 function addLanguage(obj) {
    if (obj.type === `asp`) {
       obj.composeWith(`team:asp`, {
-         args: [obj.applicationName, obj.installDep]
+         args: [obj.applicationName, obj.installDep, obj.dockerPorts]
       });
    } else if (obj.type === `aspFull`) {
       obj.composeWith(`team:aspFull`, {
@@ -85,11 +85,11 @@ function addLanguage(obj) {
       });
    } else if (obj.type === `java`) {
       obj.composeWith(`team:java`, {
-         args: [obj.applicationName, obj.groupId, obj.installDep]
+         args: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
       });
    } else {
       obj.composeWith(`team:node`, {
-         args: [obj.applicationName, obj.installDep]
+         args: [obj.applicationName, obj.installDep, obj.dockerPorts]
       });
    }
 }

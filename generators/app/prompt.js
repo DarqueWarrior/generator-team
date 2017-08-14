@@ -256,7 +256,7 @@ function dockerPorts(obj) {
       name: `dockerPorts`,
       type: `input`,
       default: util.getDefaultPortMapping,
-      message: `What should the port mapping be?`,
+      message: `What port should be exposed?`,
       validate: util.validatePortMapping,
       when: answers => {
          return util.needsRegistry(answers, obj) && obj.dockerPorts === undefined;

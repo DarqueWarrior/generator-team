@@ -37,7 +37,7 @@
          "defaultValue": "1.5"
       },
       "ports": {
-         "defaultValue": "80",
+         "defaultValue": "8080",
          "type": "string"
       }
    },
@@ -62,12 +62,6 @@
                      "ports": [
                         {
                            "port": "[variables('port')]"
-                        }
-                     ],
-                     "environmentVariables": [
-                        {
-                           "name": "PORT",
-                           "value": "[variables('port')]"
                         }
                      ],
                      "resources": {

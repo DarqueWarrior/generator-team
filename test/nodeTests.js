@@ -9,7 +9,7 @@ describe(`team:node docker`, () => {
 
    before(() => {
       return helpers.run(path.join(__dirname, `../generators/node/index`))
-         .withArguments([`nodeDemo`, `false`])
+         .withArguments([`nodeDemo`, `false`, `80`])
          .on(`error`, (e) => {
             assert.fail(e);
          })
@@ -21,11 +21,15 @@ describe(`team:node docker`, () => {
    });
 
    it(`bower install should not be called`, () => {
-      assert.equal(0, spawnStub.withArgs(`bower`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).callCount, `bower install was called`);
+      assert.equal(0, spawnStub.withArgs(`bower`, [`install`], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      }).callCount, `bower install was called`);
    });
 
    it(`npm install should not be called`, () => {
-      assert.equal(0, spawnStub.withArgs(`npm`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).callCount, `npm install was called`);
+      assert.equal(0, spawnStub.withArgs(`npm`, [`install`], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      }).callCount, `npm install was called`);
    });
 
    it(`files should be generated`, () => {
@@ -40,8 +44,12 @@ describe(`team:node docker`, () => {
          `nodeDemo/src/Dockerfile`,
          `nodeDemo/src/package.json`,
          `nodeDemo/src/parameters.xml`,
+         `nodeDemo/templates/docker.json`,
+         `nodeDemo/templates/docker.parameters.json`,
          `nodeDemo/templates/website.json`,
-         `nodeDemo/templates/website.parameters.json`
+         `nodeDemo/templates/website.parameters.json`,
+         `nodeDemo/templates/acilinux.json`,
+         `nodeDemo/templates/acilinux.parameters.json`
       ]);
 
       assert.fileContent(`nodeDemo/bower.json`, `"name": "nodedemo"`);
@@ -60,7 +68,7 @@ describe(`team:node paas`, () => {
 
    before(() => {
       return helpers.run(path.join(__dirname, `../generators/node/index.js`))
-         .withArguments([`nodeDemo`, `true`])
+         .withArguments([`nodeDemo`, `true`, `80`])
          .on(`error`, e => {
             assert.fail(e);
          })
@@ -73,12 +81,16 @@ describe(`team:node paas`, () => {
 
    it(`bower install should be called`, () => {
       // Make sure the calls to install were made
-      assert(bowerStub.withArgs(`bower`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).calledOnce, `bower install not called once`);
+      assert(bowerStub.withArgs(`bower`, [`install`], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      }).calledOnce, `bower install not called once`);
    });
 
    it(`npm install should be called`, () => {
       // Make sure the calls to install were made
-      assert(bowerStub.withArgs(`npm`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).calledOnce, `npm install not called once`);
+      assert(bowerStub.withArgs(`npm`, [`install`], {
+         stdio: ['pipe', 'pipe', process.stderr]
+      }).calledOnce, `npm install not called once`);
    });
 
    it(`files should be generated`, () => {
@@ -91,12 +103,19 @@ describe(`team:node paas`, () => {
          `package.json`,
          `src/web.config`,
          `src/Dockerfile`,
-         `src/package.json`
+         `src/package.json`,
+         `templates/website.json`,
+         `templates/website.parameters.json`,
+         `templates/docker.json`,
+         `templates/docker.parameters.json`,
+         `templates/acilinux.json`,
+         `templates/acilinux.parameters.json`
       ]);
 
       assert.fileContent(`bower.json`, `"name": "nodedemo"`);
       assert.fileContent(`package.json`, `"name": "nodedemo"`);
       assert.fileContent(`src/package.json`, `"name": "nodedemo"`);
+      assert.fileContent(`templates/acilinux.parameters.json`, `"value": "80"`);
       assert.fileContent(`src/server.js`, "var debug = require('debug')('nodeDemo:server');");
    });
 });
