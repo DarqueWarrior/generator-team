@@ -15,8 +15,9 @@ generator-team is a [Yeoman](http://yeoman.io/) generator that creates a complet
 
 It allows you to deploy to the following platforms:
 - [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/web/)
-- [Docker](https://www.docker.com/)
-- [Docker](https://www.docker.com/) images in [Azure App Service on Linux](https://docs.microsoft.com/en-us/azure/app-service-web/app-service-linux-intro) 
+- [Docker](https://www.docker.com/) to private host
+- [Docker](https://www.docker.com/) images in [Azure App Service on Linux](https://docs.microsoft.com/en-us/azure/app-service-web/app-service-linux-intro)
+- [Azure Container Instances](https://docs.microsoft.com/en-us/azure/container-instances/)
 
 ## Requirements
 - [Team Foundation Server 2017](https://www.visualstudio.com/downloads/) or [Visual Studio Team Services Account](https://app.vsaex.visualstudio.com/profile/account)
