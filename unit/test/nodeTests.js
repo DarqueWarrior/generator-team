@@ -8,13 +8,8 @@ describe(`team:node docker`, () => {
    var spawnStub;
 
    before(() => {
-<<<<<<< HEAD:test/nodeTests.js
       return helpers.run(path.join(__dirname, `../generators/node/index`))
          .withArguments([`nodeDemo`, `false`, `80`])
-=======
-      return helpers.run(path.join(__dirname, `../../generators/node/index`))
-         .withArguments([`nodeDemo`, `false`])
->>>>>>> testing:unit/test/nodeTests.js
          .on(`error`, (e) => {
             assert.fail(e);
          })
@@ -72,13 +67,8 @@ describe(`team:node paas`, () => {
    var bowerStub;
 
    before(() => {
-<<<<<<< HEAD:test/nodeTests.js
       return helpers.run(path.join(__dirname, `../generators/node/index.js`))
          .withArguments([`nodeDemo`, `true`, `80`])
-=======
-      return helpers.run(path.join(__dirname, `../../generators/node/index.js`))
-         .withArguments([`nodeDemo`, `true`])
->>>>>>> testing:unit/test/nodeTests.js
          .on(`error`, e => {
             assert.fail(e);
          })

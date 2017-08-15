@@ -49,13 +49,8 @@ describe(`team:java paas`, () => {
    var bowerStub;
 
    before(() => {
-<<<<<<< HEAD:test/javaTests.js
       return helpers.run(path.join(__dirname, `../generators/java/index`))
          .withArguments([`javaUnitTest`, `testGroupID`, `true`, `80`])
-=======
-      return helpers.run(path.join(__dirname, `../../generators/java/index`))
-         .withArguments([`javaUnitTest`, `testGroupID`, `true`])
->>>>>>> testing:unit/test/javaTests.js
          .on(`error`, e => {
             assert.fail(e);
          })
