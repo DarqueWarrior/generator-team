@@ -6,4 +6,8 @@ xunit.xml
 *.log
 /.vs
 localtest.ps1
+<<<<<<< HEAD
 *.env
+=======
+**/.env
+>>>>>>> testing

@@ -4,8 +4,8 @@ const helpers = require(`yeoman-test`);
 const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
-const util = require(`../generators/app/utility`);
-const azure = require(`../generators/azure/app`);
+const util = require(`../../generators/app/utility`);
+const azure = require(`../../generators/azure/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
@@ -13,7 +13,7 @@ describe(`azure:index`, () => {
    it(`prompts vsts`, () => {
       var azureStub;
 
-      return helpers.run(path.join(__dirname, `../generators/azure/index`))
+      return helpers.run(path.join(__dirname, `../../generators/azure/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -174,7 +174,7 @@ describe(`azure:app`, function () {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/azure/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/azure/app`, { "request": requestStub });
 
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, undefined);
 
@@ -204,7 +204,7 @@ describe(`azure:app`, function () {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       let requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/azure/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/azure/app`, { "request": requestStub });
 
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, undefined);
       this.stub(util, `checkStatus`).callsArgWith(3, null, { name: `endpoint`, operationStatus: { state: `Ready` } });
@@ -235,7 +235,7 @@ describe(`azure:app`, function () {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       let requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/azure/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/azure/app`, { "request": requestStub });
 
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, undefined);
       this.stub(util, `checkStatus`).callsArgWith(3, null, { operationStatus: { state: `Failed` } });
@@ -261,7 +261,7 @@ describe(`azure:app`, function () {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       let requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/azure/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/azure/app`, { "request": requestStub });
 
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, undefined);
       this.stub(util, `checkStatus`).callsArgWith(3, `boom`, undefined);
@@ -287,7 +287,7 @@ describe(`azure:app`, function () {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       let requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/azure/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/azure/app`, { "request": requestStub });
 
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, undefined);
       this.stub(util, `checkStatus`).callsArgWith(3, null, { name: `endpoint`, operationStatus: { state: `Ready` } });

@@ -6,8 +6,8 @@ const helpers = require(`yeoman-test`);
 const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
-const util = require(`../generators/app/utility`);
-const release = require(`../generators/release/app`);
+const util = require(`../../generators/app/utility`);
+const release = require(`../../generators/release/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
@@ -29,7 +29,7 @@ describe(`release:index`, () => {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -79,7 +79,7 @@ describe(`release:index`, () => {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `http://localhost:8080/tfs/DefaultCollection`,
             pat: `token`,
@@ -228,7 +228,7 @@ describe(`release:index`, () => {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -273,7 +273,7 @@ describe(`release:index`, () => {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `http://localhost:8080/tfs/DefaultCollection`,
             pat: `token`,
@@ -318,7 +318,7 @@ describe(`release:index`, () => {
          util.findAzureServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -361,7 +361,7 @@ describe(`release:index`, () => {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -406,7 +406,7 @@ describe(`release:index`, () => {
          util.findAzureServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -449,7 +449,7 @@ describe(`release:index`, () => {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -577,7 +577,7 @@ describe(`release:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/release/app`, {
+      const proxyApp = proxyquire(`../../generators/release/app`, {
          "request": requestStub
       });
 
@@ -649,7 +649,7 @@ describe(`release:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/release/app`, {
+      const proxyApp = proxyquire(`../../generators/release/app`, {
          "request": requestStub
       });
 
@@ -723,7 +723,7 @@ describe(`release:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../generators/release/app`, {
+      const proxyApp = proxyquire(`../../generators/release/app`, {
          "request": requestStub
       });
 

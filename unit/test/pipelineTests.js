@@ -3,15 +3,15 @@ const sinon = require(`sinon`);
 const fs = require(`fs-extra`);
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
-const util = require(`../generators/app/utility`);
+const util = require(`../../generators/app/utility`);
 
 describe(`team:pipeline`, () => {
    it(`using real dependencies`, () => {
       var deps = [
          // No docker gens are listed
-         path.join(__dirname, `../generators/azure/index`),
-         path.join(__dirname, `../generators/build/index`),
-         path.join(__dirname, `../generators/release/index`)
+         path.join(__dirname, `../../generators/azure/index`),
+         path.join(__dirname, `../../generators/build/index`),
+         path.join(__dirname, `../../generators/release/index`)
       ];
 
       let expectedToken = `OnRva2Vu`;
@@ -47,7 +47,7 @@ describe(`team:pipeline`, () => {
       let servicePrincipalKey = `servicePrincipalKey`;
       let tfs = `http://localhost:8080/tfs/defaultcollection`;
 
-      return helpers.run(path.join(__dirname, `../generators/pipeline/index`))
+      return helpers.run(path.join(__dirname, `../../generators/pipeline/index`))
          .withGenerators(deps)
          .withArguments([type, applicationName, tfs,
             queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,
@@ -171,7 +171,7 @@ describe(`team:pipeline`, () => {
          util.getAzureSubs.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/pipeline/index.js`))
+      return helpers.run(path.join(__dirname, `../../generators/pipeline/index.js`))
          .withGenerators(deps)
          .withPrompts({
             tfs: `vsts`,
@@ -205,7 +205,7 @@ describe(`team:pipeline`, () => {
          [helpers.createDummyGenerator(), `team:release`]
       ];
 
-      return helpers.run(path.join(__dirname, `../generators/pipeline/index.js`))
+      return helpers.run(path.join(__dirname, `../../generators/pipeline/index.js`))
          .withGenerators(deps)
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/defaultcollection`,
             `default`, `paas`, `AzureSub`, `AzureSubId`, `TenantId`, `servicePrincipalId`,
@@ -246,7 +246,7 @@ describe(`team:pipeline`, () => {
       let dockerRegistryPassword = `DockerPassword`;
       let tfs = `http://localhost:8080/tfs/defaultcollection`;
 
-      return helpers.run(path.join(__dirname, `../generators/pipeline/index.js`))
+      return helpers.run(path.join(__dirname, `../../generators/pipeline/index.js`))
          .withGenerators(deps)
          .withArguments([type, applicationName, tfs,
             queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,

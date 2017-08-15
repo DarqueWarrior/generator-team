@@ -2,7 +2,7 @@ const path = require(`path`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
-const util = require(`../generators/app/utility`);
+const util = require(`../../generators/app/utility`);
 
 describe(`app:index`, () => {
    it(`arguments using fake dependencies dockerpaas linux`, () => {
@@ -38,7 +38,7 @@ describe(`app:index`, () => {
       let pat = `token`;
 
       // Act
-      return helpers.run(path.join(__dirname, `../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
          .withGenerators(deps)
          .withArguments([type, name, tfs,
             azureSub, azureSubId, tenantId, servicePrincipalId,
@@ -84,7 +84,7 @@ describe(`app:index`, () => {
       let pat = `token`;
 
       // Act
-      return helpers.run(path.join(__dirname, `../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
          .withGenerators(deps)
          .withArguments([type, name, tfs,
             azureSub, azureSubId, tenantId, servicePrincipalId,
@@ -130,7 +130,7 @@ describe(`app:index`, () => {
       let pat = `token`;
 
       // Act
-      return helpers.run(path.join(__dirname, `../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
          .withGenerators(deps)
          .withArguments([type, name, tfs,
             azureSub, azureSubId, tenantId, servicePrincipalId,
@@ -159,7 +159,7 @@ describe(`app:index`, () => {
          util.getAzureSubs.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
          .withGenerators(deps)
          .withPrompts({
             tfs: `vsts`,
@@ -217,7 +217,7 @@ describe(`app:index`, () => {
       let servicePrincipalKey = `servicePrincipalKey`;
       let pat = `token`;
 
-      return helpers.run(path.join(__dirname, `../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
          .withGenerators(deps)
          .withArguments([type, name, tfs,
             azureSub, azureSubId, tenantId, servicePrincipalId,
@@ -248,7 +248,7 @@ describe(`app:index`, () => {
          util.getAzureSubs.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
          .withGenerators(deps)
          .withPrompts({
             tfs: `vsts`,

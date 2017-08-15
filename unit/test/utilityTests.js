@@ -3,8 +3,8 @@ const sinon = require(`sinon`);
 const assert = require(`assert`);
 const sinonTest = require(`sinon-test`);
 const proxyquire = require(`proxyquire`);
-const package = require('../package.json');
-const util = require(`../generators/app/utility`);
+const package = require('../../package.json');
+const util = require(`../../generators/app/utility`);
 
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
@@ -524,7 +524,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal(`GET`, options.method, `wrong method`);
@@ -553,7 +553,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal(`GET`, options.method, `wrong method`);
@@ -656,7 +656,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal(`GET`, options.method, `wrong method`);
@@ -691,7 +691,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal(`GET`, options.method, `wrong method`);
@@ -730,7 +730,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 302
@@ -757,7 +757,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 400
@@ -793,7 +793,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -816,7 +816,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
 
             if (options.url.endsWith(`serviceendpoints`)) {
@@ -859,7 +859,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -885,7 +885,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -913,7 +913,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 400
@@ -937,7 +937,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -965,7 +965,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -993,7 +993,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             if (options.url.endsWith(`serviceendpoints`)) {
                callback(null, {
@@ -1035,7 +1035,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -1061,7 +1061,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 404
@@ -1085,7 +1085,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback("boom", {
                statusCode: 500
@@ -1109,7 +1109,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 203
@@ -1133,7 +1133,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -1159,7 +1159,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -1185,7 +1185,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 404
@@ -1209,7 +1209,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -1243,7 +1243,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 200
@@ -1277,7 +1277,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             callback(null, {
                statusCode: 404
@@ -1386,7 +1386,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire('../generators/app/utility', {
+      const proxyApp = proxyquire('../../generators/app/utility', {
          'request': (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal('GET', options.method, 'wrong method');
@@ -1426,7 +1426,7 @@ describe(`utility`, () => {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal(`GET`, options.method, `wrong method`);
@@ -1461,7 +1461,7 @@ describe(`utility`, () => {
 
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../generators/app/utility`, {
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
          "request": (options, callback) => {
             // Confirm the request was formatted correctly
             assert.equal(`GET`, options.method, `wrong method`);

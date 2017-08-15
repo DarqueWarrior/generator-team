@@ -7,7 +7,7 @@ describe(`team:asp docker`, () => {
    var spawnStub;
 
    before(() => {
-      return helpers.run(path.join(__dirname, `../generators/asp/index`))
+      return helpers.run(path.join(__dirname, `../../generators/asp/index`))
          .withArguments([`aspUnitTest`, `false`, `docker`, `tcp://23.1.1.1:2376`])
          .on(`error`, e => {
             assert.fail(e);
@@ -51,7 +51,7 @@ describe(`team:asp paas`, () => {
    var bowerStub;
 
    before(() => {
-      return helpers.run(path.join(__dirname, `../generators/asp/index`))
+      return helpers.run(path.join(__dirname, `../../generators/asp/index`))
          .withArguments([`aspUnitTest`, `true`, `paas`])
          .on(`error`, e => {
             assert.fail(e);

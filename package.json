@@ -4,7 +4,7 @@
   "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
   "main": "./generators/app/index.js",
   "scripts": {
-    "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file"
+    "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file unit/test"
   },
   "files": [
     "generators/app",
@@ -40,6 +40,7 @@
   "license": "ISC",
   "dependencies": {
     "async": "^2.3.0",
+    "node-env-file": "^0.1.8",
     "request": "^2.81.0",
     "uuid": "^3.1.0",
     "yeoman-generator": "^0.24.1",
