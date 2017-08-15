@@ -8,7 +8,7 @@ describe(`team:node docker`, () => {
    var spawnStub;
 
    before(() => {
-      return helpers.run(path.join(__dirname, `../generators/node/index`))
+      return helpers.run(path.join(__dirname, `../../generators/node/index`))
          .withArguments([`nodeDemo`, `false`, `80`])
          .on(`error`, (e) => {
             assert.fail(e);
@@ -67,7 +67,7 @@ describe(`team:node paas`, () => {
    var bowerStub;
 
    before(() => {
-      return helpers.run(path.join(__dirname, `../generators/node/index.js`))
+      return helpers.run(path.join(__dirname, `../../generators/node/index.js`))
          .withArguments([`nodeDemo`, `true`, `80`])
          .on(`error`, e => {
             assert.fail(e);

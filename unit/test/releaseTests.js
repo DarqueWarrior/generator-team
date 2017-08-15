@@ -114,105 +114,105 @@ describe(`release:index`, () => {
          });
    });
 
-     it(`test prompts node acilinux vsts`, () => {
-        let expectedToken = `OnRva2Vu`;
-        let expectedAccount = `vsts`;
+   it(`test prompts node acilinux vsts`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `vsts`;
 
-        let cleanUp = () => {
-           util.getPools.restore();
-           util.findBuild.restore();
-           util.findQueue.restore();
-           util.findProject.restore();
-           util.getAzureSubs.restore();
-           util.tryFindRelease.restore();
-           util.findAzureServiceEndpoint.restore();
-           util.findDockerRegistryServiceEndpoint.restore();
-        };
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.findAzureServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
 
-        return helpers.run(path.join(__dirname, `../generators/release/index`))
-           .withPrompts({
-              tfs: `vsts`,
-              pat: `token`,
-              queue: `Hosted Linux Preview`,
-              type: `node`,
-              applicationName: `nodeDemo`,
-              target: `acilinux`,
-              azureSub: `azureSub`,
-              dockerHost: `dockerHost`,
-              dockerRegistry: `dockerRegistry`,
-              dockerRegistryId: `dockerRegistryId`,
-              dockerRegistryPassword: `dockerRegistryPassword`,
-              dockerPorts: `3000:3000`
-           })
-           .on(`error`, e => {
-              cleanUp();
-              console.log(`Oh Noes!`, e);
-           })
-           .on(`ready`, (generator) => {
-              // This is called right before `generator.run()` is called.
-              sinon.stub(util, `getPools`);
-              sinon.stub(util, `getAzureSubs`);
-              stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
-              stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
-              stubs.findBuild(expectedAccount, `acilinux`, expectedToken);
-              stubs.tryFindRelease(expectedAccount, `acilinux`, expectedToken);
-              stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
-              stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
-           })
-           .on(`end`, e => {
-              cleanUp();
-           });
-     });
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `vsts`,
+            pat: `token`,
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `acilinux`,
+            azureSub: `azureSub`,
+            dockerHost: `dockerHost`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getAzureSubs`);
+            stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
+            stubs.findBuild(expectedAccount, `acilinux`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `acilinux`, expectedToken);
+            stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
+            stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
+         })
+         .on(`end`, e => {
+            cleanUp();
+         });
+   });
 
-     it(`test prompts node acilinux tfs`, () => {
-        let expectedToken = `OnRva2Vu`;
-        let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+   it(`test prompts node acilinux tfs`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
-        let cleanUp = () => {
-           util.getPools.restore();
-           util.findBuild.restore();
-           util.findQueue.restore();
-           util.findProject.restore();
-           util.getAzureSubs.restore();
-           util.tryFindRelease.restore();
-           util.findAzureServiceEndpoint.restore();
-           util.findDockerRegistryServiceEndpoint.restore();
-        };
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.findAzureServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
 
-        return helpers.run(path.join(__dirname, `../generators/release/index`))
-           .withPrompts({
-              tfs: `http://localhost:8080/tfs/DefaultCollection`,
-              pat: `token`,
-              queue: `Hosted Linux Preview`,
-              type: `node`,
-              applicationName: `nodeDemo`,
-              target: `acilinux`,
-              azureSub: `azureSub`,
-              dockerHost: `dockerHost`,
-              dockerRegistry: `dockerRegistry`,
-              dockerRegistryId: `dockerRegistryId`,
-              dockerRegistryPassword: `dockerRegistryPassword`,
-              dockerPorts: `3000:3000`
-           })
-           .on(`error`, e => {
-              cleanUp();
-              console.log(`Oh Noes!`, e);
-           })
-           .on(`ready`, (generator) => {
-              // This is called right before `generator.run()` is called.
-              sinon.stub(util, `getPools`);
-              sinon.stub(util, `getAzureSubs`);
-              stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
-              stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
-              stubs.findBuild(expectedAccount, `acilinux`, expectedToken);
-              stubs.tryFindRelease(expectedAccount, `acilinux`, expectedToken);
-              stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
-              stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
-           })
-           .on(`end`, e => {
-              cleanUp();
-           });
-     });
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            pat: `token`,
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `acilinux`,
+            azureSub: `azureSub`,
+            dockerHost: `dockerHost`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getAzureSubs`);
+            stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
+            stubs.findBuild(expectedAccount, `acilinux`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `acilinux`, expectedToken);
+            stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
+            stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
+         })
+         .on(`end`, e => {
+            cleanUp();
+         });
+   });
 
    it(`test prompts node docker vsts`, () => {
       let expectedToken = `OnRva2Vu`;

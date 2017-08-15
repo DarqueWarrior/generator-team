@@ -49,7 +49,7 @@ describe(`team:java paas`, () => {
    var bowerStub;
 
    before(() => {
-      return helpers.run(path.join(__dirname, `../generators/java/index`))
+      return helpers.run(path.join(__dirname, `../../generators/java/index`))
          .withArguments([`javaUnitTest`, `testGroupID`, `true`, `80`])
          .on(`error`, e => {
             assert.fail(e);
