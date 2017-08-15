@@ -18,13 +18,19 @@ const dockerHost = process.env.DOCKER_HOST;
 const dockerRegistry = process.env.DOCKER_REGISTRY;
 const dockerRegistryUsername = process.env.DOCKER_REGISTRY_USERNAME;
 
-describe.only(`build:index cmdLine`, () => {
+describe(`build:index cmdLine`, () => {
    "use strict";
 
    var projectId;
    var expectedName;
    var buildDefinitionId;
    var projectName = `buildTest`;
+
+   // Arguments
+   var applicationType;
+   var queue;
+   var target;
+   var dockerRegistryId;
 
    before(function (done) {
       // runs before all tests in this block
@@ -43,9 +49,14 @@ describe.only(`build:index cmdLine`, () => {
       // Arrange
       expectedName = `buildTest-CI`;
 
+      applicationType = `asp`;
+      queue = `default`;
+      target = `paas`;
+      dockerRegistryId = ``;
+
       // Act
       helpers.run(path.join(__dirname, `../../generators/build/index`))
-         .withArguments([`asp`, projectName, acct, `default`, `paas`, ``, ``, ``, pat])
+         .withArguments([applicationType, projectName, acct, queue, target, dockerHost, dockerRegistry, dockerRegistryId, pat])
          .on(`error`, (error) => {
             assert.fail(error);
          })
@@ -60,7 +71,7 @@ describe.only(`build:index cmdLine`, () => {
             });
          });
    });
-   
+
    afterEach(function (done) {
       // runs after each test in this block
       vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, e => {
