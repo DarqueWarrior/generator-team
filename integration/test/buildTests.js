@@ -4,6 +4,7 @@ const request = require('request');
 const env = require('node-env-file');
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
+const exec = require('child_process').exec;
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
@@ -55,21 +56,22 @@ describe(`build:index cmdLine`, () => {
       dockerRegistryId = ``;
 
       // Act
-      helpers.run(path.join(__dirname, `../../generators/build/index`))
-         .withArguments([applicationType, projectName, acct, queue, target, dockerHost, dockerRegistry, dockerRegistryId, pat])
-         .on(`error`, (error) => {
+      let cmd = `yo team:build ${applicationType} ${projectName} ${acct} ${queue} ${target} '${dockerHost}' '${dockerRegistry}' '${dockerRegistryId}' ${pat}`;
+
+      exec(cmd, (error, stdout, stderr) => {
+         if (error) {
             assert.fail(error);
-         })
-         .on(`end`, () => {
-            // Assert
-            // Test to see if build was created
-            vsts.findBuildDefinition(acct, projectId, pat, expectedName, `yo Team`, (e, bld) => {
-               assert.ifError(e);
-               assert.ok(bld, `Build not created`);
-               buildDefinitionId = bld.id;
-               done(e);
-            });
+         }
+
+         // Assert
+         // Test to see if build was created
+         vsts.findBuildDefinition(acct, projectId, pat, expectedName, `yo Team`, (e, bld) => {
+            assert.ifError(e);
+            assert.ok(bld, `Build not created`);
+            buildDefinitionId = bld.id;
+            done(e);
          });
+      });
    });
 
    afterEach(function (done) {

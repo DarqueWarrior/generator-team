@@ -255,7 +255,18 @@ function checkStatus(uri, token, gen, callback) {
    });
 
    request(options, function (err, res, body) {
-      callback(err, JSON.parse(body));
+
+      let obj = {};
+
+      try {
+         obj = JSON.parse(body);
+      } catch (error) {
+         // This a HTML page with an error message.
+         err = error;
+         console.log(body);
+      }
+
+      callback(err, obj);
    });
 }
 

@@ -4,6 +4,7 @@ const request = require('request');
 const env = require('node-env-file');
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
+const exec = require('child_process').exec;
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
@@ -13,7 +14,7 @@ env(__dirname  +  '/.env', {
 });
 
 const pat = process.env.PAT;
-const acct = process.env.ACCT;
+const tfs = process.env.ACCT;
 
 describe(`project:index cmdLine`, () => {
    "use strict";
@@ -23,7 +24,7 @@ describe(`project:index cmdLine`, () => {
 
    before(function (done) {
       // runs before all tests in this block
-      vsts.findProject(acct, expectedProjectName, pat, `yo Team`, (e, project) => {
+      vsts.findProject(tfs, expectedProjectName, pat, `yo Team`, (e, project) => {
          assert.equal(project, undefined, `Precondition not meet: Project already exist`);
          done(e);
       });
@@ -31,26 +32,30 @@ describe(`project:index cmdLine`, () => {
 
    it(`project should be created`, (done) => {
       // Act
-      helpers.run(path.join(__dirname, `../../generators/project/index`))
-         .withArguments([expectedProjectName, acct, pat])
-         .on(`error`, (error) => {
+      let cmd = `yo team:project ${expectedProjectName} ${tfs} ${pat}`;
+      
+      exec(cmd, (error, stdout, stderr) => {
+         if (error) {
             assert.fail(error);
-         })
-         .on(`end`, () => {
-            // Assert
-            // Test to see if project was created
-            vsts.findProject(acct, expectedProjectName, pat, `yo Team`, (e, project) => {
-               assert.ifError(e);
-               projectId = project.id;
-               assert.equal(project.name, expectedProjectName, `Wrong project returned`);
-               done(e);
-            });
+         }
+
+         // Assert
+         // Test to see if project was created
+         vsts.findProject(tfs, expectedProjectName, pat, `yo Team`, (e, project) => {
+            assert.ifError(e);
+            assert.ok(project, `project not found`);
+
+            // Store ID so I can delete the project
+            projectId = project.id;
+            assert.equal(project.name, expectedProjectName, `Wrong project returned`);
+            done(e);
          });
+      });
    });
 
    after(function (done) {
       // runs after all tests in this block
-      vsts.deleteProject(acct, projectId, pat, `yo team`, (e) => {
+      vsts.deleteProject(tfs, projectId, pat, `yo team`, (e) => {
          done(e);
       });
    });
