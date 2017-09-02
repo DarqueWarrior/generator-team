@@ -43,6 +43,24 @@
          }
       },
       {
+         "environment": {},
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Use .NET Core SDK 1.0.4",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "b0ce7256-7898-45d3-9cb5-176b752bfea6",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "packageType": "sdk",
+            "version": "1.0.4"
+         }
+      },
+      {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
