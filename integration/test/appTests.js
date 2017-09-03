@@ -21,7 +21,7 @@ describe.only(`app:index cmdLine node paas`, () => {
    "use strict";
 
    var projectId;
-   var expectedName;
+   var originalDir = process.cwd();
 
    // Arguments
    var applicationType = `node`;
@@ -43,6 +43,7 @@ describe.only(`app:index cmdLine node paas`, () => {
    var dockerRegistryPassword = ` `;
    var servicePrincipalKey = process.env.SERVICE_PRINCIPALKEY || ` `;
    var pat = process.env.PAT || ` `;
+   var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
 
    before(function (done) {
       // runs before all tests in this block
@@ -68,8 +69,10 @@ describe.only(`app:index cmdLine node paas`, () => {
          // Act
          exec(cmd, (error, stdout, stderr) => {
             if (error) {
+               // This may happen if yo team is not installed
                console.error(`exec error: ${error}`);
                done(error);
+               return;
             }
 
             util.log(`stdout: ${stdout}`);
@@ -95,7 +98,7 @@ describe.only(`app:index cmdLine node paas`, () => {
 
    it(`build definition should be created`, (done) => {
       // Arrange
-      expectedName = `nodeTest-CI`;
+      let expectedName = `nodeTest-CI`;
 
       util.log(`Find build ${expectedName}`);
 
@@ -110,7 +113,7 @@ describe.only(`app:index cmdLine node paas`, () => {
 
    it(`release definition should be created`, (done) => {
       // Arrange
-      expectedName = `nodeTest-CD`;
+      let expectedName = `nodeTest-CD`;
 
       util.log(`Find release ${expectedName}`);
 
@@ -125,7 +128,7 @@ describe.only(`app:index cmdLine node paas`, () => {
 
    it(`azure service endpoint should be created`, (done) => {
       // Arrange
-      expectedName = azureSub;
+      let expectedName = azureSub;
 
       util.log(`Find release ${expectedName}`);
 
@@ -142,13 +145,40 @@ describe.only(`app:index cmdLine node paas`, () => {
       assert.ok(fs.existsSync(applicationName));
    });
 
+   it(`git push should succeed`, (done) => {
+      util.log(`cd to: ${__dirname}/../${applicationName}`);
+      process.chdir(`${__dirname}/../${applicationName}`);
+
+      util.log(`git push`);
+      exec(`git push`, (error, stdout, stderr) => {
+         if (error) {
+            // This may happen if git errors
+            console.error(`exec error: ${error}`);
+            done(error);
+            return;
+         }
+
+         util.log(`stdout: ${stdout}`);
+         util.log(`stderr: ${stderr}`);
+
+         done(error);
+      });
+   });
+
    // runs after all tests in this block
    after(function (done) {
       util.log(`delete project: ${projectId}`);
 
-      vsts.deleteProject(tfs, projectId, pat, userAgent, (e) => {
-         util.log(`delete folder: ${applicationName}`);
+      if (doNotCleanUp) {
+         done();
+         return;
+      }
 
+      vsts.deleteProject(tfs, projectId, pat, userAgent, (e) => {
+         util.log(`cd to: ${originalDir}`);
+         process.chdir(originalDir);
+
+         util.log(`delete folder: ${applicationName}`);
          util.rmdir(applicationName);
 
          done(e);
