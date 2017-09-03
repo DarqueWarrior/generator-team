@@ -36,7 +36,7 @@
             "--timeout",
             "600000"
          ],
-         "cwd": "${workspaceRoot}",
+         "cwd": "${fileDirname}/..",
          "preLaunchTask": null,
          "runtimeExecutable": null,
          "runtimeArgs": [
