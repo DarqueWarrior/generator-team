@@ -298,6 +298,32 @@ function findBuildDefinition(account, projectId, pat, name, userAgent, callback)
    });
 }
 
+function getBuildLog(account, projectId, pat, id, userAgent, callback){
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, true)}/${projectId}/_apis/build/builds/${id}/logs`,
+      "qs": {
+         "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      var obj = JSON.parse(body);
+
+      options.url = obj.value[obj.value.length - 2].url;
+
+      request(options, function (e, response, data) {
+         callback(e, data);
+      });
+   });
+}
+
 function getBuilds(account, projectId, pat, userAgent, callback) {
    'use strict';
 
@@ -401,6 +427,7 @@ module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    getBuilds: getBuilds,
+   getBuildLog: getBuildLog,
    findProject: findProject,
    deleteProject: deleteProject,
    createProject: createProject,

@@ -103,8 +103,13 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
       body: {
          authorization: {
             parameters: {
-               serviceprincipalid: sub.servicePrincipalId ? sub.servicePrincipalId : ``,
-               serviceprincipalkey: sub.servicePrincipalKey ? sub.servicePrincipalKey : ``,
+               // I found when testing from the command line that if I am targeting
+               // VSTS that does not require these values but I provide them anyway
+               // the creation fails.  So if the value of creationMode is Automatic
+               // do not set these values even if they are provided in error by the 
+               // user using the command line.
+               serviceprincipalid: (sub.servicePrincipalId && creationMode === `Manual`) ? sub.servicePrincipalId : ``,
+               serviceprincipalkey: (sub.servicePrincipalKey && creationMode === `Manual`) ? sub.servicePrincipalKey : ``,
                tenantid: sub.tenantId
             },
             scheme: 'ServicePrincipal'

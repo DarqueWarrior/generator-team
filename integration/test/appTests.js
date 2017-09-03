@@ -18,7 +18,7 @@ env(__dirname + '/.env', {
    overwrite: true
 });
 
-describe.only(`app:index cmdLine node paas`, () => {
+describe.only(`app:index cmdLine tfs node paas`, () => {
    "use strict";
 
    var projectId;
@@ -167,24 +167,29 @@ describe.only(`app:index cmdLine node paas`, () => {
    });
 
    it(`build should succeed`, (done) => {
+      let id = 0;
       let result = ``;
 
       // Wait for build to succeed or fail
       async.whilst(
-         function () {
+         () => {
             return result !== `failed` && result !== `succeeded`;
          },
-         function (finished) {
-            vsts.getBuilds(tfs, projectId, pat, userAgent, function (err, blds) {
+         (finished) => {
+            vsts.getBuilds(tfs, projectId, pat, userAgent, (err, blds) => {
                if (blds.length > 0) {
+                  id = blds[0].id;
                   result = blds[0].result;
                }
                finished(err);
             });
          },
-         function (e) {
-            assert.equal(result, `succeeded`);
-            done(e);
+         (e) => {
+            // Get the build log
+            vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
+               assert.equal(result, `succeeded`, logs);
+               done(e);
+            });
          }
       );
    });
