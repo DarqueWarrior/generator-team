@@ -298,6 +298,30 @@ function findBuildDefinition(account, projectId, pat, name, userAgent, callback)
    });
 }
 
+function getBuilds(account, projectId, pat, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, true)}/${projectId}/_apis/build/builds`,
+      "qs": {
+         "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      var obj = JSON.parse(body);
+
+      callback(e, obj.value);
+   });
+}
+
 function findReleaseDefinition(account, projectId, pat, name, userAgent, callback) {
    "use strict";
 
@@ -376,6 +400,7 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
+   getBuilds: getBuilds,
    findProject: findProject,
    deleteProject: deleteProject,
    createProject: createProject,

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require(`path`);
+const async = require('async');
 const util = require(`./util`);
 const vsts = require(`./index`);
 const request = require('request');
@@ -163,6 +164,29 @@ describe.only(`app:index cmdLine node paas`, () => {
 
          done(error);
       });
+   });
+
+   it(`build should succeed`, (done) => {
+      let result = ``;
+
+      // Wait for build to succeed or fail
+      async.whilst(
+         function () {
+            return result !== `failed` && result !== `succeeded`;
+         },
+         function (finished) {
+            vsts.getBuilds(tfs, projectId, pat, userAgent, function (err, blds) {
+               if (blds.length > 0) {
+                  result = blds[0].result;
+               }
+               finished(err);
+            });
+         },
+         function (e) {
+            assert.equal(result, `succeeded`);
+            done(e);
+         }
+      );
    });
 
    // runs after all tests in this block
