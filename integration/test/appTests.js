@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require(`path`);
 const util = require(`./util`);
 const vsts = require(`./index`);
@@ -64,6 +65,7 @@ describe.only(`app:index cmdLine node paas`, () => {
 
          util.log(`run command: ${cmd}`);
 
+         // Act
          exec(cmd, (error, stdout, stderr) => {
             if (error) {
                console.error(`exec error: ${error}`);
@@ -91,18 +93,38 @@ describe.only(`app:index cmdLine node paas`, () => {
       });
    });
 
-   it(`node.js build definition should be created`, (done) => {
+   it(`build definition should be created`, (done) => {
       // Arrange
       expectedName = `nodeTest-CI`;
 
       util.log(`Find build ${expectedName}`);
 
-      vsts.findBuildDefinition(tfs, projectId, pat, expectedName, userAgent, (e, b) =>{
+      vsts.findBuildDefinition(tfs, projectId, pat, expectedName, userAgent, (e, b) => {
+         // Assert
          assert.ifError(e);
          assert.ok(b, `build defintion not found`);
 
          done(e);
       });
+   });
+
+   it(`release definition should be created`, (done) => {
+      // Arrange
+      expectedName = `nodeTest-CD`;
+
+      util.log(`Find release ${expectedName}`);
+
+      vsts.findReleaseDefinition(tfs, projectId, pat, expectedName, userAgent, (e, r) => {
+         // Assert
+         assert.ifError(e);
+         assert.ok(r, `release defintion not found`);
+
+         done(e);
+      });
+   });
+
+   it(`files should be created`, () => {
+      assert.ok(fs.existsSync(applicationName));
    });
 
    // runs after all tests in this block

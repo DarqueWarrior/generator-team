@@ -4,6 +4,7 @@ const package = require('../../package.json');
 
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = '1.0';
+const RELEASE_API_VERSION = '3.0-preview.3';
 
 function encodePat(pat) {
    'use strict';
@@ -74,7 +75,7 @@ function checkStatus(uri, token, userAgent, callback) {
 }
 
 function deleteBuildDefinition(account, projectId, buildDefinitionId, pat, userAgent, callback) {
-    'use strict';
+   'use strict';
 
    let token = encodePat(pat);
 
@@ -295,6 +296,34 @@ function findBuildDefinition(account, projectId, pat, name, userAgent, callback)
    });
 }
 
+function findReleaseDefinition(account, projectId, pat, name, userAgent, callback) {
+   "use strict";
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/definitions`,
+      "qs": {
+         "api-version": RELEASE_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      var obj = JSON.parse(body);
+
+      var rel = obj.value.find(function (i) {
+         return i.name === name;
+      });
+
+      callback(e, rel);
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
@@ -303,4 +332,5 @@ module.exports = {
    createProject: createProject,
    findBuildDefinition: findBuildDefinition,
    deleteBuildDefinition: deleteBuildDefinition,
+   findReleaseDefinition: findReleaseDefinition,
 };
