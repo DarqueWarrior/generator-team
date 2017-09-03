@@ -3,8 +3,10 @@ const request = require('request');
 const package = require('../../package.json');
 
 const BUILD_API_VERSION = `2.0`;
-const PROJECT_API_VERSION = '1.0';
-const RELEASE_API_VERSION = '3.0-preview.3';
+const PROJECT_API_VERSION = `1.0`;
+const RELEASE_API_VERSION = `3.0-preview.3`;
+const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
+const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
 function encodePat(pat) {
    'use strict';
@@ -324,6 +326,53 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
    });
 }
 
+function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      var obj = JSON.parse(body);
+
+      var endpoint = obj.value.find(function (i) {
+         return i.data.subscriptionName === name;
+      });
+
+      // Down stream we need the full endpoint so call again with the ID. This will return more data
+      getServiceEndpoint(account, projectId, endpoint.id, token, callback);
+   });
+}
+
+function getServiceEndpoint(account, projectId, id, token, callback) {
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints/${id}`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      callback(error, JSON.parse(body));
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
@@ -333,4 +382,5 @@ module.exports = {
    findBuildDefinition: findBuildDefinition,
    deleteBuildDefinition: deleteBuildDefinition,
    findReleaseDefinition: findReleaseDefinition,
+   findAzureServiceEndpoint: findAzureServiceEndpoint
 };

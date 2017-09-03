@@ -123,6 +123,21 @@ describe.only(`app:index cmdLine node paas`, () => {
       });
    });
 
+   it(`azure service endpoint should be created`, (done) => {
+      // Arrange
+      expectedName = azureSub;
+
+      util.log(`Find release ${expectedName}`);
+
+      vsts.findAzureServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
+         // Assert
+         assert.ifError(e);
+         assert.ok(ep, `service endpoint not found`);
+
+         done(e);
+      });
+   });
+
    it(`files should be created`, () => {
       assert.ok(fs.existsSync(applicationName));
    });
