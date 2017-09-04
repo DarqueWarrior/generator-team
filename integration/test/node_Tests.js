@@ -24,6 +24,7 @@ describe.only(`app:index cmdLine node paas`, () => {
    "use strict";
 
    var projectId;
+   var approvalId;
    var originalDir = process.cwd();
 
    // RM has issues if you try to create a release on
@@ -231,7 +232,7 @@ describe.only(`app:index cmdLine node paas`, () => {
       );
    });
 
-   it(`approval is waiting`, (done) => {    
+   it(`approval is waiting to qa`, (done) => {
       util.log(`Find approval`);
 
       vsts.getApprovals(tfs, projectId, pat, userAgent, (e, a) => {
@@ -239,7 +240,81 @@ describe.only(`app:index cmdLine node paas`, () => {
          assert.ifError(e);
          assert.ok(a, `approval not found`);
 
+         approvalId = a.value[0].id;
+
          done(e);
+      });
+   });
+
+   it(`release should succeed in qa`, (done) => {
+      let id = 0;
+      let status = ``;
+
+      vsts.setApproval(tfs, projectId, pat, approvalId, userAgent, (e) => {
+         assert.ifError(e);
+
+         // Wait for release to succeed or fail
+         async.whilst(
+            () => {
+               return status !== `rejected` && status !== `succeeded`;
+            },
+            (finished) => {
+               vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                  if (r.length > 0) {
+                     status = r[0].environments[1].status;
+                  }
+                  finished(err);
+               });
+            },
+            (e) => {
+               // Get the release log            
+               assert.equal(status, `succeeded`);
+               done(e);
+            }
+         );
+      });
+   });
+
+   it(`approval is waiting to prod`, (done) => {
+      util.log(`Find approval`);
+
+      vsts.getApprovals(tfs, projectId, pat, userAgent, (e, a) => {
+         // Assert
+         assert.ifError(e);
+         assert.ok(a, `approval not found`);
+
+         approvalId = a.value[0].id;
+
+         done(e);
+      });
+   });
+
+   it(`release should succeed in prod`, (done) => {
+      let id = 0;
+      let status = ``;
+
+      vsts.setApproval(tfs, projectId, pat, approvalId, userAgent, (e) => {
+         assert.ifError(e);
+
+         // Wait for release to succeed or fail
+         async.whilst(
+            () => {
+               return status !== `rejected` && status !== `succeeded`;
+            },
+            (finished) => {
+               vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                  if (r.length > 0) {
+                     status = r[0].environments[2].status;
+                  }
+                  finished(err);
+               });
+            },
+            (e) => {
+               // Get the release log            
+               assert.equal(status, `succeeded`);
+               done(e);
+            }
+         );
       });
    });
 
@@ -268,6 +343,14 @@ describe.only(`app:index cmdLine node paas`, () => {
          (inParallel) => {
             util.log(`delete resource group: ${applicationName}Dev`);
             azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
+         },
+         (inParallel) => {
+            util.log(`delete resource group: ${applicationName}QA`);
+            azure.deleteResourceGroup(`${applicationName}QA`, inParallel);
+         },
+         (inParallel) => {
+            util.log(`delete resource group: ${applicationName}Prod`);
+            azure.deleteResourceGroup(`${applicationName}Prod`, inParallel);
          }
       ], done);
    });

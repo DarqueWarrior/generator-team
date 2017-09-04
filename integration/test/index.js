@@ -400,6 +400,33 @@ function getReleases(account, projectId, pat, userAgent, callback) {
    });
 }
 
+function setApproval(account, projectId, pat, id, userAgent, callback) {
+   "use strict";
+
+   let token = encodePat(pat);
+   let body = `{ "status": "Approved", "approver": "", "comments": "" }`;
+
+   var options = addUserAgent({
+      "method": `PATCH`,
+      "headers": {
+         "cache-control": `no-cache`,
+         'content-type': 'application/json',
+         "authorization": `Basic ${token}`
+      },
+      "body": body,
+      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/approvals/${id}`,
+      "qs": {
+         "api-version": DISTRIBUTED_TASK_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      var obj = JSON.parse(body);
+
+      callback(e, obj);
+   });
+}
+
 function getApprovals(account, projectId, pat, userAgent, callback) {
    "use strict";
 
@@ -478,6 +505,7 @@ module.exports = {
    getBuildLog: getBuildLog,
    findProject: findProject,
    getReleases: getReleases,
+   setApproval: setApproval,
    getApprovals: getApprovals,
    deleteProject: deleteProject,
    createProject: createProject,

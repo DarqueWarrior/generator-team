@@ -11,6 +11,10 @@ env(__dirname + '/test/.env', {
 });
 
 
-vsts.getApprovals(`demonstrations`, `7698a8a9-e21e-4c90-b1f0-cdf292f3dc88`, `wkz4tdzpl37mu2pkysxfotpqb6lolly3w66klyjmwakdqupbh4za`, `yo team`, (e, a) => {
+vsts.setApproval(`demonstrations`,
+                  `7698a8a9-e21e-4c90-b1f0-cdf292f3dc88`, 
+                  `wkz4tdzpl37mu2pkysxfotpqb6lolly3w66klyjmwakdqupbh4za`,
+                  `4`,
+                  `yo team`, (e, a) => {
    console.log(a);
 });
