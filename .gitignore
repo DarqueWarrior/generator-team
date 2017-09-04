@@ -7,3 +7,5 @@ xunit.xml
 /.vs
 localtest.ps1
 **/.env
+**/.env_vsts
+**/.env_tfs

@@ -3,6 +3,7 @@ const path = require(`path`);
 const async = require('async');
 const util = require(`./util`);
 const vsts = require(`./index`);
+const uuidV4 = require('uuid/v4');
 const request = require('request');
 const env = require('node-env-file');
 const helpers = require(`yeoman-test`);
@@ -18,15 +19,21 @@ env(__dirname + '/.env', {
    overwrite: true
 });
 
-describe.only(`app:index cmdLine tfs node paas`, () => {
+describe.only(`app:index cmdLine node paas`, () => {
    "use strict";
 
    var projectId;
    var originalDir = process.cwd();
 
+   // RM has issues if you try to create a release on
+   // a project name that was just deleted and recreated
+   //So we gen a GUID and a portion to the applicationName
+   // to help with that.
+   let uuid = uuidV4();
+
    // Arguments
    var applicationType = `node`;
-   var applicationName = `nodeTest`;
+   var applicationName = `nodeTest` + uuid.substring(0, 8);
    var tfs = process.env.ACCT;
    var azureSub = process.env.AZURE_SUB || ` `;
    var azureSubId = process.env.AZURE_SUBID || ` `;
@@ -79,27 +86,31 @@ describe.only(`app:index cmdLine tfs node paas`, () => {
             util.log(`stdout: ${stdout}`);
             util.log(`stderr: ${stderr}`);
 
-            // Find the project id
-            util.log(`find project: ${applicationName}`);
-
-            vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
-               if (e) {
-                  done(e);
-               }
-
-               projectId = p.id;
-
-               util.log(`project found: ${projectId}`);
-
-               done(e);
-            });
+            done(e);
          });
+      });
+   });
+
+   it(`project should be created`, (done) => {
+      // Arrange
+      let expectedName = `${applicationName}`;
+
+      util.log(`Find project ${expectedName}`);
+
+      vsts.findProject(tfs, expectedName, pat, userAgent, (e, p) => {
+         // Assert
+         assert.ifError(e);
+         assert.ok(p, `project not found`);
+
+         projectId = p.id;
+
+         done(e);
       });
    });
 
    it(`build definition should be created`, (done) => {
       // Arrange
-      let expectedName = `nodeTest-CI`;
+      let expectedName = `${applicationName}-CI`;
 
       util.log(`Find build ${expectedName}`);
 
@@ -114,7 +125,7 @@ describe.only(`app:index cmdLine tfs node paas`, () => {
 
    it(`release definition should be created`, (done) => {
       // Arrange
-      let expectedName = `nodeTest-CD`;
+      let expectedName = `${applicationName}-CD`;
 
       util.log(`Find release ${expectedName}`);
 
