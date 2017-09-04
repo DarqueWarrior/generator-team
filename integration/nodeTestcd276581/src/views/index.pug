@@ -1,0 +1,77 @@
+extends layout
+
+block content
+  div#myCarousel.carousel.slide(data-ride='carousel', data-interval='6000')
+    ol.carousel-indicators
+      li.active(data-target='#myCarousel', data-slide-to='0')
+      li(data-target='#myCarousel', data-slide-to='1')
+      li(data-target='#myCarousel', data-slide-to='2')
+      li(data-target='#myCarousel', data-slide-to='3')
+  
+    div.carousel-inner(role='listbox')
+
+      div.item.active
+        img.img-responsive(src='/images/banner1.svg', alt='Nodejs')
+        div.carousel-caption(role='option')
+          p Learn how to build Nodejs apps 
+            a.btn.btn-default(href='https://nodejs.org/en/docs/') Learn More
+    
+      div.item
+        img.img-responsive(src='/images/banner2.svg', alt='Team Services')
+        div.carousel-caption(role='option')
+          p There are powerful new features in Team Services for any language, any platform. 
+            a.btn.btn-default(href='https://www.visualstudio.com/products/visual-studio-team-services-vs') Learn More
+    
+      div.item
+        img.img-responsive(src='/images/banner3.svg', alt='Package Management')
+        div.carousel-caption(role='option')
+          p Bring in libraries from NuGet, Bower, and npm, and automate tasks using Grunt or Gulp. 
+            a.btn.btn-default(href='https://go.microsoft.com/fwlink/?LinkID=525029&clcid=0x409') Learn More
+    
+      div.item
+        img.img-responsive(src='/images/banner4.svg', alt='Microsoft Azure')
+        div.carousel-caption(role='option')
+          p Learn how Microsoft's Azure cloud platform allows you to build, deploy, and scale web apps. 
+            a.btn.btn-default(href='https://go.microsoft.com/fwlink/?LinkID=525027&clcid=0x409') Learn More
+    
+    a.left.carousel-control(href='#myCarousel', role='button', data-slide='prev')
+      span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
+      span.sr-only Previous
+    
+    a.right.carousel-control(href='#myCarousel', role='button', data-slide='next')
+      span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
+      span.sr-only Next
+
+  div.row
+    div.col-md-4
+      h2 Developed with
+      ul
+        li 
+          a(href='https://www.visualstudio.com/products/code-vs') Visual Studio Code
+        li
+          a(href='https://www.visualstudio.com/products/visual-studio-team-services-vs') Team Services
+        li
+          a(href='http://yeoman.io/') Yeoman                        
+ 
+    div.col-md-4
+      h2 Deployment
+      ul
+        li 
+          a(href='https://azure.microsoft.com/en-us/services/app-service/') Azure App Service
+        li
+          a(href='https://azure.microsoft.com/en-us/services/virtual-machines/') Azure IaaS Linux via Docker
+        li
+          a(href='https://azure.microsoft.com/en-us/services/container-service/') Azure Container Service  
+
+    div.col-md-4
+      h2 Application uses
+      ul
+        li Sample pages using 
+          a(href='http://expressjs.com/') Express
+          | with
+          a(href='https://pugjs.org/api/getting-started.html') Pug
+        li
+          a(href='https://go.microsoft.com/fwlink/?LinkId=518004') Bower 
+          | for managing client-side libraries
+        li Theming using 
+          a(href='https://go.microsoft.com/fwlink/?LinkID=398939') Bootstrap     

@@ -231,6 +231,18 @@ describe.only(`app:index cmdLine node paas`, () => {
       );
    });
 
+   it(`approval is waiting`, (done) => {    
+      util.log(`Find approval`);
+
+      vsts.getApprovals(tfs, projectId, pat, userAgent, (e, a) => {
+         // Assert
+         assert.ifError(e);
+         assert.ok(a, `approval not found`);
+
+         done(e);
+      });
+   });
+
    // runs after all tests in this block
    after(function (done) {
       if (doNotCleanUp) {
@@ -238,6 +250,7 @@ describe.only(`app:index cmdLine node paas`, () => {
          return;
       }
 
+      // Delete files, project, and resource group.
       async.parallel([
          (inParallel) => {
             util.log(`delete project: ${projectId}`);

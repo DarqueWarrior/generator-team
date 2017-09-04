@@ -400,6 +400,30 @@ function getReleases(account, projectId, pat, userAgent, callback) {
    });
 }
 
+function getApprovals(account, projectId, pat, userAgent, callback) {
+   "use strict";
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/approvals`,
+      "qs": {
+         "api-version": DISTRIBUTED_TASK_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      var obj = JSON.parse(body);
+
+      callback(e, obj);
+   });
+}
+
 function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
    'use strict';
 
@@ -454,6 +478,7 @@ module.exports = {
    getBuildLog: getBuildLog,
    findProject: findProject,
    getReleases: getReleases,
+   getApprovals: getApprovals,
    deleteProject: deleteProject,
    createProject: createProject,
    findBuildDefinition: findBuildDefinition,
