@@ -9,3 +9,4 @@ localtest.ps1
 **/.env
 **/.env_vsts
 **/.env_tfs
+integration/test/temp.js

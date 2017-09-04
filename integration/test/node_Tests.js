@@ -205,6 +205,31 @@ describe.only(`app:index cmdLine node paas`, () => {
       );
    });
 
+   it(`release should succeed in dev`, (done) => {
+      let id = 0;
+      let status = ``;
+
+      // Wait for release to succeed or fail
+      async.whilst(
+         () => {
+            return status !== `rejected` && status !== `succeeded`;
+         },
+         (finished) => {
+            vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+               if (r.length > 0) {
+                  status = r[0].environments[0].status;
+               }
+               finished(err);
+            });
+         },
+         (e) => {
+            // Get the release log            
+            assert.equal(status, `succeeded`);
+            done(e);
+         }
+      );
+   });
+
    // runs after all tests in this block
    after(function (done) {
       util.log(`delete project: ${projectId}`);
