@@ -3,6 +3,7 @@ const path = require(`path`);
 const async = require('async');
 const util = require(`./util`);
 const vsts = require(`./index`);
+const azure = require(`./azure`);
 const uuidV4 = require('uuid/v4');
 const request = require('request');
 const env = require('node-env-file');
@@ -232,21 +233,29 @@ describe.only(`app:index cmdLine node paas`, () => {
 
    // runs after all tests in this block
    after(function (done) {
-      util.log(`delete project: ${projectId}`);
-
       if (doNotCleanUp) {
          done();
          return;
       }
 
-      vsts.deleteProject(tfs, projectId, pat, userAgent, (e) => {
-         util.log(`cd to: ${originalDir}`);
-         process.chdir(originalDir);
+      async.parallel([
+         (inParallel) => {
+            util.log(`delete project: ${projectId}`);
+            vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
+         },
+         (inParallel) => {
+            util.log(`cd to: ${originalDir}`);
+            process.chdir(originalDir);
 
-         util.log(`delete folder: ${applicationName}`);
-         util.rmdir(applicationName);
+            util.log(`delete folder: ${applicationName}`);
+            util.rmdir(applicationName);
 
-         done(e);
-      });
+            inParallel();
+         },
+         (inParallel) => {
+            util.log(`delete resource group: ${applicationName}Dev`);
+            azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
+         }
+      ], done);
    });
 });

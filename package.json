@@ -1,66 +1,68 @@
 {
-  "name": "generator-team",
-  "version": "0.3.6",
-  "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
-  "main": "./generators/app/index.js",
-  "scripts": {
-    "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file unit/test"
-  },
-  "files": [
-    "generators/app",
-    "generators/asp",
-    "generators/aspFull",
-    "generators/azure",
-    "generators/build",
-    "generators/docker",
-    "generators/git",
-    "generators/java",
-    "generators/node",
-    "generators/pipeline",
-    "generators/project",
-    "generators/registry",
-    "generators/release"
-  ],
-  "keywords": [
-    "yeoman-generator",
-    "tfs",
-    "vsts",
-    "Team Foundation Server",
-    "Team Services",
-    "Visual Studio",
-    "DevOps",
-    "RubDevOpsOnIt",
-    "Blackshirt"
-  ],
-  "author": "@DonovanBrown",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/DarqueWarrior/generator-team"
-  },
-  "license": "ISC",
-  "dependencies": {
-    "async": "^2.3.0",
-    "node-env-file": "^0.1.8",
-    "request": "^2.81.0",
-    "uuid": "^3.1.0",
-    "yeoman-generator": "^0.24.1",
-    "yosay": "^2.0.0"
-  },
-  "devDependencies": {
-    "gulp-spawn-mocha": "^3.3.0",
-    "fs-extra": "^3.0.1",
-    "gulp": "^3.9.1",
-    "gulp-jshint": "^2.0.4",
-    "gulp-mocha": "^4.3.1",
-    "istanbul": "*",
-    "jshint": "^2.9.4",
-    "mocha": "^3.4.2",
-    "proxyquire": "*",
-    "sinon": "^2.3.4",
-    "sinon-test": "^1.0.1",
-    "supertest": "^3.0.0",
-    "xunit-file": "^1.0.0",
-    "yeoman-test": "*",
-    "yo": "^2.0.0"
-  }
+   "name": "generator-team",
+   "version": "0.3.6",
+   "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
+   "main": "./generators/app/index.js",
+   "scripts": {
+      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file unit/test"
+   },
+   "files": [
+      "generators/app",
+      "generators/asp",
+      "generators/aspFull",
+      "generators/azure",
+      "generators/build",
+      "generators/docker",
+      "generators/git",
+      "generators/java",
+      "generators/node",
+      "generators/pipeline",
+      "generators/project",
+      "generators/registry",
+      "generators/release"
+   ],
+   "keywords": [
+      "yeoman-generator",
+      "tfs",
+      "vsts",
+      "Team Foundation Server",
+      "Team Services",
+      "Visual Studio",
+      "DevOps",
+      "RubDevOpsOnIt",
+      "Blackshirt"
+   ],
+   "author": "@DonovanBrown",
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/DarqueWarrior/generator-team"
+   },
+   "license": "ISC",
+   "dependencies": {
+      "async": "^2.3.0",
+      "node-env-file": "^0.1.8",
+      "request": "^2.81.0",
+      "uuid": "^3.1.0",
+      "yeoman-generator": "^0.24.1",
+      "yosay": "^2.0.0"
+   },
+   "devDependencies": {
+      "gulp-spawn-mocha": "^3.3.0",
+      "fs-extra": "^3.0.1",
+      "gulp": "^3.9.1",
+      "gulp-jshint": "^2.0.4",
+      "gulp-mocha": "^4.3.1",
+      "istanbul": "*",
+      "jshint": "^2.9.4",
+      "mocha": "^3.4.2",
+      "proxyquire": "*",
+      "sinon": "^2.3.4",
+      "sinon-test": "^1.0.1",
+      "supertest": "^3.0.0",
+      "xunit-file": "^1.0.0",
+      "yeoman-test": "*",
+      "yo": "^2.0.0",
+      "azure-arm-resource": "^1.4.4-preview",
+      "ms-rest-azure": "^1.14.3"
+   }
 }
