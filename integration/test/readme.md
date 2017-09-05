@@ -7,6 +7,10 @@ DOCKER_HOST=tcp://my2016docker.westus.cloudapp.azure.com:2376
 DOCKER_REGISTRY=https://mydockerimage-microsoft.azurecr.io
 DOCKER_REGISTRY_USERNAME=mydockerimage
 
+When setting the port you have to use a space after the value or it will be parsed as a 
+number instead of a string and will not work.
+DOCKER_PORTS="80 "
+
 The test require this to know which account to use and how to auth.
 
 During CI/CD make sure the test machine has these environment vars set before running test.
