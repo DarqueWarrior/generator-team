@@ -164,26 +164,24 @@ describe(`Docker`, function () {
             });
          });
 
-         it(`${azureSub} azure service endpoint should be created`, function (done) {
-            if (iteration.target === `docker`) {
-               // When using your own docker host azure service
-               // is not needed.
-               this.skip();
-            }
+         // When using your own docker host azure service
+         // is not needed.
+         if (iteration.target !== `docker`) {
+            it(`${azureSub} azure service endpoint should be created`, function (done) {
+               // Arrange
+               let expectedName = azureSub;
 
-            // Arrange
-            let expectedName = azureSub;
+               util.log(`Find release ${expectedName}`);
 
-            util.log(`Find release ${expectedName}`);
+               vsts.findAzureServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
+                  // Assert
+                  assert.ifError(e);
+                  assert.ok(ep, `service endpoint not found`);
 
-            vsts.findAzureServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
-               // Assert
-               assert.ifError(e);
-               assert.ok(ep, `service endpoint not found`);
-
-               done(e);
+                  done(e);
+               });
             });
-         });
+         }
 
          it(`files should be created`, function () {
             assert.ok(fs.existsSync(applicationName));
