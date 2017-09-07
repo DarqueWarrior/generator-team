@@ -1,3 +1,4 @@
+const async = require('async');
 const env = require('node-env-file');
 const msRestAzure = require('ms-rest-azure');
 const ResourceManagementClient = require('azure-arm-resource').ResourceManagementClient;
@@ -15,16 +16,64 @@ var subscriptionId = process.env.AZURE_SUBID;
 var secret = process.env.SERVICE_PRINCIPALKEY;
 var clientId = process.env.SERVICE_PRINCIPALID;
 
-//Entrypoint of the cleanup script
-msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, function (err, credentials) {
-   if (err) return console.log(err);
-   resourceClient = new ResourceManagementClient(credentials, subscriptionId);
-});
+function connectToAzure(cb) {
+   //Entrypoint of the cleanup script
+   msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, function (err, credentials) {
+      if (err) {
+         cb(err);
+      }
+
+      resourceClient = new ResourceManagementClient(credentials, subscriptionId);
+
+      cb(null, resourceClient);
+   });
+}
 
 function deleteResourceGroup(resourceGroupName, callback) {
    return resourceClient.resourceGroups.deleteMethod(resourceGroupName, callback);
 }
 
+function getWebsiteURL(resourceGroupName, cb) {
+   async.series([
+         function (callback) {
+            resourceClient.resourceGroups.listResources(resourceGroupName, function (err, result, request, response) {
+               if (err) {
+                  return callback(err);
+               }
+
+               result.forEach(function (i) {
+                  if (i.type === "Microsoft.Web/sites") {
+                     websiteName = i.name;
+                  }
+               });
+
+               callback(null, websiteName);
+            });
+         },
+         function (callback) {
+            //Task 5
+            resourceClient.resources.get(resourceGroupName,
+               `Microsoft.Web`,
+               ``,
+               `sites`,
+               websiteName,
+               `2015-06-01`,
+               function (err, result, request, response) {
+                  if (err) {
+                     return callback(err);
+                  }
+
+                  callback(null, `http://${result.properties.hostNames[0]}`);
+               });
+         }
+      ], 
+      function (e, results) {
+         cb(e, results[1]);
+      });
+}
+
 module.exports = {
+   getWebsiteURL: getWebsiteURL,
+   connectToAzure: connectToAzure,
    deleteResourceGroup: deleteResourceGroup
 };

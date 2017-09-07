@@ -1,4 +1,5 @@
 const vsts = require(`./test/index`);
+const azure = require(`./test/azure`);
 const env = require('node-env-file');
 const msRestAzure = require('ms-rest-azure');
 const ResourceManagementClient = require('azure-arm-resource').ResourceManagementClient;
@@ -10,11 +11,8 @@ env(__dirname + '/test/.env', {
    overwrite: true
 });
 
-
-vsts.setApproval(`demonstrations`,
-                  `7698a8a9-e21e-4c90-b1f0-cdf292f3dc88`, 
-                  `wkz4tdzpl37mu2pkysxfotpqb6lolly3w66klyjmwakdqupbh4za`,
-                  `4`,
-                  `yo team`, (e, a) => {
-   console.log(a);
+azure.connectToAzure(() => {
+   azure.getWebsiteURL(`aspFullTestdf1555bfDev`, (e, a) => {
+      console.log(a);
+   });
 });
