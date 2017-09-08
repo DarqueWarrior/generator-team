@@ -34,6 +34,11 @@ function construct() {
    args.dockerPorts(this);
    args.dockerRegistryPassword(this);
    args.servicePrincipalKey(this);
+   args.powershellAuthor(this);
+   args.powershellDescription(this);
+   args.prereleaseGalleryUri(this);
+   args.prereleaseNugetApiKey(this);
+   args.nugetApiKey(this);
    args.pat(this);
 }
 
@@ -71,7 +76,12 @@ function input() {
       prompts.dockerRegistryPassword(this),
       prompts.dockerPorts(this),
       prompts.groupId(this),
-      prompts.installDep(this)
+      prompts.installDep(this),
+      prompts.powershellAuthor(this),
+      prompts.powershellDescription(this),
+      prompts.prereleaseGalleryUri(this),
+      prompts.prereleaseNugetApiKey(this),
+      prompts.nugetApiKey(this),
    ]).then(function (answers) {
       // Transfer answers to global object for use in the rest of the generator
 
@@ -82,7 +92,7 @@ function input() {
       // Hosted Linux queue you should not provide a Docker Host. But if you do
       // it will mess things up. So I am going to try and determine if I need to clear
       // additional information that was provided but not required. 
-      if(!util.needsDockerHost(answers, cmdLnInput)) {
+      if (!util.needsDockerHost(answers, cmdLnInput)) {
          answers.dockerHost = undefined;
          cmdLnInput.dockerHost = undefined;
       }
@@ -106,6 +116,11 @@ function input() {
       this.servicePrincipalId = util.reconcileValue(answers.servicePrincipalId, cmdLnInput.servicePrincipalId, ``);
       this.servicePrincipalKey = util.reconcileValue(answers.servicePrincipalKey, cmdLnInput.servicePrincipalKey, ``);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
+      this.powershellAuthor = util.reconcileValue(answers.powershellAuthor, cmdLnInput.powershellAuthor, ``);
+      this.powershellDescription = util.reconcileValue(answers.powershellDescription, cmdLnInput.powershellDescription, ``);
+      this.prereleaseGalleryUri = util.reconcileValue(answers.prereleaseGalleryUri, cmdLnInput.prereleaseGalleryUri, ``);
+      this.prereleaseNugetApiKey = util.reconcileValue(answers.prereleaseNugetApiKey, cmdLnInput.prereleaseNugetApiKey, ``);
+      this.nugetApiKey = util.reconcileValue(answers.nugetApiKey, cmdLnInput.nugetApiKey, ``);
    }.bind(this));
 }
 

@@ -22,6 +22,9 @@ function construct() {
    args.dockerRegistryId(this);
    args.dockerPorts(this);
    args.dockerRegistryPassword(this);
+   args.prereleaseGalleryUri(this);
+   args.prereleaseNugetApiKey(this);
+   args.nugetApiKey(this);
    args.pat(this);
 }
 
@@ -44,7 +47,10 @@ function input() {
       prompts.dockerRegistry(this),
       prompts.dockerRegistryUsername(this),
       prompts.dockerRegistryPassword(this),
-      prompts.dockerPorts(this)
+      prompts.dockerPorts(this),
+      prompts.prereleaseGalleryUri(this),
+      prompts.prereleaseNugetApiKey(this),
+      prompts.nugetApiKey(this),
    ]).then(function (answers) {
       // Transfer answers (a) to global object (cmdLnInput) for use in the rest
       // of the generator
@@ -60,6 +66,9 @@ function input() {
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
+      this.prereleaseGalleryUri = util.reconcileValue(answers.prereleaseGalleryUri, cmdLnInput.prereleaseGalleryUri, ``);
+      this.prereleaseNugetApiKey = util.reconcileValue(answers.prereleaseNugetApiKey, cmdLnInput.prereleaseNugetApiKey, ``);
+      this.nugetApiKey = util.reconcileValue(answers.nugetApiKey, cmdLnInput.nugetApiKey, ``);
    }.bind(this));
 }
 
@@ -89,6 +98,12 @@ function configureRelease() {
          args.dockerRegistry = _this.dockerRegistry;
          args.dockerRegistryId = _this.dockerRegistryId;
          args.dockerRegistryPassword = _this.dockerRegistryPassword;
+      }
+
+      if (util.isPowershellGallery(_this.target)) {
+         args.prereleaseGalleryUri = _this.prereleaseGalleryUri;
+         args.prereleaseNugetApiKey = _this.prereleaseNugetApiKey;
+         args.nugetApiKey = _this.nugetApiKey;
       }
 
       app.run(args, _this, done);

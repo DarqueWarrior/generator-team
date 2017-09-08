@@ -1,0 +1,259 @@
+{
+   "name": "{{ReleaseDefName}}",
+   "variables": {
+      "system.debug": {
+         "value": "false"
+      }
+   },
+   "environments": [
+      {
+         "name": "Dev Gallery",
+         "rank": 1,
+         "variables": {
+            "NuGetApiKey": {
+               "value": "{{prereleaseNugetApiKey}}",
+               "isSecret": true
+            },
+            "GalleryUri": {
+               "value": "{{prereleaseGalleryUri}}",
+               "allowOverride": true,
+               "isSecret": false
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [
+            {
+               "deploymentInput": {
+                  "parallelExecution": {
+                     "parallelExecutionType": "none"
+                  },
+                  "skipArtifactsDownload": false,
+                  "queueId": "{{QueueId}}",
+                  "demands": [],
+                  "enableAccessToken": false,
+                  "timeoutInMinutes": 0,
+                  "jobCancelTimeoutInMinutes": 1
+               },
+               "rank": 1,
+               "phaseType": 1,
+               "name": "Run on agent",
+               "workflowTasks": [
+                  {
+                     "taskId": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "version": "1.*",
+                     "name": "Publish to Dev Gallery",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "scriptType": "filePath",
+                        "scriptName": "$(System.ArtifactsDirectory)\\{{BuildName}}\\drop\\{{ProjectName}}\\Release\\{{ProjectName}}\\build.ps1",
+                        "arguments": "-Publish -GalleryUri $(GalleryUri) -NugetApiKey $(NugetApiKey) -ReleaseDirectoryBase $(System.ArtifactsDirectory)\\{{BuildName}}\\drop\\{{ProjectName}}\\Release",
+                        "workingFolder": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/{{ProjectName}}",
+                        "inlineScript": "",
+                        "failOnStandardError": "true"
+                     }
+                  }
+               ]
+            }
+         ],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "ReleaseStarted",
+               "conditionType": 1,
+               "value": ""
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         },
+         "processParameters": {},
+         "properties": {}
+      },
+      {
+         "name": "PowerShell Gallery",
+         "rank": 1,
+         "variables": {
+            "NuGetApiKey": {
+               "value": "{{NugetApiKey}}",
+               "isSecret": true
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": false,
+                  "isNotificationOn": false,
+                  "approver": {
+                     "id": "{{ApproverId}}",
+                     "displayName": "{{ApproverDisplayName}}",
+                     "uniqueName": "{{ApproverUniqueName}}"
+                  }
+               }
+            ],
+            "approvalOptions": {
+               "requiredApproverCount": 0,
+               "releaseCreatorCanBeApprover": true
+            }
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [
+            {
+               "deploymentInput": {
+                  "parallelExecution": {
+                     "parallelExecutionType": "none"
+                  },
+                  "skipArtifactsDownload": false,
+                  "queueId": "{{QueueId}}",
+                  "demands": [],
+                  "enableAccessToken": false,
+                  "timeoutInMinutes": 0,
+                  "jobCancelTimeoutInMinutes": 1
+               },
+               "rank": 1,
+               "phaseType": 1,
+               "name": "Run on agent",
+               "workflowTasks": [
+                  {
+                     "taskId": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "version": "1.*",
+                     "name": "Publish to PowerShell Gallery",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "scriptType": "filePath",
+                        "scriptName": "$(System.ArtifactsDirectory)\\{{BuildName}}\\drop\\{{ProjectName}}\\Release\\{{ProjectName}}\\build.ps1",
+                        "arguments": "-Publish -NugetApiKey $(NugetApiKey) -ReleaseDirectoryBase $(System.ArtifactsDirectory)\\{{BuildName}}\\drop\\{{ProjectName}}\\Release",
+                        "workingFolder": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/{{ProjectName}}",
+                        "inlineScript": "",
+                        "failOnStandardError": "true"
+                     }
+                  }
+               ]
+            }
+         ],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "Dev Gallery",
+               "conditionType": 2,
+               "value": "4"
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         },
+         "processParameters": {},
+         "properties": {}
+      }
+   ],
+   "artifacts": [
+      {
+         "sourceId": "{{ProjectId}}:{{BuildId}}",
+         "type": "Build",
+         "alias": "{{BuildName}}",
+         "definitionReference": {
+            "defaultVersionBranch": {
+               "id": "",
+               "name": ""
+            },
+            "defaultVersionSpecific": {
+               "id": "",
+               "name": ""
+            },
+            "defaultVersionTags": {
+               "id": "",
+               "name": ""
+            },
+            "defaultVersionType": {
+               "id": "latestType",
+               "name": "Latest"
+            },
+            "definition": {
+               "id": "{{BuildId}}",
+               "name": "{{BuildName}}"
+            },
+            "project": {
+               "id": "{{ProjectId}}",
+               "name": "{{ProjectName}}"
+            }
+         },
+         "isPrimary": true
+      }
+   ],
+   "triggers": [
+      {
+         "artifactAlias": "{{BuildName}}",
+         "triggerType": 1
+      }
+   ],
+   "releaseNameFormat": "Release-$(rev:r)"
+}

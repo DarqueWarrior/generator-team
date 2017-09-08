@@ -906,7 +906,7 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -936,7 +936,7 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -982,20 +982,20 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create build
       requestStub.onCall(0).yields(null, {
          statusCode: 200
       }, {
-         name: `build`
-      });
+            name: `build`
+         });
 
       // Act
       proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-            name: `TeamProject`,
-            id: 1
-         },
+         name: `TeamProject`,
+         id: 1
+      },
          `token`, 1, null, null, null, `build.json`, `paas`, logger,
          function (e, bld) {
             assert.equal(e, null);
@@ -1025,20 +1025,20 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create build
       requestStub.onCall(0).yields(null, {
          statusCode: 200
       }, {
-         name: `build`
-      });
+            name: `build`
+         });
 
       // Act
       proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-            name: `TeamProject`,
-            id: 1
-         },
+         name: `TeamProject`,
+         id: 1
+      },
          `token`, 1, `dockerHostEndpoint`, {
             name: `dockerRegistryEndpoint`,
             url: ``,
@@ -1077,7 +1077,7 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create build
       requestStub.onCall(0).yields(null, {
@@ -1089,9 +1089,9 @@ describe(`build:app`, function () {
       // because my method is async 
       assert.throws(function () {
          proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-               name: `TeamProject`,
-               id: 1
-            },
+            name: `TeamProject`,
+            id: 1
+         },
             `token`, 1, null, null, null, `build.json`, `paas`, logger, done);
       }, function (e) {
          done();

@@ -140,6 +140,41 @@ function gitAction(obj) {
    });
 }
 
+function powershellAuthor(obj) {
+   obj.argument(`powershellAuthor`, {
+      required: false,
+      desc: `the author of the PowerShell module`
+   });
+}
+
+function powershellDescription(obj) {
+   obj.argument(`powershellDescription`, {
+      required: false,
+      desc: `the description of the PowerShell module`
+   });
+}
+
+function nugetApiKey(obj) {
+   obj.argument(`nugetApiKey`, {
+      required: false,
+      desc: `NuGet API Key for the PowerShell Gallery`
+   });
+}
+
+function prereleaseGalleryUri(obj) {
+   obj.argument(`prereleaseGalleryUri`, {
+      required: false,
+      desc: `Base URI for the prerelease NuGet feed`
+   });
+}
+
+function prereleaseNugetApiKey(obj) {
+   obj.argument(`prereleaseNugetApiKey`, {
+      required: false,
+      desc: `NuGet API Key for the prerelease Gallery`
+   });
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -161,4 +196,9 @@ module.exports = {
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
+   powershellAuthor: powershellAuthor,
+   powershellDescription: powershellDescription,
+   nugetApiKey: nugetApiKey,
+   prereleaseGalleryUri: prereleaseGalleryUri,
+   prereleaseNugetApiKey: prereleaseNugetApiKey,
 };

@@ -92,6 +92,12 @@ function target(obj) {
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
       when: answers => {
+         // If the project type is `powershell` then
+         // there is only one valid target for PowerShell modules
+         // we'll set it and skip the target prompt
+         if (answers.type === `powershell` || obj.type === `powershell`) {
+            obj.target = 'gallery';
+         };
          return obj.target === undefined;
       }
    };
@@ -286,16 +292,16 @@ function installDep(obj) {
       message: "Install dependencies?",
       default: `false`,
       choices: [{
-            name: `Yes`,
-            value: `true`
-         },
-         {
-            name: `No`,
-            value: `false`
-         }
+         name: `Yes`,
+         value: `true`
+      },
+      {
+         name: `No`,
+         value: `false`
+      }
       ],
       when: answers => {
-         return answers.type !== `aspFull` && obj.installDep === undefined;
+         return ![`aspFull`, `powershell`].includes(answers.type) && obj.installDep === undefined;
       }
    };
 }
@@ -315,6 +321,72 @@ function gitAction(obj) {
       }],
       when: function () {
          return obj.action === undefined;
+      }
+   };
+}
+
+// PowerShell
+function powershellAuthor(obj) {
+   return {
+      name: `powershellAuthor`,
+      type: `input`,
+      store: true,
+      message: `Who is the author of the PowerShell module`,
+      validate: util.validatePowershellAuthor,
+      when: answers => {
+         return (answers.type === `powershell` || obj.type === `powershell`) && obj.powershellAuthor === undefined;
+      }
+   };
+}
+
+function powershellDescription(obj) {
+   return {
+      name: `powershellDescription`,
+      type: `input`,
+      store: true,
+      message: `Provide a description of the PowerShell module`,
+      validate: util.validatePowershellDescription,
+      when: answers => {
+         return (answers.type === `powershell` || obj.type === `powershell`) && obj.powershellDescription === undefined;
+      }
+   };
+}
+
+function nugetApiKey(obj) {
+   return {
+      name: `nugetApiKey`,
+      type: `password`,
+      store: false,
+      message: `NuGet API Key for the Powershell Gallery`,
+      validate: util.validateNugetApiKey,
+      when: answers => {
+         return (answers.type === `powershell` || obj.type === `powershell`) && obj.nugetApiKey === undefined;
+      }
+   };
+}
+
+function prereleaseGalleryUri(obj) {
+   return {
+      name: `prereleaseGalleryUri`,
+      type: `input`,
+      store: true,
+      message: `NuGet API URI for the prerelease Gallery`,
+      validate: util.validatePrereleaseGalleryUri,
+      when: answers => {
+         return (answers.type === `powershell` || obj.type === `powershell`) && obj.prereleaseGalleryUri === undefined;
+      }
+   };
+}
+
+function prereleaseNugetApiKey(obj) {
+   return {
+      name: `prereleaseNugetApiKey`,
+      type: `password`,
+      store: false,
+      message: `NuGet API Key for the prerelease Gallery`,
+      validate: util.validatePrereleaseNugetApiKey,
+      when: answers => {
+         return (answers.type === `powershell` || obj.type === `powershell`) && obj.prereleaseNugetApiKey === undefined;
       }
    };
 }
@@ -340,5 +412,10 @@ module.exports = {
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
-   dockerRegistryUsername: dockerRegistryUsername
+   dockerRegistryUsername: dockerRegistryUsername,
+   powershellAuthor: powershellAuthor,
+   powershellDescription: powershellDescription,
+   nugetApiKey: nugetApiKey,
+   prereleaseGalleryUri: prereleaseGalleryUri,
+   prereleaseNugetApiKey: prereleaseNugetApiKey,
 };

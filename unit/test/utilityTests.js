@@ -277,6 +277,51 @@ describe(`utility`, function () {
       assert.windowsTargets(actual);
    });
 
+   it(`getTargets Default queue, powershell app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Default`,
+         type: `powershell`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `PowerShell Gallery`);
+      assert.equal(actual.length, 1, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted queue, powershell app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted`,
+         type: `powershell`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `PowerShell Gallery`);
+      assert.equal(actual.length, 1, `Wrong number of entries`);
+   });
+
+   it(`getTargets Hosted VS2017 queue, powershell app type`, () => {
+      // Arrange
+      let answers = {
+         queue: `Hosted VS2017`,
+         type: `powershell`
+      };
+
+      // Act
+      let actual = util.getTargets(answers);
+
+      // Assert
+      assert.equal(actual[0].name, `PowerShell Gallery`);
+      assert.equal(actual.length, 1, `Wrong number of entries`);
+   });
+
    it(`needsDockerHost default queue dockerpaas no answers`, function () {
 
       // Arrange
@@ -297,7 +342,6 @@ describe(`utility`, function () {
    });
 
    it(`needsDockerHost default queue dockerpaas`, function () {
-
       // Arrange
       let expected = true;
 
@@ -342,7 +386,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(5, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {
@@ -679,6 +723,26 @@ describe(`utility`, function () {
       assert.equal(`You must provide a Service Principal Key`, util.validateServicePrincipalKey(null));
    });
 
+   it(`validatePowershellAuthor should return error`, () => {
+      assert.equal(`You must provide an Author`, util.validatePowershellAuthor(null));
+   });
+
+   it(`validatePowershellDescription should return error`, () => {
+      assert.equal(`You must provide a Description`, util.validatePowershellDescription(null));
+   });
+
+   it(`validateNugetApiKey should return error`, () => {
+      assert.equal(`You must provide a NuGet API Key`, util.validateNugetApiKey(null));
+   });
+
+   it(`validatePrereleaseNugetApiKey should return error`, () => {
+      assert.equal(`You must provide a prerelease NuGet API Key`, util.validatePrereleaseNugetApiKey(null));
+   });
+
+   it(`validatePrereleaseGalleryUri should return error`, () => {
+      assert.equal(`You must provide a prerelease Gallery Uri`, util.validatePrereleaseGalleryUri(null));
+   });
+
    it(`checkStatus should run with no error`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
@@ -704,7 +768,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
@@ -926,7 +990,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -954,7 +1018,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -978,7 +1042,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -1004,7 +1068,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1032,7 +1096,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1074,7 +1138,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1102,7 +1166,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1126,7 +1190,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1150,7 +1214,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1174,8 +1238,8 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
-      logger.log.error = function () {};
+      logger.log = function () { };
+      logger.log.error = function () { };
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1536,7 +1600,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Act
       proxyApp.findAzureSub(

@@ -21,6 +21,10 @@ String.prototype.replaceAll = function (search, replacement) {
    return target.split(search).join(replacement);
 };
 
+function isPowershellGallery(value) {
+   return value === `gallery`;
+}
+
 function isDocker(value) {
    return value === `docker` || value === `dockerpaas` || value === `acilinux`;
 }
@@ -91,6 +95,13 @@ function getTargets(answers) {
       result.splice(0, 1);
    }
 
+   if (answers.type === `powershell`) {
+      result = [{
+         name: `PowerShell Gallery`,
+         value: `gallery`
+      }]
+   }
+
    return result;
 }
 
@@ -113,6 +124,10 @@ function getAppTypes(answers) {
       types.splice(1, 0, {
          name: `.NET Framework`,
          value: `aspFull`
+      });
+      types.push({
+         name: `PowerShell Module`,
+         value: `powershell`
       });
    }
 
@@ -225,6 +240,27 @@ function validateServicePrincipalID(input) {
 
 function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
+}
+
+function validatePowershellAuthor(input) {
+   return validateRequired(input, `You must provide an Author`);
+}
+
+function validatePowershellDescription(input) {
+   return validateRequired(input, `You must provide a Description`);
+}
+
+function validateNugetApiKey(input) {
+   return validateRequired(input, `You must provide a NuGet API Key`);
+}
+
+function validatePrereleaseGalleryUri(input) {
+   return validateRequired(input, `You must provide a prerelease Gallery Uri`);
+
+}
+
+function validatePrereleaseNugetApiKey(input) {
+   return validateRequired(input, `You must provide a prerelease NuGet API Key`);
 }
 
 function tokenize(input, nvp) {
@@ -918,6 +954,7 @@ module.exports = {
    getPools: getPools,
    tokenize: tokenize,
    isDocker: isDocker,
+   isPowershellGallery: isPowershellGallery,
    encodePat: encodePat,
    findQueue: findQueue,
    findBuild: findBuild,
@@ -966,5 +1003,10 @@ module.exports = {
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
-   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint
+   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
+   validatePowershellAuthor: validatePowershellAuthor,
+   validatePowershellDescription: validatePowershellDescription,
+   validateNugetApiKey: validateNugetApiKey,
+   validatePrereleaseGalleryUri: validatePrereleaseGalleryUri,
+   validatePrereleaseNugetApiKey: validatePrereleaseNugetApiKey,
 };
