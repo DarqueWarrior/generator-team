@@ -10,6 +10,10 @@ env(__dirname + '/.env', {
 
 var logging = process.env.LOG || `off`;
 
+function isVSTS(instance) {
+   return instance.toLowerCase().match(/http/) === null;
+}
+
 var logMessage = function (msg) {
    if (logging === `on`) {
       console.log(msg);
@@ -21,7 +25,7 @@ var deleteFolderRecursive = function (path) {
       fs.readdirSync(path).forEach(function (file, index) {
          var curPath = path + "/" + file;
 
-         if (fs.lstatSync(curPath).isDirectory()) { // recurse
+         if (fs.lstatSync(curPath).isDirectory()) { // recursive
             deleteFolderRecursive(curPath);
          } else { // delete file
             fs.unlinkSync(curPath);
@@ -38,5 +42,6 @@ module.exports = {
    // it.
 
    rmdir: deleteFolderRecursive,
-   log: logMessage
+   log: logMessage,
+   isVSTS: isVSTS
 };

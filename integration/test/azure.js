@@ -17,7 +17,7 @@ var secret = process.env.SERVICE_PRINCIPALKEY;
 var clientId = process.env.SERVICE_PRINCIPALID;
 
 function connectToAzure(cb) {
-   //Entrypoint of the cleanup script
+   //Entry point of the cleanup script
    msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, function (err, credentials) {
       if (err) {
          cb(err);
@@ -31,6 +31,45 @@ function connectToAzure(cb) {
 
 function deleteResourceGroup(resourceGroupName, callback) {
    return resourceClient.resourceGroups.deleteMethod(resourceGroupName, callback);
+}
+
+function getACIIP(resourceGroupName, cb) {
+   async.series([
+         function (callback) {
+            resourceClient.resourceGroups.listResources(resourceGroupName, function (err, result, request, response) {
+               if (err) {
+                  return callback(err);
+               }
+
+               result.forEach(function (i) {
+                  if (i.type === "Microsoft.ContainerInstance/containerGroups") {
+                     containerGroup = i.name;
+                  }
+               });
+
+               callback(null, containerGroup);
+            });
+         },
+         function (callback) {
+            //Task 5
+            resourceClient.resources.get(resourceGroupName,
+               `Microsoft.ContainerInstance`,
+               ``,
+               `containerGroups`,
+               containerGroup,
+               `2017-08-01-preview`,
+               function (err, result, request, response) {
+                  if (err) {
+                     return callback(err);
+                  }
+
+                  callback(null, `http://${result.properties.ipAddress.ip}`);
+               });
+         }
+      ], 
+      function (e, results) {
+         cb(e, results[1]);
+      });
 }
 
 function getWebsiteURL(resourceGroupName, cb) {
@@ -73,6 +112,7 @@ function getWebsiteURL(resourceGroupName, cb) {
 }
 
 module.exports = {
+   getACIIP: getACIIP,
    getWebsiteURL: getWebsiteURL,
    connectToAzure: connectToAzure,
    deleteResourceGroup: deleteResourceGroup

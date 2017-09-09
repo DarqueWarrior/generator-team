@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require(`path`);
 const async = require('async');
 const util = require(`./util`);
 const vsts = require(`./index`);
@@ -7,7 +6,6 @@ const azure = require(`./azure`);
 const uuidV4 = require('uuid/v4');
 const request = require('request');
 const env = require('node-env-file');
-const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 const exec = require('child_process').exec;
 
@@ -20,103 +18,108 @@ env(__dirname + '/.env', {
    overwrite: true
 });
 
-describe(`Docker`, function () {
+describe.only(`Azure Container Instances (Linux)`, function () {
    "use strict";
    var iterations = [{
       appType: `node`,
       appName: `nodeACITest`,
       target: `acilinux`,
-      context: `Azure Container Instances (Linux)`
-   }, {
-      appType: `node`,
-      appName: `nodeDockerTest`,
-      target: `docker`,
-      context: `Docker Host`
    }, {
       appType: `asp`,
       appName: `aspACITest`,
       target: `acilinux`,
-      context: `Azure Container Instances (Linux)`
-   }, {
-      appType: `asp`,
-      appName: `aspDockerTest`,
-      target: `docker`,
-      context: `Docker Host`
    }, {
       appType: `java`,
       appName: `javaACITest`,
       target: `acilinux`,
-      context: `Azure Container Instances (Linux)`,
       groupId: `unitTest`
+   }];
+
+   iterations.forEach(Tests);
+});
+
+describe(`Docker Host`, function () {
+   "use strict";
+   var iterations = [{
+      appType: `node`,
+      appName: `nodeDockerTest`,
+      target: `docker`,
+   }, {
+      appType: `asp`,
+      appName: `aspDockerTest`,
+      target: `docker`,
    }, {
       appType: `java`,
       appName: `javaDockerTest`,
       target: `docker`,
-      context: `Docker Host`,
       groupId: `unitTest`
    }];
 
-   iterations.forEach(function (iteration) {
-      var projectId;
-      var approvalId;
-      var originalDir = process.cwd();
+   iterations.forEach(Tests);
+});
 
-      // RM has issues if you try to create a release on
-      // a project name that was just deleted and recreated
-      //So we gen a GUID and a portion to the applicationName
-      // to help with that.
-      let uuid = uuidV4();
+function Tests(iteration) {
+   var projectId;
+   var approvalId;
+   var originalDir = process.cwd();
 
-      // Arguments
-      var applicationType = iteration.appType;
-      var applicationName = iteration.appName + uuid.substring(0, 8);
-      var tfs = process.env.ACCT;
-      var azureSub = process.env.AZURE_SUB || ` `;
-      var azureSubId = process.env.AZURE_SUBID || ` `;
-      var tenantId = process.env.AZURE_TENANTID || ` `;
-      var servicePrincipalId = process.env.SERVICE_PRINCIPALID || ` `;
-      var queue = `default`;
-      var target = iteration.target;
-      var installDep = `false`;
-      var groupId = iteration.appName || ` `;
-      var dockerHost = process.env.DOCKER_HOST || ` `;
-      var dockerCertPath = process.env.DOCKER_CERT_PATH || ` `;
-      var dockerRegistry = process.env.DOCKER_REGISTRY || ` `;
-      var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
-      var dockerPorts = process.env.DOCKER_PORTS || ` `;
-      var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
-      var servicePrincipalKey = process.env.SERVICE_PRINCIPALKEY || ` `;
-      var pat = process.env.PAT || ` `;
-      var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
+   // RM has issues if you try to create a release on
+   // a project name that was just deleted and recreated
+   //So we gen a GUID and a portion to the applicationName
+   // to help with that.
+   let uuid = uuidV4();
 
-      context(`${iteration.appType} - ${iteration.context}`, function () {
+   // Arguments
+   var applicationType = iteration.appType;
+   var applicationName = iteration.appName + uuid.substring(0, 8);
+   var tfs = process.env.ACCT;
+   var azureSub = process.env.AZURE_SUB || ` `;
+   var azureSubId = process.env.AZURE_SUBID || ` `;
+   var tenantId = process.env.AZURE_TENANTID || ` `;
+   var servicePrincipalId = process.env.SERVICE_PRINCIPALID || ` `;
+   var queue = `default`;
+   var target = iteration.target;
+   var installDep = `false`;
+   var groupId = iteration.appName || ` `;
+   var dockerHost = process.env.DOCKER_HOST || ` `;
+   var dockerCertPath = process.env.DOCKER_CERT_PATH || ` `;
+   var dockerRegistry = process.env.DOCKER_REGISTRY || ` `;
+   var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
+   var dockerPorts = process.env.DOCKER_PORTS || ` `;
+   var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
+   var servicePrincipalKey = process.env.SERVICE_PRINCIPALKEY || ` `;
+   var pat = process.env.PAT || ` `;
+   var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
 
-         before(function (done) {
-            // runs before all tests in this block
-            // Run the command. The parts will be verified below.
-            let cmd = `yo team node ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-               `"${tenantId}" "${servicePrincipalId}" ${queue} ${target} ${installDep} ` +
-               `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
+   context(`Running Yo Team ${iteration.appType}`, function () {
 
-            util.log(`run command: ${cmd}`);
+      before(function (done) {
+         // runs before all tests in this block
+         // Run the command. The parts will be verified below.
+         let cmd = `yo team node ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
+            `"${tenantId}" "${servicePrincipalId}" ${queue} ${target} ${installDep} ` +
+            `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
 
-            // Act
-            exec(cmd, (error, stdout, stderr) => {
-               if (error) {
-                  // This may happen if yo team is not installed
-                  console.error(`exec error: ${error}`);
-                  done(error);
-                  return;
-               }
+         util.log(`run command: ${cmd}`);
 
-               util.log(`stdout: ${stdout}`);
-               util.log(`stderr: ${stderr}`);
+         // Act
+         exec(cmd, (error, stdout, stderr) => {
+            util.log(`stdout: ${stdout}`);
+            util.log(`stderr: ${stderr}`);
 
+            if (error) {
+               // This may happen if yo team is not installed
+               console.error(`exec error: ${error}`);
                done(error);
-            });
-         });
+               return;
+            }
 
+            done(error);
+         });
+      });
+
+      context(`Verify everything was created`, function () {
          it(`${applicationName} project should be created`, function (done) {
             // Arrange
             let expectedName = `${applicationName}`;
@@ -206,7 +209,9 @@ describe(`Docker`, function () {
                done(error);
             });
          });
+      });
 
+      context(`Build is running ${iteration.appType}`, function () {
          it(`build should succeed`, function (done) {
             let id = 0;
             let result = ``;
@@ -234,7 +239,9 @@ describe(`Docker`, function () {
                }
             );
          });
+      });
 
+      context(`Release is running ${iteration.appType}`, function () {
          it(`release should succeed in dev`, function (done) {
             let id = 0;
             let status = ``;
@@ -260,38 +267,57 @@ describe(`Docker`, function () {
             );
          });
 
-         // runs after all tests in this block
-         after(function (done) {
-            if (doNotCleanUp === `true`) {
-               done();
-               return;
-            }
+         if (iteration.target !== `docker`) {
+            it(`dev site should be accessible`, function (done) {
+               azure.connectToAzure(function () {
+                  azure.getACIIP(`${applicationName}Dev`, function (e, url) {
+                     assert.ifError(e);
+                     util.log(`trying to access ${url}`);
+                     request({
+                        url: url
+                     }, function (err, res, body) {
+                        assert.ifError(err);
+                        done();
+                     });
+                  });
+               });
+            });
+         }
+      });
 
-            // Delete files, project, and resource group.
-            async.parallel([
-               (inParallel) => {
-                  util.log(`delete project: ${projectId}`);
-                  vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
-               },
-               (inParallel) => {
-                  util.log(`cd to: ${originalDir}`);
-                  process.chdir(originalDir);
+      // runs after all tests in this block
+      after(function (done) {
+         if (doNotCleanUp === `true`) {
+            done();
+            return;
+         }
 
-                  util.log(`delete folder: ${applicationName}`);
-                  util.rmdir(applicationName);
+         // Delete files, project, and resource group.
+         async.parallel([
+            (inParallel) => {
+               util.log(`delete project: ${projectId}`);
+               vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
+            },
+            (inParallel) => {
+               util.log(`cd to: ${originalDir}`);
+               process.chdir(originalDir);
 
-                  inParallel();
-               },
-               (inParallel) => {
-                  if (iteration.target !== `docker`) {
+               util.log(`delete folder: ${applicationName}`);
+               util.rmdir(applicationName);
+
+               inParallel();
+            },
+            (inParallel) => {
+               if (iteration.target !== `docker`) {
+                  azure.connectToAzure(function () {
                      util.log(`delete resource group: ${applicationName}Dev`);
                      azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
-                  } else {
-                     inParallel();
-                  }
+                  });
+               } else {
+                  inParallel();
                }
-            ], done);
-         });
+            }
+         ], done);
       });
    });
-});
+}

@@ -8,6 +8,14 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
+var logging = process.env.LOGYO || `off`;
+
+var logMessage = function (msg) {
+   if (logging === `on`) {
+      console.log(msg);
+   }
+};
+
 String.prototype.replaceAll = function (search, replacement) {
    var target = this;
    return target.split(search).join(replacement);
@@ -537,7 +545,7 @@ function findProject(account, project, token, gen, callback) {
       if (res.statusCode === 203) {
          // You get this when the site tries to send you to the
          // login page.
-         gen.log.error(`x Unable to authenticate with Team Services. Check account name and personal access token.`);
+         gen.log.error(`Unable to authenticate with Team Services. Check account name and personal access token.`);
          callback({
             "message": `Unable to authenticate with Team Services. Check account name and personal access token.`
          });
@@ -561,6 +569,8 @@ function findProject(account, project, token, gen, callback) {
 
 function findQueue(name, account, teamProject, token, callback) {
    'use strict';
+
+   logMessage(`findQueue params: ${name}, ${teamProject.id}`);
 
    var options = addUserAgent({
       "method": `GET`,
@@ -587,6 +597,7 @@ function findQueue(name, account, teamProject, token, callback) {
       } else {
          // Setting to null is the all clear signal to the async
          // series to continue
+         logMessage(`findQueue: ${res.statusCode}, ${obj}`);
          callback(null, obj.value[0].id);
       }
    });
@@ -877,6 +888,7 @@ module.exports = {
    findQueue: findQueue,
    findBuild: findBuild,
    getFullURL: getFullURL,
+   logMessage: logMessage,
    getTargets: getTargets,
    getAppTypes: getAppTypes,
    checkStatus: checkStatus,
