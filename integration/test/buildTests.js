@@ -1,8 +1,6 @@
-const path = require(`path`);
+const uuidV4 = require('uuid/v4');
 const vsts = require(`./index.js`);
-const request = require('request');
 const env = require('node-env-file');
-const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 const exec = require('child_process').exec;
 
@@ -19,24 +17,41 @@ const dockerHost = process.env.DOCKER_HOST;
 const dockerRegistry = process.env.DOCKER_REGISTRY;
 const dockerRegistryUsername = process.env.DOCKER_REGISTRY_USERNAME;
 
-describe(`build:index cmdLine`, () => {
+describe.only(`Testing build`, function () {
    "use strict";
+
+   let uuid = uuidV4();
+
+   var iterations = [{
+      appType: `asp`,
+      target: `paas`,
+      suffix: ``
+   }, {
+      appType: `java`,
+      target: `paas`,
+      suffix: ``
+   }, {
+      appType: `node`,
+      target: `paas`,
+      suffix: ``
+   }, {
+      appType: `aspFull`,
+      target: `paas`,
+      suffix: ``
+   }];
 
    var projectId;
    var expectedName;
    var buildDefinitionId;
-   var projectName = `buildTest`;
+   var projectName = `buildTest${uuid.substring(0, 8)}`;
 
    // Arguments
-   var applicationType;
    var queue;
-   var target;
    var dockerRegistryId;
 
-   before(function (done) {
-      // runs before all tests in this block
-      vsts.findProject(acct, projectName, pat, `yo Team`, (e, project) => {
-         assert.equal(project, undefined, `Precondition not meet: Project already exist`);
+   context(`Creating Project`, function () {
+      before(function (done) {
+         // runs before all tests in this block
          vsts.createProject(acct, projectName, pat, `yo Team`, (e, body) => {
             if (!e) {
                projectId = body.id;
@@ -44,47 +59,51 @@ describe(`build:index cmdLine`, () => {
             done(e);
          });
       });
-   });
 
-   it(`.net core build should be created`, (done) => {
-      // Arrange
-      expectedName = `buildTest-CI`;
+      iterations.forEach(function (iteration) {
 
-      applicationType = `asp`;
-      queue = `default`;
-      target = `paas`;
-      dockerRegistryId = ``;
+         context(`Creating ${iteration.appType} build`, function () {
 
-      // Act
-      let cmd = `yo team:build ${applicationType} ${projectName} ${acct} ${queue} ${target} '${dockerHost}' '${dockerRegistry}' '${dockerRegistryId}' ${pat}`;
+            it(`${iteration.appType} - ${projectName}${iteration.suffix}-CI build should be created`, (done) => {
+               // Arrange
+               expectedName = `${projectName}${iteration.suffix}-CI`;
 
-      exec(cmd, (error, stdout, stderr) => {
-         if (error) {
-            assert.fail(error);
-         }
+               queue = `default`;
+               dockerRegistryId = ``;
 
-         // Assert
-         // Test to see if build was created
-         vsts.findBuildDefinition(acct, projectId, pat, expectedName, `yo Team`, (e, bld) => {
-            assert.ifError(e);
-            assert.ok(bld, `Build not created`);
-            buildDefinitionId = bld.id;
-            done(e);
+               // Act
+               let cmd = `yo team:build ${iteration.appType} ${projectName} ${acct} ${queue} ${iteration.target} '${dockerHost}' '${dockerRegistry}' '${dockerRegistryId}' ${pat}`;
+
+               exec(cmd, (error, stdout, stderr) => {
+                  if (error) {
+                     assert.fail(error);
+                  }
+
+                  // Assert
+                  // Test to see if build was created
+                  vsts.findBuildDefinition(acct, projectId, pat, expectedName, `yo Team`, (e, bld) => {
+                     assert.ifError(e);
+                     assert.ok(bld, `Build not created`);
+                     buildDefinitionId = bld.id;
+                     done(e);
+                  });
+               });
+            });
+
+            afterEach(function (done) {
+               // runs after each test in this block
+               vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, e => {
+                  done(e);
+               });
+            });
          });
       });
-   });
 
-   afterEach(function (done) {
-      // runs after each test in this block
-      vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, e => {
-         done(e);
-      });
-   });
-
-   after(function (done) {
-      // runs after all tests in this block
-      vsts.deleteProject(acct, projectId, pat, `yo team`, (e) => {
-         done(e);
+      after(function (done) {
+         // runs after all tests in this block
+         vsts.deleteProject(acct, projectId, pat, `yo team`, (e) => {
+            done(e);
+         });
       });
    });
 });
