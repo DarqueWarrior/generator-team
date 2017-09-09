@@ -20,7 +20,7 @@ env(__dirname + '/.env', {
    overwrite: true
 });
 
-describe(`Docker`, function () {
+describe(`App Service`, function () {
    "use strict";
    var iterations = [{
          appType: `aspFull`,
