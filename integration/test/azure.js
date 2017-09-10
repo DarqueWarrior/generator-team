@@ -17,7 +17,7 @@ var secret = process.env.SERVICE_PRINCIPAL_KEY;
 var clientId = process.env.SERVICE_PRINCIPAL_ID;
 
 function connectToAzure(cb) {
-   //Entry point of the cleanup script
+   // Entry point of the cleanup script
    msRestAzure.loginWithServicePrincipalSecret(clientId, secret, domain, function (err, credentials) {
       if (err) {
          cb(err);
@@ -30,7 +30,19 @@ function connectToAzure(cb) {
 }
 
 function deleteResourceGroup(resourceGroupName, callback) {
-   return resourceClient.resourceGroups.deleteMethod(resourceGroupName, callback);
+   // Only try and delete if you find it.
+   resourceClient.resourceGroups.list(function (err, result, request, response) {
+
+      var found = result.filter((i) => {
+         return i.name === resourceGroupName;
+      });
+
+      if (found.length !== 0) {
+         return resourceClient.resourceGroups.deleteMethod(resourceGroupName, callback);
+      }
+
+      callback();
+   });
 }
 
 function getAciIp(resourceGroupName, cb) {
@@ -66,7 +78,7 @@ function getAciIp(resourceGroupName, cb) {
                   callback(null, `http://${result.properties.ipAddress.ip}`);
                });
          }
-      ], 
+      ],
       function (e, results) {
          cb(e, results[1]);
       });
@@ -105,7 +117,7 @@ function getWebsiteURL(resourceGroupName, cb) {
                   callback(null, `http://${result.properties.hostNames[0]}`);
                });
          }
-      ], 
+      ],
       function (e, results) {
          cb(e, results[1]);
       });
