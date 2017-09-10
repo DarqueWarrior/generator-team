@@ -75,6 +75,18 @@ function input() {
    ]).then(function (answers) {
       // Transfer answers to global object for use in the rest of the generator
 
+      // When passing in parameter from the command line passing in more than are 
+      // needed can cause issues.  When using the prompts data is not asked for that
+      // is not needed and the code works on the assumption that if you provided it
+      // I needed it which is not always the case. For example, if you are using the
+      // Hosted Linux queue you should not provide a Docker Host. But if you do
+      // it will mess things up. So I am going to try and determine if I need to clear
+      // additional information that was provided but not required. 
+      if(!util.needsDockerHost(answers, cmdLnInput)) {
+         answers.dockerHost = undefined;
+         cmdLnInput.dockerHost = undefined;
+      }
+
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
       this.type = util.reconcileValue(answers.type, cmdLnInput.type);

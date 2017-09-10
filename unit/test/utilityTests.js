@@ -387,13 +387,13 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getDockerRegisteryServer`, () => {
+   it(`getDockerRegistryServer`, () => {
       // Arrange
       let expected = `index.azure.io`;
       let dockerRegistry = `https://index.azure.io/`;
 
       // Act
-      let actual = util.getDockerRegisteryServer(dockerRegistry);
+      let actual = util.getDockerRegistryServer(dockerRegistry);
 
       // Assert
       assert.equal(expected, actual);

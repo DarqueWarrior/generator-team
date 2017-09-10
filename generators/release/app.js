@@ -164,7 +164,7 @@ function createRelease(args, gen, callback) {
       '{{dockerHostEndpoint}}': args.dockerHostEndpoint ? args.dockerHostEndpoint.id : null,
       '{{dockerRegistryId}}': dockerNamespace,
       '{{containerregistry}}': args.dockerRegistry,
-      '{{containerregistry_noprotocol}}': args.dockerRegistry ? util.getDockerRegisteryServer(args.dockerRegistry) : null,
+      '{{containerregistry_noprotocol}}': args.dockerRegistry ? util.getDockerRegistryServer(args.dockerRegistry) : null,
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
