@@ -5,10 +5,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>
-		<tiles:insertAttribute name="title" ignore="true" /> -
-		<%= name %>
-	</title>
+	<title><tiles:insertAttribute name="title" ignore="true" /> - My Spring Application</title>
 	<link rel="shortcut icon" href="resources/favicon.ico">
 	<link rel="stylesheet" href="resources/css/site.css">
 	<link rel="stylesheet" href="resources/lib/bootstrap/dist/css/bootstrap.css">

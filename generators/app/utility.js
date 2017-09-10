@@ -111,7 +111,7 @@ function getAppTypes(answers) {
    // .NET Full
    if (answers.queue.indexOf(`Linux`) === -1) {
       types.splice(1, 0, {
-         name: `.NET Full`,
+         name: `.NET Framework`,
          value: `aspFull`
       });
    }

@@ -4,6 +4,7 @@ const util = require(`./util`);
 const vsts = require(`./index`);
 const azure = require(`./azure`);
 const uuidV4 = require('uuid/v4');
+const cheerio = require('cheerio');
 const request = require('request');
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
@@ -18,47 +19,59 @@ env(__dirname + '/.env', {
    overwrite: true
 });
 
-describe.only(`Azure Container Instances (Linux)`, function () {
+describe(`Azure Container Instances (Linux) using Default queue`, function () {
    "use strict";
    var iterations = [{
       appType: `node`,
       appName: `nodeACITest`,
       target: `acilinux`,
+      queue: `Default`,
+      title: `Home Page - My Express Application`
    }, {
       appType: `asp`,
       appName: `aspACITest`,
       target: `acilinux`,
+      queue: `Default`,
+      title: `Home Page - My .NET Core Application`
    }, {
       appType: `java`,
       appName: `javaACITest`,
       target: `acilinux`,
-      groupId: `unitTest`
+      queue: `Default`,
+      groupId: `integrationTest`,
+      title: `Home Page - My Spring Application`
    }];
 
-   iterations.forEach(Tests);
+   iterations.forEach(runTests);
 });
 
-describe(`Docker Host`, function () {
+describe(`Docker Host using Default queue`, function () {
    "use strict";
    var iterations = [{
       appType: `node`,
       appName: `nodeDockerTest`,
       target: `docker`,
+      queue: `Default`,
+      title: `Home Page - My Express Application`
    }, {
       appType: `asp`,
       appName: `aspDockerTest`,
       target: `docker`,
+      queue: `Default`,
+      title: `Home Page - My .NET Core Application`
    }, {
       appType: `java`,
       appName: `javaDockerTest`,
       target: `docker`,
-      groupId: `unitTest`
+      queue: `Default`,
+      groupId: `integrationTest`,
+      title: `Home Page - My Spring Application`
    }];
 
-   iterations.forEach(Tests);
+   iterations.forEach(runTests);
 });
 
-function Tests(iteration) {
+function runTests(iteration) {
    var projectId;
    var approvalId;
    var originalDir = process.cwd();
@@ -74,9 +87,9 @@ function Tests(iteration) {
    var applicationName = iteration.appName + uuid.substring(0, 8);
    var tfs = process.env.ACCT;
    var azureSub = process.env.AZURE_SUB || ` `;
-   var azureSubId = process.env.AZURE_SUBID || ` `;
-   var tenantId = process.env.AZURE_TENANTID || ` `;
-   var servicePrincipalId = process.env.SERVICE_PRINCIPALID || ` `;
+   var azureSubId = process.env.AZURE_SUB_ID || ` `;
+   var tenantId = process.env.AZURE_TENANT_ID || ` `;
+   var servicePrincipalId = process.env.SERVICE_PRINCIPAL_ID || ` `;
    var queue = `default`;
    var target = iteration.target;
    var installDep = `false`;
@@ -87,7 +100,7 @@ function Tests(iteration) {
    var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
    var dockerPorts = process.env.DOCKER_PORTS || ` `;
    var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
-   var servicePrincipalKey = process.env.SERVICE_PRINCIPALKEY || ` `;
+   var servicePrincipalKey = process.env.SERVICE_PRINCIPAL_KEY || ` `;
    var pat = process.env.PAT || ` `;
    var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
 
@@ -96,27 +109,34 @@ function Tests(iteration) {
       before(function (done) {
          // runs before all tests in this block
          // Run the command. The parts will be verified below.
-         let cmd = `yo team node ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-            `"${tenantId}" "${servicePrincipalId}" ${queue} ${target} ${installDep} ` +
+         let cmd = `yo team ${iteration.appType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
+            `"${tenantId}" "${servicePrincipalId}" "${queue}" ${target} ${installDep} ` +
             `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
             `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
 
          util.log(`run command: ${cmd}`);
 
          // Act
-         exec(cmd, (error, stdout, stderr) => {
-            util.log(`stdout: ${stdout}`);
-            util.log(`stderr: ${stderr}`);
+         async.parallel([
+            (parallel) => {
+               exec(cmd, (error, stdout, stderr) => {
+                  util.log(`stdout: ${stdout}`);
+                  util.log(`stderr: ${stderr}`);
 
-            if (error) {
-               // This may happen if yo team is not installed
-               console.error(`exec error: ${error}`);
-               done(error);
-               return;
+                  if (error) {
+                     // This may happen if yo team is not installed
+                     console.error(`exec error: ${error}`);
+                     parallel(error);
+                     return;
+                  }
+
+                  parallel(error);
+               });
+            },
+            (parallel) => {
+               azure.connectToAzure(parallel);
             }
-
-            done(error);
-         });
+         ], done);
       });
 
       context(`Verify everything was created`, function () {
@@ -146,7 +166,7 @@ function Tests(iteration) {
             vsts.findBuildDefinition(tfs, projectId, pat, expectedName, userAgent, (e, b) => {
                // Assert
                assert.ifError(e);
-               assert.ok(b, `build defintion not found`);
+               assert.ok(b, `build definition not found`);
 
                done(e);
             });
@@ -161,7 +181,7 @@ function Tests(iteration) {
             vsts.findReleaseDefinition(tfs, projectId, pat, expectedName, userAgent, (e, r) => {
                // Assert
                assert.ifError(e);
-               assert.ok(r, `release defintion not found`);
+               assert.ok(r, `release definition not found`);
 
                done(e);
             });
@@ -189,7 +209,9 @@ function Tests(iteration) {
          it(`files should be created`, function () {
             assert.ok(fs.existsSync(applicationName));
          });
+      });
 
+      context(`Push code to remote`, function () {
          it(`git push should succeed`, function (done) {
             util.log(`cd to: ${__dirname}/../${applicationName}`);
             process.chdir(`${__dirname}/../${applicationName}`);
@@ -222,10 +244,10 @@ function Tests(iteration) {
                   return result !== `failed` && result !== `succeeded`;
                },
                (finished) => {
-                  vsts.getBuilds(tfs, projectId, pat, userAgent, (err, blds) => {
-                     if (blds.length > 0) {
-                        id = blds[0].id;
-                        result = blds[0].result;
+                  vsts.getBuilds(tfs, projectId, pat, userAgent, (err, builds) => {
+                     if (builds.length > 0) {
+                        id = builds[0].id;
+                        result = builds[0].result;
                      }
                      finished(err);
                   });
@@ -269,16 +291,18 @@ function Tests(iteration) {
 
          if (iteration.target !== `docker`) {
             it(`dev site should be accessible`, function (done) {
-               azure.connectToAzure(function () {
-                  azure.getACIIP(`${applicationName}Dev`, function (e, url) {
-                     assert.ifError(e);
-                     util.log(`trying to access ${url}`);
-                     request({
-                        url: url
-                     }, function (err, res, body) {
-                        assert.ifError(err);
-                        done();
-                     });
+               azure.getAciIp(`${applicationName}Dev`, function (e, url) {
+                  assert.ifError(e);
+                  util.log(`trying to access ${url}`);
+                  request({
+                     url: url
+                  }, function (err, res, body) {
+                     assert.ifError(err);
+
+                     var dom = cheerio.load(body);
+                     assert.equal(dom(`title`).text(), `${iteration.title}`);
+
+                     done();
                   });
                });
             });
@@ -309,10 +333,8 @@ function Tests(iteration) {
             },
             (inParallel) => {
                if (iteration.target !== `docker`) {
-                  azure.connectToAzure(function () {
-                     util.log(`delete resource group: ${applicationName}Dev`);
-                     azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
-                  });
+                  util.log(`delete resource group: ${applicationName}Dev`);
+                  azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
                } else {
                   inParallel();
                }
