@@ -4,7 +4,9 @@
    "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
    "main": "./generators/app/index.js",
    "scripts": {
-      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file unit/test"
+      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file unit/test",
+      "unittest": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file unit/test",
+      "inttest": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file integration/test"
    },
    "files": [
       "generators/app",
