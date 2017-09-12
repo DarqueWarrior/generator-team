@@ -39,7 +39,9 @@ describe(`utility`, () => {
       // Arrange
       let cmdLnInput = {};
       const expected = false;
-      let answers = { target: `paas`};
+      let answers = {
+         target: `paas`
+      };
 
       // Act
       let actual = util.needsRegistry(answers, cmdLnInput);
@@ -52,7 +54,9 @@ describe(`utility`, () => {
       // Arrange
       let cmdLnInput = {};
       const expected = true;
-      let answers = { target: `docker` };
+      let answers = {
+         target: `docker`
+      };
 
       // Act
       let actual = util.needsRegistry(answers, cmdLnInput);
@@ -65,7 +69,9 @@ describe(`utility`, () => {
       // Arrange
       let cmdLnInput = {};
       const expected = true;
-      let answers = { target: `dockerpaas` };
+      let answers = {
+         target: `dockerpaas`
+      };
 
       // Act
       let actual = util.needsRegistry(answers, cmdLnInput);
@@ -78,7 +84,9 @@ describe(`utility`, () => {
       // Arrange
       let cmdLnInput = {};
       const expected = true;
-      let answers = { target: `acilinux` };
+      let answers = {
+         target: `acilinux`
+      };
 
       // Act
       let actual = util.needsRegistry(answers, cmdLnInput);
@@ -269,7 +277,27 @@ describe(`utility`, () => {
       assert.windowsTargets(actual);
    });
 
-   it(`needsDockerHost default queue`, () => {
+   it(`needsDockerHost default queue dockerpaas no answers`, () => {
+
+      // Arrange
+      let expected = true;
+
+      let answers = {
+      };
+
+      let cmdLnInput = {
+         queue: `Default`,
+         target: `dockerpaas`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, cmdLnInput);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsDockerHost default queue dockerpaas`, () => {
 
       // Arrange
       let expected = true;

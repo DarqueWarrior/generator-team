@@ -54,31 +54,6 @@ describe(`Azure App Service (Windows) using Default queue`, function () {
       suffix: ``,
       queue: `Default`,
       title: `Home Page - My Spring Application`
-   }, {
-      appType: `node`,
-      appName: `nodePaaSTest`,
-      target: `dockerpaas`,
-      context: `Azure App Service (Windows)`,
-      suffix: `-Docker`,
-      queue: `Default`,
-      title: `Home Page - My Express Application`
-   }, {
-      appType: `asp`,
-      appName: `aspDockerPaaSTest`,
-      target: `dockerpaas`,
-      context: `Azure App Service Docker (Linux)`,
-      suffix: `-Docker`,
-      queue: `Default`,
-      title: `Home Page - My .NET Core Application`
-   }, {
-      appType: `java`,
-      appName: `javaPaaSTest`,
-      target: `dockerpaas`,
-      context: `Azure App Service (Windows)`,
-      groupId: `unitTest`,
-      suffix: `-Docker`,
-      queue: `Default`,
-      title: `Home Page - My Spring Application`
    }];
 
    iterations.forEach(runTests);
@@ -185,14 +160,14 @@ function runTests(iteration) {
                exec(cmd, (error, stdout, stderr) => {
                   util.log(`stdout: ${stdout}`);
                   util.log(`stderr: ${stderr}`);
-      
+
                   if (error) {
                      // This may happen if yo team is not installed
                      console.error(`exec error: ${error}`);
                      parallel(error);
                      return;
                   }
-      
+
                   parallel(error);
                });
             },
@@ -260,7 +235,7 @@ function runTests(iteration) {
             // Arrange
             let expectedName = azureSub;
 
-            util.log(`Find release ${expectedName}`);
+            util.log(`Find service endpoint ${expectedName}`);
 
             vsts.findAzureServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
                // Assert
@@ -283,6 +258,9 @@ function runTests(iteration) {
 
             util.log(`git push`);
             exec(`git push`, (error, stdout, stderr) => {
+               util.log(`cd to: ${originalDir}`);
+               process.chdir(originalDir);
+
                if (error) {
                   // This may happen if git errors
                   console.error(`exec error: ${error}`);
@@ -355,6 +333,10 @@ function runTests(iteration) {
          });
 
          it(`dev site should be accessible`, function (done) {
+            // Retry test up to 4 times
+            // Some sites take a while to jit.
+            this.retries(4);
+
             requestSite(applicationName, "Dev", iteration.title, done);
          });
 
@@ -407,6 +389,10 @@ function runTests(iteration) {
          });
 
          it(`qa site should be accessible`, function (done) {
+            // Retry test up to 4 times
+            // Some sites take a while to jit.
+            this.retries(4);
+
             requestSite(applicationName, "QA", iteration.title, done);
          });
 
@@ -458,6 +444,10 @@ function runTests(iteration) {
          });
 
          it(`prod site should be accessible`, function (done) {
+            // Retry test up to 4 times
+            // Some sites take a while to jit.
+            this.retries(4);
+
             requestSite(applicationName, "Prod", iteration.title, done);
          });
       });
@@ -476,9 +466,6 @@ function runTests(iteration) {
                vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
             },
             (inParallel) => {
-               util.log(`cd to: ${originalDir}`);
-               process.chdir(originalDir);
-
                util.log(`delete folder: ${applicationName}`);
                util.rmdir(applicationName);
 

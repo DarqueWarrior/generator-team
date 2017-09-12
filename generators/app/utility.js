@@ -816,8 +816,8 @@ function needsDockerHost(answers, cmdLnInput) {
             cmdLnInput.target === `dockerpaas` ||
             answers.target === `acilinux` ||
             cmdLnInput.target === `acilinux`) &&
-         ((answers.queue !== undefined && answers.queue.indexOf(`Linux`) === -1) &&
-            (cmdLnInput.queue !== undefined && cmdLnInput.queue.indexOf(`Linux`) === -1));
+         ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
+            (cmdLnInput.queue === undefined || cmdLnInput.queue.indexOf(`Linux`) === -1));
    } else {
       // If you pass in the target on the command line 
       // answers.target will be undefined so test cmdLnInput

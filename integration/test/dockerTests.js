@@ -41,12 +41,14 @@ describe(`Azure Container Instances (Linux) using Default queue`, function () {
       appName: `nodeACITest`,
       target: `acilinux`,
       queue: `Default`,
+      groupId: ` `,
       title: `Home Page - My Express Application`
    }, {
       appType: `asp`,
       appName: `aspACITest`,
       target: `acilinux`,
       queue: `Default`,
+      groupId: ` `,
       title: `Home Page - My .NET Core Application`
    }, {
       appType: `java`,
@@ -61,19 +63,21 @@ describe(`Azure Container Instances (Linux) using Default queue`, function () {
 });
 
 if (util.isVSTS(tfs)) {
-   describe.only(`Azure Container Instances (Linux) using Hosted Linux Preview queue`, function () {
+   describe(`Azure Container Instances (Linux) using Hosted Linux Preview queue`, function () {
       "use strict";
       var iterations = [{
          appType: `node`,
          appName: `nodeACITest`,
          target: `acilinux`,
          queue: `Hosted Linux Preview`,
+         groupId: ` `,
          title: `Home Page - My Express Application`
       }, {
          appType: `asp`,
          appName: `aspACITest`,
          target: `acilinux`,
          queue: `Hosted Linux Preview`,
+         groupId: ` `,
          title: `Home Page - My .NET Core Application`
       }, {
          appType: `java`,
@@ -95,12 +99,14 @@ describe(`Docker Host using Default queue`, function () {
       appName: `nodeDockerTest`,
       target: `docker`,
       queue: `Default`,
+      groupId: ` `,
       title: `Home Page - My Express Application`
    }, {
       appType: `asp`,
       appName: `aspDockerTest`,
       target: `docker`,
       queue: `Default`,
+      groupId: ` `,
       title: `Home Page - My .NET Core Application`
    }, {
       appType: `java`,
@@ -115,267 +121,265 @@ describe(`Docker Host using Default queue`, function () {
 });
 
 function runTests(iteration) {
-   var projectId;
-   var approvalId;
-   var originalDir = process.cwd();
+   "use strict";
+
+   iteration.originalDir = process.cwd();
 
    // RM has issues if you try to create a release on
    // a project name that was just deleted and recreated
    //So we gen a GUID and a portion to the applicationName
    // to help with that.
-   let uuid = uuidV4();
+   iteration.uuid = uuidV4();
 
    // Arguments
-   var applicationType = iteration.appType;
-   var applicationName = iteration.appName + uuid.substring(0, 8);
+   iteration.applicationName = iteration.appName + iteration.uuid.substring(0, 8);
 
-   var queue = iteration.queue;
-   var target = iteration.target;
    var installDep = `false`;
-   var groupId = iteration.appName || ` `;
+   context(`${iteration.appType}`, function () {
+      before(function (done) {
+         // runs before all tests in this block
+         // The Azure connection will be use to find IPs of ACI
+         // and also in after to clean up.
+         azure.connectToAzure(done);
+      });
 
-   before(function (done) {
-      // runs before all tests in this block
-      // The Azure connection will be use to find IPs of ACI
-      // and also in after to clean up.
-      azure.connectToAzure(done);
-   });
+      context(`Execute command line`, function () {
+         it(`Should complete without error`, function (done) {
+            // Run the command. The parts will be verified below.
+            let cmd = `yo team ${iteration.appType} ${iteration.applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
+               `"${tenantId}" "${servicePrincipalId}" "${iteration.queue}" ${iteration.target} ${installDep} ` +
+               `"${iteration.groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
+               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
 
-   context(`Execute command line`, function () {
-      it(`Should complete without error`, function (done) {
-         // Run the command. The parts will be verified below.
-         let cmd = `yo team ${iteration.appType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-            `"${tenantId}" "${servicePrincipalId}" "${queue}" ${target} ${installDep} ` +
-            `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
+            util.log(`run command: ${cmd}`);
 
-         util.log(`run command: ${cmd}`);
+            // Act
+            exec(cmd, (error, stdout, stderr) => {
+               util.log(`stdout: ${stdout}`);
+               util.log(`stderr: ${stderr}`);
 
-         // Act
-         exec(cmd, (error, stdout, stderr) => {
-            util.log(`stdout: ${stdout}`);
-            util.log(`stderr: ${stderr}`);
+               if (error) {
+                  // This may happen if yo team is not installed
+                  console.error(`exec error: ${error}`);
+                  done(error);
+                  return;
+               }
 
-            if (error) {
-               // This may happen if yo team is not installed
-               console.error(`exec error: ${error}`);
                done(error);
-               return;
-            }
-
-            done(error);
-         });
-      });
-   });
-
-   context(`Verify everything was created`, function () {
-      it(`${applicationName} project should be created`, function (done) {
-         // Arrange
-         util.log(`Find project ${applicationName}`);
-
-         vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
-            // Assert
-            assert.ifError(e);
-            assert.ok(p, `project not found`);
-
-            projectId = p.id;
-
-            done(e);
+            });
          });
       });
 
-      it(`${applicationName}-Docker-CI build definition should be created`, function (done) {
-         // Arrange
-         let expectedName = `${applicationName}-Docker-CI`;
-
-         util.log(`Find build ${expectedName}`);
-
-         vsts.findBuildDefinition(tfs, projectId, pat, expectedName, userAgent, (e, b) => {
-            // Assert
-            assert.ifError(e);
-            assert.ok(b, `build definition not found`);
-
-            done(e);
-         });
-      });
-
-      it(`${applicationName}-Docker-CD release definition should be created`, function (done) {
-         // Arrange
-         let expectedName = `${applicationName}-Docker-CD`;
-
-         util.log(`Find release ${expectedName}`);
-
-         vsts.findReleaseDefinition(tfs, projectId, pat, expectedName, userAgent, (e, r) => {
-            // Assert
-            assert.ifError(e);
-            assert.ok(r, `release definition not found`);
-
-            done(e);
-         });
-      });
-
-      // When using your own docker host azure service
-      // is not needed.
-      if (iteration.target !== `docker`) {
-         it(`${azureSub} azure service endpoint should be created`, function (done) {
+      context(`Verify everything was created`, function () {
+         it(`${iteration.applicationName} project should be created`, function (done) {
             // Arrange
-            let expectedName = azureSub;
+            util.log(`Find project ${iteration.applicationName}`);
+
+            vsts.findProject(tfs, iteration.applicationName, pat, userAgent, (e, p) => {
+               // Assert
+               assert.ifError(e);
+               assert.ok(p, `project not found`);
+
+               iteration.projectId = p.id;
+
+               done(e);
+            });
+         });
+
+         it(`${iteration.applicationName}-Docker-CI build definition should be created`, function (done) {
+            // Arrange
+            let expectedName = `${iteration.applicationName}-Docker-CI`;
+
+            util.log(`Find build ${expectedName}`);
+
+            vsts.findBuildDefinition(tfs, iteration.projectId, pat, expectedName, userAgent, (e, b) => {
+               // Assert
+               assert.ifError(e);
+               assert.ok(b, `build definition not found`);
+
+               done(e);
+            });
+         });
+
+         it(`${iteration.applicationName}-Docker-CD release definition should be created`, function (done) {
+            // Arrange
+            let expectedName = `${iteration.applicationName}-Docker-CD`;
 
             util.log(`Find release ${expectedName}`);
 
-            vsts.findAzureServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
+            vsts.findReleaseDefinition(tfs, iteration.projectId, pat, expectedName, userAgent, (e, r) => {
                // Assert
                assert.ifError(e);
-               assert.ok(ep, `service endpoint not found`);
+               assert.ok(r, `release definition not found`);
 
                done(e);
             });
          });
-      }
 
-      it(`files should be created`, function () {
-         assert.ok(fs.existsSync(applicationName));
-      });
-   });
+         // When using your own docker host azure service
+         // is not needed.
+         if (iteration.target !== `docker`) {
+            it(`${azureSub} azure service endpoint should be created`, function (done) {
+               // Arrange
+               let expectedName = azureSub;
 
-   context(`Push code to remote`, function () {
-      it(`git push should succeed`, function (done) {
-         util.log(`cd to: ${__dirname}/../${applicationName}`);
-         process.chdir(`${__dirname}/../${applicationName}`);
+               util.log(`Find service endpoint ${expectedName}`);
 
-         util.log(`git push`);
-         exec(`git push`, (error, stdout, stderr) => {
-            if (error) {
-               // This may happen if git errors
-               console.error(`exec error: ${error}`);
-               done(error);
-               return;
-            }
+               vsts.findAzureServiceEndpoint(tfs, iteration.projectId, pat, expectedName, userAgent, (e, ep) => {
+                  // Assert
+                  assert.ifError(e);
+                  assert.ok(ep, `service endpoint not found`);
 
-            util.log(`stdout: ${stdout}`);
-            util.log(`stderr: ${stderr}`);
-
-            done(error);
-         });
-      });
-   });
-
-   context(`Build is running ${iteration.appType}`, function () {
-      it(`build should succeed`, function (done) {
-         let id = 0;
-         let result = ``;
-
-         // Wait for build to succeed or fail
-         async.whilst(
-            () => {
-               return result !== `failed` && result !== `succeeded`;
-            },
-            (finished) => {
-               vsts.getBuilds(tfs, projectId, pat, userAgent, (err, builds) => {
-                  if (builds.length > 0) {
-                     id = builds[0].id;
-                     result = builds[0].result;
-                  }
-                  finished(err);
-               });
-            },
-            (e) => {
-               // Get the build log
-               vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
-                  assert.equal(result, `succeeded`, logs);
                   done(e);
                });
-            }
-         );
-      });
-   });
+            });
+         }
 
-   context(`Release is running ${iteration.appType}`, function () {
-      it(`release should succeed in dev`, function (done) {
-         let id = 0;
-         let status = ``;
-
-         // Wait for release to succeed or fail
-         async.whilst(
-            () => {
-               return status !== `rejected` && status !== `succeeded` && status !== `partiallySucceeded`;
-            },
-            (finished) => {
-               vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                  if (r.length > 0) {
-                     status = r[0].environments[0].status;
-                  }
-                  finished(err);
-               });
-            },
-            (e) => {
-               // Get the release log            
-               assert.ok(status === `succeeded` || status === `partiallySucceeded`);
-               done(e);
-            }
-         );
+         it(`files should be created`, function () {
+            assert.ok(fs.existsSync(iteration.applicationName));
+         });
       });
 
-      if (iteration.target !== `docker`) {
-         it(`dev site should be accessible`, function (done) {
-            azure.getAciIp(`${applicationName}Dev`, function (e, url) {
-               assert.ifError(e);
-               util.log(`trying to access ${url}`);
-               request({
-                  url: url
-               }, function (err, res, body) {
-                  assert.ifError(err);
+      context(`Push code to remote`, function () {
+         it(`git push should succeed`, function (done) {
+            util.log(`cd to: ${__dirname}/../${iteration.applicationName}`);
+            process.chdir(`${__dirname}/../${iteration.applicationName}`);
 
-                  var dom = cheerio.load(body);
-                  assert.equal(dom(`title`).text(), `${iteration.title}`);
+            util.log(`git push`);
+            exec(`git push`, (error, stdout, stderr) => {
+               util.log(`cd to: ${iteration.originalDir}`);
+               process.chdir(iteration.originalDir);
 
-                  done();
-               });
+               if (error) {
+                  // This may happen if git errors
+                  console.error(`exec error: ${error}`);
+                  done(error);
+                  return;
+               }
+
+               util.log(`stdout: ${stdout}`);
+               util.log(`stderr: ${stderr}`);
+
+               done(error);
             });
          });
-      }
-   });
+      });
 
-   // runs after all tests in this block
-   after(function (done) {
-      if (doNotCleanUp === `true`) {
-         done();
-         return;
-      }
+      context(`Build is running ${iteration.appType}`, function () {
+         it(`build should succeed`, function (done) {
+            // Wait for build to succeed or fail
+            async.whilst(
+               () => {
+                  return iteration.buildResult !== `failed` && iteration.buildResult !== `succeeded`;
+               },
+               (finished) => {
+                  vsts.getBuilds(tfs, iteration.projectId, pat, userAgent, (err, builds) => {
+                     if (builds.length > 0) {
+                        iteration.buildId = builds[0].id;
+                        iteration.buildResult = builds[0].result;
+                     }
+                     finished(err);
+                  });
+               },
+               (e) => {
+                  // Get the build log
+                  vsts.getBuildLog(tfs, iteration.projectId, pat, iteration.buildId, userAgent, (e, logs) => {
+                     assert.equal(iteration.buildResult, `succeeded`, logs);
+                     done(e);
+                  });
+               }
+            );
+         });
+      });
 
-      // Delete files, project, and resource group.
-      async.parallel([
-         (inParallel) => {
-            // If find again because if the execution of the yo team command
-            // fails the project might have been created but the test that
-            // sets project id might not have been executed. 
-            vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
-               if (p) {
-                  projectId = p.id;
-                  util.log(`delete project: ${projectId}`);
-                  vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
+      context(`Release is running ${iteration.appType}`, function () {
+         it(`release should succeed in dev`, function (done) {
+            iteration.id = 0;
+            iteration.status = ``;
+
+            // Wait for release to succeed or fail
+            async.whilst(
+               () => {
+                  return iteration.status !== `rejected` && iteration.status !== `succeeded` && iteration.status !== `partiallySucceeded`;
+               },
+               (finished) => {
+                  vsts.getReleases(tfs, iteration.projectId, pat, userAgent, (err, r) => {
+                     if (r.length > 0) {
+                        iteration.status = r[0].environments[0].status;
+                     }
+                     finished(err);
+                  });
+               },
+               (e) => {
+                  // Get the release log            
+                  assert.ok(iteration.status === `succeeded` || iteration.status === `partiallySucceeded`);
+                  done(e);
+               }
+            );
+         });
+
+         if (iteration.target !== `docker`) {
+            it(`dev site should be accessible`, function (done) {
+               // Retry test up to 4 times
+               // Some sites take a while to jit.
+               this.retries(4);
+
+               azure.getAciIp(`${iteration.applicationName}Dev`, function (e, url) {
+                  assert.ifError(e);
+                  util.log(`trying to access ${url}`);
+                  request({
+                     url: url
+                  }, function (err, res, body) {
+                     assert.ifError(err);
+
+                     var dom = cheerio.load(body);
+                     assert.equal(dom(`title`).text(), `${iteration.title}`);
+
+                     done();
+                  });
+               });
+            });
+         }
+      });
+
+      // runs after all tests in this block
+      after(function (done) {
+         if (doNotCleanUp === `true`) {
+            done();
+            return;
+         }
+
+         // Delete files, project, and resource group.
+         async.parallel([
+            (inParallel) => {
+               // If find again because if the execution of the yo team command
+               // fails the project might have been created but the test that
+               // sets project id might not have been executed. 
+               vsts.findProject(tfs, iteration.applicationName, pat, userAgent, (e, p) => {
+                  if (p) {
+                     iteration.projectId = p.id;
+                     util.log(`delete project: ${iteration.projectId}`);
+                     vsts.deleteProject(tfs, iteration.projectId, pat, userAgent, inParallel);
+                  } else {
+                     inParallel();
+                  }
+               });
+            },
+            (inParallel) => {
+               util.log(`delete folder: ${iteration.applicationName}`);
+               util.rmdir(iteration.applicationName);
+
+               inParallel();
+            },
+            (inParallel) => {
+               if (iteration.target !== `docker`) {
+                  util.log(`delete resource group: ${iteration.applicationName}Dev`);
+                  azure.deleteResourceGroup(`${iteration.applicationName}Dev`, inParallel);
                } else {
                   inParallel();
                }
-            });
-         },
-         (inParallel) => {
-            util.log(`cd to: ${originalDir}`);
-            process.chdir(originalDir);
-
-            util.log(`delete folder: ${applicationName}`);
-            util.rmdir(applicationName);
-
-            inParallel();
-         },
-         (inParallel) => {
-            if (iteration.target !== `docker`) {
-               util.log(`delete resource group: ${applicationName}Dev`);
-               azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
-            } else {
-               inParallel();
             }
-         }
-      ], done);
+         ], done);
+      });
    });
 }
