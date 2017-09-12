@@ -34,6 +34,11 @@ var servicePrincipalKey = process.env.SERVICE_PRINCIPAL_KEY || ` `;
 var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
 var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
 
+// The number of levels up from the folder the test are executed in to the 
+// folder where the repo was cloned.  This is not the same when run locally
+// vs. run on a build machine. 
+var levelsUp = process.env.LEVELS_UP || `/../`;
+
 describe(`Azure Container Instances (Linux) using Default queue`, function () {
    "use strict";
    var iterations = [{
@@ -242,8 +247,8 @@ function runTests(iteration) {
 
       context(`Push code to remote`, function () {
          it(`git push should succeed`, function (done) {
-            util.log(`cd to: ${__dirname}/../${iteration.applicationName}`);
-            process.chdir(`${__dirname}/../${iteration.applicationName}`);
+            util.log(`cd to: ${__dirname}${levelsUp}${iteration.applicationName}`);
+            process.chdir(`${__dirname}${levelsUp}${iteration.applicationName}`);
 
             util.log(`git push`);
             exec(`git push`, (error, stdout, stderr) => {

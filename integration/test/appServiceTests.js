@@ -141,6 +141,11 @@ function runTests(iteration) {
    var pat = process.env.PAT || ` `;
    var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
 
+   // The number of levels up from the folder the test are executed in to the 
+   // folder where the repo was cloned.  This is not the same when run locally
+   // vs. run on a build machine. 
+   var levelsUp = process.env.LEVELS_UP || `/../`;
+
    context(`Running Yo Team ${iteration.appType}`, function () {
 
       before(function (done) {
@@ -253,8 +258,8 @@ function runTests(iteration) {
 
       context(`Push code to remote`, function () {
          it(`git push should succeed`, function (done) {
-            util.log(`cd to: ${__dirname}/../${applicationName}`);
-            process.chdir(`${__dirname}/../${applicationName}`);
+            util.log(`cd to: ${__dirname}${levelsUp}${applicationName}`);
+            process.chdir(`${__dirname}${levelsUp}${applicationName}`);
 
             util.log(`git push`);
             exec(`git push`, (error, stdout, stderr) => {
