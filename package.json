@@ -41,12 +41,12 @@
    },
    "license": "ISC",
    "dependencies": {
-      "async": "^2.3.0",
+      "async": "^2.5.0",
       "node-env-file": "^0.1.8",
       "request": "^2.81.0",
       "uuid": "^3.1.0",
       "yeoman-generator": "^0.24.1",
-      "yosay": "^2.0.0"
+      "yosay": "^2.0.1"
    },
    "devDependencies": {
       "azure-arm-resource": "^1.4.4-preview",
@@ -55,17 +55,17 @@
       "gulp": "^3.9.1",
       "gulp-jshint": "^2.0.4",
       "gulp-mocha": "^4.3.1",
-      "gulp-spawn-mocha": "^3.3.0",
+      "gulp-spawn-mocha": "^3.3.1",
       "istanbul": "*",
       "jshint": "^2.9.4",
-      "mocha": "^3.4.2",
+      "mocha": "^3.5.3",
       "ms-rest-azure": "^1.14.3",
       "proxyquire": "*",
-      "sinon": "^2.3.4",
+      "sinon": "^2.4.1",
       "sinon-test": "^1.0.1",
       "supertest": "^3.0.0",
       "xunit-file": "^1.0.0",
-      "yeoman-test": "*",
+      "yeoman-test": "^1.7.0",
       "yo": "^2.0.0"
    }
 }
