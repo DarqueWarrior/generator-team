@@ -68,7 +68,7 @@
                      "location": "Central US",
                      "csmFile": "**/website.json",
                      "csmParametersFile": "**/WebSite.parameters.json",
-                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation \"$(aiLocation)\"",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""
@@ -197,7 +197,7 @@
                      "location": "Central US",
                      "csmFile": "**/website.json",
                      "csmParametersFile": "**/WebSite.parameters.json",
-                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation \"$(aiLocation)\"",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""
@@ -326,7 +326,7 @@
                      "location": "Central US",
                      "csmFile": "**/website.json",
                      "csmParametersFile": "**/WebSite.parameters.json",
-                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation '$(aiLocation)'",
+                     "overrideParameters": "-hostingPlanName $(hostingPlanName) -webSiteName $(webSiteName) -aiLocation \"$(aiLocation)\"",
                      "enableDeploymentPrerequisitesForCreate": "false",
                      "enableDeploymentPrerequisitesForSelect": "false",
                      "outputVariable": ""
