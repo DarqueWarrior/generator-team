@@ -810,7 +810,7 @@ function needsDockerHost(answers, cmdLnInput) {
       // If you pass in the target on the command line 
       // answers.target will be undefined so test cmdLnInput
       isDocker = (answers.target === `docker` || cmdLnInput.target === `docker`);
-      
+
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
             cmdLnInput.target === `dockerpaas` ||
@@ -848,6 +848,38 @@ function isPaaS(answers, cmdLnInput) {
 
 function isVSTS(instance) {
    return instance.toLowerCase().match(/http/) === null;
+}
+
+function isTFSGreaterThan2017(account, token, callback) {
+   if (isVSTS(account)) {
+      callback(undefined, true);
+   } else {
+
+      // We can determine if this is 2017 or not by searching for a 
+      // specific docker task.
+      var options = addUserAgent({
+         "method": `GET`,
+         "headers": {
+            "cache-control": `no-cache`,
+            "authorization": `Basic ${token}`
+         },
+         "url": `${getFullURL(account)}/_apis/distributedtask/tasks`
+      });
+
+      request(options, function (error, response, body) {
+         var obj = JSON.parse(body);
+
+         var task = obj.value.find(function (i) {
+            return i.name === `Docker` && i.id === `e28912f1-0114-4464-802a-a3a35437fd16`;
+         });
+
+         if (task === undefined) {
+            callback(undefined, false);
+         } else {
+            callback(undefined, true);
+         }
+      });
+   }
 }
 
 function getFullURL(instance, includeCollection, forRM) {
@@ -919,6 +951,7 @@ module.exports = {
    validateAzureSubID: validateAzureSubID,
    validatePortMapping: validatePortMapping,
    validateDockerHubID: validateDockerHubID,
+   isTFSGreaterThan2017: isTFSGreaterThan2017,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
