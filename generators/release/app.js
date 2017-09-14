@@ -121,9 +121,9 @@ function getRelease(args, callback) {
    if (util.isDocker(args.target)) {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
-            release = `vsts_release_${args.type}.json`;
+            release = `vsts_release_${args.target}.json`;
          } else {
-            release = `tfs_release_${args.type}.json`;
+            release = `tfs_release_${args.target}.json`;
          }
 
          callback(e, release);

@@ -492,6 +492,423 @@ describe(`release:app`, function () {
    let expectedToken = `OnRva2Vu`;
    let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
+   it(`getRelease asp tfs 2017 paas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `paas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease asp vsts pass`, function (done) {
+      // Arrange 
+      let expected = `vsts_release.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getRelease aspFull vsts pass`, function (done) {
+      // Arrange 
+      let expected = `vsts_release.json`;
+
+      // Act
+      release.getRelease({
+         type: `aspFull`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease asp tfs 2017 docker`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_docker.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `docker`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease asp vsts docker`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_docker.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease asp tfs 2017 dockerpaas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_dockerpaas.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease asp vsts dockerpaas`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_dockerpaas.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `dockerpaas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease asp tfs 2017 acilinux`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_acilinux.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `acilinux`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease asp vsts acilinux`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_acilinux.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `acilinux`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java tfs 2017 dockerpaas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_dockerpaas.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease java vsts dockerpaas`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_dockerpaas.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `dockerpaas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java tfs 2017 acilinux`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_acilinux.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `acilinux`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease java vsts acilinux`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_acilinux.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `acilinux`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java vsts docker`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_docker.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java vsts pass`, function (done) {
+      // Arrange 
+      let expected = `vsts_release.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease node vsts dockerpaas`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_dockerpaas.json`;
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `dockerpaas`,
+         tfs: `vsts`,
+         queue: `Hosted Linux Preview`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease node vsts acilinux`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_acilinux.json`;
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `acilinux`,
+         tfs: `vsts`,
+         queue: `Hosted Linux Preview`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease node vsts docker`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_docker.json`;
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease node vsts paas`, function (done) {
+      // Arrange 
+      let expected = `vsts_release.json`;
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease node tfs 2017 acilinux`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_acilinux.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `acilinux`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease node tfs 2017 dockerpaas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_dockerpaas.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease node tfs 2018 dockerpaas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `vsts_release_dockerpaas.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, true);
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease node tfs 2017 docker`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_docker.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `docker`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease node tfs 2017 paas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `paas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease node tfs 2018 paas`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `vsts_release.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, true);
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `paas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
    it(`run with existing release should run without error`, sinon.test(function (done) {
       // Arrange
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
