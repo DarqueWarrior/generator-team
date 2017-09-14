@@ -64,7 +64,7 @@ describe(`release:index`, function () {
          });
    });
 
-   it(`test prompts node dockerpaas tfs`, function () {
+   it(`test prompts node dockerpaas tfs 2017`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
@@ -75,6 +75,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findAzureServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -102,6 +103,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `dockerpaas`, expectedToken);
@@ -163,7 +165,7 @@ describe(`release:index`, function () {
          });
    });
 
-   it(`test prompts node acilinux tfs`, function () {
+   it(`test prompts node acilinux tfs 2017`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
@@ -174,6 +176,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findAzureServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -201,6 +204,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `acilinux`, expectedToken);
@@ -258,7 +262,7 @@ describe(`release:index`, function () {
          });
    });
 
-   it(`test prompts node docker tfs`, function () {
+   it(`test prompts node docker tfs 2017`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
@@ -268,6 +272,7 @@ describe(`release:index`, function () {
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindRelease.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -291,6 +296,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
@@ -303,7 +309,7 @@ describe(`release:index`, function () {
          });
    });
 
-   it(`test prompts node paas`, function () {
+   it(`test prompts node paas vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
@@ -346,7 +352,7 @@ describe(`release:index`, function () {
          });
    });
 
-   it(`test prompts java docker`, function () {
+   it(`test prompts java docker vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
@@ -391,7 +397,7 @@ describe(`release:index`, function () {
          });
    });
 
-   it(`test prompts java paas`, function () {
+   it(`test prompts java paas vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 

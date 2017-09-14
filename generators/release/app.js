@@ -66,8 +66,7 @@ function run(args, gen, done) {
                      azureEndpoint = ep;
                      inParallel(err, azureEndpoint);
                   });
-               }
-               else {
+               } else {
                   azureEndpoint = undefined;
                   inParallel(null, undefined);
                }
@@ -114,6 +113,34 @@ function run(args, gen, done) {
    });
 }
 
+function getRelease(args, callback) {
+   var release = ``;
+
+   let pat = util.encodePat(args.pat);
+
+   if (util.isDocker(args.target)) {
+      util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
+         if (result) {
+            release = `vsts_release_${args.type}.json`;
+         } else {
+            release = `tfs_release_${args.type}.json`;
+         }
+
+         callback(e, release);
+      });
+   } else {
+      util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
+         if (result) {
+            release = `vsts_release.json`;
+         } else {
+            release = `tfs_release.json`;
+         }
+
+         callback(e, release);
+      });
+   }
+}
+
 function findOrCreateRelease(args, gen, callback) {
    'use strict';
 
@@ -145,7 +172,7 @@ function createRelease(args, gen, callback) {
    // Azure website names have to be unique.  So we gen a GUID and addUserAgent
    // a portion to the site name to help with that.
    let uuid = uuidV4();
-   
+
    // Load the template and replace values.
    var tokens = {
       '{{BuildId}}': args.build.id,
@@ -175,10 +202,16 @@ function createRelease(args, gen, callback) {
 
    var options = util.addUserAgent({
       method: 'POST',
-      headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${args.token}` },
+      headers: {
+         'cache-control': 'no-cache',
+         'content-type': 'application/json',
+         'authorization': `Basic ${args.token}`
+      },
       json: true,
       url: `${util.getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
-      qs: { 'api-version': RELEASE_API_VERSION },
+      qs: {
+         'api-version': RELEASE_API_VERSION
+      },
       body: JSON.parse(util.tokenize(contents, tokens))
    });
 
@@ -189,7 +222,9 @@ function createRelease(args, gen, callback) {
    var status = '';
 
    async.whilst(
-      function () { return status !== 'failed' && status !== 'succeeded'; },
+      function () {
+         return status !== 'failed' && status !== 'succeeded';
+      },
       function (finished) {
          request(options, function (err, resp, body) {
 
@@ -217,5 +252,6 @@ module.exports = {
    // it.
 
    run: run,
+   getRelease: getRelease,
    findOrCreateRelease: findOrCreateRelease
 };

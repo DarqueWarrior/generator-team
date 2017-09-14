@@ -64,58 +64,35 @@ function input() {
 }
 
 function configureRelease() {
+   // This will not match in callback of
+   // getRelease so store it here.
+   var _this = this;
    var done = this.async();
 
-   var release = this.templatePath(`tfs_release.json`);
+   app.getRelease(this, function (e, result) {
+      var release = _this.templatePath(result);
 
-   if (util.isVSTS(this.tfs)) {
-      release = this.templatePath(`vsts_release.json`);
-   }
+      var args = {
+         pat: _this.pat,
+         tfs: _this.tfs,
+         queue: _this.queue,
+         target: _this.target,
+         releaseJson: release,
+         azureSub: _this.azureSub,
+         appName: _this.applicationName,
+         project: _this.applicationName
+      };
 
-   if (this.target === `docker`) {
-      if (util.isVSTS(this.tfs)) {
-         release = this.templatePath(`vsts_release_docker.json`);
-      } else {
-         release = this.templatePath(`tfs_release_docker.json`);
+      if (util.needsRegistry(_this)) {
+         args.dockerHost = _this.dockerHost;
+         args.dockerPorts = _this.dockerPorts;
+         args.dockerRegistry = _this.dockerRegistry;
+         args.dockerRegistryId = _this.dockerRegistryId;
+         args.dockerRegistryPassword = _this.dockerRegistryPassword;
       }
-   }
 
-   if (this.target === `dockerpaas`) {
-      if (util.isVSTS(this.tfs)) {
-         release = this.templatePath(`vsts_release_dockerpaas.json`);
-      } else {
-         release = this.templatePath(`tfs_release_dockerpaas.json`);
-      }
-   }
-
-   if (this.target === `acilinux`) {
-      if (util.isVSTS(this.tfs)) {
-         release = this.templatePath(`vsts_release_acilinux.json`);
-      } else {
-         release = this.templatePath(`tfs_release_acilinux.json`);
-      }
-   }
-
-   var args = {
-      pat: this.pat,
-      tfs: this.tfs,
-      queue: this.queue,
-      target: this.target,
-      releaseJson: release,
-      azureSub: this.azureSub,
-      appName: this.applicationName,
-      project: this.applicationName
-   };
-
-   if (util.needsRegistry(this)) {
-      args.dockerHost = this.dockerHost;
-      args.dockerPorts = this.dockerPorts;
-      args.dockerRegistry = this.dockerRegistry;
-      args.dockerRegistryId = this.dockerRegistryId;
-      args.dockerRegistryPassword = this.dockerRegistryPassword;
-   }
-
-   app.run(args, this, done);
+      app.run(args, _this, done);
+   });
 }
 
 module.exports = generators.Base.extend({
