@@ -58,28 +58,32 @@ function input() {
 }
 
 function configureBuild() {
-
+   // This will not match in callback of
+   // getBuild so store it here.
+   var _this = this;
    var done = this.async();
 
-   var build = this.templatePath(app.getBuild(this));
+   app.getBuild(this, function (e, result) {
+      var build = _this.templatePath(result);
 
-   var args = {
-      pat: this.pat,
-      tfs: this.tfs,
-      buildJson: build,
-      queue: this.queue,
-      target: this.target,
-      appName: this.applicationName,
-      project: this.applicationName
-   };
+      var args = {
+         pat: _this.pat,
+         tfs: _this.tfs,
+         buildJson: build,
+         queue: _this.queue,
+         target: _this.target,
+         appName: _this.applicationName,
+         project: _this.applicationName
+      };
 
-   if (util.isDocker(this.target)) {
-      args.dockerHost = this.dockerHost;
-      args.dockerRegistry = this.dockerRegistry;
-      args.dockerRegistryId = this.dockerRegistryId;
-   }
+      if (util.isDocker(_this.target)) {
+         args.dockerHost = _this.dockerHost;
+         args.dockerRegistry = _this.dockerRegistry;
+         args.dockerRegistryId = _this.dockerRegistryId;
+      }
 
-   app.run(args, this, done);
+      app.run(args, _this, done);
+   });
 }
 
 module.exports = generators.Base.extend({

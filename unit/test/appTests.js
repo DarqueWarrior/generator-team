@@ -4,8 +4,8 @@ const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 const util = require(`../../generators/app/utility`);
 
-describe(`app:index`, () => {
-   it(`arguments using fake dependencies dockerpaas linux`, () => {
+describe(`app:index`, function () {
+   it(`arguments using fake dependencies dockerpaas linux`, function () {
       // Arrange
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
@@ -14,7 +14,7 @@ describe(`app:index`, () => {
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:project`],
          [helpers.createDummyGenerator(), `team:release`],
-         [helpers.createDummyGenerator(), `team:registry`]         
+         [helpers.createDummyGenerator(), `team:registry`]
       ];
 
       let type = `asp`;
@@ -47,12 +47,12 @@ describe(`app:index`, () => {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          });
    });
 
-   it(`arguments using fake dependencies paas`, () => {
+   it(`arguments using fake dependencies paas`, function () {
       // Arrange
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
@@ -93,12 +93,12 @@ describe(`app:index`, () => {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          });
    });
 
-   it(`arguments using fake dependencies aspFull paas`, () => {
+   it(`arguments using fake dependencies aspFull paas`, function () {
       // Arrange
       let deps = [
          [helpers.createDummyGenerator(), `team:aspFull`],
@@ -139,12 +139,12 @@ describe(`app:index`, () => {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          });
    });
 
-   it(`prompts using fake dependencies paas`, () => {
+   it(`prompts using fake dependencies paas`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
@@ -154,7 +154,7 @@ describe(`app:index`, () => {
          [helpers.createDummyGenerator(), `team:release`]
       ];
 
-      var cleanUp = () => {
+      var cleanUp = function () {
          util.getPools.restore();
          util.getAzureSubs.restore();
       };
@@ -171,21 +171,21 @@ describe(`app:index`, () => {
             azureSub: `azureSub`,
             installDep: `false`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`arguments using fake dependencies docker`, () => {
+   it(`arguments using fake dependencies docker`, function () {
       // Arrange
       let deps = [
          [helpers.createDummyGenerator(), `team:git`],
@@ -226,12 +226,12 @@ describe(`app:index`, () => {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          });
    });
 
-   it(`prompts using fake dependencies docker`, () => {
+   it(`prompts using fake dependencies docker`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
@@ -243,7 +243,7 @@ describe(`app:index`, () => {
          [helpers.createDummyGenerator(), `team:registry`]
       ];
 
-      var cleanUp = () => {
+      var cleanUp = function () {
          util.getPools.restore();
          util.getAzureSubs.restore();
       };
@@ -266,16 +266,16 @@ describe(`app:index`, () => {
             dockerRegistryId: `dockerRegistryId`,
             dockerRegistryPassword: `dockerRegistryPassword`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generato => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });

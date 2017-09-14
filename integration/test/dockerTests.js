@@ -274,10 +274,10 @@ function runTests(iteration) {
          it(`build should succeed`, function (done) {
             // Wait for build to succeed or fail
             async.whilst(
-               () => {
+               function () {
                   return iteration.buildResult !== `failed` && iteration.buildResult !== `succeeded`;
                },
-               (finished) => {
+               function (finished) {
                   vsts.getBuilds(tfs, iteration.projectId, pat, userAgent, (err, builds) => {
                      if (builds.length > 0) {
                         iteration.buildId = builds[0].id;
@@ -286,7 +286,7 @@ function runTests(iteration) {
                      finished(err);
                   });
                },
-               (e) => {
+               function (e) {
                   // Get the build log
                   vsts.getBuildLog(tfs, iteration.projectId, pat, iteration.buildId, userAgent, (e, logs) => {
                      assert.equal(iteration.buildResult, `succeeded`, logs);
@@ -304,10 +304,10 @@ function runTests(iteration) {
 
             // Wait for release to succeed or fail
             async.whilst(
-               () => {
+               function () {
                   return iteration.status !== `rejected` && iteration.status !== `succeeded` && iteration.status !== `partiallySucceeded`;
                },
-               (finished) => {
+               function (finished) {
                   vsts.getReleases(tfs, iteration.projectId, pat, userAgent, (err, r) => {
                      if (r.length > 0) {
                         iteration.status = r[0].environments[0].status;
@@ -315,7 +315,7 @@ function runTests(iteration) {
                      finished(err);
                   });
                },
-               (e) => {
+               function (e) {
                   // Get the release log            
                   assert.ok(iteration.status === `succeeded` || iteration.status === `partiallySucceeded`);
                   done(e);
@@ -356,7 +356,7 @@ function runTests(iteration) {
 
          // Delete files, project, and resource group.
          async.parallel([
-            (inParallel) => {
+            function (inParallel) {
                // If find again because if the execution of the yo team command
                // fails the project might have been created but the test that
                // sets project id might not have been executed. 
@@ -370,13 +370,13 @@ function runTests(iteration) {
                   }
                });
             },
-            (inParallel) => {
+            function (inParallel) {
                util.log(`delete folder: ${iteration.applicationName}`);
                util.rmdir(iteration.applicationName);
 
                inParallel();
             },
-            (inParallel) => {
+            function (inParallel) {
                if (iteration.target !== `docker`) {
                   util.log(`delete resource group: ${iteration.applicationName}Dev`);
                   azure.deleteResourceGroup(`${iteration.applicationName}Dev`, inParallel);

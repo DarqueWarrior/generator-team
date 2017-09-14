@@ -11,12 +11,13 @@ const util = require(`../../generators/app/utility`);
 sinon.test = sinonTest.configureTest(sinon);
 
 describe(`build:index`, function () {
-   it(`test prompts asp:paas should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts tfs 2017 asp:paas should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -30,32 +31,39 @@ describe(`build:index`, function () {
             queue: `Default`,
             pat: `token`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test prompts aspFull:paas should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts tfs 2017 aspFull:paas should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -69,32 +77,39 @@ describe(`build:index`, function () {
             queue: `Default`,
             pat: `token`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test prompts java:paas should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts java:paas should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -108,32 +123,39 @@ describe(`build:index`, function () {
             queue: `Default`,
             pat: `token`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test prompts node:paas should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts node:paas should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -147,34 +169,41 @@ describe(`build:index`, function () {
             queue: `Default`,
             pat: `token`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test prompts node:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts node:docker should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
@@ -186,34 +215,41 @@ describe(`build:index`, function () {
             queue: `Default`,
             pat: `token`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test prompts asp:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts asp:docker should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
@@ -225,34 +261,41 @@ describe(`build:index`, function () {
             queue: `Default`,
             pat: `token`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test prompts java:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts java:docker should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
@@ -266,156 +309,194 @@ describe(`build:index`, function () {
             dockerHost: `dockerHost`,
             dockerRegistryId: `dockerRegistryId`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test cmd line node:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test cmd line node:docker should not return error`, function () {
+      let cleanUp = function () {
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`node`, `nodeDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
-            `token`])
-         .on(`error`, e => {
+            `token`
+         ])
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test cmd line java:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test cmd line java:docker should not return error`, function () {
+      let cleanUp = function () {
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`java`, `javaDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
-            `token`])
-         .on(`error`, e => {
+            `token`
+         ])
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test cmd line asp:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test cmd line asp:docker should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
-            `token`])
-         .on(`error`, e => {
+            `token`
+         ])
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
          });
    });
 
-   it(`test cmd line asp:docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test cmd line asp:docker should not return error`, function () {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
-         util.findDockerServiceEndpoint.restore();
-         util.tryFindBuild.restore();
-         util.findDockerRegistryServiceEndpoint.restore();
          util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/build/index`))
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
-            `token`])
-         .on(`error`, error => {
+            `token`
+         ])
+         .on(`error`, function (error) {
             cleanUp();
             assert.fail(error);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs
             cleanUp();
@@ -423,261 +504,391 @@ describe(`build:index`, function () {
    });
 });
 
-describe(`build:app`, () => {
+describe(`build:app`, function () {
    "use strict";
 
-   it(`getBuild asp tfs paas`, () => {
+   it(`getBuild asp tfs 2017 paas`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_asp_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `paas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `asp`,
+         target: `paas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild asp vsts pass`, () => {
+   it(`getBuild asp vsts pass`, function (done) {
       // Arrange 
       let expected = `vsts_asp_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `paas`, tfs: `vsts` });
+      build.getBuild({
+         type: `asp`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
 
       // Assert
       assert.equal(expected, actual);
    });
 
-   it(`getBuild aspFull vsts pass`, () => {
+   it(`getBuild aspFull vsts pass`, function (done) {
       // Arrange 
       let expected = `vsts_aspFull_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `aspFull`, target: `paas`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `aspFull`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild asp tfs docker`, () => {
+   it(`getBuild asp tfs 2017 docker`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_asp_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `docker`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `asp`,
+         target: `docker`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild asp vsts docker`, () => {
+   it(`getBuild asp vsts docker`, function (done) {
       // Arrange 
       let expected = `vsts_asp_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `docker`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `asp`,
+         target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild asp tfs dockerpaas`, () => {
+   it(`getBuild asp tfs 2017 dockerpaas`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_asp_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `dockerpaas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `asp`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild asp vsts dockerpaas`, () => {
+   it(`getBuild asp vsts dockerpaas`, function (done) {
       // Arrange 
       let expected = `vsts_asp_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `dockerpaas`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `asp`,
+         target: `dockerpaas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild asp tfs acilinux`, () => {
+   it(`getBuild asp tfs 2017 acilinux`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_asp_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `acilinux`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `asp`,
+         target: `acilinux`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild asp vsts acilinux`, () => {
+   it(`getBuild asp vsts acilinux`, function (done) {
       // Arrange 
       let expected = `vsts_asp_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `asp`, target: `acilinux`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `asp`,
+         target: `acilinux`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild java tfs dockerpaas`, () => {
+   it(`getBuild java tfs 2017 dockerpaas`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_java_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `java`, target: `dockerpaas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `java`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild java vsts dockerpaas`, () => {
+   it(`getBuild java vsts dockerpaas`, function (done) {
       // Arrange 
       let expected = `vsts_java_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `java`, target: `dockerpaas`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `java`,
+         target: `dockerpaas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild java tfs acilinux`, () => {
+   it(`getBuild java tfs 2017 acilinux`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_java_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `java`, target: `acilinux`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `java`,
+         target: `acilinux`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild java vsts acilinux`, () => {
+   it(`getBuild java vsts acilinux`, function (done) {
       // Arrange 
       let expected = `vsts_java_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `java`, target: `acilinux`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `java`,
+         target: `acilinux`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild java vsts docker`, () => {
+   it(`getBuild java vsts docker`, function (done) {
       // Arrange 
       let expected = `vsts_java_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `java`, target: `docker`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `java`,
+         target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild java vsts pass`, () => {
+   it(`getBuild java vsts pass`, function (done) {
       // Arrange 
       let expected = `vsts_java_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `java`, target: `paas`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `java`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild node vsts dockerpaas`, () => {
+   it(`getBuild node vsts dockerpaas`, function (done) {
       // Arrange 
       let expected = `vsts_node_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `dockerpaas`, tfs: `vsts`, queue: `Hosted Linux Preview` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `node`,
+         target: `dockerpaas`,
+         tfs: `vsts`,
+         queue: `Hosted Linux Preview`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild node vsts acilinux`, () => {
+   it(`getBuild node vsts acilinux`, function (done) {
       // Arrange 
       let expected = `vsts_node_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `acilinux`, tfs: `vsts`, queue: `Hosted Linux Preview` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `node`,
+         target: `acilinux`,
+         tfs: `vsts`,
+         queue: `Hosted Linux Preview`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild node vsts docker`, () => {
+   it(`getBuild node vsts docker`, function (done) {
       // Arrange 
       let expected = `vsts_node_docker_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `docker`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `node`,
+         target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild node vsts paas`, () => {
+   it(`getBuild node vsts paas`, function (done) {
       // Arrange 
       let expected = `vsts_node_build.json`;
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `paas`, tfs: `vsts` });
-
-      // Assert
-      assert.equal(expected, actual);
+      build.getBuild({
+         type: `node`,
+         target: `paas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
    });
 
-   it(`getBuild node tfs acilinux`, () => {
+   it(`getBuild node tfs 2017 acilinux`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_node_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `acilinux`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `node`,
+         target: `acilinux`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild node tfs dockerpaas`, () => {
+   it(`getBuild node tfs 2017 dockerpaas`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_node_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `dockerpaas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `node`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild node tfs docker`, () => {
+   it(`getBuild node tfs 2017 docker`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_node_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `docker`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
+      build.getBuild({
+         type: `node`,
+         target: `docker`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`getBuild node tfs paas`, () => {
+   it(`getBuild node tfs 2017 paas`, sinon.test(function (done) {
       // Arrange 
       let expected = `tfs_node_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
 
       // Act
-      let actual = build.getBuild({ type: `node`, target: `paas`, tfs: `http://tfs:8080/tfs/DefaultCollection` });
-
-      // Assert
-      assert.equal(expected, actual);
-   });
+      build.getBuild({
+         type: `node`,
+         target: `paas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
 
    it(`run with existing build should run without error`, sinon.test(function (done) {
       // Arrange
@@ -685,12 +896,17 @@ describe(`build:app`, () => {
       // to call and calls it with the rest of the arguments provided.
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-      this.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
+      this.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+         value: "I`m a build."
+      });
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -714,10 +930,13 @@ describe(`build:app`, () => {
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `tryFindBuild`).callsArgWith(4, new Error("boom"), null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -735,7 +954,7 @@ describe(`build:app`, () => {
 
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          build.run(args, logger);
       }, function (e) {
          done();
@@ -748,24 +967,37 @@ describe(`build:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../../generators/build/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/build/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{BuildDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = function () {};
 
       // Create build
-      requestStub.onCall(0).yields(null, { statusCode: 200 }, { name: `build` });
+      requestStub.onCall(0).yields(null, {
+         statusCode: 200
+      }, {
+         name: `build`
+      });
 
       // Act
-      proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, { name: `TeamProject`, id: 1 },
-         `token`, 1, null, null, null, `build.json`, `paas`, logger, function (e, bld) {
+      proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+            name: `TeamProject`,
+            id: 1
+         },
+         `token`, 1, null, null, null, `build.json`, `paas`, logger,
+         function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);
 
@@ -778,26 +1010,46 @@ describe(`build:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../../generators/build/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/build/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{BuildDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = function () {};
 
       // Create build
-      requestStub.onCall(0).yields(null, { statusCode: 200 }, { name: `build` });
+      requestStub.onCall(0).yields(null, {
+         statusCode: 200
+      }, {
+         name: `build`
+      });
 
       // Act
-      proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, { name: `TeamProject`, id: 1 },
-         `token`, 1, `dockerHostEndpoint`,
-         { name: `dockerRegistryEndpoint`, url: ``, authorization: { parameters: { registry: `` } } },
-         `dockerRegistryId`, `build.json`, `docker`, logger, function (e, bld) {
+      proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+            name: `TeamProject`,
+            id: 1
+         },
+         `token`, 1, `dockerHostEndpoint`, {
+            name: `dockerRegistryEndpoint`,
+            url: ``,
+            authorization: {
+               parameters: {
+                  registry: ``
+               }
+            }
+         },
+         `dockerRegistryId`, `build.json`, `docker`, logger,
+         function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);
 
@@ -810,26 +1062,36 @@ describe(`build:app`, () => {
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../../generators/build/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/build/app`, {
+         "request": requestStub
+      });
 
       this.stub(util, `findQueue`).callsArgWith(4, null, 1);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{BuildDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-      this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
+      this.stub(util, `findProject`).callsArgWith(4, null, {
+         value: "TeamProject",
+         id: 1
+      });
 
       var logger = sinon.stub();
-      logger.log = () => { };
+      logger.log = function () {};
 
       // Create build
-      requestStub.onCall(0).yields(null, { statusCode: 400 }, undefined);
+      requestStub.onCall(0).yields(null, {
+         statusCode: 400
+      }, undefined);
 
       // Act
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
-         proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, { name: `TeamProject`, id: 1 },
+      assert.throws(function () {
+         proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+               name: `TeamProject`,
+               id: 1
+            },
             `token`, 1, null, null, null, `build.json`, `paas`, logger, done);
       }, function (e) {
          done();

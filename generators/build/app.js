@@ -149,24 +149,32 @@ function createBuild(account, teamProject, token, queueId,
    });
 }
 
-function getBuild(args) {
+function getBuild(args, callback) {
    var build = ``;
-   
-   if (util.isDocker(args.target)) {
-      if (util.isVSTS(args.tfs)) {
-         build = `vsts_${args.type}_docker_build.json`;
-      } else {
-         build = `tfs_${args.type}_docker_build.json`;
-      }
-   } else {
-      if (util.isVSTS(args.tfs)) {
-         build = `vsts_${args.type}_build.json`;
-      } else {
-         build = `tfs_${args.type}_build.json`;
-      }
-   }
 
-   return build;
+   let pat = util.encodePat(args.pat);
+
+   if (util.isDocker(args.target)) {
+      util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
+         if (result) {
+            build = `vsts_${args.type}_docker_build.json`;
+         } else {
+            build = `tfs_${args.type}_docker_build.json`;
+         }
+
+         callback(e, build);
+      });
+   } else {
+      util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
+         if (result) {
+            build = `vsts_${args.type}_build.json`;
+         } else {
+            build = `tfs_${args.type}_build.json`;
+         }
+
+         callback(e, build);
+      });
+   }
 }
 
 module.exports = {

@@ -161,7 +161,7 @@ function runTests(iteration) {
          // Act
          // Execute yo team and log into azure (used during clean up).
          async.parallel([
-            (parallel) => {
+            function (parallel) {
                exec(cmd, (error, stdout, stderr) => {
                   util.log(`stdout: ${stdout}`);
                   util.log(`stderr: ${stderr}`);
@@ -176,7 +176,7 @@ function runTests(iteration) {
                   parallel(error);
                });
             },
-            (parallel) => {
+            function (parallel) {
                azure.connectToAzure(parallel);
             }
          ], done);
@@ -288,10 +288,10 @@ function runTests(iteration) {
 
             // Wait for build to succeed or fail
             async.whilst(
-               () => {
+               function () {
                   return result !== `failed` && result !== `succeeded`;
                },
-               (finished) => {
+               function (finished) {
                   vsts.getBuilds(tfs, projectId, pat, userAgent, (err, builds) => {
                      if (builds.length > 0) {
                         id = builds[0].id;
@@ -300,7 +300,7 @@ function runTests(iteration) {
                      finished(err);
                   });
                },
-               (e) => {
+               function (e) {
                   // Get the build log
                   vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
                      assert.equal(result, `succeeded`, logs);
@@ -318,10 +318,10 @@ function runTests(iteration) {
 
             // Wait for release to succeed or fail
             async.whilst(
-               () => {
+               function () {
                   return status !== `rejected` && status !== `succeeded` && status !== `partiallySucceeded`;
                },
-               (finished) => {
+               function (finished) {
                   vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
                      if (r.length > 0) {
                         status = r[0].environments[0].status;
@@ -329,7 +329,7 @@ function runTests(iteration) {
                      finished(err);
                   });
                },
-               (e) => {
+               function (e) {
                   // Get the release log            
                   assert.ok(status === `succeeded` || status === `partiallySucceeded`);
                   done(e);
@@ -367,16 +367,16 @@ function runTests(iteration) {
 
             assert.ok(approvalId);
 
-            vsts.setApproval(tfs, projectId, pat, approvalId, userAgent, (e) => {
+            vsts.setApproval(tfs, projectId, pat, approvalId, userAgent, function (e) {
                approvalId = undefined;
                assert.ifError(e);
 
                // Wait for release to succeed or fail
                async.whilst(
-                  () => {
+                  function () {
                      return status !== `rejected` && status !== `succeeded`;
                   },
-                  (finished) => {
+                  function (finished) {
                      vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
                         if (r.length > 0) {
                            status = r[0].environments[1].status;
@@ -384,7 +384,7 @@ function runTests(iteration) {
                         finished(err);
                      });
                   },
-                  (e) => {
+                  function (e) {
                      // Get the release log            
                      assert.equal(status, `succeeded`);
                      done(e);
@@ -423,15 +423,15 @@ function runTests(iteration) {
 
             assert.ok(approvalId);
 
-            vsts.setApproval(tfs, projectId, pat, approvalId, userAgent, (e) => {
+            vsts.setApproval(tfs, projectId, pat, approvalId, userAgent, function (e) {
                assert.ifError(e);
 
                // Wait for release to succeed or fail
                async.whilst(
-                  () => {
+                  function () {
                      return status !== `rejected` && status !== `succeeded`;
                   },
-                  (finished) => {
+                  function (finished) {
                      vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
                         if (r.length > 0) {
                            status = r[0].environments[2].status;
@@ -439,7 +439,7 @@ function runTests(iteration) {
                         finished(err);
                      });
                   },
-                  (e) => {
+                  function (e) {
                      // Get the release log            
                      assert.equal(status, `succeeded`);
                      done(e);
@@ -466,25 +466,25 @@ function runTests(iteration) {
 
          // Delete files, project, and resource group.
          async.parallel([
-            (inParallel) => {
+            function (inParallel) {
                util.log(`delete project: ${projectId}`);
                vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
             },
-            (inParallel) => {
+            function (inParallel) {
                util.log(`delete folder: ${applicationName}`);
                util.rmdir(applicationName);
 
                inParallel();
             },
-            (inParallel) => {
+            function (inParallel) {
                util.log(`delete resource group: ${applicationName}Dev`);
                azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
             },
-            (inParallel) => {
+            function (inParallel) {
                util.log(`delete resource group: ${applicationName}QA`);
                azure.deleteResourceGroup(`${applicationName}QA`, inParallel);
             },
-            (inParallel) => {
+            function (inParallel) {
                util.log(`delete resource group: ${applicationName}Prod`);
                azure.deleteResourceGroup(`${applicationName}Prod`, inParallel);
             }

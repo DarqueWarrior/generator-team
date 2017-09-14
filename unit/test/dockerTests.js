@@ -10,10 +10,10 @@ const docker = require(`../../generators/docker/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
-describe(`docker:index`, () => {
+describe(`docker:index`, function () {
    "use strict";
-   it(`test prompts docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test prompts docker should not return error`, function () {
+      let cleanUp = function () {
          util.tryFindDockerServiceEndpoint.restore();
          util.findProject.restore();
       };
@@ -29,11 +29,11 @@ describe(`docker:index`, () => {
             dockerRegistryPassword: `dockerRegistryPassword`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `findProject`).callsArgWith(4, null, {
                value: "TeamProject",
@@ -44,15 +44,15 @@ describe(`docker:index`, () => {
                id: 1
             });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs         
             cleanUp();
          });
    });
 
-   it(`test cmd line docker should not return error`, () => {
-      let cleanUp = () => {
+   it(`test cmd line docker should not return error`, function () {
+      let cleanUp = function () {
          util.tryFindDockerServiceEndpoint.restore();
          util.findProject.restore();
       };
@@ -69,11 +69,11 @@ describe(`docker:index`, () => {
             `dockerRegistryPassword`,
             `token`
          ])
-         .on(`error`, error => {
+         .on(`error`, function (error) {
             cleanUp();
             assert.fail(error);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `findProject`).callsArgWith(4, null, {
                value: "TeamProject",
@@ -84,7 +84,7 @@ describe(`docker:index`, () => {
                id: 1
             });
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             // Using the yeoman helpers and sinon.test did not play nice
             // so clean up your stubs         
             cleanUp();
@@ -92,7 +92,7 @@ describe(`docker:index`, () => {
    });
 });
 
-describe(`docker:app`, () => {
+describe(`docker:app`, function () {
    "use strict";
 
    it(`run with existing endpoint should run without error`, sinon.test(function (done) {
@@ -107,7 +107,7 @@ describe(`docker:app`, () => {
       });
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -134,7 +134,7 @@ describe(`docker:app`, () => {
       this.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, new Error("boom"), null);
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -152,9 +152,9 @@ describe(`docker:app`, () => {
 
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          docker.run(args, logger);
-      }, e => {
+      }, function (e) {
          done();
          return true;
       });
@@ -180,7 +180,7 @@ describe(`docker:app`, () => {
       });
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Create Project
       requestStub.onCall(0).yields(null, {
@@ -219,7 +219,7 @@ describe(`docker:app`, () => {
       });
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Create Project
       requestStub.onCall(0).yields(null, {
@@ -229,10 +229,10 @@ describe(`docker:app`, () => {
       // Act
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          proxyApp.findOrCreateDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
             `DockerHost`, `dockerCertPath`, `token`, logger, done);
-      }, e => {
+      }, function (e) {
          done();
          return true;
       });
@@ -242,7 +242,7 @@ describe(`docker:app`, () => {
       // Arrange
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Act
       docker.findOrCreateDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,

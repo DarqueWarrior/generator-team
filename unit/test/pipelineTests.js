@@ -5,8 +5,8 @@ const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 const util = require(`../../generators/app/utility`);
 
-describe(`team:pipeline`, () => {
-   it(`using real dependencies`, () => {
+describe(`team:pipeline`, function () {
+   it(`using real dependencies`, function () {
       var deps = [
          // No docker gens are listed
          path.join(__dirname, `../../generators/azure/index`),
@@ -17,12 +17,13 @@ describe(`team:pipeline`, () => {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/defaultcollection`;
 
-      var cleanUp = () => {
+      var cleanUp = function () {
          util.findBuild.restore();
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.tryFindRelease.restore();
+         util.isTFSGreaterThan2017.restore();
          util.findAzureServiceEndpoint.restore();
          util.tryFindAzureServiceEndpoint.restore();
       };
@@ -54,16 +55,16 @@ describe(`team:pipeline`, () => {
             dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts,
             dockerRegistryPassword, servicePrincipalKey, pat
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             // This will protect the code from changes in sub generator arguments
             // There was a bug where the token was not correct and this test would
             // have caught it.
-            sinon.stub(util, `findProject`).callsFake((tfs, project, token, gen, callback) => {
+            sinon.stub(util, `findProject`).callsFake(function (tfs, project, token, gen, callback) {
                assert.equal(expectedAccount, tfs, `findProject - TFS is wrong`);
                assert.equal(`aspDemo`, project, `findProject - Project is wrong`);
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
@@ -74,7 +75,14 @@ describe(`team:pipeline`, () => {
                });
             });
 
-            sinon.stub(util, `findAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
+            sinon.stub(util, `isTFSGreaterThan2017`).callsFake(function(account, token, callback){
+               assert.equal(expectedAccount, account, `findAzureServiceEndpoint - TFS is wrong`);
+               assert.equal(expectedToken, token, `findAzureServiceEndpoint - Token is wrong`);
+
+               callback(undefined, false);
+            });
+
+            sinon.stub(util, `findAzureServiceEndpoint`).callsFake(function (account, projectId, sub, token, gen, callback) {
                assert.equal(expectedAccount, account, `findAzureServiceEndpoint - TFS is wrong`);
                assert.equal(1, projectId, `findAzureServiceEndpoint - ProjectId is wrong`);
                assert.equal(expectedToken, token, `findAzureServiceEndpoint - Token is wrong`);
@@ -86,7 +94,7 @@ describe(`team:pipeline`, () => {
                });
             });
 
-            sinon.stub(util, `tryFindAzureServiceEndpoint`).callsFake((account, projectId, sub, token, gen, callback) => {
+            sinon.stub(util, `tryFindAzureServiceEndpoint`).callsFake(function (account, projectId, sub, token, gen, callback) {
                assert.equal(expectedAccount, account, `tryFindAzureServiceEndpoint - TFS is wrong`);
                assert.equal(1, projectId, `tryFindAzureServiceEndpoint - ProjectId is wrong`);
                assert.equal(expectedToken, token, `tryFindAzureServiceEndpoint - Token is wrong`);
@@ -101,7 +109,7 @@ describe(`team:pipeline`, () => {
                });
             });
 
-            sinon.stub(util, `findQueue`).callsFake((name, account, teamProject, token, callback) => {
+            sinon.stub(util, `findQueue`).callsFake(function (name, account, teamProject, token, callback) {
                assert.equal(`default`, name, `findQueue - name is wrong`);
                assert.equal(expectedAccount, account, `findQueue - Account is wrong`);
                assert.equal(1, teamProject.id, `findQueue - team project is wrong`);
@@ -110,7 +118,7 @@ describe(`team:pipeline`, () => {
                callback(null, 1);
             });
 
-            sinon.stub(util, `findBuild`).callsFake((account, teamProject, token, target, callback) => {
+            sinon.stub(util, `findBuild`).callsFake(function (account, teamProject, token, target, callback) {
                assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
                assert.equal(expectedToken, token, `findBuild - token is wrong`);
@@ -126,7 +134,7 @@ describe(`team:pipeline`, () => {
                });
             });
 
-            sinon.stub(util, `tryFindBuild`).callsFake((account, teamProject, token, target, callback) => {
+            sinon.stub(util, `tryFindBuild`).callsFake(function (account, teamProject, token, target, callback) {
                assert.equal(expectedAccount, account, `tryFindBuild - Account is wrong`);
                assert.equal(1, teamProject.id, `tryFindBuild - team project is wrong`);
                assert.equal(expectedToken, token, `tryFindBuild - token is wrong`);
@@ -142,7 +150,7 @@ describe(`team:pipeline`, () => {
                });
             });
 
-            sinon.stub(util, `tryFindRelease`).callsFake((args, callback) => {
+            sinon.stub(util, `tryFindRelease`).callsFake(function (args, callback) {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
                assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
@@ -153,12 +161,12 @@ describe(`team:pipeline`, () => {
                });
             });
          })
-         .on(`end`, e => {
+         .on(`end`, function () {
             cleanUp();
          });
    });
 
-   it(`prompts for azure should not compose with Docker`, () => {
+   it(`prompts for azure should not compose with Docker`, function () {
       let deps = [
          // No docker gens are listed
          [helpers.createDummyGenerator(), `team:azure`],
@@ -166,7 +174,7 @@ describe(`team:pipeline`, () => {
          [helpers.createDummyGenerator(), `team:release`]
       ];
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.getAzureSubs.restore();
       };
@@ -183,21 +191,21 @@ describe(`team:pipeline`, () => {
             azureSub: `azureSub`,
             installDep: `false`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`for azure should not compose with Docker`, () => {
+   it(`for azure should not compose with Docker`, function () {
       var deps = [
          // No docker gens are listed
          [helpers.createDummyGenerator(), `team:azure`],
@@ -212,12 +220,12 @@ describe(`team:pipeline`, () => {
             ``, ``, ``, ``, ``, ``,
             `servicePrincipalKey`, `token`
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          });
    });
 
-   it(`for docker should not compose with azure`, () => {
+   it(`for docker should not compose with azure`, function () {
       var deps = [
          // No azure gens are listed
          [helpers.createDummyGenerator(), `team:build`],
@@ -253,7 +261,7 @@ describe(`team:pipeline`, () => {
             dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts,
             dockerRegistryPassword, servicePrincipalKey, pat
          ])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          });
    });

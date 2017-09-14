@@ -854,7 +854,6 @@ function isTFSGreaterThan2017(account, token, callback) {
    if (isVSTS(account)) {
       callback(undefined, true);
    } else {
-
       // We can determine if this is 2017 or not by searching for a 
       // specific docker task.
       var options = addUserAgent({

@@ -4,35 +4,35 @@ const fs = require(`fs-extra`);
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 
-describe(`team:node docker`, () => {
+describe(`team:node docker`, function () {
    var spawnStub;
 
-   before(() => {
+   before(function () {
       return helpers.run(path.join(__dirname, `../../generators/node/index`))
          .withArguments([`nodeDemo`, `false`, `80`])
-         .on(`error`, (e) => {
+         .on(`error`, function (e) {
             assert.fail(e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
             spawnStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should not be called`, () => {
+   it(`bower install should not be called`, function () {
       assert.equal(0, spawnStub.withArgs(`bower`, [`install`], {
          stdio: ['pipe', 'pipe', process.stderr]
       }).callCount, `bower install was called`);
    });
 
-   it(`npm install should not be called`, () => {
+   it(`npm install should not be called`, function () {
       assert.equal(0, spawnStub.withArgs(`npm`, [`install`], {
          stdio: ['pipe', 'pipe', process.stderr]
       }).callCount, `npm install was called`);
    });
 
-   it(`files should be generated`, () => {
+   it(`files should be generated`, function () {
       assert.file([
          `nodeDemo/.bowerrc`,
          `nodeDemo/README.md`,
@@ -63,37 +63,37 @@ describe(`team:node docker`, () => {
    });
 });
 
-describe(`team:node paas`, () => {
+describe(`team:node paas`, function () {
    var bowerStub;
 
-   before(() => {
+   before(function () {
       return helpers.run(path.join(__dirname, `../../generators/node/index.js`))
          .withArguments([`nodeDemo`, `true`, `80`])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
             bowerStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should be called`, () => {
+   it(`bower install should be called`, function () {
       // Make sure the calls to install were made
       assert(bowerStub.withArgs(`bower`, [`install`], {
          stdio: ['pipe', 'pipe', process.stderr]
       }).calledOnce, `bower install not called once`);
    });
 
-   it(`npm install should be called`, () => {
+   it(`npm install should be called`, function () {
       // Make sure the calls to install were made
       assert(bowerStub.withArgs(`npm`, [`install`], {
          stdio: ['pipe', 'pipe', process.stderr]
       }).calledOnce, `npm install not called once`);
    });
 
-   it(`files should be generated`, () => {
+   it(`files should be generated`, function () {
       assert.file([
          `.bowerrc`,
          `README.md`,

@@ -16,7 +16,7 @@ env(__dirname  +  '/.env', {
 const pat = process.env.PAT;
 const tfs = process.env.ACCT;
 
-describe(`project:index cmdLine`, () => {
+describe(`project:index cmdLine`, function () {
    "use strict";
 
    var projectId;
@@ -30,7 +30,7 @@ describe(`project:index cmdLine`, () => {
       });
    });
 
-   it(`project should be created`, (done) => {
+   it(`project should be created`, function (done) {
       // Act
       let cmd = `yo team:project ${expectedProjectName} ${tfs} ${pat}`;
       
@@ -55,7 +55,7 @@ describe(`project:index cmdLine`, () => {
 
    after(function (done) {
       // runs after all tests in this block
-      vsts.deleteProject(tfs, projectId, pat, `yo team`, (e) => {
+      vsts.deleteProject(tfs, projectId, pat, `yo team`, function (e) {
          done(e);
       });
    });

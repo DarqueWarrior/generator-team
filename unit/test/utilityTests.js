@@ -14,14 +14,14 @@ const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
 sinon.test = sinonTest.configureTest(sinon);
 
-assert.linuxTargets = (a) => {
+assert.linuxTargets = function (a) {
    assert.equal(a[0].name, `Azure Container Instances (Linux)`);
    assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[2].name, `Docker Host`);
    assert.equal(a.length, 3, `Wrong number of entries`);
 };
 
-assert.allTargets = (a) => {
+assert.allTargets = function (a) {
    assert.equal(a[0].name, `Azure App Service`);
    assert.equal(a[1].name, `Azure Container Instances (Linux)`);
    assert.equal(a[2].name, `Azure App Service Docker (Linux)`);
@@ -29,13 +29,13 @@ assert.allTargets = (a) => {
    assert.equal(a.length, 4, `Wrong number of entries`);
 };
 
-assert.windowsTargets = (a) => {
+assert.windowsTargets = function (a) {
    assert.equal(a[0].name, `Azure App Service`);
    assert.equal(a.length, 1, `Wrong number of entries`);
 };
 
-describe(`utility`, () => {
-   it(`needsRegistry paas`, () => {
+describe(`utility`, function () {
+   it(`needsRegistry paas`, function () {
       // Arrange
       let cmdLnInput = {};
       const expected = false;
@@ -50,7 +50,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`needsRegistry docker`, () => {
+   it(`needsRegistry docker`, function () {
       // Arrange
       let cmdLnInput = {};
       const expected = true;
@@ -65,7 +65,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`needsRegistry dockerpaas`, () => {
+   it(`needsRegistry dockerpaas`, function () {
       // Arrange
       let cmdLnInput = {};
       const expected = true;
@@ -80,7 +80,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`needsRegistry acilinux`, () => {
+   it(`needsRegistry acilinux`, function () {
       // Arrange
       let cmdLnInput = {};
       const expected = true;
@@ -95,7 +95,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getTargets Default queue, node app type`, () => {
+   it(`getTargets Default queue, node app type`, function () {
       // Arrange
       let answers = {
          queue: `Default`,
@@ -109,7 +109,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted queue, node app type`, () => {
+   it(`getTargets Hosted queue, node app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted`,
@@ -123,7 +123,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted VS2017 queue, node app type`, () => {
+   it(`getTargets Hosted VS2017 queue, node app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted VS2017`,
@@ -137,7 +137,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted Linux Preview queue, node app type`, () => {
+   it(`getTargets Hosted Linux Preview queue, node app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted Linux Preview`,
@@ -151,7 +151,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Default queue, asp app type`, () => {
+   it(`getTargets Default queue, asp app type`, function () {
       // Arrange
       let answers = {
          queue: `Default`,
@@ -165,7 +165,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted queue, asp app type`, () => {
+   it(`getTargets Hosted queue, asp app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted`,
@@ -179,7 +179,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted VS2017 queue, asp app type`, () => {
+   it(`getTargets Hosted VS2017 queue, asp app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted VS2017`,
@@ -193,7 +193,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted Linux Preview queue, asp app type`, () => {
+   it(`getTargets Hosted Linux Preview queue, asp app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted Linux Preview`,
@@ -207,7 +207,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Default queue, java app type`, () => {
+   it(`getTargets Default queue, java app type`, function () {
       // Arrange
       let answers = {
          queue: `Default`,
@@ -221,7 +221,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted queue, java app type`, () => {
+   it(`getTargets Hosted queue, java app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted`,
@@ -235,7 +235,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted VS2017 queue, java app type`, () => {
+   it(`getTargets Hosted VS2017 queue, java app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted VS2017`,
@@ -249,7 +249,7 @@ describe(`utility`, () => {
       assert.allTargets(actual);
    });
 
-   it(`getTargets Hosted Linux Preview queue, java app type`, () => {
+   it(`getTargets Hosted Linux Preview queue, java app type`, function () {
       // Arrange
       let answers = {
          queue: `Hosted Linux Preview`,
@@ -263,7 +263,7 @@ describe(`utility`, () => {
       assert.linuxTargets(actual);
    });
 
-   it(`getTargets Default queue, aspFull app type`, () => {
+   it(`getTargets Default queue, aspFull app type`, function () {
       // Arrange
       let answers = {
          queue: `Default`,
@@ -277,7 +277,7 @@ describe(`utility`, () => {
       assert.windowsTargets(actual);
    });
 
-   it(`needsDockerHost default queue dockerpaas no answers`, () => {
+   it(`needsDockerHost default queue dockerpaas no answers`, function () {
 
       // Arrange
       let expected = true;
@@ -296,7 +296,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`needsDockerHost default queue dockerpaas`, () => {
+   it(`needsDockerHost default queue dockerpaas`, function () {
 
       // Arrange
       let expected = true;
@@ -317,7 +317,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getAppTypes linux`, () => {
+   it(`getAppTypes linux`, function () {
 
       // Arrange
       let answers = {
@@ -331,7 +331,7 @@ describe(`utility`, () => {
       assert.equal(3, actual.length, `Wrong number of items returned`);
    });
 
-   it(`getAppTypes default`, () => {
+   it(`getAppTypes default`, function () {
 
       // Arrange
       let answers = {
@@ -345,7 +345,7 @@ describe(`utility`, () => {
       assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
-   it(`addUserAgent`, () => {
+   it(`addUserAgent`, function () {
       // Arrange
       let options = {
          method: 'GET',
@@ -367,7 +367,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual.headers['user-agent']);
    });
 
-   it(`getUserAgent`, () => {
+   it(`getUserAgent`, function () {
       // Arrange
       let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 
@@ -378,7 +378,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getPATPrompt should return generic message`, () => {
+   it(`getPATPrompt should return generic message`, function () {
       // Arrange
       let expected = `What is your Personal Access Token?`;
 
@@ -389,7 +389,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getPATPrompt should return TFS message`, () => {
+   it(`getPATPrompt should return TFS message`, function () {
       // Arrange
       let expected = `What is your TFS Personal Access Token?`;
 
@@ -402,7 +402,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isDockerHub true`, () => {
+   it(`isDockerHub true`, function () {
       // Arrange
       let expected = true;
       let dockerRegistry = `https://Index.Docker.io/v1/`;
@@ -414,7 +414,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getDockerRegistryServer`, () => {
+   it(`getDockerRegistryServer`, function () {
       // Arrange
       let expected = `index.azure.io`;
       let dockerRegistry = `https://index.azure.io/`;
@@ -426,7 +426,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getImageNamespace with registryID`, () => {
+   it(`getImageNamespace with registryID`, function () {
       // Arrange
       let expected = "imagenamespace";
 
@@ -437,7 +437,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getImageNamespace with no registryID and ep`, () => {
+   it(`getImageNamespace with no registryID and ep`, function () {
       // Arrange
       let expected = "images.azure.io";
 
@@ -454,7 +454,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getImageNamespace with no registryID and ep`, () => {
+   it(`getImageNamespace with no registryID and ep`, function () {
       // Arrange
       let expected = "images.azure.io";
 
@@ -471,7 +471,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isDockerHub false`, () => {
+   it(`isDockerHub false`, function () {
       // Arrange
       let expected = false;
       let dockerRegistry = `https://index.azure.io/`;
@@ -483,7 +483,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`getDefaultPortMapping java`, () => {
+   it(`getDefaultPortMapping java`, function () {
       var actual = util.getDefaultPortMapping({
          type: `java`,
          target: `docker`
@@ -491,7 +491,7 @@ describe(`utility`, () => {
       assert.equal(`8080:8080`, actual);
    });
 
-   it(`getDefaultPortMapping asp`, () => {
+   it(`getDefaultPortMapping asp`, function () {
       var actual = util.getDefaultPortMapping({
          type: `asp`,
          target: `docker`
@@ -499,7 +499,7 @@ describe(`utility`, () => {
       assert.equal(`80:80`, actual);
    });
 
-   it(`getDefaultPortMapping node`, () => {
+   it(`getDefaultPortMapping node`, function () {
       var actual = util.getDefaultPortMapping({
          type: `node`,
          target: `docker`
@@ -507,7 +507,7 @@ describe(`utility`, () => {
       assert.equal(`3000:3000`, actual);
    });
 
-   it(`getDefaultPortMapping default paas`, () => {
+   it(`getDefaultPortMapping default paas`, function () {
       var actual = util.getDefaultPortMapping({
          type: `unknown`,
          target: `dockerpaas`
@@ -515,7 +515,7 @@ describe(`utility`, () => {
       assert.equal(`80`, actual);
    });
 
-   it(`getDefaultPortMapping java paas`, () => {
+   it(`getDefaultPortMapping java paas`, function () {
       var actual = util.getDefaultPortMapping({
          type: `java`,
          target: `dockerpaas`
@@ -523,7 +523,7 @@ describe(`utility`, () => {
       assert.equal(`8080`, actual);
    });
 
-   it(`getDefaultPortMapping asp paas`, () => {
+   it(`getDefaultPortMapping asp paas`, function () {
       var actual = util.getDefaultPortMapping({
          type: `asp`,
          target: `dockerpaas`
@@ -531,7 +531,7 @@ describe(`utility`, () => {
       assert.equal(`80`, actual);
    });
 
-   it(`getDefaultPortMapping node paas`, () => {
+   it(`getDefaultPortMapping node paas`, function () {
       var actual = util.getDefaultPortMapping({
          type: `node`,
          target: `dockerpaas`
@@ -539,7 +539,7 @@ describe(`utility`, () => {
       assert.equal(`3000`, actual);
    });
 
-   it(`getDefaultPortMapping default paas`, () => {
+   it(`getDefaultPortMapping default paas`, function () {
       var actual = util.getDefaultPortMapping({
          type: `unknown`,
          target: `dockerpaas`
@@ -567,10 +567,10 @@ describe(`utility`, () => {
       proxyApp.getPools({
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`
-      }).then(() => {
+      }).then(function () {
          assert.fail();
          done();
-      }, (e) => {
+      }, function (e) {
          assert.equal(`boom`, e);
          done();
       });
@@ -598,84 +598,84 @@ describe(`utility`, () => {
       proxyApp.getPools({
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`
-      }).then((x) => {
+      }).then(function (x) {
          assert.equal(`UnitTest`, x);
          done();
-      }, (e) => {
+      }, function (e) {
          assert.fail();
          done();
       });
    });
 
-   it(`validatePortMapping should return true`, () => {
+   it(`validatePortMapping should return true`, function () {
       assert.ok(util.validatePortMapping(`80:80`));
    });
 
-   it(`validatePortMapping should return error`, () => {
+   it(`validatePortMapping should return error`, function () {
       assert.equal(`You must provide a Port Mapping`, util.validatePortMapping(null));
    });
 
-   it(`validateApplicationName should return error`, () => {
+   it(`validateApplicationName should return error`, function () {
       assert.equal(`You must provide a name for your application`, util.validateApplicationName(null));
    });
 
-   it(`validateGroupID should return error`, () => {
+   it(`validateGroupID should return error`, function () {
       assert.equal(`You must provide a Group ID`, util.validateGroupID(null));
    });
 
-   it(`validatePersonalAccessToken should return error`, () => {
+   it(`validatePersonalAccessToken should return error`, function () {
       assert.equal(`You must provide a Personal Access Token`, util.validatePersonalAccessToken(null));
    });
 
-   it(`validateTFS should return error`, () => {
+   it(`validateTFS should return error`, function () {
       assert.equal(`You must provide your TFS URL or Team Service account name`, util.validateTFS(null));
    });
 
-   it(`validateAzureSub should return error`, () => {
+   it(`validateAzureSub should return error`, function () {
       assert.equal(`You must provide an Azure Subscription Name`, util.validateAzureSub(null));
    });
 
-   it(`validateDockerHost should return error`, () => {
+   it(`validateDockerHost should return error`, function () {
       assert.equal(`You must provide a Docker Host URL`, util.validateDockerHost(null));
    });
 
-   it(`validateDockerCertificatePath should return error`, () => {
+   it(`validateDockerCertificatePath should return error`, function () {
       assert.equal(`You must provide a Docker Certificate Path`, util.validateDockerCertificatePath(null));
    });
 
-   it(`validateDockerHubID should return error`, () => {
+   it(`validateDockerHubID should return error`, function () {
       assert.equal(`You must provide a Docker Registry username`, util.validateDockerHubID(null));
    });
 
-   it(`validateDockerHubPassword should return error`, () => {
+   it(`validateDockerHubPassword should return error`, function () {
       assert.equal(`You must provide a Docker Registry Password`, util.validateDockerHubPassword(null));
    });
 
-   it(`validateDockerRegistry should return error on null`, () => {
+   it(`validateDockerRegistry should return error on null`, function () {
       assert.equal(`You must provide a Docker Registry URL`, util.validateDockerRegistry(null));
    });
 
-   it(`validateDockerRegistry should return error on missing http(s)`, () => {
+   it(`validateDockerRegistry should return error on missing http(s)`, function () {
       assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`microsoft.azurecr.io`));
    });
 
-   it(`validateDockerRegistry should return error on missing http(s)`, () => {
+   it(`validateDockerRegistry should return error on missing http(s)`, function () {
       assert.equal(true, util.validateDockerRegistry(`https://microsoft.azurecr.io`));
    });
 
-   it(`validateAzureSubID should return error`, () => {
+   it(`validateAzureSubID should return error`, function () {
       assert.equal(`You must provide an Azure Subscription ID`, util.validateAzureSubID(null));
    });
 
-   it(`validateAzureTenantID should return error`, () => {
+   it(`validateAzureTenantID should return error`, function () {
       assert.equal(`You must provide an Azure Tenant ID`, util.validateAzureTenantID(null));
    });
 
-   it(`validateServicePrincipalID should return error`, () => {
+   it(`validateServicePrincipalID should return error`, function () {
       assert.equal(`You must provide a Service Principal ID`, util.validateServicePrincipalID(null));
    });
 
-   it(`validateServicePrincipalKey should return error`, () => {
+   it(`validateServicePrincipalKey should return error`, function () {
       assert.equal(`You must provide a Service Principal Key`, util.validateServicePrincipalKey(null));
    });
 
@@ -704,7 +704,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
@@ -897,7 +897,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -925,7 +925,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -949,7 +949,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -975,7 +975,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1003,7 +1003,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1045,7 +1045,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1073,7 +1073,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1097,7 +1097,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1121,7 +1121,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1145,8 +1145,8 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
-      logger.log.error = () => {};
+      logger.log = function () {};
+      logger.log.error = function () {};
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1332,7 +1332,7 @@ describe(`utility`, () => {
       });
    }));
 
-   it(`extractInstance good`, () => {
+   it(`extractInstance good`, function () {
       // Arrange
       var expected = `vsts`;
 
@@ -1343,7 +1343,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`extractInstance account only`, () => {
+   it(`extractInstance account only`, function () {
       // Arrange
       var expected = `vsts`;
 
@@ -1354,7 +1354,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isTFSGreaterThan2017 false`, (done) => {
+   it(`isTFSGreaterThan2017 false`, function (done) {
       // Arrange
       var expected = false;
 
@@ -1385,7 +1385,7 @@ describe(`utility`, () => {
       });
    });
 
-   it(`isTFSGreaterThan2017 passed VSTS true`, (done) => {
+   it(`isTFSGreaterThan2017 passed VSTS true`, function (done) {
       // Arrange
       var expected = true;
 
@@ -1397,7 +1397,7 @@ describe(`utility`, () => {
       });
    });
 
-   it(`isTFSGreaterThan2017 true`, (done) => {
+   it(`isTFSGreaterThan2017 true`, function (done) {
       // Arrange
       var expected = true;
 
@@ -1428,7 +1428,7 @@ describe(`utility`, () => {
       });
    });
 
-   it(`isVSTS false`, () => {
+   it(`isVSTS false`, function () {
       // Arrange
       var expected = false;
 
@@ -1439,7 +1439,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isVSTS true`, () => {
+   it(`isVSTS true`, function () {
       // Arrange
       var expected = true;
 
@@ -1450,7 +1450,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`get full URL for TFS`, () => {
+   it(`get full URL for TFS`, function () {
       // Arrange
       var expected = `http://tfs:8080/tfs/DefaultCollection`;
 
@@ -1461,7 +1461,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`get full URL for VSTS`, () => {
+   it(`get full URL for VSTS`, function () {
       // Arrange
       var expected = `https://vsts.visualstudio.com`;
 
@@ -1472,7 +1472,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`get full URL for VSTS for RM`, () => {
+   it(`get full URL for VSTS for RM`, function () {
       // Arrange
       var expected = `https://vsts.vsrm.visualstudio.com/DefaultCollection`;
 
@@ -1507,7 +1507,7 @@ describe(`utility`, () => {
       });
 
       var logger = this.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Act
       proxyApp.findAzureSub(
@@ -1543,10 +1543,10 @@ describe(`utility`, () => {
       proxyApp.getAzureSubs({
          tfs: `vsts`,
          pat: `token`
-      }).then(() => {
+      }).then(function () {
          assert.fail();
          done();
-      }, (e) => {
+      }, function (e) {
          assert.equal(`boom`, e);
          done();
       });
@@ -1584,16 +1584,16 @@ describe(`utility`, () => {
       proxyApp.getAzureSubs({
          tfs: `vsts`,
          pat: `token`
-      }).then((x) => {
+      }).then(function (x) {
          assert.equal(expected, JSON.stringify(x));
          done();
-      }, (e) => {
+      }, function (e) {
          assert.fail();
          done();
       });
    });
 
-   it(`isDocker paas`, () => {
+   it(`isDocker paas`, function () {
       // Arrange
       var expected = false;
 
@@ -1604,7 +1604,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isDocker acilinux`, () => {
+   it(`isDocker acilinux`, function () {
       // Arrange
       var expected = true;
 
@@ -1615,7 +1615,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isDocker docker`, () => {
+   it(`isDocker docker`, function () {
       // Arrange
       var expected = true;
 
@@ -1626,7 +1626,7 @@ describe(`utility`, () => {
       assert.equal(expected, actual);
    });
 
-   it(`isDocker dockerpaas`, () => {
+   it(`isDocker dockerpaas`, function () {
       // Arrange
       var expected = true;
 

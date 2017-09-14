@@ -4,27 +4,27 @@ const fs = require(`fs-extra`);
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 
-describe(`team:java docker`, () => {
+describe(`team:java docker`, function () {
    var spawnStub;
 
-   before(() => {
+   before(function () {
       return helpers.run(path.join(__dirname, `../../generators/java/index`))
          .withArguments([`javaUnitTest`, `docker`, `false`])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
             spawnStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should not be called`, () => {
+   it(`bower install should not be called`, function () {
       assert.equal(0, spawnStub.withArgs(`bower`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).callCount, `bower install was called`);
    });
 
-   it(`files should be generated`, () => {
+   it(`files should be generated`, function () {
       assert.file([
          `javaUnitTest/pom.xml`,
          `javaUnitTest/.bowerrc`,
@@ -45,28 +45,28 @@ describe(`team:java docker`, () => {
    });
 });
 
-describe(`team:java paas`, () => {
+describe(`team:java paas`, function () {
    var bowerStub;
 
-   before(() => {
+   before(function () {
       return helpers.run(path.join(__dirname, `../../generators/java/index`))
          .withArguments([`javaUnitTest`, `testGroupID`, `true`, `80`])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
             bowerStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should be called`, () => {
+   it(`bower install should be called`, function () {
       // Make sure the calls to install were made
       assert(bowerStub.withArgs(`bower`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).calledOnce, `bower install not called once`);
    });
 
-   it(`files should be generated`, () => {
+   it(`files should be generated`, function () {
       assert.file([
          `pom.xml`,
          `.bowerrc`,

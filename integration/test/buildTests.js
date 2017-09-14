@@ -66,7 +66,7 @@ describe(`Testing PaaS builds`, function () {
 
          context(`Creating ${iteration.appType} build`, function () {
 
-            it(`${iteration.appType} - ${projectName}${iteration.suffix}-CI build should be created`, (done) => {
+            it(`${iteration.appType} - ${projectName}${iteration.suffix}-CI build should be created`, function (done) {
                // Arrange
                expectedName = `${projectName}${iteration.suffix}-CI`;
 
@@ -109,7 +109,7 @@ describe(`Testing PaaS builds`, function () {
 
       after(function (done) {
          // runs after all tests in this block
-         vsts.deleteProject(acct, projectId, pat, `yo team`, (e) => {
+         vsts.deleteProject(acct, projectId, pat, `yo team`, function (e) {
             done(e);
          });
       });
@@ -183,7 +183,7 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
       iterations.forEach(function (iteration) {
          context(`Creating ${iteration.appType} build targeting ${iteration.target} with Default queue`, function () {
 
-            it(`${iteration.appType} - ${projectName}${iteration.suffix}-CI build should NOT be created`, (done) => {
+            it(`${iteration.appType} - ${projectName}${iteration.suffix}-CI build should NOT be created`, function (done) {
                // Arrange
                expectedName = `${projectName}${iteration.suffix}-CI`;
 
@@ -262,7 +262,7 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
 
       after(function (done) {
          // runs after all tests in this block
-         vsts.deleteProject(acct, projectId, pat, `yo team`, (e) => {
+         vsts.deleteProject(acct, projectId, pat, `yo team`, function (e) {
             done(e);
          });
       });

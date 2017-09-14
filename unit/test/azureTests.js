@@ -9,8 +9,8 @@ const azure = require(`../../generators/azure/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
-describe(`azure:index`, () => {
-   it(`prompts vsts`, () => {
+describe(`azure:index`, function () {
+   it(`prompts vsts`, function () {
       var azureStub;
 
       return helpers.run(path.join(__dirname, `../../generators/azure/index`))
@@ -32,7 +32,7 @@ describe(`azure:index`, () => {
 
             azureStub = sinon.stub(azure, `run`).callsArgWith(2, null, null);
          })
-         .on(`end`, (e) => {
+         .on(`end`, function (e) {
             azure.run.restore();
             util.getAzureSubs.restore();
 
@@ -109,9 +109,9 @@ describe(`azure:app`, function () {
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, { name: `endpoint`, id: 1 });
 
       var logger = sinon.stub();
-      logger.log = () => { };
-      logger.log.error = () => { };
-      logger.env = { error: () => { } };
+      logger.log = function () { };
+      logger.log.error = function () { };
+      logger.env = { error: function () { } };
 
       var args = {
          tfs: `vsts`,
@@ -161,7 +161,7 @@ describe(`azure:app`, function () {
 
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          azure.run(args, logger);
       }, function (e) {
          done();
@@ -241,8 +241,8 @@ describe(`azure:app`, function () {
       this.stub(util, `checkStatus`).callsArgWith(3, null, { operationStatus: { state: `Failed` } });
 
       var logger = sinon.stub();
-      logger.log = () => { };
-      logger.log.error = () => { };
+      logger.log = function () { };
+      logger.log.error = function () { };
 
       // Create endpoint
       requestStub.onCall(0).yields(null, null, { name: `endpoint` });
@@ -267,8 +267,8 @@ describe(`azure:app`, function () {
       this.stub(util, `checkStatus`).callsArgWith(3, `boom`, undefined);
 
       var logger = sinon.stub();
-      logger.log = () => { };
-      logger.log.error = () => { };
+      logger.log = function () { };
+      logger.log.error = function () { };
 
       // Create endpoint
       requestStub.onCall(0).yields(null, null, { name: `endpoint` });

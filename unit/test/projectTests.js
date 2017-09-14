@@ -9,26 +9,26 @@ const project = require(`../../generators/project/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
-describe(`project:index cmdLine`, () => {
+describe(`project:index cmdLine`, function () {
    "use strict";
 
-   it(`project should be found`, () => {
+   it(`project should be found`, function () {
       var spy;
       var utilTryFindProject;
 
       return helpers.run(path.join(__dirname, `../../generators/project/index`))
          .withArguments([`unitTest`, `http://localhost:8080/tfs/DefaultCollection`, `token`])
-         .on(`error`, (error) => {
+         .on(`error`, function (error) {
             util.tryFindProject.restore();
 
             assert.fail(error);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
             generator.log = spy = sinon.spy();
             utilTryFindProject = sinon.stub(util, `tryFindProject`).callsArgWith(4, null, JSON.stringify({ name: `unitTest`, id: 1 }));
          })
-         .on(`end`, () => {
+         .on(`end`, function () {
             var call = spy.getCall(0);
             assert.ok(call, `generator.log was not called`);
 
@@ -42,7 +42,7 @@ describe(`project:index cmdLine`, () => {
    });
 });
 
-describe(`project:app`, () => {
+describe(`project:app`, function () {
    "use strict";
 
    it(`run with error should return error`, sinon.test(function (done) {
@@ -59,7 +59,7 @@ describe(`project:app`, () => {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: () => { }
+         log: function () { }
       };
 
       // Act
@@ -70,9 +70,9 @@ describe(`project:app`, () => {
 
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          project.run(args);
-      }, (err) => {
+      }, function (err) {
          done();
          return true;
       });
@@ -111,7 +111,7 @@ describe(`project:app`, () => {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: () => { }
+         log: function () { }
       };
 
       // Act
@@ -161,7 +161,7 @@ describe(`project:app`, () => {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: () => { }
+         log: function () { }
       };
 
       // Act
@@ -209,10 +209,10 @@ describe(`project:app`, () => {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: () => { }
+         log: function () { }
       };
 
-      args.log.error = () => { };
+      args.log.error = function () { };
 
       // Act
       proxyApp.findOrCreateProject(

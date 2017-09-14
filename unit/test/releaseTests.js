@@ -11,14 +11,14 @@ const release = require(`../../generators/release/app`);
 
 sinon.test = sinonTest.configureTest(sinon);
 
-describe(`release:index`, () => {
+describe(`release:index`, function () {
    "use strict";
 
-   it(`test prompts node dockerpaas vsts`, () => {
+   it(`test prompts node dockerpaas vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -44,11 +44,11 @@ describe(`release:index`, () => {
             dockerRegistryPassword: `dockerRegistryPassword`,
             dockerPorts: `3000:3000`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
@@ -59,16 +59,16 @@ describe(`release:index`, () => {
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
             stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts node dockerpaas tfs`, () => {
+   it(`test prompts node dockerpaas tfs`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -94,11 +94,11 @@ describe(`release:index`, () => {
             dockerRegistryPassword: `dockerRegistryPassword`,
             dockerPorts: `3000:3000`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
@@ -109,12 +109,12 @@ describe(`release:index`, () => {
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
             stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts node acilinux vsts`, () => {
+   it(`test prompts node acilinux vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
@@ -144,11 +144,11 @@ describe(`release:index`, () => {
             dockerRegistryPassword: `dockerRegistryPassword`,
             dockerPorts: `3000:3000`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
@@ -158,17 +158,16 @@ describe(`release:index`, () => {
             stubs.tryFindRelease(expectedAccount, `acilinux`, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
             stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
-         })
-         .on(`end`, e => {
+         }).on(`end`, e => {
             cleanUp();
          });
    });
 
-   it(`test prompts node acilinux tfs`, () => {
+   it(`test prompts node acilinux tfs`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -194,11 +193,11 @@ describe(`release:index`, () => {
             dockerRegistryPassword: `dockerRegistryPassword`,
             dockerPorts: `3000:3000`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
@@ -209,16 +208,16 @@ describe(`release:index`, () => {
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
             stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts node docker vsts`, () => {
+   it(`test prompts node docker vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -240,11 +239,11 @@ describe(`release:index`, () => {
             dockerRegistryId: `dockerRegistryId`,
             dockerPorts: `3000:3000`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
@@ -254,16 +253,16 @@ describe(`release:index`, () => {
             stubs.findDockerServiceEndpoint(expectedAccount, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts node docker tfs`, () => {
+   it(`test prompts node docker tfs`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -285,11 +284,11 @@ describe(`release:index`, () => {
             dockerRegistryId: `dockerRegistryId`,
             dockerPorts: `3000:3000`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
@@ -299,16 +298,16 @@ describe(`release:index`, () => {
             stubs.findDockerServiceEndpoint(expectedAccount, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts node paas`, () => {
+   it(`test prompts node paas`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -328,11 +327,11 @@ describe(`release:index`, () => {
             target: `paas`,
             azureSub: `azureSub`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
@@ -342,16 +341,16 @@ describe(`release:index`, () => {
             stubs.tryFindRelease(expectedAccount, `paas`, expectedToken);
             stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts java docker`, () => {
+   it(`test prompts java docker`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -373,11 +372,11 @@ describe(`release:index`, () => {
             dockerRegistryId: `dockerRegistryId`,
             dockerPorts: `8080:8080`
          })
-         .on(`error`, (error) => {
+         .on(`error`, function (error) {
             cleanUp();
             console.log(`Oh Noes!`, error);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             stubs.findProject(expectedAccount, `javaDemo`, expectedToken);
@@ -387,16 +386,16 @@ describe(`release:index`, () => {
             stubs.findDockerServiceEndpoint(expectedAccount, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts java paas`, () => {
+   it(`test prompts java paas`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -416,11 +415,11 @@ describe(`release:index`, () => {
             target: `paas`,
             azureSub: `azureSub`
          })
-         .on(`error`, (error) => {
+         .on(`error`, function (error) {
             cleanUp();
             console.log(`Oh Noes!`, error);
          })
-         .on(`ready`, (generator) => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
@@ -430,16 +429,16 @@ describe(`release:index`, () => {
             stubs.tryFindRelease(expectedAccount, `paas`, expectedToken);
             stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
          })
-         .on(`end`, (e) => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 
-   it(`test prompts asp docker vsts`, () => {
+   it(`test prompts asp docker vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
-      let cleanUp = () => {
+      let cleanUp = function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
@@ -461,11 +460,11 @@ describe(`release:index`, () => {
             dockerRegistryId: `dockerRegistryId`,
             dockerPorts: `80:80`
          })
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             cleanUp();
             console.log(`Oh Noes!`, e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             stubs.findProject(expectedAccount, `aspDemo`, expectedToken);
@@ -475,13 +474,13 @@ describe(`release:index`, () => {
             stubs.findDockerServiceEndpoint(expectedAccount, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
          })
-         .on(`end`, e => {
+         .on(`end`, function (e) {
             cleanUp();
          });
    });
 });
 
-describe(`release:app`, () => {
+describe(`release:app`, function () {
    "use strict";
 
    let expectedToken = `OnRva2Vu`;
@@ -498,7 +497,7 @@ describe(`release:app`, () => {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -541,7 +540,7 @@ describe(`release:app`, () => {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -564,9 +563,9 @@ describe(`release:app`, () => {
 
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          release.run(args, logger);
-      }, e => {
+      }, function (e) {
          done();
          return true;
       });
@@ -605,7 +604,7 @@ describe(`release:app`, () => {
       });
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Create release
       requestStub.onCall(0).yields(null, {
@@ -664,7 +663,7 @@ describe(`release:app`, () => {
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       var args = {
          build: {
@@ -739,7 +738,7 @@ describe(`release:app`, () => {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = () => {};
+      logger.log = function () {};
 
       // Create release
       requestStub.onCall(0).yields(null, {
@@ -776,9 +775,9 @@ describe(`release:app`, () => {
       // Act
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(() => {
+      assert.throws(function () {
          proxyApp.findOrCreateRelease(args, logger, done);
-      }, e => {
+      }, function (e) {
          done();
          return true;
       });

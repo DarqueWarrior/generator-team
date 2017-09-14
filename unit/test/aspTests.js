@@ -3,31 +3,31 @@ const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 
-describe(`team:asp docker`, () => {
+describe(`team:asp docker`, function () {
    var spawnStub;
 
-   before(() => {
+   before(function () {
       return helpers.run(path.join(__dirname, `../../generators/asp/index`))
          .withArguments([`aspUnitTest`, `false`, `docker`, `tcp://23.1.1.1:2376`])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
             spawnStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should not be called`, () => {
+   it(`bower install should not be called`, function () {
       assert.equal(0, spawnStub.withArgs(`bower`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).callCount, `bower install was called`);
    });
 
-   it(`dotnet restore should not be called`, () => {
+   it(`dotnet restore should not be called`, function () {
       assert.equal(0, spawnStub.withArgs(`dotnet`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).callCount, `dotnet restore was called`);
    });
 
-   it(`files should be generated`, () => {
+   it(`files should be generated`, function () {
       assert.file([
          `aspUnitTest/.bowerrc`,
          `aspUnitTest/README.md`,
@@ -47,33 +47,33 @@ describe(`team:asp docker`, () => {
    });
 });
 
-describe(`team:asp paas`, () => {
+describe(`team:asp paas`, function () {
    var bowerStub;
 
-   before(() => {
+   before(function () {
       return helpers.run(path.join(__dirname, `../../generators/asp/index`))
          .withArguments([`aspUnitTest`, `true`, `paas`])
-         .on(`error`, e => {
+         .on(`error`, function (e) {
             assert.fail(e);
          })
-         .on(`ready`, generator => {
+         .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
             bowerStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should be called`, () => {
+   it(`bower install should be called`, function () {
       // Make sure the calls to install were made
       assert(bowerStub.withArgs(`bower`, [`install`], { stdio: ['pipe', 'pipe', process.stderr] }).calledOnce, `bower install not called once`);
    });
 
-   it(`dotnet restore should be called`, () => {
+   it(`dotnet restore should be called`, function () {
       // Make sure the calls to install were made
       assert(bowerStub.withArgs(`dotnet`, [`restore`], { stdio: ['pipe', 'pipe', process.stderr] }).calledOnce, `dotnet restore not called once`);
    });
 
-   it(`files should be generated`, () => {
+   it(`files should be generated`, function () {
       assert.file([
          `.bowerrc`,
          `README.md`,

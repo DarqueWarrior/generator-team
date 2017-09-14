@@ -33,7 +33,7 @@ function deleteResourceGroup(resourceGroupName, callback) {
    // Only try and delete if you find it.
    resourceClient.resourceGroups.list(function (err, result, request, response) {
 
-      var found = result.filter((i) => {
+      var found = result.filter(function (i) {
          return i.name === resourceGroupName;
       });
 

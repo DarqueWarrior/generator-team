@@ -10,6 +10,7 @@
         "dockerpaas",
         "paas",
         "proxyquire",
+        "refactorying",
         "vsts"
     ],
     // flagWords - list of words to be always considered incorrect
