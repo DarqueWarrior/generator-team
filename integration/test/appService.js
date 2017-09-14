@@ -19,78 +19,6 @@ env(__dirname + '/.env', {
    overwrite: true
 });
 
-describe(`Azure App Service (Windows) using Default queue`, function () {
-   "use strict";
-   var iterations = [{
-      appType: `aspFull`,
-      appName: `aspFullTest`,
-      target: `paas`,
-      context: `Azure App Service (Windows)`,
-      suffix: ``,
-      queue: `Default`,
-      title: `Home Page - My .NET Framework Application`
-   }, {
-      appType: `node`,
-      appName: `nodePaaSTest`,
-      target: `paas`,
-      context: `Azure App Service (Windows)`,
-      suffix: ``,
-      queue: `Default`,
-      title: `Home Page - My Express Application`
-   }, {
-      appType: `asp`,
-      appName: `aspPaaSTest`,
-      target: `paas`,
-      context: `Azure App Service (Windows)`,
-      suffix: ``,
-      queue: `Default`,
-      title: `Home Page - My .NET Core Application`
-   }, {
-      appType: `java`,
-      appName: `javaPaaSTest`,
-      target: `paas`,
-      context: `Azure App Service (Windows)`,
-      groupId: `unitTest`,
-      suffix: ``,
-      queue: `Default`,
-      title: `Home Page - My Spring Application`
-   }];
-
-   iterations.forEach(runTests);
-});
-
-describe(`Azure App Service Docker (Linux) using Default queue`, function () {
-   "use strict";
-   var iterations = [{
-      appType: `node`,
-      appName: `nodeDockerPaaSTest`,
-      target: `dockerpaas`,
-      context: `Azure App Service Docker (Linux)`,
-      suffix: `-Docker`,
-      queue: `Default`,
-      title: `Home Page - My Express Application`
-   }, {
-      appType: `asp`,
-      appName: `aspDockerPaaSTest`,
-      target: `dockerpaas`,
-      context: `Azure App Service Docker (Linux)`,
-      suffix: `-Docker`,
-      queue: `Default`,
-      title: `Home Page - My .NET Core Application`
-   }, {
-      appType: `java`,
-      appName: `javaDockerPaaSTest`,
-      target: `dockerpaas`,
-      context: `Azure App Service Docker (Linux)`,
-      groupId: `unitTest`,
-      suffix: `-Docker`,
-      queue: `Default`,
-      title: `Home Page - My Spring Application`
-   }];
-
-   iterations.forEach(runTests);
-});
-
 function requestSite(applicationName, env, title, cb) {
    azure.getWebsiteURL(`${applicationName}${env}`, function (e, url) {
       assert.ifError(e);
@@ -142,7 +70,7 @@ function runTests(iteration) {
    var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
 
    // The number of levels up from the folder the test are executed in to the 
-   // folder where the repo was cloned.  This is not the same when run locally
+   // folder where the repository was cloned.  This is not the same when run locally
    // vs. run on a build machine. 
    var levelsUp = process.env.LEVELS_UP || `/../`;
 
@@ -492,3 +420,7 @@ function runTests(iteration) {
       });
    });
 }
+
+module.exports = {
+   runTests: runTests
+};
