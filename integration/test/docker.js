@@ -55,6 +55,8 @@ function runTests(iteration) {
 
    var installDep = `false`;
    context(`${iteration.appType}`, function () {
+      this.bail(true);
+
       before(function (done) {
          // runs before all tests in this block
          // The Azure connection will be use to find IPs of ACI
