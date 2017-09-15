@@ -247,9 +247,10 @@ function runTests(iteration) {
 
                azure.getAciIp(`${iteration.applicationName}Dev`, function (e, url) {
                   assert.ifError(e);
-                  util.log(`trying to access ${url}`);
+                  let fullUrl = `${url}:${dockerPorts}`;
+                  util.log(`trying to access ${fullUrl}`);
                   request({
-                     url: url
+                     url: fullUrl
                   }, function (err, res, body) {
                      assert.ifError(err);
 

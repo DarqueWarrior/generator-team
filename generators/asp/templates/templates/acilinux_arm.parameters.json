@@ -9,7 +9,7 @@
          "value": "Linux"
       },
       "ports": {
-         "value": "80"
+         "value": "<%= port %>"
       }
    }
 }
