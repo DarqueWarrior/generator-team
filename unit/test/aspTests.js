@@ -47,12 +47,12 @@ describe(`team:asp docker`, function () {
    });
 });
 
-describe(`team:asp paas`, function () {
+describe.only(`team:asp paas`, function () {
    var bowerStub;
 
    before(function () {
       return helpers.run(path.join(__dirname, `../../generators/asp/index`))
-         .withArguments([`aspUnitTest`, `true`, `paas`])
+         .withArguments([`aspUnitTest`, `true`, `80`])
          .on(`error`, function (e) {
             assert.fail(e);
          })
