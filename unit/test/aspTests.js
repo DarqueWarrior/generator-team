@@ -47,7 +47,7 @@ describe(`team:asp docker`, function () {
    });
 });
 
-describe.only(`team:asp paas`, function () {
+describe(`team:asp paas`, function () {
    var bowerStub;
 
    before(function () {
