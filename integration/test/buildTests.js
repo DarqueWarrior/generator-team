@@ -116,7 +116,7 @@ describe(`Testing PaaS builds`, function () {
    });
 });
 
-describe.only(`Testing Docker builds without Docker service endpoint`, function () {
+describe(`Testing Docker builds without Docker service endpoint`, function () {
    "use strict";
 
    let uuid = uuidV4();
