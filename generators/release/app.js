@@ -122,6 +122,10 @@ function getRelease(args, callback) {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
             release = `vsts_release_${args.target}.json`;
+
+            if(!util.isVSTS(args.tfs) && args.target === `dockerpaas`){
+               release = `tfs_2018_release_${args.target}.json`;
+            }
          } else {
             release = `tfs_release_${args.target}.json`;
          }
