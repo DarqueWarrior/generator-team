@@ -131,7 +131,11 @@ function getRelease(args, callback) {
    } else {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
-            release = `vsts_release.json`;
+            if (util.isVSTS(args.tfs)) {
+               release = `vsts_release.json`;
+            } else {
+               release = `tfs_2018_release.json`;
+            }
          } else {
             release = `tfs_release.json`;
          }

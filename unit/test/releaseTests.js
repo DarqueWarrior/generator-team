@@ -894,7 +894,7 @@ describe(`release:app`, function () {
 
    it(`getRelease node tfs 2018 paas`, sinon.test(function (done) {
       // Arrange 
-      let expected = `vsts_release.json`;
+      let expected = `tfs_2018_release.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, true);
 
       // Act
