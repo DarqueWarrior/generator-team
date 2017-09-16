@@ -54,7 +54,7 @@ describe(`Testing PaaS builds`, function () {
       before(function (done) {
          // runs before all tests in this block
          util.log(`creating project: ${projectName}`);
-         vsts.createProject(acct, projectName, pat, `yo Team`, (e, body) => {
+         vsts.createProject(acct, projectName, pat, `yo Team`, function (e, body) {
             if (!e) {
                projectId = body.id;
             }
@@ -78,7 +78,7 @@ describe(`Testing PaaS builds`, function () {
 
                util.log(`run command: ${cmd}`);
 
-               exec(cmd, (error, stdout, stderr) => {
+               exec(cmd, function (error, stdout, stderr) {
                   util.log(`stdout: ${stdout}`);
                   util.log(`stderr: ${stderr}`);
 
@@ -88,7 +88,7 @@ describe(`Testing PaaS builds`, function () {
 
                   // Assert
                   // Test to see if build was created
-                  vsts.findBuildDefinition(acct, projectId, pat, expectedName, `yo Team`, (e, bld) => {
+                  vsts.findBuildDefinition(acct, projectId, pat, expectedName, `yo Team`, function (e, bld) {
                      assert.ifError(e);
                      assert.ok(bld, `Build not created`);
                      buildDefinitionId = bld.id;
@@ -100,7 +100,7 @@ describe(`Testing PaaS builds`, function () {
             afterEach(function (done) {
                // runs after each test in this block
                util.log(`deleting build: ${buildDefinitionId}`);
-               vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, e => {
+               vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, function (e) {
                   done(e);
                });
             });
@@ -116,7 +116,7 @@ describe(`Testing PaaS builds`, function () {
    });
 });
 
-describe(`Testing Docker builds without Docker service endpoint`, function () {
+describe.only(`Testing Docker builds without Docker service endpoint`, function () {
    "use strict";
 
    let uuid = uuidV4();
@@ -172,7 +172,7 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
       before(function (done) {
          // runs before all tests in this block
          util.log(`creating project: ${projectName}`);
-         vsts.createProject(acct, projectName, pat, `yo Team`, (e, body) => {
+         vsts.createProject(acct, projectName, pat, `yo Team`, function (e, body) {
             if (!e) {
                projectId = body.id;
             }
@@ -195,7 +195,7 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
 
                util.log(`run command: ${cmd}`);
 
-               exec(cmd, (error, stdout, stderr) => {
+               exec(cmd, function (error, stdout, stderr) {
                   util.log(`stdout: ${stdout}`);
                   util.log(`stderr: ${stderr}`);
 
@@ -232,7 +232,7 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
 
                   util.log(`run command: ${cmd}`);
 
-                  exec(cmd, (error, stdout, stderr) => {
+                  exec(cmd, function (error, stdout, stderr) {
                      util.log(`stdout: ${stdout}`);
                      util.log(`stderr: ${stderr}`);
 
@@ -251,10 +251,16 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
 
                afterEach(function (done) {
                   // runs after each test in this block
-                  util.log(`deleting build: ${buildDefinitionId}`);
-                  vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, e => {
-                     done(e);
-                  });
+                  // some test make sure the build was not created in
+                  // those cases buildDefinitionId will be undefined
+                  if (buildDefinitionId) {
+                     util.log(`deleting build: ${buildDefinitionId}`);
+                     vsts.deleteBuildDefinition(acct, projectId, buildDefinitionId, pat, `yo team`, function (e) {
+                        done(e);
+                     });
+                  } else {
+                     done();
+                  }
                });
             });
          }
