@@ -23,258 +23,358 @@ assert.linuxTargets = function (a) {
 
 assert.allTargets = function (a) {
    assert.equal(a[0].name, `Azure App Service`);
-   assert.equal(a[1].name, `Azure Container Instances (Linux)`);
-   assert.equal(a[2].name, `Azure App Service Docker (Linux)`);
-   assert.equal(a[3].name, `Docker Host`);
-   assert.equal(a.length, 4, `Wrong number of entries`);
+   assert.equal(a[1].name, `Azure App Service (Deployment Slots)`);
+   assert.equal(a[2].name, `Azure Container Instances (Linux)`);
+   assert.equal(a[3].name, `Azure App Service Docker (Linux)`);
+   assert.equal(a[4].name, `Docker Host`);
+   assert.equal(a.length, 5, `Wrong number of entries`);
 };
 
 assert.windowsTargets = function (a) {
    assert.equal(a[0].name, `Azure App Service`);
-   assert.equal(a.length, 1, `Wrong number of entries`);
+   assert.equal(a[1].name, `Azure App Service (Deployment Slots)`);
+   assert.equal(a.length, 2, `Wrong number of entries`);
 };
 
 describe(`utility`, function () {
-   it(`needsRegistry paas`, function () {
-      // Arrange
-      let cmdLnInput = {};
-      const expected = false;
-      let answers = {
-         target: `paas`
-      };
 
-      // Act
-      let actual = util.needsRegistry(answers, cmdLnInput);
+   context(`registry`, function () {
+      it(`needsRegistry paas`, function () {
+         // Arrange
+         let cmdLnInput = {};
+         const expected = false;
+         let answers = {
+            target: `paas`
+         };
 
-      // Assert
-      assert.equal(expected, actual);
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry paasslots`, function () {
+         // Arrange
+         let cmdLnInput = {};
+         const expected = false;
+         let answers = {
+            target: `paasslots`
+         };
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry docker`, function () {
+         // Arrange
+         let cmdLnInput = {};
+         const expected = true;
+         let answers = {
+            target: `docker`
+         };
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry dockerpaas`, function () {
+         // Arrange
+         let cmdLnInput = {};
+         const expected = true;
+         let answers = {
+            target: `dockerpaas`
+         };
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry acilinux`, function () {
+         // Arrange
+         let cmdLnInput = {};
+         const expected = true;
+         let answers = {
+            target: `acilinux`
+         };
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
    });
 
-   it(`needsRegistry docker`, function () {
-      // Arrange
-      let cmdLnInput = {};
-      const expected = true;
-      let answers = {
-         target: `docker`
-      };
+   context(`targets`, function () {
+      it(`getTargets Default queue, node app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `node`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Act
-      let actual = util.needsRegistry(answers, cmdLnInput);
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Assert
-      assert.equal(expected, actual);
-   });
+      it(`getTargets Hosted queue, node app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted`,
+            type: `node`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-   it(`needsRegistry dockerpaas`, function () {
-      // Arrange
-      let cmdLnInput = {};
-      const expected = true;
-      let answers = {
-         target: `dockerpaas`
-      };
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Act
-      let actual = util.needsRegistry(answers, cmdLnInput);
+      it(`getTargets Hosted VS2017 queue, node app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted VS2017`,
+            type: `node`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Assert
-      assert.equal(expected, actual);
-   });
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-   it(`needsRegistry acilinux`, function () {
-      // Arrange
-      let cmdLnInput = {};
-      const expected = true;
-      let answers = {
-         target: `acilinux`
-      };
+      it(`getTargets Hosted Linux Preview queue, node app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Act
-      let actual = util.needsRegistry(answers, cmdLnInput);
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Assert
-      assert.equal(expected, actual);
-   });
+      it(`getTargets Default queue, asp app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `asp`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-   it(`getTargets Default queue, node app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Default`,
-         type: `node`
-      };
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Act
-      let actual = util.getTargets(answers);
+      it(`getTargets Hosted queue, asp app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted`,
+            type: `asp`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Assert
-      assert.allTargets(actual);
-   });
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-   it(`getTargets Hosted queue, node app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted`,
-         type: `node`
-      };
+      it(`getTargets Hosted VS2017 queue, asp app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted VS2017`,
+            type: `asp`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Act
-      let actual = util.getTargets(answers);
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Assert
-      assert.allTargets(actual);
-   });
+      it(`getTargets Hosted Linux Preview queue, asp app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted Linux Preview`,
+            type: `asp`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-   it(`getTargets Hosted VS2017 queue, node app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted VS2017`,
-         type: `node`
-      };
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Act
-      let actual = util.getTargets(answers);
+      it(`getTargets Default queue, java app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `java`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Assert
-      assert.allTargets(actual);
-   });
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-   it(`getTargets Hosted Linux Preview queue, node app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted Linux Preview`,
-         type: `node`
-      };
+      it(`getTargets Hosted queue, java app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted`,
+            type: `java`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Act
-      let actual = util.getTargets(answers);
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Assert
-      assert.allTargets(actual);
-   });
+      it(`getTargets Hosted VS2017 queue, java app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted VS2017`,
+            type: `java`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-   it(`getTargets Default queue, asp app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Default`,
-         type: `asp`
-      };
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.allTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-      // Act
-      let actual = util.getTargets(answers);
+      it(`getTargets Hosted Linux Preview queue, java app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Hosted Linux Preview`,
+            type: `java`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Assert
-      assert.allTargets(actual);
-   });
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.linuxTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
 
-   it(`getTargets Hosted queue, asp app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted`,
-         type: `asp`
-      };
+      it(`getTargets Default queue, aspFull app type 2018/VSTS`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `aspFull`,
+            tfs: `vsts`,
+            pat: `token`
+         };
 
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.allTargets(actual);
-   });
-
-   it(`getTargets Hosted VS2017 queue, asp app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted VS2017`,
-         type: `asp`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.allTargets(actual);
-   });
-
-   it(`getTargets Hosted Linux Preview queue, asp app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted Linux Preview`,
-         type: `asp`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.allTargets(actual);
-   });
-
-   it(`getTargets Default queue, java app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Default`,
-         type: `java`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.allTargets(actual);
-   });
-
-   it(`getTargets Hosted queue, java app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted`,
-         type: `java`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.allTargets(actual);
-   });
-
-   it(`getTargets Hosted VS2017 queue, java app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted VS2017`,
-         type: `java`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.allTargets(actual);
-   });
-
-   it(`getTargets Hosted Linux Preview queue, java app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Hosted Linux Preview`,
-         type: `java`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.linuxTargets(actual);
-   });
-
-   it(`getTargets Default queue, aspFull app type`, function () {
-      // Arrange
-      let answers = {
-         queue: `Default`,
-         type: `aspFull`
-      };
-
-      // Act
-      let actual = util.getTargets(answers);
-
-      // Assert
-      assert.windowsTargets(actual);
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.windowsTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });         
+      });
    });
 
    it(`needsDockerHost default queue dockerpaas no answers`, function () {
@@ -483,68 +583,70 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`getDefaultPortMapping java`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `java`,
-         target: `docker`
+   context(`docker ports`, function () {
+      it(`getDefaultPortMapping java`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `java`,
+            target: `docker`
+         });
+         assert.equal(`8080:8080`, actual);
       });
-      assert.equal(`8080:8080`, actual);
-   });
 
-   it(`getDefaultPortMapping asp`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `asp`,
-         target: `docker`
+      it(`getDefaultPortMapping asp`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `asp`,
+            target: `docker`
+         });
+         assert.equal(`80:80`, actual);
       });
-      assert.equal(`80:80`, actual);
-   });
 
-   it(`getDefaultPortMapping node`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `node`,
-         target: `docker`
+      it(`getDefaultPortMapping node`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `node`,
+            target: `docker`
+         });
+         assert.equal(`3000:3000`, actual);
       });
-      assert.equal(`3000:3000`, actual);
-   });
 
-   it(`getDefaultPortMapping default paas`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `unknown`,
-         target: `dockerpaas`
+      it(`getDefaultPortMapping default dockerpaas`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `unknown`,
+            target: `dockerpaas`
+         });
+         assert.equal(`80`, actual);
       });
-      assert.equal(`80`, actual);
-   });
 
-   it(`getDefaultPortMapping java paas`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `java`,
-         target: `dockerpaas`
+      it(`getDefaultPortMapping java dockerpaas`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `java`,
+            target: `dockerpaas`
+         });
+         assert.equal(`8080`, actual);
       });
-      assert.equal(`8080`, actual);
-   });
 
-   it(`getDefaultPortMapping asp paas`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `asp`,
-         target: `dockerpaas`
+      it(`getDefaultPortMapping asp dockerpaas`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `asp`,
+            target: `dockerpaas`
+         });
+         assert.equal(`80`, actual);
       });
-      assert.equal(`80`, actual);
-   });
 
-   it(`getDefaultPortMapping node paas`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `node`,
-         target: `dockerpaas`
+      it(`getDefaultPortMapping node dockerpaas`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `node`,
+            target: `dockerpaas`
+         });
+         assert.equal(`3000`, actual);
       });
-      assert.equal(`3000`, actual);
-   });
 
-   it(`getDefaultPortMapping default paas`, function () {
-      var actual = util.getDefaultPortMapping({
-         type: `unknown`,
-         target: `dockerpaas`
+      it(`getDefaultPortMapping default dockerpaas`, function () {
+         var actual = util.getDefaultPortMapping({
+            type: `unknown`,
+            target: `dockerpaas`
+         });
+         assert.equal(`80`, actual);
       });
-      assert.equal(`80`, actual);
    });
 
    it(`getPools has error`, function (done) {
@@ -607,76 +709,79 @@ describe(`utility`, function () {
       });
    });
 
-   it(`validatePortMapping should return true`, function () {
-      assert.ok(util.validatePortMapping(`80:80`));
-   });
+   context(`validation`, function () {
 
-   it(`validatePortMapping should return error`, function () {
-      assert.equal(`You must provide a Port Mapping`, util.validatePortMapping(null));
-   });
+      it(`validatePortMapping should return true`, function () {
+         assert.ok(util.validatePortMapping(`80:80`));
+      });
 
-   it(`validateApplicationName should return error`, function () {
-      assert.equal(`You must provide a name for your application`, util.validateApplicationName(null));
-   });
+      it(`validatePortMapping should return error`, function () {
+         assert.equal(`You must provide a Port Mapping`, util.validatePortMapping(null));
+      });
 
-   it(`validateGroupID should return error`, function () {
-      assert.equal(`You must provide a Group ID`, util.validateGroupID(null));
-   });
+      it(`validateApplicationName should return error`, function () {
+         assert.equal(`You must provide a name for your application`, util.validateApplicationName(null));
+      });
 
-   it(`validatePersonalAccessToken should return error`, function () {
-      assert.equal(`You must provide a Personal Access Token`, util.validatePersonalAccessToken(null));
-   });
+      it(`validateGroupID should return error`, function () {
+         assert.equal(`You must provide a Group ID`, util.validateGroupID(null));
+      });
 
-   it(`validateTFS should return error`, function () {
-      assert.equal(`You must provide your TFS URL or Team Service account name`, util.validateTFS(null));
-   });
+      it(`validatePersonalAccessToken should return error`, function () {
+         assert.equal(`You must provide a Personal Access Token`, util.validatePersonalAccessToken(null));
+      });
 
-   it(`validateAzureSub should return error`, function () {
-      assert.equal(`You must provide an Azure Subscription Name`, util.validateAzureSub(null));
-   });
+      it(`validateTFS should return error`, function () {
+         assert.equal(`You must provide your TFS URL or Team Service account name`, util.validateTFS(null));
+      });
 
-   it(`validateDockerHost should return error`, function () {
-      assert.equal(`You must provide a Docker Host URL`, util.validateDockerHost(null));
-   });
+      it(`validateAzureSub should return error`, function () {
+         assert.equal(`You must provide an Azure Subscription Name`, util.validateAzureSub(null));
+      });
 
-   it(`validateDockerCertificatePath should return error`, function () {
-      assert.equal(`You must provide a Docker Certificate Path`, util.validateDockerCertificatePath(null));
-   });
+      it(`validateDockerHost should return error`, function () {
+         assert.equal(`You must provide a Docker Host URL`, util.validateDockerHost(null));
+      });
 
-   it(`validateDockerHubID should return error`, function () {
-      assert.equal(`You must provide a Docker Registry username`, util.validateDockerHubID(null));
-   });
+      it(`validateDockerCertificatePath should return error`, function () {
+         assert.equal(`You must provide a Docker Certificate Path`, util.validateDockerCertificatePath(null));
+      });
 
-   it(`validateDockerHubPassword should return error`, function () {
-      assert.equal(`You must provide a Docker Registry Password`, util.validateDockerHubPassword(null));
-   });
+      it(`validateDockerHubID should return error`, function () {
+         assert.equal(`You must provide a Docker Registry username`, util.validateDockerHubID(null));
+      });
 
-   it(`validateDockerRegistry should return error on null`, function () {
-      assert.equal(`You must provide a Docker Registry URL`, util.validateDockerRegistry(null));
-   });
+      it(`validateDockerHubPassword should return error`, function () {
+         assert.equal(`You must provide a Docker Registry Password`, util.validateDockerHubPassword(null));
+      });
 
-   it(`validateDockerRegistry should return error on missing http(s)`, function () {
-      assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`microsoft.azurecr.io`));
-   });
+      it(`validateDockerRegistry should return error on null`, function () {
+         assert.equal(`You must provide a Docker Registry URL`, util.validateDockerRegistry(null));
+      });
 
-   it(`validateDockerRegistry should return error on missing http(s)`, function () {
-      assert.equal(true, util.validateDockerRegistry(`https://microsoft.azurecr.io`));
-   });
+      it(`validateDockerRegistry should return error on missing http(s)`, function () {
+         assert.equal(`You must provide a Docker Registry URL including http(s)`, util.validateDockerRegistry(`microsoft.azurecr.io`));
+      });
 
-   it(`validateAzureSubID should return error`, function () {
-      assert.equal(`You must provide an Azure Subscription ID`, util.validateAzureSubID(null));
-   });
+      it(`validateDockerRegistry should return error on missing http(s)`, function () {
+         assert.equal(true, util.validateDockerRegistry(`https://microsoft.azurecr.io`));
+      });
 
-   it(`validateAzureTenantID should return error`, function () {
-      assert.equal(`You must provide an Azure Tenant ID`, util.validateAzureTenantID(null));
-   });
+      it(`validateAzureSubID should return error`, function () {
+         assert.equal(`You must provide an Azure Subscription ID`, util.validateAzureSubID(null));
+      });
 
-   it(`validateServicePrincipalID should return error`, function () {
-      assert.equal(`You must provide a Service Principal ID`, util.validateServicePrincipalID(null));
-   });
+      it(`validateAzureTenantID should return error`, function () {
+         assert.equal(`You must provide an Azure Tenant ID`, util.validateAzureTenantID(null));
+      });
 
-   it(`validateServicePrincipalKey should return error`, function () {
-      assert.equal(`You must provide a Service Principal Key`, util.validateServicePrincipalKey(null));
+      it(`validateServicePrincipalID should return error`, function () {
+         assert.equal(`You must provide a Service Principal ID`, util.validateServicePrincipalID(null));
+      });
+
+      it(`validateServicePrincipalKey should return error`, function () {
+         assert.equal(`You must provide a Service Principal Key`, util.validateServicePrincipalKey(null));
+      });
    });
 
    it(`checkStatus should run with no error`, sinon.test(function (done) {
@@ -714,251 +819,310 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`findQueue should find queue`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            // Confirm the request was formatted correctly
-            assert.equal(`GET`, options.method, `wrong method`);
-            assert.equal(`Basic token`, options.headers.authorization, `wrong authorization`);
-            assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
+   context(`queue`, function () {
+      it(`findQueue should find queue`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               // Confirm the request was formatted correctly
+               assert.equal(`GET`, options.method, `wrong method`);
+               assert.equal(`Basic token`, options.headers.authorization, `wrong authorization`);
+               assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
 
-            // Respond
-            callback(null, {
-               statusCode: 200
-            }, JSON.stringify({
-               value: [{
-                  id: 420
-               }, {
-                  id: 311
-               }]
-            }));
-         }
-      });
-
-      // Act
-      proxyApp.findQueue(
-         `Hosted`,
-         `http://localhost:8080/tfs/DefaultCollection`, {
-            id: 1
-         },
-         `token`,
-         (err, data) => {
-            // Assert
-            assert.equal(420, data);
-
-            done();
-         });
-   }));
-
-   it(`findQueue should returns error obj from server`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 302
-            }, JSON.stringify("{ error: `some error` }"));
-         }
-      });
-
-      // Act
-      proxyApp.findQueue(
-         `Hosted`,
-         `http://localhost:8080/tfs/DefaultCollection`, {
-            id: 1
-         },
-         `token`,
-         (err, data) => {
-            // Assert
-            assert.ok(err);
-
-            done();
-         });
-   }));
-
-   it(`findQueue should returns error`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 400
-            }, null);
-         }
-      });
-
-      // Act
-      proxyApp.findQueue(
-         `Hosted`,
-         `http://localhost:8080/tfs/DefaultCollection`, {
-            id: 1
-         },
-         `token`,
-         (err, data) => {
-            // Assert
-            assert.ok(err instanceof Error);
-
-            done();
-         });
-   }));
-
-   it(`findDockerRegistryServiceEndpoint should short circuit with null or undefined dockerRegistry`, sinon.test(function (done) {
-      util.findDockerRegistryServiceEndpoint(null, null, undefined, null, (err, obj) => {
-         assert.equal(err, null);
-         assert.equal(obj, null);
-
-         done();
-      });
-   }));
-
-   it(`tryFindDockerRegistryServiceEndpoint should return null`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 200
-            }, JSON.stringify({
-               value: []
-            }));
-         }
-      });
-
-      proxyApp.tryFindDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, `DockerHub`, `token`, (err, obj) => {
-            assert.equal(obj, undefined);
-            assert.equal(err, null);
-
-            done();
-         });
-   }));
-
-   it(`tryFindDockerRegistryServiceEndpoint should return endpoint`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-
-            if (options.url.endsWith(`serviceendpoints`)) {
+               // Respond
                callback(null, {
                   statusCode: 200
                }, JSON.stringify({
                   value: [{
-                     type: "dockerregistry"
+                     id: 420
+                  }, {
+                     id: 311
                   }]
                }));
-            } else {
+            }
+         });
+
+         // Act
+         proxyApp.findQueue(
+            `Hosted`,
+            `http://localhost:8080/tfs/DefaultCollection`, {
+               id: 1
+            },
+            `token`,
+            (err, data) => {
+               // Assert
+               assert.equal(420, data);
+
+               done();
+            });
+      }));
+
+      it(`findQueue should returns error obj from server`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 302
+               }, JSON.stringify("{ error: `some error` }"));
+            }
+         });
+
+         // Act
+         proxyApp.findQueue(
+            `Hosted`,
+            `http://localhost:8080/tfs/DefaultCollection`, {
+               id: 1
+            },
+            `token`,
+            (err, data) => {
+               // Assert
+               assert.ok(err);
+
+               done();
+            });
+      }));
+
+      it(`findQueue should returns error`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 400
+               }, null);
+            }
+         });
+
+         // Act
+         proxyApp.findQueue(
+            `Hosted`,
+            `http://localhost:8080/tfs/DefaultCollection`, {
+               id: 1
+            },
+            `token`,
+            (err, data) => {
+               // Assert
+               assert.ok(err instanceof Error);
+
+               done();
+            });
+      }));
+   });
+
+   context(`docker`, function () {
+      it(`isDocker paas`, function () {
+         // Arrange
+         var expected = false;
+
+         // Act
+         var actual = util.isDocker(`paas`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`isDocker paasslots`, function () {
+         // Arrange
+         var expected = false;
+
+         // Act
+         var actual = util.isDocker(`paasslots`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`isDocker acilinux`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isDocker(`acilinux`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`isDocker docker`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isDocker(`docker`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`isDocker dockerpaas`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isDocker(`dockerpaas`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`findDockerRegistryServiceEndpoint should short circuit with null or undefined dockerRegistry`, sinon.test(function (done) {
+         util.findDockerRegistryServiceEndpoint(null, null, undefined, null, (err, obj) => {
+            assert.equal(err, null);
+            assert.equal(obj, null);
+
+            done();
+         });
+      }));
+
+      it(`tryFindDockerRegistryServiceEndpoint should return null`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
                callback(null, {
                   statusCode: 200
                }, JSON.stringify({
-                  type: "dockerregistry"
+                  value: []
                }));
             }
-         }
-      });
+         });
 
-      proxyApp.tryFindDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, `DockerHub`, `token`, (err, obj) => {
-            assert.equal(obj.type, `dockerregistry`);
+         proxyApp.tryFindDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+            `e2eDemo`, `DockerHub`, `token`, (err, obj) => {
+               assert.equal(obj, undefined);
+               assert.equal(err, null);
+
+               done();
+            });
+      }));
+
+      it(`tryFindDockerRegistryServiceEndpoint should return endpoint`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+
+               if (options.url.endsWith(`serviceendpoints`)) {
+                  callback(null, {
+                     statusCode: 200
+                  }, JSON.stringify({
+                     value: [{
+                        type: "dockerregistry"
+                     }]
+                  }));
+               } else {
+                  callback(null, {
+                     statusCode: 200
+                  }, JSON.stringify({
+                     type: "dockerregistry"
+                  }));
+               }
+            }
+         });
+
+         proxyApp.tryFindDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+            `e2eDemo`, `DockerHub`, `token`, (err, obj) => {
+               assert.equal(obj.type, `dockerregistry`);
+               assert.equal(err, null);
+
+               done();
+            });
+      }));
+
+      it(`findDockerServiceEndpoint should short circuit with null or undefined dockerHost`, sinon.test(function (done) {
+         util.findDockerServiceEndpoint(null, null, undefined, null, null, (err, obj) => {
             assert.equal(err, null);
+            assert.equal(obj, null);
 
             done();
          });
-   }));
+      }));
 
-   it(`findDockerServiceEndpoint should short circuit with null or undefined dockerHost`, sinon.test(function (done) {
-      util.findDockerServiceEndpoint(null, null, undefined, null, null, (err, obj) => {
-         assert.equal(err, null);
-         assert.equal(obj, null);
-
-         done();
-      });
-   }));
-
-   it(`tryFindDockerServiceEndpoint should return undefined`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 200
-            }, JSON.stringify({
-               value: []
-            }));
-         }
-      });
-
-      var logger = this.stub();
-      logger.log = function () {};
-
-      proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
-            assert.equal(obj, undefined);
-            assert.equal(err, null);
-
-            done();
+      it(`tryFindDockerServiceEndpoint should return undefined`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  value: []
+               }));
+            }
          });
-   }));
 
-   it(`tryFindDockerServiceEndpoint should return endpoint`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 200
-            }, JSON.stringify({
-               value: [{
-                  url: "DockerHub"
-               }]
-            }));
-         }
-      });
+         var logger = this.stub();
+         logger.log = function () {};
 
-      var logger = this.stub();
-      logger.log = function () {};
+         proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+            `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
+               assert.equal(obj, undefined);
+               assert.equal(err, null);
 
-      proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
-            assert.equal(obj.url, `DockerHub`);
-            assert.equal(err, null);
+               done();
+            });
+      }));
 
-            done();
+      it(`tryFindDockerServiceEndpoint should return endpoint`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  value: [{
+                     url: "DockerHub"
+                  }]
+               }));
+            }
          });
-   }));
 
-   it(`tryFindDockerServiceEndpoint should return error`, sinon.test(function (done) {
-      // Arrange
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 400
-            }, undefined);
-         }
-      });
+         var logger = this.stub();
+         logger.log = function () {};
 
-      var logger = this.stub();
-      logger.log = function () {};
+         proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+            `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
+               assert.equal(obj.url, `DockerHub`);
+               assert.equal(err, null);
 
-      proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
-         `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
-            assert.ok(err);
-            assert.equal(obj, undefined);
+               done();
+            });
+      }));
 
-            done();
+      it(`tryFindDockerServiceEndpoint should return error`, sinon.test(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 400
+               }, undefined);
+            }
          });
-   }));
+
+         var logger = this.stub();
+         logger.log = function () {};
+
+         proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+            `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
+               assert.ok(err);
+               assert.equal(obj, undefined);
+
+               done();
+            });
+      }));
+   });
 
    it(`tryFindAzureServiceEndpoint should short circuit`, sinon.test(function (done) {
       // Arrange
@@ -1354,133 +1518,138 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`isTFSGreaterThan2017 false`, function (done) {
-      // Arrange
-      var expected = false;
+   context(`is`, function () {
 
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 200
-            }, JSON.stringify({
-               count: 2,
-               value: [{
-                  id: `1e78dc1b-9132-4b18-9c75-0e7ecc634b74`,
-                  name: `Xcode`
-               }, {
-                  id: `bcb64569-d51a-4af0-9c01-ea5d05b3b622`,
-                  name: `ManualIntervention`
-               }]
-            }));
-         }
+      it(`isTFSGreaterThan2017 false`, function (done) {
+         // Arrange
+         var expected = false;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 404
+               }, JSON.stringify({
+                  count: 2,
+                  value: [{
+                     id: `1e78dc1b-9132-4b18-9c75-0e7ecc634b74`,
+                     name: `Xcode`
+                  }, {
+                     id: `bcb64569-d51a-4af0-9c01-ea5d05b3b622`,
+                     name: `ManualIntervention`
+                  }]
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.isTFSGreaterThan2017(`http://tfs2017:8080/tfs/DefaultCollection`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
       });
 
-      // Act
-      proxyApp.isTFSGreaterThan2017(`http://tfs2017:8080/tfs/DefaultCollection`, 'token', (e, actual) => {
+      it(`isTFSGreaterThan2017 passed VSTS true`, function (done) {
+         // Arrange
+         var expected = true;
+
+         // Act
+         util.isTFSGreaterThan2017(`vsts`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
+      });
+
+      it(`isTFSGreaterThan2017 true`, function (done) {
+         // Arrange
+         var expected = true;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  count: 2,
+                  value: [{
+                     id: `1e78dc1b-9132-4b18-9c75-0e7ecc634b74`,
+                     name: `Xcode`
+                  }, {
+                     id: `e28912f1-0114-4464-802a-a3a35437fd16`,
+                     name: `Docker`
+                  }]
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.isTFSGreaterThan2017(`http://tfs2018:8080/tfs/DefaultCollection`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
+      });
+
+      it(`isVSTS false`, function () {
+         // Arrange
+         var expected = false;
+
+         // Act
+         var actual = util.isVSTS(`http://tfs:8080/tfs/DefaultCollection`);
+
          // Assert
          assert.equal(expected, actual);
-         done(e);
       });
-   });
 
-   it(`isTFSGreaterThan2017 passed VSTS true`, function (done) {
-      // Arrange
-      var expected = true;
+      it(`isVSTS true`, function () {
+         // Arrange
+         var expected = true;
 
-      // Act
-      util.isTFSGreaterThan2017(`vsts`, 'token', (e, actual) => {
+         // Act
+         var actual = util.isVSTS(`mydemos`);
+
          // Assert
          assert.equal(expected, actual);
-         done(e);
       });
    });
 
-   it(`isTFSGreaterThan2017 true`, function (done) {
-      // Arrange
-      var expected = true;
+   context(`urls`, function () {
+      it(`get full URL for TFS`, function () {
+         // Arrange
+         var expected = `http://tfs:8080/tfs/DefaultCollection`;
 
-      // This allows me to take control of the request requirement
-      // without this there would be no way to stub the request calls
-      const proxyApp = proxyquire(`../../generators/app/utility`, {
-         "request": (options, callback) => {
-            callback(null, {
-               statusCode: 200
-            }, JSON.stringify({
-               count: 2,
-               value: [{
-                  id: `1e78dc1b-9132-4b18-9c75-0e7ecc634b74`,
-                  name: `Xcode`
-               }, {
-                  id: `e28912f1-0114-4464-802a-a3a35437fd16`,
-                  name: `Docker`
-               }]
-            }));
-         }
-      });
+         // Act
+         var actual = util.getFullURL(`http://tfs:8080/tfs/DefaultCollection`);
 
-      // Act
-      proxyApp.isTFSGreaterThan2017(`http://tfs2018:8080/tfs/DefaultCollection`, 'token', (e, actual) => {
          // Assert
          assert.equal(expected, actual);
-         done(e);
       });
-   });
 
-   it(`isVSTS false`, function () {
-      // Arrange
-      var expected = false;
+      it(`get full URL for VSTS`, function () {
+         // Arrange
+         var expected = `https://vsts.visualstudio.com`;
 
-      // Act
-      var actual = util.isVSTS(`http://tfs:8080/tfs/DefaultCollection`);
+         // Act
+         var actual = util.getFullURL(`vsts`);
 
-      // Assert
-      assert.equal(expected, actual);
-   });
+         // Assert
+         assert.equal(expected, actual);
+      });
 
-   it(`isVSTS true`, function () {
-      // Arrange
-      var expected = true;
+      it(`get full URL for VSTS for RM`, function () {
+         // Arrange
+         var expected = `https://vsts.vsrm.visualstudio.com/DefaultCollection`;
 
-      // Act
-      var actual = util.isVSTS(`mydemos`);
+         // Act
+         var actual = util.getFullURL(`vsts`, true, true);
 
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`get full URL for TFS`, function () {
-      // Arrange
-      var expected = `http://tfs:8080/tfs/DefaultCollection`;
-
-      // Act
-      var actual = util.getFullURL(`http://tfs:8080/tfs/DefaultCollection`);
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`get full URL for VSTS`, function () {
-      // Arrange
-      var expected = `https://vsts.visualstudio.com`;
-
-      // Act
-      var actual = util.getFullURL(`vsts`);
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`get full URL for VSTS for RM`, function () {
-      // Arrange
-      var expected = `https://vsts.vsrm.visualstudio.com/DefaultCollection`;
-
-      // Act
-      var actual = util.getFullURL(`vsts`, true, true);
-
-      // Assert
-      assert.equal(expected, actual);
+         // Assert
+         assert.equal(expected, actual);
+      });
    });
 
    it('findAzureSub should find sub', sinon.test(function (done) {
@@ -1591,49 +1760,5 @@ describe(`utility`, function () {
          assert.fail();
          done();
       });
-   });
-
-   it(`isDocker paas`, function () {
-      // Arrange
-      var expected = false;
-
-      // Act
-      var actual = util.isDocker(`paas`);
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`isDocker acilinux`, function () {
-      // Arrange
-      var expected = true;
-
-      // Act
-      var actual = util.isDocker(`acilinux`);
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`isDocker docker`, function () {
-      // Arrange
-      var expected = true;
-
-      // Act
-      var actual = util.isDocker(`docker`);
-
-      // Assert
-      assert.equal(expected, actual);
-   });
-
-   it(`isDocker dockerpaas`, function () {
-      // Arrange
-      var expected = true;
-
-      // Act
-      var actual = util.isDocker(`dockerpaas`);
-
-      // Assert
-      assert.equal(expected, actual);
    });
 });

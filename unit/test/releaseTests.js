@@ -72,6 +72,7 @@ describe(`release:index`, function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
@@ -102,6 +103,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `getAzureSubs`);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
@@ -173,6 +175,7 @@ describe(`release:index`, function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
@@ -203,6 +206,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `getAzureSubs`);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
@@ -270,6 +274,7 @@ describe(`release:index`, function () {
          util.getPools.restore();
          util.findBuild.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindRelease.restore();
          util.isTFSGreaterThan2017.restore();
@@ -296,6 +301,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
@@ -303,6 +309,49 @@ describe(`release:index`, function () {
             stubs.tryFindRelease(expectedAccount, `docker`, expectedToken);
             stubs.findDockerServiceEndpoint(expectedAccount, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
+         })
+         .on(`end`, function (e) {
+            cleanUp();
+         });
+   });
+
+   it(`test prompts node paasslots vsts`, function () {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `vsts`;
+
+      let cleanUp = function () {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.findAzureServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `vsts`,
+            pat: `token`,
+            queue: `Default`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `paasslots`,
+            azureSub: `azureSub`
+         })
+         .on(`error`, function (e) {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getAzureSubs`);
+            stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Default`, expectedToken);
+            stubs.findBuild(expectedAccount, `paasslots`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `paasslots`, expectedToken);
+            stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
          })
          .on(`end`, function (e) {
             cleanUp();
@@ -509,7 +558,26 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`getRelease asp vsts pass`, function (done) {
+   it(`getRelease asp vsts paasslots`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_slots.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `paasslots`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`getRelease asp vsts paas`, function (done) {
       // Arrange 
       let expected = `vsts_release.json`;
 
@@ -528,7 +596,23 @@ describe(`release:app`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`getRelease aspFull vsts pass`, function (done) {
+   it(`getRelease aspFull vsts paasslots`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_slots.json`;
+
+      // Act
+      release.getRelease({
+         type: `aspFull`,
+         target: `paasslots`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease aspFull vsts paas`, function (done) {
       // Arrange 
       let expected = `vsts_release.json`;
 
@@ -725,7 +809,23 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease java vsts pass`, function (done) {
+   it(`getRelease java vsts paasslots`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_slots.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `paasslots`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java vsts paas`, function (done) {
       // Arrange 
       let expected = `vsts_release.json`;
 
@@ -783,6 +883,22 @@ describe(`release:app`, function () {
       release.getRelease({
          type: `node`,
          target: `docker`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease node vsts paasslots`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_slots.json`;
+
+      // Act
+      release.getRelease({
+         type: `node`,
+         target: `paasslots`,
          tfs: `vsts`
       }, function (e, actual) {
          // Assert
@@ -981,7 +1097,7 @@ describe(`release:app`, function () {
       // Act
       // I have to use an anonymous function otherwise
       // I would be passing the return value of findOrCreateProject
-      // instead of the function. I have to do this to pass args
+      // instead of the function. I have to do this to paas args
       // to findOrCreateProject.
 
       // I use the custom error validation method to call done

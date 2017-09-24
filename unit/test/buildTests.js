@@ -15,6 +15,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -38,6 +39,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -61,6 +63,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -84,6 +87,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -107,6 +111,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -130,6 +135,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -153,6 +159,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -176,6 +183,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -199,6 +207,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -222,6 +231,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -245,6 +255,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -268,6 +279,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -291,6 +303,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -316,6 +329,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -421,6 +435,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -441,6 +456,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -464,6 +480,7 @@ describe(`build:index`, function () {
       let cleanUp = function () {
          util.getPools.restore();
          util.findQueue.restore();
+         util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -484,6 +501,7 @@ describe(`build:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);

@@ -64,34 +64,61 @@ function reconcileValue(first, second, fallback) {
 // to convert the war file into a zip file.
 function getTargets(answers) {
 
-   if (answers.type === `aspFull`) {
-      return [{
-         name: `Azure App Service`,
-         value: `paas`
-      }];
-   }
+   return new Promise(function (resolve, reject) {
+      isTFSGreaterThan2017(answers.tfs, answers.pat, function(e, result){
+         if (e) {
+            reject(e);
+            return;
+         }
 
-   let result = [{
-      name: `Azure App Service`,
-      value: `paas`
-   }, {
-      name: `Azure Container Instances (Linux)`,
-      value: `acilinux`
-   }, {
-      name: `Azure App Service Docker (Linux)`,
-      value: `dockerpaas`
-   }, {
-      name: `Docker Host`,
-      value: `docker`
-   }];
+         let targets = [];
 
-   if (answers.type === `java` &&
-      answers.queue === `Hosted Linux Preview`) {
-      // Remove Azure App Service
-      result.splice(0, 1);
-   }
+         if(result) {
+            if (answers.type === `aspFull`) {
+               targets = [{
+                  name: `Azure App Service`,
+                  value: `paas`
+               }, {
+                  name: `Azure App Service (Deployment Slots)`,
+                  value: `paasslots`
+               }];
+            } else {
+               targets = [{
+                  name: `Azure App Service`,
+                  value: `paas`
+               }, {
+                  name: `Azure App Service (Deployment Slots)`,
+                  value: `paasslots`
+               }, {
+                  name: `Azure Container Instances (Linux)`,
+                  value: `acilinux`
+               }, {
+                  name: `Azure App Service Docker (Linux)`,
+                  value: `dockerpaas`
+               }, {
+                  name: `Docker Host`,
+                  value: `docker`
+               }];
+            
+               // TODO: Investigate if we need to remove these
+               // options. I think you can offer paas and paasslots
+               // for this combination. 
+               if (answers.type === `java` &&
+                  answers.queue === `Hosted Linux Preview`) {
+                  // Remove Azure App Service
+                  targets.splice(0, 1);
+            
+                  // Remove Azure App Service (Deployment Slots)
+                  targets.splice(0, 1);
+               }
+            }
+         } else{
 
-   return result;
+         }         
+
+         resolve(targets);
+      });      
+   });
 }
 
 function getAppTypes(answers) {
@@ -862,20 +889,16 @@ function isTFSGreaterThan2017(account, token, callback) {
             "cache-control": `no-cache`,
             "authorization": `Basic ${token}`
          },
-         "url": `${getFullURL(account)}/_apis/distributedtask/tasks`
+         "url": `${getFullURL(account)}/_apis/distributedtask/tasks/e28912f1-0114-4464-802a-a3a35437fd16`
       });
 
       request(options, function (error, response, body) {
-         var obj = JSON.parse(body);
-
-         var task = obj.value.find(function (i) {
-            return i.name === `Docker` && i.id === `e28912f1-0114-4464-802a-a3a35437fd16`;
-         });
-
-         if (task === undefined) {
-            callback(undefined, false);
-         } else {
+         if (error) {
+            callback(error, undefined);
+         } else if (response.statusCode === 200) {
             callback(undefined, true);
+         } else {
+            callback(undefined, false);
          }
       });
    }

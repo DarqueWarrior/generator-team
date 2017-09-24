@@ -123,7 +123,7 @@ function getRelease(args, callback) {
          if (result) {
             release = `vsts_release_${args.target}.json`;
 
-            if(!util.isVSTS(args.tfs) && args.target === `dockerpaas`){
+            if (!util.isVSTS(args.tfs) && args.target === `dockerpaas`) {
                release = `tfs_2018_release_${args.target}.json`;
             }
          } else {
@@ -136,7 +136,12 @@ function getRelease(args, callback) {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
             if (util.isVSTS(args.tfs)) {
-               release = `vsts_release.json`;
+
+               if (args.target === `paasslots`) {
+                  release = `vsts_release_slots.json`;
+               } else {
+                  release = `vsts_release.json`;
+               }
             } else {
                release = `tfs_2018_release.json`;
             }
