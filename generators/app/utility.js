@@ -271,7 +271,7 @@ function checkStatus(uri, token, gen, callback) {
       } catch (error) {
          // This a HTML page with an error message.
          err = error;
-         console.log(body);
+         gen.log(body);
       }
 
       callback(err, obj);
@@ -813,9 +813,9 @@ function needsDockerHost(answers, cmdLnInput) {
 
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
-            cmdLnInput.target === `dockerpaas` ||
-            answers.target === `acilinux` ||
-            cmdLnInput.target === `acilinux`) &&
+         cmdLnInput.target === `dockerpaas` ||
+         answers.target === `acilinux` ||
+         cmdLnInput.target === `acilinux`) &&
          ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
             (cmdLnInput.queue === undefined || cmdLnInput.queue.indexOf(`Linux`) === -1));
    } else {

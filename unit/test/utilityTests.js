@@ -714,6 +714,35 @@ describe(`utility`, function () {
       });
    }));
 
+   it(`checkStatus should throw a syntax error with invalid JSON`, sinon.test(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            // Confirm the request was formatted correctly
+            assert.equal(`GET`, options.method, `wrong method`);
+            assert.equal(`Basic token`, options.headers.authorization, `wrong authorization`);
+            assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
+
+            // Respond
+            callback(null, {
+               statusCode: 200
+            }, 'invalid = json; boohoo');
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Act
+      proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
+         assert.ok(e instanceof SyntaxError);
+
+         done();
+      });
+   }));
+
    it(`findQueue should find queue`, sinon.test(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
