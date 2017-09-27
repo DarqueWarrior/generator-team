@@ -252,6 +252,22 @@
          }
       },
       {
+         "condition": "[equals(parameters('skuName'), 'S1')]",
+         "comments": "Staging slot",
+         "type": "Microsoft.Web/sites/slots",
+         "kind": "app",
+         "name": "[concat(parameters('webSiteName'), '/stage')]",
+         "apiVersion": "2016-08-01",
+         "location": "[resourceGroup().location]",
+         "properties": {
+            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+         },
+         "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
+            "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+         ]
+      },
+      {
          "apiVersion": "2014-04-01",
          "name": "[concat('LongHttpQueue ', parameters('hostingPlanName'))]",
          "type": "Microsoft.Insights/alertrules",

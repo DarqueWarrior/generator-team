@@ -87,21 +87,23 @@
             "name": "[parameters('webSiteName')]",
             "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
          },
-         "resources": [{
-            "name": "appsettings",
-            "type": "config",
-            "apiVersion": "2015-08-01",
-            "dependsOn": [
-               "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
-            ],
-            "tags": {
-               "displayName": "appSettings"
-            },
-            "properties": {
-               "WEBSITE_NODE_DEFAULT_VERSION": "[parameters('websiteNodeVersion')]",
-               "MSDEPLOY_RENAME_LOCKED_FILES": "1"
+         "resources": [
+            {
+               "name": "appsettings",
+               "type": "config",
+               "apiVersion": "2015-08-01",
+               "dependsOn": [
+                  "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]"
+               ],
+               "tags": {
+                  "displayName": "appSettings"
+               },
+               "properties": {
+                  "WEBSITE_NODE_DEFAULT_VERSION": "[parameters('websiteNodeVersion')]",
+                  "MSDEPLOY_RENAME_LOCKED_FILES": "1"
+               }
             }
-         }]
+         ]
       },
       {
          "apiVersion": "2014-04-01",
@@ -116,51 +118,54 @@
             "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
          ],
          "properties": {
-            "profiles": [{
-               "name": "Default",
-               "capacity": {
-                  "minimum": 1,
-                  "maximum": 2,
-                  "default": 1
-               },
-               "rules": [{
-                     "metricTrigger": {
-                        "metricName": "CpuPercentage",
-                        "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                        "timeGrain": "PT1M",
-                        "statistic": "Average",
-                        "timeWindow": "PT10M",
-                        "timeAggregation": "Average",
-                        "operator": "GreaterThan",
-                        "threshold": 80.0
-                     },
-                     "scaleAction": {
-                        "direction": "Increase",
-                        "type": "ChangeCount",
-                        "value": 1,
-                        "cooldown": "PT10M"
-                     }
+            "profiles": [
+               {
+                  "name": "Default",
+                  "capacity": {
+                     "minimum": 1,
+                     "maximum": 2,
+                     "default": 1
                   },
-                  {
-                     "metricTrigger": {
-                        "metricName": "CpuPercentage",
-                        "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                        "timeGrain": "PT1M",
-                        "statistic": "Average",
-                        "timeWindow": "PT1H",
-                        "timeAggregation": "Average",
-                        "operator": "LessThan",
-                        "threshold": 60.0
+                  "rules": [
+                     {
+                        "metricTrigger": {
+                           "metricName": "CpuPercentage",
+                           "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                           "timeGrain": "PT1M",
+                           "statistic": "Average",
+                           "timeWindow": "PT10M",
+                           "timeAggregation": "Average",
+                           "operator": "GreaterThan",
+                           "threshold": 80.0
+                        },
+                        "scaleAction": {
+                           "direction": "Increase",
+                           "type": "ChangeCount",
+                           "value": 1,
+                           "cooldown": "PT10M"
+                        }
                      },
-                     "scaleAction": {
-                        "direction": "Decrease",
-                        "type": "ChangeCount",
-                        "value": 1,
-                        "cooldown": "PT1H"
+                     {
+                        "metricTrigger": {
+                           "metricName": "CpuPercentage",
+                           "metricResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
+                           "timeGrain": "PT1M",
+                           "statistic": "Average",
+                           "timeWindow": "PT1H",
+                           "timeAggregation": "Average",
+                           "operator": "LessThan",
+                           "threshold": 60.0
+                        },
+                        "scaleAction": {
+                           "direction": "Decrease",
+                           "type": "ChangeCount",
+                           "value": 1,
+                           "cooldown": "PT1H"
+                        }
                      }
-                  }
-               ]
-            }],
+                  ]
+               }
+            ],
             "enabled": false,
             "name": "[concat(parameters('hostingPlanName'), '-', resourceGroup().name)]",
             "targetResourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
@@ -177,6 +182,24 @@
          "properties": {
             "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
          },
+         "resources": [
+            {
+               "name": "appsettings",
+               "type": "config",
+               "apiVersion": "2015-08-01",
+               "dependsOn": [
+                  "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
+                  "[resourceId('Microsoft.Web/sites/slots', parameters('webSiteName'), 'stage')]"
+              ],
+               "tags": {
+                  "displayName": "appSettings"
+               },
+               "properties": {
+                  "WEBSITE_NODE_DEFAULT_VERSION": "[parameters('websiteNodeVersion')]",
+                  "MSDEPLOY_RENAME_LOCKED_FILES": "1"
+               }
+            }
+         ],
          "dependsOn": [
             "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
             "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"

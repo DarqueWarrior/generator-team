@@ -373,7 +373,7 @@ describe(`utility`, function () {
          }, function (e) {
             assert.fail();
             done();
-         });         
+         });
       });
    });
 
@@ -1519,6 +1519,135 @@ describe(`utility`, function () {
    });
 
    context(`is`, function () {
+      it(`isPaaS paas true from answers`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({
+            target: `paas`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS paasslots true from answers`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({
+            target: `paasslots`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS dockerpaas true from answers`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({
+            target: `dockerpaas`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS acilinux true from answers`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({
+            target: `acilinux`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS docker false from answers`, function () {
+         // Arrange
+         let expected = false;
+
+         // Act
+         let actual = util.isPaaS({
+            target: `docker`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS paas true from cmdLnInput`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({}, {
+            target: `paas`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS paasslots true from cmdLnInput`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({}, {
+            target: `paasslots`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS dockerpaas true from cmdLnInput`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({}, {
+            target: `dockerpaas`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS acilinux true from cmdLnInput`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({}, {
+            target: `acilinux`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS docker false from cmdLnInput`, function () {
+         // Arrange
+         let expected = false;
+
+         // Act
+         let actual = util.isPaaS({}, {
+            target: `docker`
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
 
       it(`isTFSGreaterThan2017 false`, function (done) {
          // Arrange

@@ -171,6 +171,38 @@
          }
       },
       {
+         "apiVersion": "2016-08-01",
+         "comments": "Staging slot",
+         "condition": "[equals(parameters('skuName'), 'S1')]",
+         "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
+            "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+         ],
+         "kind": "app",
+         "location": "[resourceGroup().location]",
+         "name": "[concat(parameters('webSiteName'), '/stage')]",
+         "properties": {
+            "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+         },
+         "resources": [
+            {
+               "apiVersion": "2015-08-01",
+               "dependsOn": [
+                    "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
+                    "[resourceId('Microsoft.Web/sites/slots', parameters('webSiteName'), 'stage')]"
+                ],
+               "name": "web",
+               "properties": {
+                  "javaVersion": "1.8",
+                  "javaContainer": "TOMCAT",
+                  "javaContainerVersion": "8.0"
+               },
+               "type": "config"
+            }
+         ],
+         "type": "Microsoft.Web/sites/slots"
+      },
+      {
          "apiVersion": "2014-04-01",
          "name": "[concat('ServerErrors ', parameters('webSiteName'))]",
          "type": "Microsoft.Insights/alertrules",

@@ -65,7 +65,7 @@ function reconcileValue(first, second, fallback) {
 function getTargets(answers) {
 
    return new Promise(function (resolve, reject) {
-      isTFSGreaterThan2017(answers.tfs, answers.pat, function(e, result){
+      isTFSGreaterThan2017(answers.tfs, answers.pat, function (e, result) {
          if (e) {
             reject(e);
             return;
@@ -73,7 +73,7 @@ function getTargets(answers) {
 
          let targets = [];
 
-         if(result) {
+         if (result) {
             if (answers.type === `aspFull`) {
                targets = [{
                   name: `Azure App Service`,
@@ -99,7 +99,7 @@ function getTargets(answers) {
                   name: `Docker Host`,
                   value: `docker`
                }];
-            
+
                // TODO: Investigate if we need to remove these
                // options. I think you can offer paas and paasslots
                // for this combination. 
@@ -107,17 +107,17 @@ function getTargets(answers) {
                   answers.queue === `Hosted Linux Preview`) {
                   // Remove Azure App Service
                   targets.splice(0, 1);
-            
+
                   // Remove Azure App Service (Deployment Slots)
                   targets.splice(0, 1);
                }
             }
-         } else{
+         } else {
 
-         }         
+         }
 
          resolve(targets);
-      });      
+      });
    });
 }
 
@@ -691,7 +691,7 @@ function tryFindRelease(args, callback) {
 function findRelease(args, callback) {
    "use strict";
 
-   var name = (args.target === `docker` || args.target === `dockerpaas`) ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
+   var name = isDocker(args.target) ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
 
    var options = addUserAgent({
       "method": `GET`,
@@ -862,12 +862,15 @@ function isPaaS(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       return (answers.target === `paas` ||
          cmdLnInput.target === `paas` ||
+         answers.target === `paasslots` ||
+         cmdLnInput.target === `paasslots` ||
          answers.target === `acilinux` ||
          cmdLnInput.target === `acilinux` ||
          answers.target === `dockerpaas` ||
          cmdLnInput.target === `dockerpaas`);
    } else {
       return (answers.target === `paas` ||
+         answers.target === `paasslots` ||
          answers.target === `acilinux` ||
          answers.target === `dockerpaas`);
    }

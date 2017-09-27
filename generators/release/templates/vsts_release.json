@@ -50,7 +50,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "1.*",
+                  "version": "2.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -76,7 +76,7 @@
                },
                {
                   "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                  "version": "2.*",
+                  "version": "3.*",
                   "name": "Deploy AzureRM Web App: {{WebAppName}}Dev",
                   "enabled": true,
                   "alwaysRun": false,
@@ -180,7 +180,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "1.*",
+                  "version": "2.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -206,7 +206,7 @@
                },
                {
                   "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                  "version": "2.*",
+                  "version": "3.*",
                   "name": "Deploy AzureRM Web App: {{WebAppName}}QA",
                   "enabled": true,
                   "alwaysRun": false,
@@ -330,7 +330,7 @@
             "name": "Run on agent",
             "workflowTasks": [{
                   "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                  "version": "1.*",
+                  "version": "2.*",
                   "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                   "enabled": true,
                   "alwaysRun": false,
@@ -356,7 +356,7 @@
                },
                {
                   "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                  "version": "2.*",
+                  "version": "3.*",
                   "name": "Deploy AzureRM Web App: {{WebAppName}}Prod",
                   "enabled": true,
                   "alwaysRun": false,
