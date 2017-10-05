@@ -16,46 +16,46 @@ function run(args, gen, done) {
    var token = util.encodePat(args.pat);
 
    async.series([
-         function (mainSeries) {
-            util.findProject(args.tfs, args.project, token, gen, function (err, tp) {
-               teamProject = tp;
-               mainSeries(err, tp);
-            });
-         },
-         function (mainSeries) {
-            async.parallel([
-               function (inParallel) {
-                  util.findQueue(args.queue, args.tfs, teamProject, token, function (err, id) {
-                     queueId = id;
-                     inParallel(err, id);
+      function (mainSeries) {
+         util.findProject(args.tfs, args.project, token, gen, function (err, tp) {
+            teamProject = tp;
+            mainSeries(err, tp);
+         });
+      },
+      function (mainSeries) {
+         async.parallel([
+            function (inParallel) {
+               util.findQueue(args.queue, args.tfs, teamProject, token, function (err, id) {
+                  queueId = id;
+                  inParallel(err, id);
+               });
+            },
+            function (inParallel) {
+               if (util.needsDockerHost(args)) {
+                  util.findDockerServiceEndpoint(args.tfs, teamProject.id, args.dockerHost, token, gen, function (err, ep) {
+                     dockerEndpoint = ep;
+                     inParallel(err, dockerEndpoint);
                   });
-               },
-               function (inParallel) {
-                  if (util.needsDockerHost(args)) {
-                     util.findDockerServiceEndpoint(args.tfs, teamProject.id, args.dockerHost, token, gen, function (err, ep) {
-                        dockerEndpoint = ep;
-                        inParallel(err, dockerEndpoint);
-                     });
-                  } else {
-                     inParallel(null, undefined);
-                  }
-               },
-               function (inParallel) {
-                  if (util.needsRegistry(args)) {
-                     util.findDockerRegistryServiceEndpoint(args.tfs, teamProject.id, args.dockerRegistry, token, function (err, ep) {
-                        dockerRegistryEndpoint = ep;
-                        inParallel(err, dockerRegistryEndpoint);
-                     });
-                  } else {
-                     inParallel(null, undefined);
-                  }
+               } else {
+                  inParallel(null, undefined);
                }
-            ], mainSeries);
-         },
-         function (mainSeries) {
-            findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
-         }
-      ],
+            },
+            function (inParallel) {
+               if (util.needsRegistry(args)) {
+                  util.findDockerRegistryServiceEndpoint(args.tfs, teamProject.id, args.dockerRegistry, token, function (err, ep) {
+                     dockerRegistryEndpoint = ep;
+                     inParallel(err, dockerRegistryEndpoint);
+                  });
+               } else {
+                  inParallel(null, undefined);
+               }
+            }
+         ], mainSeries);
+      },
+      function (mainSeries) {
+         findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+      }
+   ],
       function (err, results) {
          // This is just for test and will be undefined during normal use
          if (done) {
@@ -114,7 +114,7 @@ function createBuild(account, teamProject, token, queueId,
       '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : ``,
       '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : ``,
       '{{dockerRegistryId}}': dockerNamespace,
-      '{{ProjectLowerCase}}': teamProject.name.toLowerCase()
+      '{{ProjectLowerCase}}': teamProject.name.toLowerCase(),
    };
 
    contents = util.tokenize(contents, tokens);

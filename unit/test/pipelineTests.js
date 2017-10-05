@@ -47,13 +47,17 @@ describe(`team:pipeline`, function () {
       let servicePrincipalId = `servicePrincipalId`;
       let servicePrincipalKey = `servicePrincipalKey`;
       let tfs = `http://localhost:8080/tfs/defaultcollection`;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
 
       return helpers.run(path.join(__dirname, `../../generators/pipeline/index`))
          .withGenerators(deps)
          .withArguments([type, applicationName, tfs,
             queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,
             dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts,
-            dockerRegistryPassword, servicePrincipalKey, pat
+            dockerRegistryPassword, servicePrincipalKey, nugetApiKey,
+            prereleaseGalleryUri, prereleaseNugetApiKey, pat
          ])
          .on(`error`, function (e) {
             cleanUp();
@@ -218,7 +222,7 @@ describe(`team:pipeline`, function () {
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/defaultcollection`,
             `default`, `paas`, `AzureSub`, `AzureSubId`, `TenantId`, `servicePrincipalId`,
             ``, ``, ``, ``, ``, ``,
-            `servicePrincipalKey`, `token`
+            `servicePrincipalKey`, ``, ``, ``, `token`
          ])
          .on(`error`, function (e) {
             assert.fail(e);
@@ -253,13 +257,17 @@ describe(`team:pipeline`, function () {
       let dockerRegistryId = `DockerUsername`;
       let dockerRegistryPassword = `DockerPassword`;
       let tfs = `http://localhost:8080/tfs/defaultcollection`;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
 
       return helpers.run(path.join(__dirname, `../../generators/pipeline/index.js`))
          .withGenerators(deps)
          .withArguments([type, applicationName, tfs,
             queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,
             dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts,
-            dockerRegistryPassword, servicePrincipalKey, pat
+            dockerRegistryPassword, servicePrincipalKey, nugetApiKey,
+            prereleaseGalleryUri, prereleaseNugetApiKey, pat
          ])
          .on(`error`, function (e) {
             assert.fail(e);

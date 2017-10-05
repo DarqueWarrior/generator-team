@@ -103,7 +103,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
-            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `dockerpaas`, expectedToken);
@@ -296,7 +296,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
-            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
@@ -479,6 +479,88 @@ describe(`release:index`, function () {
             stubs.tryFindRelease(expectedAccount, `docker`, expectedToken);
             stubs.findDockerServiceEndpoint(expectedAccount, expectedToken);
             stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
+         })
+         .on(`end`, function (e) {
+            cleanUp();
+         });
+   });
+
+   it(`test prompts powershell gallery vsts`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `vsts`;
+
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.tryFindRelease.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `vsts`,
+            pat: `token`,
+            queue: `Hosted VS2017`,
+            type: `powershell`,
+            applicationName: `powershellDemo`,
+            target: `gallery`,
+            nugetApikey: `apiKey`,
+            prereleaseGalleryUri: 'http://somewhere.com',
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            stubs.findProject(expectedAccount, `powershellDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Hosted VS2017`, expectedToken);
+            stubs.findBuild(expectedAccount, `gallery`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `gallery`, expectedToken);
+         })
+         .on(`end`, function (e) {
+            cleanUp();
+         });
+   });
+
+   it(`test prompts powershell gallery tfs`, () => {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+
+      let cleanUp = () => {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.tryFindRelease.restore();
+         util.isTFSGreaterThan2017.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            pat: `token`,
+            queue: `Hosted VS2017`,
+            type: `powershell`,
+            applicationName: `powershellDemo`,
+            target: `gallery`,
+            nugetApikey: `apiKey`,
+            prereleaseGalleryUri: 'http://somewhere.com',
+         })
+         .on(`error`, e => {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, (generator) => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+            stubs.findProject(expectedAccount, `powershellDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Hosted VS2017`, expectedToken);
+            stubs.findBuild(expectedAccount, `gallery`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `gallery`, expectedToken);
          })
          .on(`end`, function (e) {
             cleanUp();
@@ -909,6 +991,39 @@ describe(`release:app`, function () {
       });
    }));
 
+   it(`getRelease powershell vsts gallery`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `vsts_release_gallery.json`;
+
+      // Act
+      release.getRelease({
+         type: `powershell`,
+         target: `gallery`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease powershell tfs 2017 gallery`, sinon.test(function (done) {
+      // Arrange 
+      let expected = `tfs_release_gallery.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `powershell`,
+         target: `gallery`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
    it(`run with existing release should run without error`, sinon.test(function (done) {
       // Arrange
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
@@ -920,7 +1035,7 @@ describe(`release:app`, function () {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -963,7 +1078,7 @@ describe(`release:app`, function () {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -1027,14 +1142,14 @@ describe(`release:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create release
       requestStub.onCall(0).yields(null, {
          statusCode: 200
       }, {
-         name: `release`
-      });
+            name: `release`
+         });
 
       var args = {
          build: {
@@ -1086,7 +1201,7 @@ describe(`release:app`, function () {
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          build: {
@@ -1128,8 +1243,8 @@ describe(`release:app`, function () {
       requestStub.onCall(1).yields(null, {
          statusCode: 200
       }, {
-         name: `release`
-      });
+            name: `release`
+         });
 
       // Act
       proxyApp.findOrCreateRelease(args, logger, (e, rel) => {
@@ -1161,7 +1276,7 @@ describe(`release:app`, function () {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create release
       requestStub.onCall(0).yields(null, {

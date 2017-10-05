@@ -14,20 +14,37 @@ function addRelease(obj) {
    }
 
    obj.composeWith(`team:release`, {
-      args: [obj.type, obj.applicationName, obj.tfs,
-         queue, obj.target,
+      args: [
+         obj.type,
+         obj.applicationName,
+         obj.tfs,
+         queue,
+         obj.target,
          obj.azureSub,
-         obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
-         obj.dockerRegistryPassword, obj.pat
+         obj.dockerHost,
+         obj.dockerRegistry,
+         obj.dockerRegistryId,
+         obj.dockerPorts,
+         obj.dockerRegistryPassword,
+         obj.nugetApiKey,
+         obj.prereleaseGalleryUri,
+         obj.prereleaseNugetApiKey,
+         obj.pat
       ]
    });
 }
 
 function addBuild(obj) {
    obj.composeWith(`team:build`, {
-      args: [obj.type, obj.applicationName, obj.tfs,
-         obj.queue, obj.target,
-         obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId,
+      args: [
+         obj.type,
+         obj.applicationName,
+         obj.tfs,
+         obj.queue,
+         obj.target,
+         obj.dockerHost,
+         obj.dockerRegistry,
+         obj.dockerRegistryId,
          obj.pat
       ]
    });
@@ -36,8 +53,14 @@ function addBuild(obj) {
 function addAzure(obj) {
    if (util.isPaaS(obj)) {
       obj.composeWith(`team:azure`, {
-         args: [obj.applicationName, obj.tfs,
-            obj.azureSub, obj.azureSubId, obj.tenantId, obj.servicePrincipalId, obj.servicePrincipalKey,
+         args: [
+            obj.applicationName,
+            obj.tfs,
+            obj.azureSub,
+            obj.azureSubId,
+            obj.tenantId,
+            obj.servicePrincipalId,
+            obj.servicePrincipalKey,
             obj.pat
          ]
       });
@@ -46,7 +69,9 @@ function addAzure(obj) {
 
 function addProject(obj) {
    obj.composeWith(`team:project`, {
-      args: [obj.applicationName, obj.tfs,
+      args: [
+         obj.applicationName,
+         obj.tfs,
          obj.pat
       ]
    });
@@ -55,8 +80,12 @@ function addProject(obj) {
 function addRegistry(obj) {
    if (util.needsRegistry(obj)) {
       obj.composeWith(`team:registry`, {
-         args: [obj.applicationName, obj.tfs,
-            obj.dockerRegistry, obj.dockerRegistryId, obj.dockerRegistryPassword,
+         args: [
+            obj.applicationName,
+            obj.tfs,
+            obj.dockerRegistry,
+            obj.dockerRegistryId,
+            obj.dockerRegistryPassword,
             obj.pat
          ]
       });
@@ -66,8 +95,11 @@ function addRegistry(obj) {
 function addDockerHost(obj) {
    if (util.needsDockerHost(obj)) {
       obj.composeWith(`team:docker`, {
-         args: [obj.applicationName, obj.tfs,
-            obj.dockerHost, obj.dockerCertPath,
+         args: [
+            obj.applicationName,
+            obj.tfs,
+            obj.dockerHost,
+            obj.dockerCertPath,
             obj.pat
          ]
       });
@@ -77,7 +109,11 @@ function addDockerHost(obj) {
 function addLanguage(obj) {
    if (obj.type === `asp`) {
       obj.composeWith(`team:asp`, {
-         args: [obj.applicationName, obj.installDep, obj.dockerPorts]
+         args: [
+            obj.applicationName,
+            obj.installDep,
+            obj.dockerPorts
+         ]
       });
    } else if (obj.type === `aspFull`) {
       obj.composeWith(`team:aspFull`, {
@@ -85,18 +121,37 @@ function addLanguage(obj) {
       });
    } else if (obj.type === `java`) {
       obj.composeWith(`team:java`, {
-         args: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
+         args: [
+            obj.applicationName,
+            obj.groupId,
+            obj.installDep,
+            obj.dockerPorts
+         ]
+      });
+   } else if (obj.type === `powershell`) {
+      obj.composeWith(`team:powershell`, {
+         args: [
+            obj.applicationName,
+            obj.powershellAuthor,
+            obj.powershellDescription
+         ]
       });
    } else {
       obj.composeWith(`team:node`, {
-         args: [obj.applicationName, obj.installDep, obj.dockerPorts]
+         args: [
+            obj.applicationName,
+            obj.installDep,
+            obj.dockerPorts
+         ]
       });
    }
 }
 
 function addGit(obj) {
    obj.composeWith(`team:git`, {
-      args: [obj.applicationName, obj.tfs,
+      args: [
+         obj.applicationName,
+         obj.tfs,
          `all`,
          obj.pat
       ]

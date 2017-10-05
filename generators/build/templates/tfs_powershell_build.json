@@ -1,0 +1,187 @@
+{
+   "name": "{{BuildDefName}}",
+   "type": "build",
+   "quality": "definition",
+   "buildNumberFormat": "$(BuildDefinitionName)-$(BuildID)",
+   "queue": {
+      "id": "{{QueueId}}"
+   },
+   "triggers": [
+      {
+         "branchFilters": [
+            "+refs/heads/master"
+         ],
+         "pathFilters": [],
+         "batchChanges": false,
+         "maxConcurrentBuildsPerBranch": 1,
+         "triggerType": "continuousIntegration"
+      }
+   ],
+   "variables": {
+      "system.debug": {
+         "value": "true",
+         "allowOverride": true
+      }
+   },
+   "build": [
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Run Static Code Analysis",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+            "versionSpec": "*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "scriptType": "filePath",
+            "scriptName": "./build.ps1",
+            "arguments": "-Syntax",
+            "workingFolder": "",
+            "inlineScript": "",
+            "failOnStandardError": "true"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Run Unit Tests",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+            "versionSpec": "*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "scriptType": "filePath",
+            "scriptName": "./build.ps1",
+            "arguments": "-Unit",
+            "workingFolder": "",
+            "inlineScript": "",
+            "failOnStandardError": "true"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Publish Test Results",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
+            "versionSpec": "*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "testRunner": "NUnit",
+            "testResultsFiles": "**\\TEST-*.xml",
+            "searchFolder": "$(System.DefaultWorkingDirectory)",
+            "mergeTestResults": "false",
+            "testRunTitle": "Unit Tests",
+            "platform": "",
+            "configuration": "",
+            "publishRunAttachments": "true"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Stage Module for Release",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+            "versionSpec": "1.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "scriptType": "filePath",
+            "scriptName": "./build.ps1",
+            "arguments": "-Stage",
+            "workingFolder": "",
+            "inlineScript": "",
+            "failOnStandardError": "true"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Bump Build Version",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+            "versionSpec": "1.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "scriptType": "filePath",
+            "scriptName": "./build.ps1",
+            "arguments": "-Version  -Build $(Build.BuildId)",
+            "workingFolder": "",
+            "inlineScript": "",
+            "failOnStandardError": "true"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Copy Module to Release Folder",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+            "versionSpec": "*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "SourceFolder": "",
+            "Contents": "Release\\{{Project}}\\**",
+            "TargetFolder": "$(build.StagingDirectory)/{{Project}}",
+            "CleanTargetFolder": "false",
+            "OverWrite": "false",
+            "flattenFolders": "false"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Publish Artifact",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+            "versionSpec": "*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "PathtoPublish": "$(build.StagingDirectory)",
+            "ArtifactName": "drop",
+            "ArtifactType": "Container",
+            "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+         }
+      }
+   ],
+   "repository": {
+      "properties": {
+         "labelSources": "0",
+         "reportBuildStatus": "true"
+      },
+      "type": "TfsGit",
+      "name": "{{Project}}",
+      "url": "{{TFS}}/_git/{{Project}}",
+      "defaultBranch": "refs/heads/master",
+      "clean": "false",
+      "checkoutSubmodules": false
+   }
+}

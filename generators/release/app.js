@@ -92,7 +92,10 @@ function run(args, gen, done) {
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
             endpoint: azureEndpoint ? azureEndpoint.id : null,
-            dockerRegistryPassword: args.dockerRegistryPassword
+            dockerRegistryPassword: args.dockerRegistryPassword,
+            prereleaseGalleryUri: args.prereleaseGalleryUri,
+            prereleaseNugetApiKey: args.prereleaseNugetApiKey,
+            nugetApiKey: args.nugetApiKey,
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {
@@ -118,12 +121,12 @@ function getRelease(args, callback) {
 
    let pat = util.encodePat(args.pat);
 
-   if (util.isDocker(args.target)) {
+   if (util.isDocker(args.target) || util.isPowershellGallery(args.target)) {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
             release = `vsts_release_${args.target}.json`;
 
-            if(!util.isVSTS(args.tfs) && args.target === `dockerpaas`){
+            if (!util.isVSTS(args.tfs) && args.target === `dockerpaas`) {
                release = `tfs_2018_release_${args.target}.json`;
             }
          } else {
@@ -203,7 +206,10 @@ function createRelease(args, gen, callback) {
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
-      '{{ReleaseDefName}}': releaseDefName
+      '{{ReleaseDefName}}': releaseDefName,
+      '{{prereleaseGalleryUri}}': args.prereleaseGalleryUri,
+      '{{prereleaseNugetApiKey}}': args.prereleaseNugetApiKey,
+      '{{releaseNugetApiKey}}': args.nugetApiKey,
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');

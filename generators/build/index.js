@@ -38,7 +38,7 @@ function input() {
       prompts.target(this),
       prompts.dockerHost(this),
       prompts.dockerRegistry(this),
-      prompts.dockerRegistryUsername(this)
+      prompts.dockerRegistryUsername(this),
    ]).then(function (answers) {
       // Transfer answers (a) to global object (cmdLnInput) for use in the rest
       // of the generator
@@ -73,7 +73,7 @@ function configureBuild() {
          queue: _this.queue,
          target: _this.target,
          appName: _this.applicationName,
-         project: _this.applicationName
+         project: _this.applicationName,
       };
 
       if (util.isDocker(_this.target)) {

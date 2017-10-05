@@ -35,6 +35,11 @@ describe(`app:index`, function () {
       let dockerPorts = `dockerPorts`;
       let dockerRegistryPassword = `dockerRegistryPassword`;
       let servicePrincipalKey = `servicePrincipalKey`;
+      let powershellAuthor = ``;
+      let powershellDescription = ``;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
       let pat = `token`;
 
       // Act
@@ -44,8 +49,9 @@ describe(`app:index`, function () {
             azureSub, azureSubId, tenantId, servicePrincipalId,
             queue, target, installDep, groupId,
             dockerHost, dockerCertPath,
-            dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
-            servicePrincipalKey, pat
+            dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, powershellAuthor, powershellDescription,
+            prereleaseGalleryUri, prereleaseNugetApiKey, nugetApiKey, pat
          ])
          .on(`error`, function (e) {
             assert.fail(e);
@@ -81,6 +87,11 @@ describe(`app:index`, function () {
       let dockerPorts = ``;
       let dockerRegistryPassword = ``;
       let servicePrincipalKey = `servicePrincipalKey`;
+      let powershellAuthor = ``;
+      let powershellDescription = ``;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
       let pat = `token`;
 
       // Act
@@ -90,8 +101,9 @@ describe(`app:index`, function () {
             azureSub, azureSubId, tenantId, servicePrincipalId,
             queue, target, installDep, groupId,
             dockerHost, dockerCertPath,
-            dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
-            servicePrincipalKey, pat
+            dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, powershellAuthor, powershellDescription,
+            prereleaseGalleryUri, prereleaseNugetApiKey, nugetApiKey, pat
          ])
          .on(`error`, function (e) {
             assert.fail(e);
@@ -127,6 +139,11 @@ describe(`app:index`, function () {
       let dockerPorts = ``;
       let dockerRegistryPassword = ``;
       let servicePrincipalKey = `servicePrincipalKey`;
+      let powershellAuthor = ``;
+      let powershellDescription = ``;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
       let pat = `token`;
 
       // Act
@@ -136,8 +153,9 @@ describe(`app:index`, function () {
             azureSub, azureSubId, tenantId, servicePrincipalId,
             queue, target, installDep, groupId,
             dockerHost, dockerCertPath,
-            dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
-            servicePrincipalKey, pat
+            dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, powershellAuthor, powershellDescription,
+            nugetApiKey, prereleaseGalleryUri, prereleaseNugetApiKey, pat
          ])
          .on(`error`, function (e) {
             assert.fail(e);
@@ -215,6 +233,11 @@ describe(`app:index`, function () {
       let dockerPorts = `dockerPorts`;
       let dockerRegistryPassword = `dockerRegistryPassword`;
       let servicePrincipalKey = `servicePrincipalKey`;
+      let powershellAuthor = ``;
+      let powershellDescription = ``;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
       let pat = `token`;
 
       return helpers.run(path.join(__dirname, `../../generators/app/index`))
@@ -223,8 +246,9 @@ describe(`app:index`, function () {
             azureSub, azureSubId, tenantId, servicePrincipalId,
             queue, target, installDep, groupId,
             dockerHost, dockerCertPath,
-            dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
-            servicePrincipalKey, pat
+            dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, powershellAuthor, powershellDescription,
+            nugetApiKey, prereleaseGalleryUri, prereleaseNugetApiKey, pat
          ])
          .on(`error`, function (e) {
             assert.fail(e);
@@ -277,6 +301,149 @@ describe(`app:index`, function () {
          })
          .on(`end`, function (e) {
             cleanUp();
+         });
+   });
+
+   it(`arguments using fake dependencies docker`, () => {
+      // Arrange
+      let deps = [
+         [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:node`],
+         [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:docker`],
+         [helpers.createDummyGenerator(), `team:project`],
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:registry`]
+      ];
+
+      let type = `node`;
+      let name = `demo`;
+      let tfs = `vsts`;
+      let azureSub = ``;
+      let azureSubId = ``;
+      let tenantId = ``;
+      let servicePrincipalId = ``;
+      let queue = `default`;
+      let target = `docker`;
+      let installDep = `false`;
+      let groupId = ``;
+      let dockerHost = `dockerHost`;
+      let dockerCertPath = `dockerCertPath`;
+      let dockerRegistry = `dockerRegistry`;
+      let dockerRegistryId = `dockerRegistryId`;
+      let dockerPorts = `dockerPorts`;
+      let dockerRegistryPassword = `dockerRegistryPassword`;
+      let servicePrincipalKey = `servicePrincipalKey`;
+      let powershellAuthor = ``;
+      let powershellDescription = ``;
+      let nugetApiKey = ``;
+      let prereleaseGalleryUri = ``;
+      let prereleaseNugetApiKey = ``;
+      let pat = `token`;
+
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
+         .withGenerators(deps)
+         .withArguments([type, name, tfs,
+            azureSub, azureSubId, tenantId, servicePrincipalId,
+            queue, target, installDep, groupId,
+            dockerHost, dockerCertPath,
+            dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, powershellAuthor, powershellDescription,
+            nugetApiKey, prereleaseGalleryUri, prereleaseNugetApiKey, pat
+         ])
+         .on(`error`, e => {
+            assert.fail(e);
+         });
+   });
+
+   it(`prompts using fake dependencies powershell`, () => {
+      let deps = [
+         [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:project`],
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:powershell`],
+      ];
+
+      var cleanUp = () => {
+         util.getPools.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
+         .withGenerators(deps)
+         .withPrompts({
+            tfs: `vsts`,
+            type: `powershell`,
+            pat: `token`,
+            queue: `Default`,
+            target: `gallery`,
+            applicationName: `powershellDemo`,
+            powershellAuthor: `PowerShell Demo Author`,
+            powershellDescription: `Does Awesome Things`,
+            nugetApiKey: `apiKey`,
+            prereleaseGalleryUri: `https://www.myget.org/F/usepowershell/api/v2`,
+            prereleaseNugetApiKey: `prereleaseApiKey`
+         })
+         .on(`error`, e => {
+            cleanUp();
+            assert.fail(e);
+         })
+         .on(`ready`, generator => {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+         })
+         .on(`end`, e => {
+            cleanUp();
+         });
+   });
+
+   it(`arguments using fake dependencies powershell`, () => {
+      // Arrange
+      let deps = [
+         [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:project`],
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:powershell`],
+      ];
+
+      let type = `powershell`;
+      let name = `demo`;
+      let tfs = `vsts`;
+      let azureSub = ``;
+      let azureSubId = ``;
+      let tenantId = ``;
+      let servicePrincipalId = ``;
+      let queue = `default`;
+      let target = `gallery`;
+      let installDep = `false`;
+      let groupId = ``;
+      let dockerHost = ``;
+      let dockerCertPath = ``;
+      let dockerRegistry = ``;
+      let dockerRegistryId = ``;
+      let dockerPorts = ``;
+      let dockerRegistryPassword = ``;
+      let servicePrincipalKey = ``;
+      let powershellAuthor = `PowerShell Demo Author`;
+      let powershellDescription = `Does Awesome Things`;
+      let nugetApiKey = `apiKey`;
+      let prereleaseGalleryUri = `https://www.myget.org/F/usepowershell/api/v2`;
+      let prereleaseNugetApiKey = `prereleaseApiKey`;
+      let pat = `token`;
+
+      return helpers.run(path.join(__dirname, `../../generators/app/index`))
+         .withGenerators(deps)
+         .withArguments([type, name, tfs,
+            azureSub, azureSubId, tenantId, servicePrincipalId,
+            queue, target, installDep, groupId,
+            dockerHost, dockerCertPath,
+            dockerRegistry, dockerRegistryId, dockerPorts,
+            dockerRegistryPassword, servicePrincipalKey, powershellAuthor, powershellDescription,
+            nugetApiKey, prereleaseGalleryUri, prereleaseNugetApiKey, pat
+         ])
+         .on(`error`, e => {
+            assert.fail(e);
          });
    });
 });

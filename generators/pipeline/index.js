@@ -32,6 +32,9 @@ function construct() {
    args.dockerPorts(this);
    args.dockerRegistryPassword(this);
    args.servicePrincipalKey(this);
+   args.nugetApiKey(this);
+   args.prereleaseGalleryUri(this);
+   args.prereleaseNugetApiKey(this);
    args.pat(this);
 }
 
@@ -60,6 +63,9 @@ function input() {
       prompts.dockerRegistryUsername(this),
       prompts.dockerRegistryPassword(this),
       prompts.dockerPorts(this),
+      prompts.nugetApiKey(this),
+      prompts.prereleaseGalleryUri(this),
+      prompts.prereleaseNugetApiKey(this),
    ]).then(function (answers) {
       // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
       // of the generator
@@ -80,6 +86,9 @@ function input() {
       this.servicePrincipalId = util.reconcileValue(answers.servicePrincipalId, cmdLnInput.servicePrincipalId, ``);
       this.servicePrincipalKey = util.reconcileValue(answers.servicePrincipalKey, cmdLnInput.servicePrincipalKey, ``);
       this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
+      this.nugetApiKey = util.reconcileValue(answers.nugetApiKey, cmdLnInput.nugetApiKey, ``);
+      this.prereleaseGalleryUri = util.reconcileValue(answers.prereleaseGalleryUri, cmdLnInput.prereleaseGalleryUri, ``);
+      this.prereleaseNugetApiKey = util.reconcileValue(answers.prereleaseNugetApiKey, cmdLnInput.prereleaseNugetApiKey, ``);
    }.bind(this));
 }
 
