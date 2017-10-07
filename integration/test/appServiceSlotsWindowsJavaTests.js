@@ -2,7 +2,8 @@ const appService = require('./appService');
 
 describe(`Azure App Service Slots (Windows) using Default queue`, function () {
    "use strict";
-   var iterations = [{
+
+   appService.runTests({
       appType: `java`,
       appName: `javaPaaSTest`,
       target: `paasslots`,
@@ -11,7 +12,5 @@ describe(`Azure App Service Slots (Windows) using Default queue`, function () {
       suffix: ``,
       queue: `Default`,
       title: `Home Page - My Spring Application`
-   }];
-
-   iterations.forEach(appService.runTests);
+   });
 });

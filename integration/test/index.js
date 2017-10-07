@@ -1,4 +1,5 @@
 const async = require('async');
+const util = require(`./util`);
 const request = require('request');
 const package = require('../../package.json');
 
@@ -298,7 +299,7 @@ function findBuildDefinition(account, projectId, pat, name, userAgent, callback)
    });
 }
 
-function getBuildLog(account, projectId, pat, id, userAgent, callback){
+function getBuildLog(account, projectId, pat, id, userAgent, callback) {
    let token = encodePat(pat);
 
    var options = addUserAgent({
@@ -394,7 +395,20 @@ function getReleases(account, projectId, pat, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
-      var obj = JSON.parse(body);
+      if (e) {
+         util.log(`Error in getRelease: ${e}`);
+      }
+
+      let obj = {};
+
+      try {
+         obj = JSON.parse(body);
+      } catch (error) {
+         // This a HTML page with an error message.
+         e = error;
+         util.log(error);
+         util.log(body);
+      }
 
       callback(e, obj.value);
    });

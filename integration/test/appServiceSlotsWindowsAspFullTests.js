@@ -2,6 +2,7 @@ const appService = require('./appService');
 
 describe(`Azure App Service Slots (Windows) using Default queue`, function () {
    "use strict";
+   
    appService.runTests({
       appType: `aspFull`,
       appName: `aspFullTest`,

@@ -2,7 +2,8 @@ const appService = require('./appService');
 
 describe(`Azure App Service (Windows) using Default queue`, function () {
    "use strict";
-   var iterations = [{
+
+   appService.runTests({
       appType: `asp`,
       appName: `aspPaaSTest`,
       target: `paas`,
@@ -10,7 +11,5 @@ describe(`Azure App Service (Windows) using Default queue`, function () {
       suffix: ``,
       queue: `Default`,
       title: `Home Page - My .NET Core Application`
-   }];
-
-   iterations.forEach(appService.runTests);
+   });
 });

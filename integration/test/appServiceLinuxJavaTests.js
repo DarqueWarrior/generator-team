@@ -3,6 +3,7 @@ const appService = require('./appService');
 describe(`Default Java AS Docker`, function () {
    describe(`Azure App Service Docker (Linux) using Default queue`, function () {
       "use strict";
+      
       appService.runTests({
          appType: `java`,
          appName: `javaDockerPaaSTest`,

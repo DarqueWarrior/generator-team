@@ -253,10 +253,16 @@ function runTests(iteration) {
                },
                function (finished) {
                   vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                     if (r.length > 0) {
+                     if (r !== undefined && r.length > 0) {
                         status = r[0].environments[0].status;
                      }
-                     finished(err);
+                     
+                     // Sleep before calling again. If you have too many
+                     // test running at the same time VSTS will start to 
+                     // Timeout. Might be DOS protection.
+                     setTimeout(function () {
+                        finished(err);
+                     }, 15000 + Math.floor((Math.random() * 1000) + 1));
                   });
                },
                function (e) {
@@ -308,10 +314,16 @@ function runTests(iteration) {
                   },
                   function (finished) {
                      vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                        if (r.length > 0) {
+                        if (r !== undefined && r.length > 0) {
                            status = r[0].environments[1].status;
                         }
-                        finished(err);
+
+                        // Sleep before calling again. If you have too many
+                        // test running at the same time VSTS will start to 
+                        // Timeout. Might be DOS protection.
+                        setTimeout(function () {
+                           finished(err);
+                        }, 15000 + Math.floor((Math.random() * 1000) + 1));
                      });
                   },
                   function (e) {
@@ -363,10 +375,16 @@ function runTests(iteration) {
                   },
                   function (finished) {
                      vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                        if (r.length > 0) {
+                        if (r !== undefined && r.length > 0) {
                            status = r[0].environments[2].status;
                         }
-                        finished(err);
+
+                        // Sleep before calling again. If you have too many
+                        // test running at the same time VSTS will start to 
+                        // Timeout. Might be DOS protection.
+                        setTimeout(function () {
+                           finished(err);
+                        }, 15000 + Math.floor((Math.random() * 1000) + 1));
                      });
                   },
                   function (e) {
