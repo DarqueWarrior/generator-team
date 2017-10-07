@@ -55,7 +55,7 @@ function runTests(iteration) {
 
    var installDep = `false`;
    context(`${iteration.appType}`, function () {
-      this.bail(true);
+      this.bail(false);
 
       before(function (done) {
          // runs before all tests in this block
@@ -194,13 +194,18 @@ function runTests(iteration) {
                   return iteration.buildResult !== `failed` && iteration.buildResult !== `succeeded`;
                },
                function (finished) {
-                  vsts.getBuilds(tfs, iteration.projectId, pat, userAgent, (err, builds) => {
-                     if (builds.length > 0) {
-                        iteration.buildId = builds[0].id;
-                        iteration.buildResult = builds[0].result;
-                     }
-                     finished(err);
-                  });
+                  // Sleep before calling again. If you have too many
+                  // test running at the same time VSTS will start to 
+                  // Timeout. Might be DOS protection.
+                  setTimeout(function () {
+                     vsts.getBuilds(tfs, iteration.projectId, pat, userAgent, (err, builds) => {
+                        if (builds.length > 0) {
+                           iteration.buildId = builds[0].id;
+                           iteration.buildResult = builds[0].result;
+                        }
+                        finished(err);
+                     });
+                  }, 30000 + Math.floor((Math.random() * 1000) + 1));
                },
                function (e) {
                   // Get the build log
@@ -224,12 +229,17 @@ function runTests(iteration) {
                   return iteration.status !== `rejected` && iteration.status !== `succeeded` && iteration.status !== `partiallySucceeded`;
                },
                function (finished) {
-                  vsts.getReleases(tfs, iteration.projectId, pat, userAgent, (err, r) => {
-                     if (r.length > 0) {
-                        iteration.status = r[0].environments[0].status;
-                     }
-                     finished(err);
-                  });
+                  // Sleep before calling again. If you have too many
+                  // test running at the same time VSTS will start to 
+                  // Timeout. Might be DOS protection.
+                  setTimeout(function () {
+                     vsts.getReleases(tfs, iteration.projectId, pat, userAgent, (err, r) => {
+                        if (r.length > 0) {
+                           iteration.status = r[0].environments[0].status;
+                        }
+                        finished(err);
+                     });
+                  }, 35000 + Math.floor((Math.random() * 1000) + 1));
                },
                function (e) {
                   // Get the release log            
@@ -245,21 +255,26 @@ function runTests(iteration) {
                // Some sites take a while to jit.
                this.retries(4);
 
-               azure.getAciIp(`${iteration.applicationName}Dev`, function (e, url) {
-                  assert.ifError(e);
-                  let fullUrl = `${url}:${dockerPorts}`;
-                  util.log(`trying to access ${fullUrl}`);
-                  request({
-                     url: fullUrl
-                  }, function (err, res, body) {
-                     assert.ifError(err);
+               // Sleep before calling again. If you have too many
+               // test running at the same time VSTS will start to 
+               // Timeout. Might be DOS protection.
+               setTimeout(function () {
+                  azure.getAciIp(`${iteration.applicationName}Dev`, function (e, url) {
+                     assert.ifError(e);
+                     let fullUrl = `${url}:${dockerPorts}`;
+                     util.log(`trying to access ${fullUrl}`);
+                     request({
+                        url: fullUrl
+                     }, function (err, res, body) {
+                        assert.ifError(err);
 
-                     var dom = cheerio.load(body);
-                     assert.equal(dom(`title`).text(), `${iteration.title}`);
+                        var dom = cheerio.load(body);
+                        assert.equal(dom(`title`).text(), `${iteration.title}`);
 
-                     done();
+                        done();
+                     });
                   });
-               });
+               }, 15000 + Math.floor((Math.random() * 1000) + 1));
             });
          }
       });

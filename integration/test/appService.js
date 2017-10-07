@@ -222,13 +222,18 @@ function runTests(iteration) {
                   return result !== `failed` && result !== `succeeded`;
                },
                function (finished) {
-                  vsts.getBuilds(tfs, projectId, pat, userAgent, (err, builds) => {
-                     if (builds.length > 0) {
-                        id = builds[0].id;
-                        result = builds[0].result;
-                     }
-                     finished(err);
-                  });
+                  // Sleep before calling again. If you have too many
+                  // test running at the same time VSTS will start to 
+                  // Timeout. Might be DOS protection.
+                  setTimeout(function () {
+                     vsts.getBuilds(tfs, projectId, pat, userAgent, (err, builds) => {
+                        if (builds.length > 0) {
+                           id = builds[0].id;
+                           result = builds[0].result;
+                        }
+                        finished(err);
+                     });
+                  }, 15000 + Math.floor((Math.random() * 1000) + 1));
                },
                function (e) {
                   // Get the build log
@@ -252,18 +257,18 @@ function runTests(iteration) {
                   return status !== `rejected` && status !== `succeeded` && status !== `partiallySucceeded`;
                },
                function (finished) {
-                  vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                     if (r !== undefined && r.length > 0) {
-                        status = r[0].environments[0].status;
-                     }
-                     
-                     // Sleep before calling again. If you have too many
-                     // test running at the same time VSTS will start to 
-                     // Timeout. Might be DOS protection.
-                     setTimeout(function () {
+                  // Sleep before calling again. If you have too many
+                  // test running at the same time VSTS will start to 
+                  // Timeout. Might be DOS protection.
+                  setTimeout(function () {
+                     vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                        if (r !== undefined && r.length > 0) {
+                           status = r[0].environments[0].status;
+                        }
+
                         finished(err);
-                     }, 15000 + Math.floor((Math.random() * 1000) + 1));
-                  });
+                     });
+                  }, 15000 + Math.floor((Math.random() * 1000) + 1));
                },
                function (e) {
                   // Get the release log            
@@ -313,18 +318,17 @@ function runTests(iteration) {
                      return status !== `rejected` && status !== `succeeded`;
                   },
                   function (finished) {
-                     vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                        if (r !== undefined && r.length > 0) {
-                           status = r[0].environments[1].status;
-                        }
-
-                        // Sleep before calling again. If you have too many
-                        // test running at the same time VSTS will start to 
-                        // Timeout. Might be DOS protection.
-                        setTimeout(function () {
+                     // Sleep before calling again. If you have too many
+                     // test running at the same time VSTS will start to 
+                     // Timeout. Might be DOS protection.
+                     setTimeout(function () {
+                        vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                           if (r !== undefined && r.length > 0) {
+                              status = r[0].environments[1].status;
+                           }
                            finished(err);
-                        }, 15000 + Math.floor((Math.random() * 1000) + 1));
-                     });
+                        });
+                     }, 15000 + Math.floor((Math.random() * 1000) + 1));
                   },
                   function (e) {
                      // Get the release log            
@@ -374,18 +378,17 @@ function runTests(iteration) {
                      return status !== `rejected` && status !== `succeeded`;
                   },
                   function (finished) {
-                     vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
-                        if (r !== undefined && r.length > 0) {
-                           status = r[0].environments[2].status;
-                        }
-
-                        // Sleep before calling again. If you have too many
-                        // test running at the same time VSTS will start to 
-                        // Timeout. Might be DOS protection.
-                        setTimeout(function () {
+                     // Sleep before calling again. If you have too many
+                     // test running at the same time VSTS will start to 
+                     // Timeout. Might be DOS protection.
+                     setTimeout(function () {
+                        vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                           if (r !== undefined && r.length > 0) {
+                              status = r[0].environments[2].status;
+                           }
                            finished(err);
-                        }, 15000 + Math.floor((Math.random() * 1000) + 1));
-                     });
+                        });
+                     }, 15000 + Math.floor((Math.random() * 1000) + 1));
                   },
                   function (e) {
                      // Get the release log            

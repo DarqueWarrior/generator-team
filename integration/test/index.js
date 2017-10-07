@@ -73,6 +73,8 @@ function checkStatus(uri, token, userAgent, callback) {
    }, userAgent);
 
    request(options, function (err, res, body) {
+      util.log(`checkStatus response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       callback(err, JSON.parse(body));
    });
 }
@@ -222,10 +224,12 @@ function createProject(account, project, pat, userAgent, callback) {
                return status !== 'failed' && status !== 'succeeded';
             },
             function (finished) {
-               checkStatus(teamProject.url, token, userAgent, function (err, stat) {
-                  status = stat.status;
-                  finished(err);
-               });
+               setTimeout(function () {
+                  checkStatus(teamProject.url, token, userAgent, function (err, stat) {
+                     status = stat.status;
+                     finished(err);
+                  });
+               }, 15000 + Math.floor((Math.random() * 1000) + 1));
             },
             thisSeries
          );
@@ -315,6 +319,8 @@ function getBuildLog(account, projectId, pat, id, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
+      util.log(`getBuildLog response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       var obj = JSON.parse(body);
 
       options.url = obj.value[obj.value.length - 2].url;
@@ -343,6 +349,8 @@ function getBuilds(account, projectId, pat, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
+      util.log(`getBuilds response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       var obj = JSON.parse(body);
 
       callback(e, obj.value);
@@ -367,6 +375,8 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
    }, userAgent);
 
    request(options, function (e, response, body) {
+      util.log(`findReleaseDefinition response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
@@ -402,6 +412,8 @@ function getReleases(account, projectId, pat, userAgent, callback) {
       let obj = {};
 
       try {
+         util.log(`getReleases response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
          obj = JSON.parse(body);
       } catch (error) {
          // This a HTML page with an error message.
@@ -435,6 +447,8 @@ function setApproval(account, projectId, pat, id, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
+      util.log(`setApproval response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       var obj = JSON.parse(body);
 
       callback(e, obj);
@@ -459,6 +473,8 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
+      util.log(`getApprovals response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       var obj = JSON.parse(body);
 
       callback(e, obj);
@@ -483,6 +499,8 @@ function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, call
    });
 
    request(options, function (error, response, body) {
+      util.log(`findAzureServiceEndpoint response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
@@ -508,6 +526,8 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
    });
 
    request(options, function (error, response, body) {
+      util.log(`getServiceEndpoint response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+
       callback(error, JSON.parse(body));
    });
 }
