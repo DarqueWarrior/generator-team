@@ -76,7 +76,7 @@
                },
                {
                   "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                  "version": "3.*",
+                  "version": "2.*",
                   "name": "Deploy AzureRM Web App: {{WebAppName}}Dev",
                   "enabled": true,
                   "alwaysRun": false,
@@ -206,7 +206,7 @@
                },
                {
                   "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                  "version": "3.*",
+                  "version": "2.*",
                   "name": "Deploy AzureRM Web App: {{WebAppName}}QA",
                   "enabled": true,
                   "alwaysRun": false,
@@ -356,7 +356,7 @@
                },
                {
                   "taskId": "497d490f-eea7-4f2b-ab94-48d9c1acdcb1",
-                  "version": "3.*",
+                  "version": "2.*",
                   "name": "Deploy AzureRM Web App: {{WebAppName}}Prod",
                   "enabled": true,
                   "alwaysRun": false,

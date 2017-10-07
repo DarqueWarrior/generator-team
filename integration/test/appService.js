@@ -8,6 +8,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
+const parallel = require('mocha.parallel');
 const exec = require('child_process').exec;
 
 const userAgent = `yo team`;
@@ -75,6 +76,7 @@ function runTests(iteration) {
    var levelsUp = process.env.LEVELS_UP || `/../`;
 
    context(`Running Yo Team ${iteration.appType}`, function () {
+      this.bail(true);
 
       before(function (done) {
          // runs before all tests in this block
