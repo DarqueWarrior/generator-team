@@ -1,6 +1,6 @@
 {
    "name": "generator-team",
-   "version": "0.3.6",
+   "version": "0.3.7",
    "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
    "main": "./generators/app/index.js",
    "scripts": {
@@ -59,6 +59,8 @@
       "istanbul": "*",
       "jshint": "^2.9.4",
       "mocha": "^3.5.3",
+      "mocha-parallel-tests": "^1.2.9",
+      "mocha.parallel": "^0.15.3",
       "ms-rest-azure": "^1.14.3",
       "proxyquire": "*",
       "sinon": "^2.4.1",
