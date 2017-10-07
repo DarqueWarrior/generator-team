@@ -186,6 +186,7 @@
          },
          "resources": [
             {
+               "condition": "[equals(parameters('skuName'), 'S1')]",               
                "apiVersion": "2015-08-01",
                "dependsOn": [
                     "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
