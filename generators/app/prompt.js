@@ -98,7 +98,6 @@ function target(obj) {
 }
 
 // Azure
-
 function azureSubInput(obj) {
    return {
       name: `azureSub`,

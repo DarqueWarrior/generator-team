@@ -3,7 +3,7 @@ const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
 
-describe.only(`team:aspFull paas`, function () {
+describe(`team:aspFull paas`, function () {
    var bowerStub;
 
    before(function () {

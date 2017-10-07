@@ -136,7 +136,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted queue, node app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted queue, node app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted`,
@@ -156,7 +156,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted VS2017 queue, node app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted VS2017 queue, node app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted VS2017`,
@@ -176,7 +176,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted Linux Preview queue, node app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted Linux Preview queue, node app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted Linux Preview`,
@@ -216,7 +216,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted queue, asp app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted queue, asp app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted`,
@@ -236,7 +236,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted VS2017 queue, asp app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted VS2017 queue, asp app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted VS2017`,
@@ -256,7 +256,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted Linux Preview queue, asp app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted Linux Preview queue, asp app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted Linux Preview`,
@@ -296,7 +296,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted queue, java app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted queue, java app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted`,
@@ -316,7 +316,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted VS2017 queue, java app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted VS2017 queue, java app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted VS2017`,
@@ -336,7 +336,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Hosted Linux Preview queue, java app type 2018/VSTS`, function (done) {
+      it(`getTargets Hosted Linux Preview queue, java app type VSTS`, function (done) {
          // Arrange
          let answers = {
             queue: `Hosted Linux Preview`,

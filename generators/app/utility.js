@@ -65,7 +65,9 @@ function reconcileValue(first, second, fallback) {
 function getTargets(answers) {
 
    return new Promise(function (resolve, reject) {
-      isTFSGreaterThan2017(answers.tfs, answers.pat, function (e, result) {
+      let pat = encodePat(answers.pat);
+
+      isTFSGreaterThan2017(answers.tfs, pat, function (e, result) {
          if (e) {
             reject(e);
             return;
@@ -880,6 +882,9 @@ function isVSTS(instance) {
    return instance.toLowerCase().match(/http/) === null;
 }
 
+//
+// token must be encoded before calling this function. 
+//
 function isTFSGreaterThan2017(account, token, callback) {
    if (isVSTS(account)) {
       callback(undefined, true);
