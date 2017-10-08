@@ -55,7 +55,7 @@ function runTests(iteration) {
 
    var installDep = `false`;
    context(`${iteration.appType}`, function () {
-      this.bail(false);
+      this.bail(true);
 
       before(function (done) {
          // runs before all tests in this block
@@ -251,9 +251,9 @@ function runTests(iteration) {
 
          if (iteration.target !== `docker`) {
             it(`dev site should be accessible`, function (done) {
-               // Retry test up to 4 times
+               // Retry test up to 10 times
                // Some sites take a while to jit.
-               this.retries(4);
+               this.retries(10);
 
                // Sleep before calling again. If you have too many
                // test running at the same time VSTS will start to 
