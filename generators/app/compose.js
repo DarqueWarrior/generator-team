@@ -87,6 +87,13 @@ function addLanguage(obj) {
       obj.composeWith(`team:java`, {
          args: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
       });
+   } else if (obj.type === `custom`) {
+      obj.composeWith(`team:custom`, {
+         args: [obj.applicationName, obj.customFolder, obj.tfs, obj.queue, obj.target,
+            obj.azureSub, obj.azureSubId, obj.tenantId, obj.servicePrincipalId,
+            obj.dockerHost, obj.dockerCertPath, obj.dockerRegistry, obj.dockerRegistryId,
+            obj.dockerPorts, obj.dockerRegistryPassword, obj.servicePrincipalKey, obj.pat]
+      });
    } else {
       obj.composeWith(`team:node`, {
          args: [obj.applicationName, obj.installDep, obj.dockerPorts]

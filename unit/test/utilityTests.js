@@ -30,6 +30,12 @@ assert.allTargets = function (a) {
    assert.equal(a.length, 5, `Wrong number of entries`);
 };
 
+assert.customTargets = function (a) {
+   assert.equal(a[0].name, `Azure App Service`);
+   assert.equal(a[1].name, `Docker Host`);
+   assert.equal(a.length, 2, `Wrong number of entries`);
+};
+
 assert.windowsTargets = function (a) {
    assert.equal(a[0].name, `Azure App Service`);
    assert.equal(a[1].name, `Azure App Service (Deployment Slots)`);
@@ -116,6 +122,26 @@ describe(`utility`, function () {
    });
 
    context(`targets`, function () {
+      it(`getTargets Default queue, Custom app type`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `custom`,
+            tfs: `vsts`,
+            pat: `token`
+         };
+
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.customTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
+
       it(`getTargets Default queue, node app type 2018/VSTS`, function (done) {
          // Arrange
          let answers = {
@@ -428,7 +454,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(3, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes default`, function () {
@@ -442,7 +468,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(5, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {

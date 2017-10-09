@@ -16,10 +16,11 @@ function construct() {
    // Order is important
    // These are position based arguments for this generator. If they are not provided
    // via the command line they will be queried during the prompting priority
-   args.customFolder(this);
    args.applicationName(this);
+   args.customFolder(this);
    args.tfs(this);
    args.queue(this);
+   args.target(this);
    args.azureSub(this);
    args.azureSubId(this);
    args.tenantId(this);
@@ -44,8 +45,8 @@ function input() {
       prompts.tfs(this),
       prompts.pat(this),
       prompts.queue(this),
-      prompts.applicationType(this),
       prompts.applicationName(this),
+      prompts.customFolder(this),
       prompts.target(this),
       prompts.azureSubInput(this),
       prompts.azureSubList(this),
@@ -71,6 +72,7 @@ function input() {
       this.tenantId = util.reconcileValue(answers.tenantId, cmdLnInput.tenantId, ``);
       this.azureSubId = util.reconcileValue(answers.azureSubId, cmdLnInput.azureSubId, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath, ``);

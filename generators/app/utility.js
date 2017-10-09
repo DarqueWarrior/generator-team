@@ -76,7 +76,15 @@ function getTargets(answers) {
          let targets = [];
 
          if (result) {
-            if (answers.type === `aspFull`) {
+            if (answers.type === `custom`) {
+               targets = [{
+                  name: `Azure App Service`,
+                  value: `paas`
+               }, {
+                  name: `Docker Host`,
+                  value: `docker`
+               }];
+            } else if (answers.type === `aspFull`) {
                targets = [{
                   name: `Azure App Service`,
                   value: `paas`
@@ -114,8 +122,6 @@ function getTargets(answers) {
                   targets.splice(0, 1);
                }
             }
-         } else {
-
          }
 
          resolve(targets);
@@ -134,6 +140,9 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
+   }, {
+      name: `Custom`,
+      value: `custom`
    }];
 
    // If this is not a Linux based agent also show
@@ -201,7 +210,7 @@ function validateGroupID(input) {
 }
 
 function validateCustomFolder(input) {
-   return validateRequired(input, `You must provide a path`);
+   return validateRequired(input, `You must provide a custom template path`);
 }
 
 function validateApplicationName(input) {

@@ -57,6 +57,7 @@ function input() {
       prompts.queue(this),
       prompts.applicationType(this),
       prompts.applicationName(this),
+      prompts.customFolder(this),      
       prompts.target(this),
       prompts.azureSubInput(this),
       prompts.azureSubList(this),
@@ -98,6 +99,7 @@ function input() {
       this.installDep = util.reconcileValue(answers.installDep, cmdLnInput.installDep);
       this.azureSubId = util.reconcileValue(answers.azureSubId, cmdLnInput.azureSubId, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);      
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath, ``);

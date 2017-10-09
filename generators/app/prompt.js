@@ -9,7 +9,7 @@ function tfs(obj) {
       validate: util.validateTFS,
       filter: util.extractInstance,
       when: answers => {
-         // If the value was passed on the commandline it will
+         // If the value was passed on the command line it will
          // not be set in answers which other prompts expect.
          // So, place it in answers now.
          answers.tfs = obj.tfs;
@@ -27,7 +27,7 @@ function pat(obj) {
       message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
       when: answers => {
-         // If the value was passed on the commandline it will
+         // If the value was passed on the command line it will
          // not be set in answers which other prompts expect.
          // So, place it in answers now.
          answers.pat = obj.pat;
@@ -66,6 +66,11 @@ function applicationType(obj) {
       default: obj.type,
       choices: util.getAppTypes,
       when: answers => {
+         // If the value was passed on the command line it will
+         // not be set in answers which other prompts expect.
+         // So, place it in answers now.
+         answers.type = obj.type;
+
          return obj.type === undefined;
       }
    };
@@ -76,10 +81,10 @@ function customFolder(obj) {
       name: `customFolder`,
       type: `input`,
       store: true,
-      message: `Enter path to custom build and release templates.`,
+      message: `What is your custom template path?`,
       validate: util.validateCustomFolder,
-      when: () => {
-         return obj.customFolder === undefined;
+      when: answers => {
+         return answers.type === `custom` && obj.customFolder === undefined;
       }
    };
 }
@@ -215,7 +220,7 @@ function dockerCertPath(obj) {
       name: `dockerCertPath`,
       type: `input`,
       store: true,
-      message: `What is your Docker Certificate Path?`,
+      message: `What is your Docker Certificate path?`,
       validate: util.validateDockerCertificatePath,
       when: answers => {
          return util.needsDockerHost(answers, obj) && obj.dockerCertPath === undefined;

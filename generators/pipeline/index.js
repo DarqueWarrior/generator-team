@@ -33,6 +33,7 @@ function construct() {
    args.dockerRegistryPassword(this);
    args.servicePrincipalKey(this);
    args.pat(this);
+   args.customFolder(this);  
 }
 
 function input() {
@@ -47,6 +48,7 @@ function input() {
       prompts.queue(this),
       prompts.applicationType(this),
       prompts.applicationName(this),
+      prompts.customFolder(this),      
       prompts.target(this),
       prompts.azureSubInput(this),
       prompts.azureSubList(this),

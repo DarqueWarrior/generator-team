@@ -3,7 +3,7 @@ const util = require(`./utility`);
 function applicationType(obj) {
    obj.argument(`type`, {
       required: false,
-      desc: `project type to create (asp, node or java)`
+      desc: `project type to create (asp, node, java or custom)`
    });
 }
 
