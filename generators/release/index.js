@@ -23,6 +23,7 @@ function construct() {
    args.dockerPorts(this);
    args.dockerRegistryPassword(this);
    args.pat(this);
+   args.customFolder(this);   
 }
 
 function input() {
@@ -37,6 +38,7 @@ function input() {
       prompts.queue(this),
       prompts.applicationType(this),
       prompts.applicationName(this),
+      prompts.customFolder(this),      
       prompts.target(this),
       prompts.azureSubInput(this),
       prompts.azureSubList(this),
@@ -55,6 +57,7 @@ function input() {
       this.target = util.reconcileValue(answers.target, cmdLnInput.target);
       this.azureSub = util.reconcileValue(answers.azureSub, cmdLnInput.azureSub, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);      
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
@@ -71,6 +74,10 @@ function configureRelease() {
 
    app.getRelease(this, function (e, result) {
       var release = _this.templatePath(result);
+
+      if(_this.type === `custom`) {
+         release = path.join(_this.customFolder, result);
+      }
 
       var args = {
          pat: _this.pat,
