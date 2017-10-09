@@ -35,6 +35,7 @@ function construct() {
    args.dockerRegistryPassword(this);
    args.servicePrincipalKey(this);
    args.pat(this);
+   args.customFolder(this);   
 }
 
 function init() {

@@ -35,6 +35,7 @@ describe(`team:pipeline`, function () {
       let target = `paas`;
       let dockerHost = ``;
       let dockerPorts = ``;
+      let customFolder = ``;
       let queue = `default`;
       let dockerCertPath = ``;
       let dockerRegistry = ``;
@@ -53,7 +54,7 @@ describe(`team:pipeline`, function () {
          .withArguments([type, applicationName, tfs,
             queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,
             dockerHost, dockerCertPath, dockerRegistry, dockerRegistryId, dockerPorts,
-            dockerRegistryPassword, servicePrincipalKey, pat
+            dockerRegistryPassword, servicePrincipalKey, pat, customFolder
          ])
          .on(`error`, function (e) {
             cleanUp();

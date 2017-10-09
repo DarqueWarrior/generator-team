@@ -20,6 +20,7 @@ function construct() {
    args.dockerRegistry(this);
    args.dockerRegistryId(this);
    args.pat(this);
+   args.customFolder(this);   
 }
 
 // Collect any missing data from the user.
@@ -35,6 +36,7 @@ function input() {
       prompts.queue(this),
       prompts.applicationType(this),
       prompts.applicationName(this),
+      prompts.customFolder(this),      
       prompts.target(this),
       prompts.dockerHost(this),
       prompts.dockerRegistry(this),
@@ -51,6 +53,7 @@ function input() {
       this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
       this.target = util.reconcileValue(answers.target, cmdLnInput.target);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);      
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
@@ -65,6 +68,10 @@ function configureBuild() {
 
    app.getBuild(this, function (e, result) {
       var build = _this.templatePath(result);
+
+      if(_this.type === `custom`) {
+         build = path.join(_this.customFolder, result);
+      }
 
       var args = {
          pat: _this.pat,
