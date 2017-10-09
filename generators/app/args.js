@@ -14,6 +14,13 @@ function applicationName(obj) {
    });
 }
 
+function customFolder(obj) {
+   obj.argument(`customFolder`, {
+      required: false,
+      desc: `path to folder of build & release templates`
+   });
+}
+
 function tfs(obj) {
    obj.argument(`tfs`, {
       required: false,
@@ -153,6 +160,7 @@ module.exports = {
    installDep: installDep,
    dockerHost: dockerHost,
    dockerPorts: dockerPorts,
+   customFolder: customFolder,
    dockerCertPath: dockerCertPath,
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,

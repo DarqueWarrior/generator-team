@@ -200,6 +200,10 @@ function validateGroupID(input) {
    return validateRequired(input, `You must provide a Group ID`);
 }
 
+function validateCustomFolder(input) {
+   return validateRequired(input, `You must provide a path`);
+}
+
 function validateApplicationName(input) {
    return validateRequired(input, `You must provide a name for your application`);
 }
@@ -982,6 +986,7 @@ module.exports = {
    validatePortMapping: validatePortMapping,
    validateDockerHubID: validateDockerHubID,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
+   validateCustomFolder: validateCustomFolder,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,

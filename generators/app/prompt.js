@@ -71,6 +71,19 @@ function applicationType(obj) {
    };
 }
 
+function customFolder(obj) {
+   return {
+      name: `customFolder`,
+      type: `input`,
+      store: true,
+      message: `Enter path to custom build and release templates.`,
+      validate: util.validateCustomFolder,
+      when: () => {
+         return obj.customFolder === undefined;
+      }
+   };
+}
+
 function applicationName(obj) {
    return {
       name: `applicationName`,
@@ -331,6 +344,7 @@ module.exports = {
    dockerHost: dockerHost,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
+   customFolder: customFolder,
    azureSubInput: azureSubInput,
    dockerRegistry: dockerRegistry,
    dockerCertPath: dockerCertPath,
