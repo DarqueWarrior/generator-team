@@ -3,8 +3,6 @@ const async = require('async');
 const request = require('request');
 const util = require('../app/utility');
 
-const PROJECT_API_VERSION = '1.0';
-
 function run(gen, callback) {
    "use strict";
    
@@ -71,7 +69,7 @@ function findOrCreateProject(gen, callback) {
                   method: 'GET',
                   headers: { 'cache-control': 'no-cache', 'authorization': `Basic ${token}` },
                   url: `${util.getFullURL(gen.tfs)}/_apis/projects/${gen.applicationName}`,
-                  qs: { 'api-version': PROJECT_API_VERSION }
+                  qs: { 'api-version': util.PROJECT_API_VERSION }
                });
 
                // Get the real id of the team project now that is exist.
@@ -111,7 +109,7 @@ function createProject(account, project, token, gen, callback) {
       headers: { 'content-type': 'application/json', authorization: `Basic ${token}` },
       json: true,
       url: `${util.getFullURL(account)}/_apis/projects`,
-      qs: { 'api-version': PROJECT_API_VERSION },
+      qs: { 'api-version': util.PROJECT_API_VERSION },
       body: {
          name: project,
          capabilities: {

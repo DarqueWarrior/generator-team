@@ -35,7 +35,7 @@ describe(`team:pipeline`, function () {
       let target = `paas`;
       let dockerHost = ``;
       let dockerPorts = ``;
-      let customFolder = ``;
+      let customFolder = ` `;
       let queue = `default`;
       let dockerCertPath = ``;
       let dockerRegistry = ``;

@@ -6,12 +6,6 @@ const proxyquire = require(`proxyquire`);
 const package = require('../../package.json');
 const util = require(`../../generators/app/utility`);
 
-const BUILD_API_VERSION = `2.0`;
-const PROJECT_API_VERSION = `1.0`;
-const RELEASE_API_VERSION = `3.0-preview.3`;
-const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
-const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
-
 sinon.test = sinonTest.configureTest(sinon);
 
 assert.linuxTargets = function (a) {
@@ -31,9 +25,12 @@ assert.allTargets = function (a) {
 };
 
 assert.customTargets = function (a) {
-   assert.equal(a[0].name, `Azure App Service`);
-   assert.equal(a[1].name, `Docker Host`);
-   assert.equal(a.length, 2, `Wrong number of entries`);
+   assert.equal(a[0].name, `Azure`);
+   assert.equal(a[1].name, `Docker`);
+   assert.equal(a[2].name, `Both`);
+   
+   // Make sure it did not return too many.
+   assert.equal(a.length, 3, `Wrong number of entries`);
 };
 
 assert.windowsTargets = function (a) {
@@ -454,7 +451,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(3, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes default`, function () {
@@ -468,7 +465,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(5, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {
@@ -481,7 +478,7 @@ describe(`utility`, function () {
          },
          url: `https://test.visualstudio.com/_apis/projects/test`,
          qs: {
-            'api-version': PROJECT_API_VERSION
+            'api-version': util.PROJECT_API_VERSION
          }
       };
       let expected = `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;

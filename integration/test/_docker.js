@@ -1,8 +1,8 @@
 const fs = require('fs');
 const async = require('async');
-const util = require(`./util`);
-const vsts = require(`./index`);
-const azure = require(`./azure`);
+const util = require(`./_util`);
+const vsts = require(`./_index`);
+const azure = require(`./_azure`);
 const uuidV4 = require('uuid/v4');
 const cheerio = require('cheerio');
 const request = require('request');
@@ -43,6 +43,7 @@ function runTests(iteration) {
    "use strict";
 
    iteration.originalDir = process.cwd();
+   var customFolder = iteration.customFolder || ` `;
 
    // RM has issues if you try to create a release on
    // a project name that was just deleted and recreated
@@ -70,7 +71,7 @@ function runTests(iteration) {
             let cmd = `yo team ${iteration.appType} ${iteration.applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
                `"${tenantId}" "${servicePrincipalId}" "${iteration.queue}" ${iteration.target} ${installDep} ` +
                `"${iteration.groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
+               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${customFolder}"`;
 
             util.log(`run command: ${cmd}`);
 

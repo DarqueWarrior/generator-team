@@ -3,8 +3,6 @@ const async = require('async');
 const request = require('request');
 const util = require('../app/utility');
 
-const SERVICE_ENDPOINTS_API_VERSION = '3.0-preview.1';
-
 function run(args, gen, done) {
    'use strict';
 
@@ -98,7 +96,7 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
       json: true,
       url: `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
       qs: {
-         'api-version': SERVICE_ENDPOINTS_API_VERSION
+         'api-version': util.SERVICE_ENDPOINTS_API_VERSION
       },
       body: {
          authorization: {
@@ -136,7 +134,7 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
          // using the automatic creation mode 
          // we need to wait for the status to be Failed or
          // Ready before proceeding.
-         var url = `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints/${obj.id}?api-version=${SERVICE_ENDPOINTS_API_VERSION}`;
+         var url = `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints/${obj.id}?api-version=${util.SERVICE_ENDPOINTS_API_VERSION}`;
 
          var status = '';
 

@@ -1,4 +1,4 @@
-const docker = require('./docker');
+const docker = require('./_docker');
 
 describe(`Docker Host using Default queue`, function () {
    "use strict";

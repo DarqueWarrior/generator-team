@@ -53,7 +53,7 @@ function input() {
       this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
       this.target = util.reconcileValue(answers.target, cmdLnInput.target);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
-      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);      
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder, ``);
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);

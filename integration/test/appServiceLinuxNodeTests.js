@@ -1,4 +1,4 @@
-const appService = require('./appService');
+const appService = require('./_appService');
 
 describe(`Default Node AS Docker`, function () {
    describe(`Azure App Service Docker (Linux) using Default queue`, function () {

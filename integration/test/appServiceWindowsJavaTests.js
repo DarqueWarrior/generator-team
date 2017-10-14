@@ -1,4 +1,4 @@
-const appService = require('./appService');
+const appService = require('./_appService');
 
 describe(`Default Java AS`, function () {
    describe(`Azure App Service (Windows) using Default queue`, function () {

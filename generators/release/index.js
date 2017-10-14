@@ -57,8 +57,8 @@ function input() {
       this.target = util.reconcileValue(answers.target, cmdLnInput.target);
       this.azureSub = util.reconcileValue(answers.azureSub, cmdLnInput.azureSub, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
-      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);      
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder, ``);
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);

@@ -1,5 +1,5 @@
 const async = require('async');
-const util = require(`./util`);
+const util = require(`./_util`);
 const request = require('request');
 const package = require('../../package.json');
 
@@ -73,7 +73,7 @@ function checkStatus(uri, token, userAgent, callback) {
    }, userAgent);
 
    request(options, function (err, res, body) {
-      util.log(`checkStatus response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`checkStatus response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       callback(err, JSON.parse(body));
    });
@@ -319,7 +319,7 @@ function getBuildLog(account, projectId, pat, id, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
-      util.log(`getBuildLog response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`getBuildLog response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
 
@@ -349,7 +349,7 @@ function getBuilds(account, projectId, pat, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
-      util.log(`getBuilds response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`getBuilds response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
 
@@ -375,7 +375,7 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
    }, userAgent);
 
    request(options, function (e, response, body) {
-      util.log(`findReleaseDefinition response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`findReleaseDefinition response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
 
@@ -406,13 +406,13 @@ function getReleases(account, projectId, pat, userAgent, callback) {
 
    request(options, function (e, response, body) {
       if (e) {
-         util.log(`Error in getRelease: ${e}`);
+         util.log(`Error in getRelease:\r\n ${e}`);
       }
 
       let obj = {};
 
       try {
-         util.log(`getReleases response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+         util.log(`getReleases response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
          obj = JSON.parse(body);
       } catch (error) {
@@ -447,7 +447,7 @@ function setApproval(account, projectId, pat, id, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
-      util.log(`setApproval response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`setApproval response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
 
@@ -473,7 +473,7 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
    }, userAgent);
 
    request(options, function (e, response, body) {
-      util.log(`getApprovals response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`getApprovals response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
 
@@ -499,7 +499,7 @@ function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, call
    });
 
    request(options, function (error, response, body) {
-      util.log(`findAzureServiceEndpoint response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`findAzureServiceEndpoint response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
 
@@ -526,7 +526,7 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
    });
 
    request(options, function (error, response, body) {
-      util.log(`getServiceEndpoint response: ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
+      util.log(`getServiceEndpoint response:\r\n ${body}\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       callback(error, JSON.parse(body));
    });

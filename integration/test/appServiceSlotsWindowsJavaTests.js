@@ -1,4 +1,4 @@
-const appService = require('./appService');
+const appService = require('./_appService');
 
 describe(`Azure App Service Slots (Windows) using Default queue`, function () {
    "use strict";

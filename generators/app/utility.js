@@ -78,11 +78,14 @@ function getTargets(answers) {
          if (result) {
             if (answers.type === `custom`) {
                targets = [{
-                  name: `Azure App Service`,
+                  name: `Azure`,
                   value: `paas`
                }, {
-                  name: `Docker Host`,
+                  name: `Docker`,
                   value: `docker`
+               }, {
+                  name: `Both`,
+                  value: `dockerpaas`
                }];
             } else if (answers.type === `aspFull`) {
                targets = [{
@@ -140,10 +143,12 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
-   }, {
-      name: `Custom`,
-      value: `custom`
-   }];
+   }
+   // , {
+   //    name: `Custom`,
+   //    value: `custom`
+   // }
+   ];
 
    // If this is not a Linux based agent also show
    // .NET Full
@@ -956,6 +961,11 @@ module.exports = {
 
    // Exports the portions of the file we want to share with files that require
    // it.
+   BUILD_API_VERSION: BUILD_API_VERSION,
+   PROJECT_API_VERSION: PROJECT_API_VERSION,
+   RELEASE_API_VERSION: RELEASE_API_VERSION,
+   DISTRIBUTED_TASK_API_VERSION: DISTRIBUTED_TASK_API_VERSION,
+   SERVICE_ENDPOINTS_API_VERSION: SERVICE_ENDPOINTS_API_VERSION,
 
    isVSTS: isVSTS,
    isPaaS: isPaaS,

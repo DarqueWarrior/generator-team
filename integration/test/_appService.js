@@ -1,8 +1,8 @@
 const fs = require('fs');
 const async = require('async');
-const util = require(`./util`);
-const vsts = require(`./index`);
-const azure = require(`./azure`);
+const util = require(`./_util`);
+const vsts = require(`./_index`);
+const azure = require(`./_azure`);
 const uuidV4 = require('uuid/v4');
 const request = require('request');
 const cheerio = require('cheerio');
@@ -60,6 +60,7 @@ function runTests(iteration) {
    var target = iteration.target;
    var installDep = `false`;
    var groupId = iteration.appName || ` `;
+   var customFolder = iteration.customFolder || ` `;
    var dockerHost = process.env.DOCKER_HOST || ` `;
    var dockerCertPath = process.env.DOCKER_CERT_PATH || ` `;
    var dockerRegistry = process.env.DOCKER_REGISTRY || ` `;
@@ -84,7 +85,7 @@ function runTests(iteration) {
          let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
             `"${tenantId}" "${servicePrincipalId}" "${queue}" ${target} ${installDep} ` +
             `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat}`;
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${customFolder}"`;
 
          util.log(`run command: ${cmd}`);
 

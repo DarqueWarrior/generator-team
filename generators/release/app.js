@@ -5,8 +5,6 @@ const uuidV4 = require('uuid/v4');
 const request = require('request');
 const util = require('../app/utility');
 
-const RELEASE_API_VERSION = '3.0-preview.3';
-
 function run(args, gen, done) {
    'use strict';
 
@@ -223,7 +221,7 @@ function createRelease(args, gen, callback) {
       json: true,
       url: `${util.getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
       qs: {
-         'api-version': RELEASE_API_VERSION
+         'api-version': util.RELEASE_API_VERSION
       },
       body: JSON.parse(util.tokenize(contents, tokens))
    });

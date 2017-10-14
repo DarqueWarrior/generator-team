@@ -4,8 +4,6 @@ const async = require('async');
 const request = require('request');
 const util = require('../app/utility');
 
-const BUILD_API_VERSION = '2.0';
-
 function run(args, gen, done) {
    'use strict';
 
@@ -132,7 +130,7 @@ function createBuild(account, teamProject, token, queueId,
       json: true,
       url: `${util.getFullURL(account)}/${teamProject.id}/_apis/build/definitions`,
       qs: {
-         'api-version': BUILD_API_VERSION
+         'api-version': util.BUILD_API_VERSION
       },
       body: payload
    });

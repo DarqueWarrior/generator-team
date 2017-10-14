@@ -74,8 +74,8 @@ function input() {
       this.tenantId = util.reconcileValue(answers.tenantId, cmdLnInput.tenantId, ``);
       this.azureSubId = util.reconcileValue(answers.azureSubId, cmdLnInput.azureSubId, ``);
       this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
-      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder);
       this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
+      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder, ``);
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath, ``);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);

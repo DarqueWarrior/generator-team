@@ -7,8 +7,6 @@ const process = require('process');
 const request = require('request');
 const util = require('../app/utility');
 
-const SERVICE_ENDPOINTS_API_VERSION = '3.0-preview.1';
-
 function run(args, gen, done) {
    'use strict';
 
@@ -88,7 +86,7 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
          headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
          json: true,
          url: `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
-         qs: { 'api-version': SERVICE_ENDPOINTS_API_VERSION },
+         qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
          body: {
             authorization:
             {

@@ -1,4 +1,4 @@
-const docker = require('./docker');
+const docker = require('./_docker');
 
 describe(`Azure Container Instances (Linux) using Default queue`, function () {
    "use strict";

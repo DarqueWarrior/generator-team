@@ -1,9 +1,11 @@
-const util = require(`./util`);
+// region require
+const util = require(`./_util`);
 const uuidV4 = require('uuid/v4');
 const vsts = require(`./index.js`);
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
 const exec = require('child_process').exec;
+// endregion
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
