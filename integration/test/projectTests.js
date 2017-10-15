@@ -1,6 +1,6 @@
 const path = require(`path`);
-const vsts = require(`./index.js`);
 const request = require('request');
+const vsts = require(`./_index.js`);
 const env = require('node-env-file');
 const helpers = require(`yeoman-test`);
 const assert = require(`yeoman-assert`);
