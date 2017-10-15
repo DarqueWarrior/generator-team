@@ -239,6 +239,7 @@ function runTests(iteration) {
                function (e) {
                   // Get the build log
                   vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
+                     util.log(`buildResult:\r\n${result}\r\nlogs:\r\n${logs}`);
                      assert.equal(result, `succeeded`, logs);
                      done(e);
                   });
@@ -272,7 +273,8 @@ function runTests(iteration) {
                   }, 15000 + Math.floor((Math.random() * 1000) + 1));
                },
                function (e) {
-                  // Get the release log            
+                  // Get the release log          
+                  util.log(`release in dev:\r\n${status}`);  
                   assert.ok(status === `succeeded` || status === `partiallySucceeded`);
                   done(e);
                }
@@ -332,7 +334,8 @@ function runTests(iteration) {
                      }, 15000 + Math.floor((Math.random() * 1000) + 1));
                   },
                   function (e) {
-                     // Get the release log            
+                     // Get the release log
+                     util.log(`release in qa:\r\n${status}`);
                      assert.equal(status, `succeeded`);
                      done(e);
                   }
@@ -392,7 +395,8 @@ function runTests(iteration) {
                      }, 15000 + Math.floor((Math.random() * 1000) + 1));
                   },
                   function (e) {
-                     // Get the release log            
+                     // Get the release log       
+                     util.log(`release in prod:\r\n${status}`);     
                      assert.equal(status, `succeeded`);
                      done(e);
                   }

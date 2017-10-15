@@ -99,7 +99,10 @@ function runTests(iteration) {
 
             vsts.findProject(tfs, iteration.applicationName, pat, userAgent, (e, p) => {
                // Assert
+               util.log(`Error:\r\n${e}`);
                assert.ifError(e);
+
+               util.log(`Project:\r\n${p}`);
                assert.ok(p, `project not found`);
 
                iteration.projectId = p.id;
@@ -116,8 +119,10 @@ function runTests(iteration) {
 
             vsts.findBuildDefinition(tfs, iteration.projectId, pat, expectedName, userAgent, (e, b) => {
                // Assert
+               util.log(`Error:\r\n${e}`);
                assert.ifError(e);
                assert.ok(b, `build definition not found`);
+               util.log(`+ Found build ${expectedName}`);
 
                done(e);
             });
@@ -133,6 +138,7 @@ function runTests(iteration) {
                // Assert
                assert.ifError(e);
                assert.ok(r, `release definition not found`);
+               util.log(`+ Found release ${expectedName}`);
 
                done(e);
             });
@@ -151,6 +157,7 @@ function runTests(iteration) {
                   // Assert
                   assert.ifError(e);
                   assert.ok(ep, `service endpoint not found`);
+                  util.log(`+ Found service endpoint ${expectedName}`);
 
                   done(e);
                });
@@ -211,6 +218,7 @@ function runTests(iteration) {
                function (e) {
                   // Get the build log
                   vsts.getBuildLog(tfs, iteration.projectId, pat, iteration.buildId, userAgent, (e, logs) => {
+                     util.log(`buildResult:\r\n${iteration.buildResult}\r\nlogs:\r\n${logs}`);
                      assert.equal(iteration.buildResult, `succeeded`, logs);
                      done(e);
                   });
@@ -243,7 +251,8 @@ function runTests(iteration) {
                   }, 35000 + Math.floor((Math.random() * 1000) + 1));
                },
                function (e) {
-                  // Get the release log            
+                  // Get the release log
+                  util.log(`iteration.status:\r\n${iteration.status}`);
                   assert.ok(iteration.status === `succeeded` || iteration.status === `partiallySucceeded`);
                   done(e);
                }
@@ -270,7 +279,9 @@ function runTests(iteration) {
                         assert.ifError(err);
 
                         var dom = cheerio.load(body);
+                        util.log(`Page Title:\r\n${dom(`title`).text()}`);
                         assert.equal(dom(`title`).text(), `${iteration.title}`);
+                        util.log(`+ dev site should be accessible`);
 
                         done();
                      });
