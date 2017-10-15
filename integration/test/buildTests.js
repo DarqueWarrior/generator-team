@@ -1,7 +1,7 @@
 // region require
 const util = require(`./_util`);
 const uuidV4 = require('uuid/v4');
-const vsts = require(`./index.js`);
+const vsts = require(`./_index`);
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
 const exec = require('child_process').exec;
