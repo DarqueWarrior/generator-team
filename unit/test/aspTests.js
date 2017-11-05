@@ -29,19 +29,19 @@ describe(`team:asp docker`, function () {
 
    it(`files should be generated`, function () {
       assert.file([
-         `aspUnitTest/.bowerrc`,
          `aspUnitTest/README.md`,
          `aspUnitTest/.gitignore`,
-         `aspUnitTest/bower.json`,
          `aspUnitTest/aspUnitTest.sln`,
          `aspUnitTest/src/aspUnitTest/aspUnitTest.csproj`,
+         `aspUnitTest/src/aspUnitTest/.bowerrc`,
+         `aspUnitTest/src/aspUnitTest/bower.json`,
          `aspUnitTest/src/aspUnitTest/web.config`,
          `aspUnitTest/src/aspUnitTest/Dockerfile`,
          `aspUnitTest/src/aspUnitTest/appsettings.json`,
-         `aspUnitTest/test/aspUnitTest.Tests/aspUnitTest.Tests.csproj`
+         `aspUnitTest/src/aspUnitTest.Tests/aspUnitTest.Tests.csproj`
       ]);
 
-      assert.fileContent(`aspUnitTest/bower.json`, `"name": "aspunittest"`);
+      assert.fileContent(`aspUnitTest/src/aspUnitTest/bower.json`, `"name": "aspunittest"`);
       assert.fileContent(`aspUnitTest/src/aspUnitTest/Dockerfile`, `ENTRYPOINT dotnet aspUnitTest.dll`);
       assert.fileContent(`aspUnitTest/src/aspUnitTest/aspUnitTest.csproj`, `<AssemblyName>aspUnitTest</AssemblyName>`);      
    });
@@ -75,24 +75,34 @@ describe(`team:asp paas`, function () {
 
    it(`files should be generated`, function () {
       assert.file([
-         `.bowerrc`,
          `README.md`,
          `aspUnitTest.sln`,
          `.gitignore`,
-         `./bower.json`,
-         `./src/aspUnitTest/web.config`,
-         `./src/aspUnitTest/Dockerfile`,
-         `./src/aspUnitTest/aspUnitTest.csproj`,
+         `./src/aspUnitTest/.bowerrc`,
+         `./src/aspUnitTest/appsettings.Development.json`,
          `./src/aspUnitTest/appsettings.json`,
-         `./test/aspUnitTest.Tests/aspUnitTest.Tests.csproj`,
-         `./templates/website.json`,
+         `./src/aspUnitTest/bower.json`,
+         `./src/aspUnitTest/bundleconfig.json`,
+         `./src/aspUnitTest/Dockerfile`,
+         `./src/aspUnitTest/Program.cs`,
+         `./src/aspUnitTest/Startup.cs`,
+         `./src/aspUnitTest/Controllers/HomeController.cs`,
+         `./src/aspUnitTest/Models/ErrorViewModel.cs`,
+         `./src/aspUnitTest/aspUnitTest.csproj`,
+         `./src/aspUnitTest.Tests/aspUnitTest.Tests.csproj`,
+         `./src/aspUnitTest.Tests/HomeControllerTest.cs`,
+         `./templates/acilinux.json`,
+         `./templates/acilinux.parameters.json`,
+         `./templates/docker.json`,
+         `./templates/docker.parameters.json`,
          `./templates/parameters.xml`,
+         `./templates/website.json`,
          `./templates/website.parameters.json`
       ]);
 
-      assert.fileContent(`./bower.json`, `"name": "aspunittest"`);
       assert.fileContent(`./templates/website.json`, `"name": "appsettings"`);
       assert.fileContent(`./templates/acilinux.parameters.json`, `"value": "80"`);
+      assert.fileContent(`./src/aspUnitTest/bower.json`, `"name": "aspunittest"`);
       assert.fileContent(`./src/aspUnitTest/Dockerfile`, `ENTRYPOINT dotnet aspUnitTest.dll`);
       assert.fileContent(`./src/aspUnitTest/aspUnitTest.csproj`, `<AssemblyName>aspUnitTest</AssemblyName>`);
    });

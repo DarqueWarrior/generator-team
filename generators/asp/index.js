@@ -50,8 +50,6 @@ function writeFiles() {
    // Root files
    this.copy(`${src}/README.md`, `${root}/README.md`);
    this.copy(`${src}/gitignore`, `${root}/.gitignore`);
-   this.fs.copyTpl(`${src}/.bowerrc`, `${root}/.bowerrc`, tokens);
-   this.fs.copyTpl(`${src}/bower.json`, `${root}/bower.json`, tokens);
    this.fs.copyTpl(`${src}/app.sln`, `${root}/${this.applicationName}.sln`, tokens);
 
    // Web App project
@@ -62,23 +60,27 @@ function writeFiles() {
    this.directory(`${src}/Views/Home`, `${root}/Views/Home`);
 
    this.copy(`${src}/web.config`, `${root}/web.config`);
+   this.fs.copyTpl(`${src}/.bowerrc`, `${root}/.bowerrc`, tokens);
    this.copy(`${src}/appsettings.json`, `${root}/appsettings.json`);
+   this.fs.copyTpl(`${src}/bower.json`, `${root}/bower.json`, tokens);
    this.copy(`${src}/bundleconfig.json`, `${root}/bundleconfig.json`);
    this.copy(`${src}/Views/_ViewStart.cshtml`, `${root}/Views/_ViewStart.cshtml`);
+   this.copy(`${src}/Views/Shared/_ValidationScriptsPartial.cshtml`, `${root}/Views/Shared/_ValidationScriptsPartial.cshtml`);
    this.copy(`${src}/Views/Shared/Error.cshtml`, `${root}/Views/Shared/Error.cshtml`);
+   this.copy(`${src}/appsettings.Development.json`, `${root}/appsettings.Development.json`);
 
    this.fs.copyTpl(`${src}/Dockerfile`, `${root}/Dockerfile`, tokens);
    this.fs.copyTpl(`${src}/Program.cs`, `${root}/Program.cs`, tokens);
    this.fs.copyTpl(`${src}/Startup.cs`, `${root}/Startup.cs`, tokens);
    this.fs.copyTpl(`${src}/app.csproj`, `${root}/${this.applicationName}.csproj`, tokens);   
+   this.fs.copyTpl(`${src}/Models/ErrorViewModel.cs`, `${root}/Models/ErrorViewModel.cs`, tokens);
    this.fs.copyTpl(`${src}/Views/_ViewImports.cshtml`, `${root}/Views/_ViewImports.cshtml`, tokens);
    this.fs.copyTpl(`${src}/Views/Shared/_Layout.cshtml`, `${root}/Views/Shared/_Layout.cshtml`, tokens);
    this.fs.copyTpl(`${src}/Controllers/HomeController.cs`, `${root}/Controllers/HomeController.cs`, tokens);
-   this.fs.copyTpl(`${src}/Properties/launchSettings.json`, `${root}/Properties/launchSettings.json`, tokens);
 
    // Now test project
-   src = `${this.sourceRoot()}/test/app.tests`;
-   root = `${this.applicationName}/test/${this.applicationName}.Tests`;
+   src = `${this.sourceRoot()}/src/app.tests`;
+   root = `${this.applicationName}/src/${this.applicationName}.Tests`;
 
    this.fs.copyTpl(`${src}/app.Tests.csproj`, `${root}/${this.applicationName}.Tests.csproj`, tokens);
    this.fs.copyTpl(`${src}/HomeControllerTest.cs`, `${root}/HomeControllerTest.cs`, tokens);
