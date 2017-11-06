@@ -282,9 +282,9 @@ function runTests(iteration) {
          });
 
          it(`dev site should be accessible`, function (done) {
-            // Retry test up to 4 times
+            // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(4);
+            this.retries(10);
 
             requestSite(applicationName, "Dev", iteration.title, done);
          });
@@ -344,9 +344,9 @@ function runTests(iteration) {
          });
 
          it(`qa site should be accessible`, function (done) {
-            // Retry test up to 4 times
+            // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(4);
+            this.retries(10);
 
             requestSite(applicationName, "QA", iteration.title, done);
          });
@@ -405,9 +405,9 @@ function runTests(iteration) {
          });
 
          it(`prod site should be accessible`, function (done) {
-            // Retry test up to 4 times
+            // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(4);
+            this.retries(10);
 
             requestSite(applicationName, "Prod", iteration.title, done);
          });

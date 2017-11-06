@@ -38,7 +38,7 @@
          "inputs": {
             "filename": "bower",
             "arguments": "install",
-            "workingFolder": "",
+            "workingFolder": "src/{{Project}}",
             "failOnStandardError": "false"
          }
       },
@@ -74,7 +74,7 @@
          "inputs": {
             "filename": "dotnet",
             "arguments": "test -l trx",
-            "workingFolder": "test/{{Project}}.Tests",
+            "workingFolder": "src/{{Project}}.Tests",
             "failOnStandardError": "false"
          }
       },

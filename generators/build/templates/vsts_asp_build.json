@@ -38,7 +38,7 @@
          "inputs": {
             "filename": "bower",
             "arguments": "install --allow-root",
-            "workingFolder": "",
+            "workingFolder": "src/{{Project}}",
             "failOnStandardError": "false"
          }
       },
@@ -47,7 +47,7 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Use .NET Core SDK 1.0.4",
+         "displayName": "Use .NET Core SDK 2.0.0",
          "timeoutInMinutes": 0,
          "condition": "succeeded()",
          "task": {
@@ -57,7 +57,7 @@
          },
          "inputs": {
             "packageType": "sdk",
-            "version": "1.0.4"
+            "version": "2.0.0"
          }
       },
       {
