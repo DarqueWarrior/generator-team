@@ -43,7 +43,7 @@ describe(`team:asp docker`, function () {
 
       assert.fileContent(`aspUnitTest/src/aspUnitTest/bower.json`, `"name": "aspunittest"`);
       assert.fileContent(`aspUnitTest/src/aspUnitTest/Dockerfile`, `ENTRYPOINT dotnet aspUnitTest.dll`);
-      assert.fileContent(`aspUnitTest/src/aspUnitTest/aspUnitTest.csproj`, `<AssemblyName>aspUnitTest</AssemblyName>`);      
+      assert.fileContent(`aspUnitTest/src/aspUnitTest/aspUnitTest.csproj`, `<TargetFramework>netcoreapp2.0</TargetFramework>`);
    });
 });
 
@@ -104,6 +104,6 @@ describe(`team:asp paas`, function () {
       assert.fileContent(`./templates/acilinux.parameters.json`, `"value": "80"`);
       assert.fileContent(`./src/aspUnitTest/bower.json`, `"name": "aspunittest"`);
       assert.fileContent(`./src/aspUnitTest/Dockerfile`, `ENTRYPOINT dotnet aspUnitTest.dll`);
-      assert.fileContent(`./src/aspUnitTest/aspUnitTest.csproj`, `<AssemblyName>aspUnitTest</AssemblyName>`);
+      assert.fileContent(`./src/aspUnitTest/aspUnitTest.csproj`, `<TargetFramework>netcoreapp2.0</TargetFramework>`);
    });
 });
