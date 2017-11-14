@@ -260,11 +260,11 @@ function runTests(iteration) {
          });
 
          if (iteration.target !== `docker`) {
-            it(`dev site should be accessible`, function (done) {
-               // Retry test up to 10 times
-               // Some sites take a while to jit.
-               this.retries(10);
+            // Retry test up to 10 times
+            // Some sites take a while to jit.
+            this.retries(10);
 
+            it(`dev site should be accessible`, function (done) {
                // Sleep before calling again. If you have too many
                // test running at the same time VSTS will start to 
                // Timeout. Might be DOS protection.
@@ -273,18 +273,25 @@ function runTests(iteration) {
                      assert.ifError(e);
                      let fullUrl = `${url}:${dockerPorts}`;
                      util.log(`trying to access ${fullUrl}`);
-                     request({
-                        url: fullUrl
-                     }, function (err, res, body) {
-                        assert.ifError(err);
+                     try {
+                        request({
+                           url: fullUrl
+                        }, function (err, res, body) {
+                           assert.ifError(err);
 
-                        var dom = cheerio.load(body);
-                        util.log(`Page Title:\r\n${dom(`title`).text()}`);
-                        assert.equal(dom(`title`).text(), `${iteration.title}`);
-                        util.log(`+ dev site should be accessible`);
+                           var dom = cheerio.load(body);
+                           util.log(`Page Title:\r\n${dom(`title`).text()}`);
+                           assert.equal(dom(`title`).text(), `${iteration.title}`);
+                           util.log(`+ dev site should be accessible`);
 
-                        done();
-                     });
+                           done();
+                        });
+
+                     } catch (error) {
+                        // We need to catch any timeouts or the test will exit without
+                        // re-trying. 
+                        assert.fail(error);
+                     }
                   });
                }, 15000 + Math.floor((Math.random() * 1000) + 1));
             });
