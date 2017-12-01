@@ -1,0 +1,362 @@
+{
+  "name": "{{BuildDefName}}",
+  "type": "build",
+  "quality": "definition",
+  "buildNumberFormat": "$(version.major).$(version.minor).$(Year:yy)$(DayOfYear)$(Rev:.rr)",
+  "queue": {
+    "id": "{{QueueId}}"
+  },
+  "build": [
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Install an Apple certificate",
+      "timeoutInMinutes": 0,
+      "refName": "InstallAppleCertificate_1",
+      "task": {
+        "id": "d2eff759-736d-4b7b-8554-7ba0960d49d6",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "certSecureFile": "",
+        "certPwd": "$(iOSCertificatPwd)",
+        "keychain": "temp",
+        "keychainPassword": "",
+        "customKeychainPath": "",
+        "deleteCert": "false",
+        "deleteCustomKeychain": "false",
+        "signingIdentity": ""
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Install an Apple provisioning profile",
+      "timeoutInMinutes": 0,
+      "refName": "InstallAppleProvisioningProfile_2",
+      "task": {
+        "id": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "provisioningProfileLocation": "secureFiles",
+        "provProfileSecureFile": "",
+        "provProfileSourceRepository": "alpha.provisingprofile",
+        "removeProfile": "false"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "NuGet restore Sources/{{BuildDefName}}.sln",
+      "timeoutInMinutes": 0,
+      "refName": "NuGetInstaller_3",
+      "task": {
+        "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+        "versionSpec": "2.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "solution": "Sources/{{BuildDefName}}.sln",
+        "nugetConfigPath": "Sources/NuGet.config",
+        "restoreMode": "restore",
+        "noCache": "false",
+        "nuGetRestoreArgs": "",
+        "verbosity": "-",
+        "nuGetVersion": "3.3.0",
+        "nuGetPath": "",
+        "command": "restore",
+        "selectOrConfig": "select",
+        "feedRestore": "",
+        "includeNuGetOrg": "true",
+        "externalEndpoints": "",
+        "packagesDirectory": "",
+        "verbosityRestore": "Detailed",
+        "searchPatternPush": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+        "nuGetFeedType": "internal",
+        "feedPublish": "",
+        "allowPackageConflicts": "false",
+        "externalEndpoint": "",
+        "verbosityPush": "Detailed",
+        "searchPatternPack": "**/*.csproj",
+        "configurationToPack": "$(BuildConfiguration)",
+        "outputDir": "$(Build.ArtifactStagingDirectory)",
+        "versioningScheme": "off",
+        "includeReferencedProjects": "false",
+        "versionEnvVar": "",
+        "requestedMajorVersion": "1",
+        "requestedMinorVersion": "0",
+        "requestedPatchVersion": "0",
+        "packTimezone": "utc",
+        "includeSymbols": "false",
+        "buildProperties": "",
+        "verbosityPack": "Detailed",
+        "arguments": ""
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Build Xamarin.iOS solution Sources/{{BuildDefName}}.sln",
+      "timeoutInMinutes": 0,
+      "refName": "XamariniOS_4",
+      "task": {
+        "id": "0f077e3a-af59-496d-81bc-ad971b7464e0",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "solution": "Sources/{{BuildDefName}}.sln",
+        "configuration": "$(BuildConfiguration)",
+        "clean": "false",
+        "packageApp": "true",
+        "forSimulator": "false",
+        "runNugetRestore": "true",
+        "args": "",
+        "cwd": "",
+        "buildTool": "xbuild",
+        "mdtoolLocation": "",
+        "signMethod": "id",
+        "iosSigningIdentity": "$(Identity)",
+        "unlockDefaultKeychain": "false",
+        "defaultKeychainPassword": "",
+        "provProfileUuid": "$(UUID)",
+        "p12": "",
+        "p12pwd": "",
+        "provProfile": "",
+        "removeProfile": "false"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Build Xamarin.Android Project Sources/Droid/{{BuildDefName}}.Droid.csproj",
+      "timeoutInMinutes": 0,
+      "refName": "XamarinAndroid_5",
+      "task": {
+        "id": "27edd013-36fd-43aa-96a3-7d73e1e35285",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "project": "Sources/Droid/{{BuildDefName}}.Droid.csproj",
+        "target": "",
+        "outputDir": "",
+        "configuration": "$(BuildConfiguration)",
+        "createAppPackage": "true",
+        "clean": "false",
+        "msbuildLocationMethod": "version",
+        "msbuildVersion": "latest",
+        "msbuildLocation": "",
+        "msbuildArchitecture": "x64",
+        "msbuildArguments": "",
+        "jdkSelection": "JDKVersion",
+        "jdkVersion": "default",
+        "jdkUserInputPath": "",
+        "jdkArchitecture": "x86"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Copy Files to: $(Build.StagingDirectory)/ios",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "refName": "CopyFiles1",
+      "task": {
+        "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+        "versionSpec": "2.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "SourceFolder": "",
+        "Contents": "**/*.ipa",
+        "TargetFolder": "$(Build.StagingDirectory)/ios",
+        "CleanTargetFolder": "false",
+        "OverWrite": "false",
+        "flattenFolders": "true"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Copy Files to: $(Build.StagingDirectory)/android",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "refName": "CopyFiles2",
+      "task": {
+        "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+        "versionSpec": "2.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "SourceFolder": "",
+        "Contents": "**/*.apk",
+        "TargetFolder": "$(Build.StagingDirectory)/android",
+        "CleanTargetFolder": "false",
+        "OverWrite": "false",
+        "flattenFolders": "true"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Publish Artifact: drop",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "refName": "PublishBuildArtifacts3",
+      "task": {
+        "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "PathtoPublish": "$(Build.StagingDirectory)",
+        "ArtifactName": "drop",
+        "ArtifactType": "Container",
+        "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
+        "Parallel": "false",
+        "ParallelCount": "8"
+      }
+    }
+  ],
+  "options": [
+    {
+      "enabled": false,
+      "definition": {
+        "id": "a9db38f9-9fdc-478c-b0f9-464221e58316"
+      },
+      "inputs": {
+        "workItemType": "677999",
+        "assignToRequestor": "true",
+        "additionalFields": "{}"
+      }
+    },
+    {
+      "enabled": true,
+      "definition": {
+        "id": "57578776-4c22-4526-aeb0-86b6da17ee9c"
+      },
+      "inputs": {
+        "additionalFields": "{}"
+      }
+    },
+    {
+      "enabled": true,
+      "definition": {
+        "id": "5d58cc01-7c75-450c-be18-a388ddb129ec"
+      },
+      "inputs": {
+        "branchFilters": "[\"+refs/heads/master\"]",
+        "additionalFields": "{}"
+      }
+    },
+    {
+      "enabled": true,
+      "definition": {
+        "id": "7c555368-ca64-4199-add6-9ebaf0b0137d"
+      },
+      "inputs": {
+        "multipliers": "[\"BuildConfiguration\"]",
+        "parallel": "true",
+        "continueOnError": "true"
+      }
+    }
+  ],
+  "triggers": [
+    {
+      "branchFilters": [
+        "+refs/heads/master"
+      ],
+      "pathFilters": [],
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "pollingInterval": 0,
+      "triggerType": 2
+    }
+  ],
+  "variables": {
+    "androidCertificatPwd": {
+      "value": null,
+      "isSecret": true
+    },
+    "androidversionCode": {
+      "value": ""
+    },
+    "BuildConfiguration": {
+      "value": "Release",
+      "allowOverride": true
+    },
+    "Identity": {
+      "value": "iPhone Developer:()"
+    },
+    "iOSCertificatPwd": {
+      "value": null,
+      "isSecret": true
+    },
+    "version.major": {
+      "value": "1",
+      "allowOverride": true
+    },
+    "version.minor": {
+      "value": "1",
+      "allowOverride": true
+    },
+    "UUID": {
+      "value": "d795fbf1-c7ef-4b96-ac38-d57dcf780d02"
+    },
+    "variableCFBundleIdentifier": {
+      "value": "com.meglem.xamarin"
+    }
+  },
+  "retentionRules": [
+    {
+      "branches": [
+        "+refs/heads/*"
+      ],
+      "artifacts": [],
+      "artifactTypesToDelete": [
+        "FilePath",
+        "SymbolStore"
+      ],
+      "daysToKeep": 10,
+      "minimumToKeep": 1,
+      "deleteBuildRecord": true,
+      "deleteTestResults": true
+    }
+  ],
+  "repository": {
+    "properties": {
+      "labelSources": "0",
+      "reportBuildStatus": "true",
+      "fetchDepth": "0",
+      "gitLfsSupport": "false",
+      "skipSyncSource": "false",
+      "cleanOptions": "0"
+    },
+    "type": "TfsGit",
+    "name": "{{Project}}",
+    "url": "https://{{VSTS}}.visualstudio.com/_git/{{Project}}",
+    "defaultBranch": "refs/heads/master",
+    "clean": "false",
+    "checkoutSubmodules": false
+  }
+}

@@ -95,6 +95,11 @@ function getTargets(answers) {
                   name: `Azure App Service (Deployment Slots)`,
                   value: `paasslots`
                }];
+            } else if (answers.type === `xamarin`) {
+               targets = [{
+                  name: `App Center`,
+                  value: `appcenter`
+               }];
             } else {
                targets = [{
                   name: `Azure App Service`,
@@ -143,6 +148,9 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
+   }, {
+      name: `Xamarin`,
+      value: `xamarin`
    }
    // , {
    //    name: `Custom`,
@@ -711,7 +719,15 @@ function tryFindRelease(args, callback) {
 function findRelease(args, callback) {
    "use strict";
 
-   var name = isDocker(args.target) ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
+   var name = '';
+
+   if(isDocker(args.target)){
+       name = `${args.appName}-Docker-CD`;
+   } else if(args.target === 'appCenter'){
+      name = `${args.releaseName}` === 'iOS' ? `${args.appName}-CD-iOS` : `${args.appName}-CD-Android`;
+   } else {
+     name = `${args.appName}-CD`;
+   }
 
    var options = addUserAgent({
       "method": `GET`,

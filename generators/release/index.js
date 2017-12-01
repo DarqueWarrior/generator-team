@@ -73,11 +73,23 @@ function configureRelease() {
    var done = this.async();
 
    app.getRelease(this, function (e, result) {
-      var release = _this.templatePath(result);
 
-      if(_this.type === `custom`) {
-         release = path.join(_this.customFolder, result);
-      }
+   var release = '';
+   var releaseName = '';
+   var i = 0;
+   do {
+       if(_this.type === `custom`) {
+           release = path.join(_this.customFolder, result[i]);
+       } else if (_this.type === `xamarin`){
+           releaseName = result[i][0];
+           release = _this.templatePath(result[i][1]);
+       } else {
+           release = _this.templatePath(result[i]);
+       }
+
+
+
+
 
       var args = {
          pat: _this.pat,
@@ -85,6 +97,7 @@ function configureRelease() {
          queue: _this.queue,
          target: _this.target,
          releaseJson: release,
+         releaseName: releaseName,
          azureSub: _this.azureSub,
          appName: _this.applicationName,
          project: _this.applicationName
@@ -99,6 +112,8 @@ function configureRelease() {
       }
 
       app.run(args, _this, done);
+      i++;
+      } while (result[i]);
    });
 }
 

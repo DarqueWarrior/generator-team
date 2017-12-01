@@ -82,6 +82,7 @@ function run(args, gen, done) {
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
+            releaseName: args.releaseName,
             dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             dockerRegistry: args.dockerRegistry,
@@ -119,13 +120,13 @@ function getRelease(args, callback) {
    if (util.isDocker(args.target)) {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
-            release = `vsts_release_${args.target}.json`;
+            release = [`vsts_release_${args.target}.json`];
 
             if (!util.isVSTS(args.tfs) && args.target === `dockerpaas`) {
-               release = `tfs_2018_release_${args.target}.json`;
+               release = [`tfs_2018_release_${args.target}.json`];
             }
          } else {
-            release = `tfs_release_${args.target}.json`;
+            release = [`tfs_release_${args.target}.json`];
          }
 
          callback(e, release);
@@ -136,15 +137,20 @@ function getRelease(args, callback) {
             if (util.isVSTS(args.tfs)) {
 
                if (args.target === `paasslots`) {
-                  release = `vsts_release_slots.json`;
+                  release = [`vsts_release_slots.json`];
+               } else if(args.target === `appcenter`){
+                  release = [
+                      [`iOS`,`vsts_release_ios.json`],
+                      [`Android`,`vsts_release_android.json`]
+                  ];
                } else {
-                  release = `vsts_release.json`;
+                  release = [`vsts_release.json`];
                }
             } else {
-               release = `tfs_2018_release.json`;
+               release = [`tfs_2018_release.json`];
             }
          } else {
-            release = `tfs_release.json`;
+            release = [`tfs_release.json`];
          }
 
          callback(e, release);
@@ -173,6 +179,10 @@ function createRelease(args, gen, callback) {
    'use strict';
 
    let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
+
+   if(args.releaseName === 'iOS' || args.releaseName === 'Android'){
+       releaseDefName += "-" + args.releaseName;
+   }
 
    gen.log(`+ Creating ${releaseDefName} release definition`);
 

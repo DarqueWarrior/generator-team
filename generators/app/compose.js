@@ -88,9 +88,13 @@ function addLanguage(obj) {
          args: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
       });
    } else if (obj.type === `node`) {
-      obj.composeWith(`team:node`, {
-         args: [obj.applicationName, obj.installDep, obj.dockerPorts]
-      });
+       obj.composeWith(`team:node`, {
+           args: [obj.applicationName, obj.installDep, obj.dockerPorts]
+       });
+   } else if (obj.type === `xamarin`) {
+       obj.composeWith(`team:xamarin`, {
+           args: [obj.applicationName]
+       });
    }
 }
 
