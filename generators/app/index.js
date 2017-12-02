@@ -50,6 +50,7 @@ function input() {
    // Collect any missing data from the user.
    // This gives me access to the generator in the
    // when callbacks of prompt
+   "use strict";
    let cmdLnInput = this;
 
    return this.prompt([
