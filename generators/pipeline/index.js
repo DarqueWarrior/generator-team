@@ -1,6 +1,7 @@
 // All this generator does is compose the others to build just a pipeline.
 // This will be helpful if you already have a project and just want the CI/CD
 // setup for it.  Or you ran yo tfs once and want to add an additional pipeline.
+"use strict";
 const url = require(`url`);
 const yosay = require(`yosay`);
 const args = require(`../app/args`);

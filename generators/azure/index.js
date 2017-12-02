@@ -1,3 +1,4 @@
+"use strict";
 const app = require('./app.js');
 const args = require(`../app/args`);
 const util = require(`../app/utility`);

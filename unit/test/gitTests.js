@@ -1,3 +1,4 @@
+"use strict";
 const path = require(`path`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);

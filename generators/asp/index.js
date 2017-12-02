@@ -1,3 +1,4 @@
+"use strict";
 const path = require('path');
 const uuidV4 = require('uuid/v4');
 const args = require(`../app/args`);

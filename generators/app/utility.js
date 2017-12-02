@@ -1,6 +1,7 @@
+"use strict";
 const url = require('url');
 const request = require(`request`);
-const package = require('../../package.json');
+const pkg = require('../../package.json');
 
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
@@ -47,7 +48,7 @@ function addUserAgent(options) {
 }
 
 function getUserAgent() {
-   return `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
+   return `Yo Team/${pkg.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 }
 
 function reconcileValue(first, second, fallback) {
