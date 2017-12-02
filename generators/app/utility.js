@@ -26,12 +26,14 @@ function isDocker(value) {
 }
 
 function getDockerRegistryServer(server) {
+   "use strict";
    let parts = url.parse(server);
 
    return parts.host;
 }
 
 function getImageNamespace(registryId, endPoint) {
+   "use strict";
    let dockerNamespace = registryId ? registryId.toLowerCase() : null;
 
    if (endPoint && endPoint.authorization && !isDockerHub(endPoint.authorization.parameters.registry)) {
@@ -65,6 +67,7 @@ function reconcileValue(first, second, fallback) {
 function getTargets(answers) {
 
    return new Promise(function (resolve, reject) {
+      "use strict";
       let pat = encodePat(answers.pat);
 
       isTFSGreaterThan2017(answers.tfs, pat, function (e, result) {
@@ -134,6 +137,7 @@ function getTargets(answers) {
 
 function getAppTypes(answers) {
    // Default to languages tha work on all agents
+   "use strict";
    let types = [{
       name: `.NET Core`,
       value: `asp`
@@ -850,6 +854,7 @@ function needsRegistry(answers, cmdLnInput) {
 }
 
 function needsDockerHost(answers, cmdLnInput) {
+   "use strict";
    let isDocker;
    let paasRequiresHost;
 
