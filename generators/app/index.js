@@ -1,12 +1,13 @@
 // This is the main entry point of the generator.  The heavy lifting is done in the
 // sub generators.  I separated them so I could compose with language generators.
+"use strict";
 const url = require(`url`);
 const yosay = require(`yosay`);
 const args = require(`./args`);
 const util = require(`./utility`);
 const prompts = require(`./prompt`);
 const compose = require(`../app/compose`);
-const package = require('../../package.json');
+const pkg = require('../../package.json');
 const generators = require(`yeoman-generator`);
 
 function construct() {
@@ -43,7 +44,7 @@ function init() {
    // sub generators. I also use this to determine which data I still need to
    // prompt for.
 
-   this.log(yosay(`Welcome to DevOps powered by Microsoft version ${package.version}`));
+   this.log(yosay(`Welcome to DevOps powered by Microsoft version ${pkg.version}`));
 }
 
 function input() {

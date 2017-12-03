@@ -1,3 +1,4 @@
+"use strict";
 const sinon = require('sinon');
 const assert = require('assert');
 const request = require('supertest');

@@ -1,3 +1,4 @@
+"use strict";
 const fs = require('fs');
 const async = require('async');
 const util = require(`./_util`);

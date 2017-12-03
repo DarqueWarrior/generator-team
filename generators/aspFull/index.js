@@ -1,3 +1,4 @@
+"use strict";
 const path = require('path');
 const mkdirp = require('mkdirp');
 const uuidV4 = require('uuid/v4');
@@ -75,9 +76,9 @@ function writeFiles() {
    this.fs.copyTpl(`${src}/Global.asax`, `${root}/Global.asax`, tokens);
    this.fs.copyTpl(`${src}/Global.asax.cs`, `${root}/Global.asax.cs`, tokens);
    this.copy(`${src}/packages.config`, `${root}/packages.config`);
-   this.copy(`${src}/web.config`, `${root}/web.config`);
-   this.copy(`${src}/web.Debug.config`, `${root}/web.Debug.config`);
-   this.copy(`${src}/web.Release.config`, `${root}/web.Release.config`);
+   this.copy(`${src}/web.config`, `${root}/Web.config`);
+   this.copy(`${src}/web.Debug.config`, `${root}/Web.Debug.config`);
+   this.copy(`${src}/web.Release.config`, `${root}/Web.Release.config`);
 
    this.fs.copyTpl(`${src}/webapp.csproj`, `${root}/${this.applicationName}.csproj`, tokens);
 

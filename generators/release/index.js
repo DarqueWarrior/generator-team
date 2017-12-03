@@ -1,3 +1,4 @@
+"use strict";
 const url = require(`url`);
 const path = require(`path`);
 const app = require(`./app.js`);

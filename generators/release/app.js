@@ -1,4 +1,5 @@
 // This is the code that deals with TFS
+'use strict';
 const fs = require('fs');
 const async = require('async');
 const uuidV4 = require('uuid/v4');
@@ -6,8 +7,6 @@ const request = require('request');
 const util = require('../app/utility');
 
 function run(args, gen, done) {
-   'use strict';
-
    var build = {};
    var approverId;
    var queueId = 0;
@@ -153,8 +152,6 @@ function getRelease(args, callback) {
 }
 
 function findOrCreateRelease(args, gen, callback) {
-   'use strict';
-
    util.tryFindRelease(args, function (e, rel) {
       if (e) {
          callback(e);
@@ -170,8 +167,6 @@ function findOrCreateRelease(args, gen, callback) {
 }
 
 function createRelease(args, gen, callback) {
-   'use strict';
-
    let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
 
    gen.log(`+ Creating ${releaseDefName} release definition`);

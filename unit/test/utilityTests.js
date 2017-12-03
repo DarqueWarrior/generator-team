@@ -1,3 +1,4 @@
+"use strict";
 const fs = require(`fs`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
