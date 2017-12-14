@@ -1,7 +1,10 @@
-# generator-team
+# generator-team (Yo Team)
 
 ## Build status
 ![](https://dlb.visualstudio.com/_apis/public/build/definitions/40202688-4713-4e5d-85ea-958146d71db6/53/badge)
+
+## Revision history
+[Changes](https://github.com/DarqueWarrior/generator-team/wiki)
 
 ## See it in action
 [Ignite New Zealand 2016](https://channel9.msdn.com/Events/Ignite/New-Zealand-2016/M328)
