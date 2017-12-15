@@ -28,7 +28,7 @@ assert.customTargets = function (a) {
    assert.equal(a[0].name, `Azure`);
    assert.equal(a[1].name, `Docker`);
    assert.equal(a[2].name, `Both`);
-   
+
    // Make sure it did not return too many.
    assert.equal(a.length, 3, `Wrong number of entries`);
 };
@@ -40,6 +40,89 @@ assert.windowsTargets = function (a) {
 };
 
 describe(`utility`, function () {
+
+   context(`profiles`, function () {
+      it(`file does not exist`, sinon.test(function () {
+         this.stub(fs, `existsSync`).returns(false);
+
+         let actual = util.searchProfiles(`unitTest`);
+
+         assert.equal(actual, null);
+      }));
+
+      it(`file is invalid`, sinon.test(function () {
+         this.stub(fs, `existsSync`).returns(true);
+         this.stub(fs, `readFileSync`).returns(`This is not json.`);
+
+         let actual = util.searchProfiles(`unitTest`);
+
+         assert.equal(actual, null);
+      }));
+
+      it(`profile is OnPremise`, sinon.test(function () {
+         this.stub(fs, `existsSync`).returns(true);
+         this.stub(fs, `readFileSync`).returns(`
+         [
+            {
+               "Name": "unitTest",
+               "URL": "http://localhost:8080/tfs/defaultcollection",
+               "Pat": "",
+               "Type": "OnPremise",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "Pat": "OnE2cXpseHk0YXp3dHpz",
+               "Type": "Pat",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "test",
+               "URL": "https://test.visualstudio.com",
+               "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+               "Type": "Pat",
+               "Version": "VSTS"
+            }
+         ]`);
+
+         let actual = util.searchProfiles(`unitTest`);
+
+         assert.equal(actual, null);
+      }));
+
+      it(`profile is found`, sinon.test(function () {
+         this.stub(fs, `existsSync`).returns(true);
+         this.stub(fs, `readFileSync`).returns(`
+         [
+            {
+               "Name": "unitTest",
+               "URL": "http://localhost:8080/tfs/defaultcollection",
+               "Pat": "",
+               "Type": "OnPremise",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "Pat": "OnE2cXpseHk0YXp3dHpz",
+               "Type": "Pat",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "test",
+               "URL": "https://test.visualstudio.com",
+               "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+               "Type": "Pat",
+               "Version": "VSTS"
+            }
+         ]`);
+
+         let actual = util.searchProfiles(`test`);
+
+         assert.notEqual(actual, null);
+      }));
+   });
 
    context(`registry`, function () {
       it(`needsRegistry paas`, function () {

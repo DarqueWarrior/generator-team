@@ -826,7 +826,7 @@ function searchProfiles(input) {
          var profiles = JSON.parse(fs.readFileSync(path, 'utf8'));
 
          var found = profiles.filter(function (i) {
-            return i.Name === input;
+            return i.Name === input && i.Type === `Pat`;
          });
    
          if (found.length !== 0) {
@@ -1040,6 +1040,7 @@ module.exports = {
    needsRegistry: needsRegistry,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
+   searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
