@@ -27,12 +27,7 @@ function pat(obj) {
       message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
       when: answers => {
-         // If the value was passed on the command line it will
-         // not be set in answers which other prompts expect.
-         // So, place it in answers now.
-         answers.pat = obj.pat;
-
-         return obj.pat === undefined;
+         return util.readPatFromProfile(answers, obj);
       }
    };
 }

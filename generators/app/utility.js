@@ -1,3 +1,5 @@
+const fs = require('fs');
+const os = require('os');
 const url = require('url');
 const request = require(`request`);
 const package = require('../../package.json');
@@ -8,6 +10,7 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
+var profile = null;
 var logging = process.env.LOGYO || `off`;
 
 var logMessage = function (msg) {
@@ -135,19 +138,19 @@ function getTargets(answers) {
 function getAppTypes(answers) {
    // Default to languages tha work on all agents
    let types = [{
-      name: `.NET Core`,
-      value: `asp`
-   }, {
-      name: `Node.js`,
-      value: `node`
-   }, {
-      name: `Java`,
-      value: `java`
-   }
-   // , {
-   //    name: `Custom`,
-   //    value: `custom`
-   // }
+         name: `.NET Core`,
+         value: `asp`
+      }, {
+         name: `Node.js`,
+         value: `node`
+      }, {
+         name: `Java`,
+         value: `java`
+      }
+      // , {
+      //    name: `Custom`,
+      //    value: `custom`
+      // }
    ];
 
    // If this is not a Linux based agent also show
@@ -814,7 +817,51 @@ function isDockerHub(dockerRegistry) {
    return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
 }
 
+// Reads profiles created by the VSTeam PowerShell module.
+function searchProfiles(input) {
+   let path = os.homedir() + '/vsteam_profiles.json';
+   
+   if (fs.existsSync(path)) {
+      try {
+         var profiles = JSON.parse(fs.readFileSync(path, 'utf8'));
+
+         var found = profiles.filter(function (i) {
+            return i.Name === input;
+         });
+   
+         if (found.length !== 0) {
+            return found[0];
+         }
+      } catch (error) {
+         // The file is invalid
+      }      
+   }
+
+   return null;
+}
+
+function readPatFromProfile(answers, obj) {
+   if (profile) {
+      // Profiles are stored 64 bit encoded
+      let b = new Buffer(profile.Pat, 'base64');
+      // Skip the leading :
+      obj.pat = b.toString().substring(1);
+   }
+   // If the value was passed on the command line it will
+   // not be set in answers which other prompts expect.
+   // So, place it in answers now.
+   answers.pat = obj.pat;
+
+   return obj.pat === undefined;
+}
+
 function extractInstance(input) {
+   profile = searchProfiles(input);
+
+   if (profile !== null) {
+      input = profile.URL;
+   }
+
    // When using VSTS we only want the account name but
    // people continue to give the entire url which will
    // cause issues later. So check to see if the value
@@ -1000,6 +1047,7 @@ module.exports = {
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
+   readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    validatePortMapping: validatePortMapping,
