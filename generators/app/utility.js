@@ -993,7 +993,7 @@ function isPaaS(answers, cmdLnInput) {
 
 function isVSTS(instance) {
    if (instance) {
-      return instance.toLowerCase().match(/http/) === null;
+      return instance.toLowerCase().match(/http/) === null || instance.toLowerCase().match(/visualstudio\.com/) !== null;
    }
 
    return false;

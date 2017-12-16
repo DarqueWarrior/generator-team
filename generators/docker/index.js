@@ -33,11 +33,11 @@ function input() {
       prompts.dockerCertPath(this)
    ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
-      this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
-      this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost);
-      this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath);
-      this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName);
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.dockerHost = util.reconcileValue(cmdLnInput.dockerHost, answers.dockerHost);
+      this.dockerCertPath = util.reconcileValue(cmdLnInput.dockerCertPath, answers.dockerCertPath);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName);
    }.bind(this));
 }
 

@@ -26,12 +26,12 @@ function input() {
       prompts.groupId(this),
       prompts.installDep(this),
       prompts.dockerPorts(this)
-   ]).then(function (a) {
+   ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
-      this.groupId = util.reconcileValue(a.groupId, cmdLnInput.groupId);
-      this.installDep = util.reconcileValue(a.installDep, cmdLnInput.installDep);
-      this.dockerPorts = util.reconcileValue(a.dockerPorts, cmdLnInput.dockerPorts, ``);
-      this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
+      this.groupId = util.reconcileValue(cmdLnInput.groupId, answers.groupId);
+      this.installDep = util.reconcileValue(cmdLnInput.installDep, answers.installDep);
+      this.dockerPorts = util.reconcileValue(cmdLnInput.dockerPorts, answers.dockerPorts, ``);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName);
    }.bind(this));
 }
 

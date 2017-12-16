@@ -110,9 +110,12 @@ describe(`profiles:index cmdLine`, function () {
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns(profiles);
          })
          .on(`end`, function () {
-            assert.equal(5, spy.callCount, `generator.log was not called the correct number of times.`);
+            fs.existsSync.restore();
+            fs.readFileSync.restore();
 
-            assert.equal(`Name                                          URL                                           Version Type`, spy.getCall(0).args[0]);
+            assert.equal(6, spy.callCount, `generator.log was not called the correct number of times.`);
+
+            assert.equal(`\r\nName                                          URL                                           Version Type`, spy.getCall(0).args[0]);
             assert.equal(`----                                          ---                                           ------- ----`, spy.getCall(1).args[0]);
             assert.equal(`unitTest                                      http://localhost:8080/tfs/defaultcollection   TFS2017 OnPremise`, spy.getCall(2).args[0]);
             assert.equal(`http://192.168.1.3:8080/tfs/defaultcollection http://192.168.1.3:8080/tfs/defaultcollection TFS2017 Pat`, spy.getCall(3).args[0]);
@@ -120,9 +123,6 @@ describe(`profiles:index cmdLine`, function () {
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);
-
-            fs.existsSync.restore();
-            fs.readFileSync.restore();
          });
    });
 
@@ -144,24 +144,26 @@ describe(`profiles:index cmdLine`, function () {
             generator.log = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(false);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
+               let actual = JSON.parse(data);
+
                // Make sure the PAT was stored 64 bit encoded
-               assert.equal(data[0].Pat, `OnRva2Vu`);
-               assert.equal(data[0].URL, `http://localhost:8080/tfs/DefaultCollection`);
-               assert.equal(data[0].Name, `local`);
-               assert.equal(data[0].Version, `TFS2018`);
-               assert.equal(data[0].Type, `Pat`);
+               assert.equal(actual[0].Pat, `OnRva2Vu`);
+               assert.equal(actual[0].URL, `http://localhost:8080/tfs/DefaultCollection`);
+               assert.equal(actual[0].Name, `local`);
+               assert.equal(actual[0].Version, `TFS2018`);
+               assert.equal(actual[0].Type, `Pat`);
             });
          })
          .on(`end`, function () {
+            fs.existsSync.restore();
+            fs.writeFileSync.restore();
+
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
             assert.equal(`+ Profile Added.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsWriteFileSyncStub.callCount, `fs.writeFileSync was not called`);
-
-            fs.existsSync.restore();
-            fs.writeFileSync.restore();
          });
    });
 
@@ -183,24 +185,26 @@ describe(`profiles:index cmdLine`, function () {
             generator.log = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(false);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
+               let actual = JSON.parse(data);
+
                // Make sure the PAT was stored 64 bit encoded
-               assert.equal(data[0].Pat, `OnRva2Vu`);
-               assert.equal(data[0].URL, `https://test.visualstudio.com`);
-               assert.equal(data[0].Name, `test`);
-               assert.equal(data[0].Version, `VSTS`);
-               assert.equal(data[0].Type, `Pat`);
+               assert.equal(actual[0].Pat, `OnRva2Vu`);
+               assert.equal(actual[0].URL, `https://test.visualstudio.com`);
+               assert.equal(actual[0].Name, `test`);
+               assert.equal(actual[0].Version, `VSTS`);
+               assert.equal(actual[0].Type, `Pat`);
             });
          })
          .on(`end`, function () {
+            fs.existsSync.restore();
+            fs.writeFileSync.restore();
+
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
             assert.equal(`+ Profile Added.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsWriteFileSyncStub.callCount, `fs.writeFileSync was not called`);
-
-            fs.existsSync.restore();
-            fs.writeFileSync.restore();
          });
    });
 
@@ -225,17 +229,23 @@ describe(`profiles:index cmdLine`, function () {
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(true);
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns(profiles);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
-               assert.equal(data.length, 3);
+               let actual = JSON.parse(data);
+
+               assert.equal(actual.length, 3);
 
                // Make sure the PAT was stored 64 bit encoded
-               assert.equal(data[1].Pat, `OnRva2Vu`);
-               assert.equal(data[1].URL, `http://192.168.1.3:8080/tfs/defaultcollection`);
-               assert.equal(data[1].Name, `local`);
-               assert.equal(data[1].Version, `TFS2018`);
-               assert.equal(data[1].Type, `Pat`);
+               assert.equal(actual[1].Pat, `OnRva2Vu`);
+               assert.equal(actual[1].URL, `http://192.168.1.3:8080/tfs/defaultcollection`);
+               assert.equal(actual[1].Name, `local`);
+               assert.equal(actual[1].Version, `TFS2018`);
+               assert.equal(actual[1].Type, `Pat`);
             });
          })
          .on(`end`, function () {
+            fs.existsSync.restore();
+            fs.readFileSync.restore();            
+            fs.writeFileSync.restore();
+
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
             assert.equal(`+ Profile Added.`, spy.getCall(0).args[0]);
@@ -243,10 +253,59 @@ describe(`profiles:index cmdLine`, function () {
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);
             assert.equal(1, fsWriteFileSyncStub.callCount, `fs.writeFileSync was not called`);
+         });
+   });
 
+   it(`delete entry`, function () {
+      var spy;
+      var fsExistsSyncStub;
+      var fsWriteFileSyncStub;
+      var fsReadFileSyncStub;
+      
+      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+         .withArguments([`delete`, `http://192.168.1.3:8080/tfs/defaultcollection`])
+         .on(`error`, function (error) {
             fs.existsSync.restore();
             fs.readFileSync.restore();            
             fs.writeFileSync.restore();
+
+            assert.fail(error);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before generator.run() is called
+            generator.log = spy = sinon.spy();
+            fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(true);
+            fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns(profiles);
+            fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
+               let actual = JSON.parse(data);
+               
+               assert.equal(actual.length, 2);
+
+               assert.equal(actual[0].Pat, ``);
+               assert.equal(actual[0].URL, `http://localhost:8080/tfs/defaultcollection`);
+               assert.equal(actual[0].Name, `unitTest`);
+               assert.equal(actual[0].Version, `TFS2017`);
+               assert.equal(actual[0].Type, `OnPremise`);
+               
+               assert.equal(actual[1].Pat, `OndrejR0ZHpwbDM3bXUycGt5c3hm`);
+               assert.equal(actual[1].URL, `https://test.visualstudio.com`);
+               assert.equal(actual[1].Name, `test`);
+               assert.equal(actual[1].Version, `VSTS`);
+               assert.equal(actual[1].Type, `Pat`);
+            });
+         })
+         .on(`end`, function () {
+            fs.existsSync.restore();
+            fs.readFileSync.restore();            
+            fs.writeFileSync.restore();
+
+            assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
+
+            assert.equal(`+ Profile Delete.`, spy.getCall(0).args[0]);
+
+            assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
+            assert.equal(1, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);
+            assert.equal(1, fsWriteFileSyncStub.callCount, `fs.writeFileSync was not called`);
          });
    });
 });

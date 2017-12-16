@@ -89,26 +89,26 @@ function input() {
          cmdLnInput.dockerHost = undefined;
       }
 
-      this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
-      this.type = util.reconcileValue(answers.type, cmdLnInput.type);
-      this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
-      this.target = util.reconcileValue(answers.target, cmdLnInput.target);
-      this.groupId = util.reconcileValue(answers.groupId, cmdLnInput.groupId, ``);
-      this.azureSub = util.reconcileValue(answers.azureSub, cmdLnInput.azureSub, ``);
-      this.tenantId = util.reconcileValue(answers.tenantId, cmdLnInput.tenantId, ``);
-      this.installDep = util.reconcileValue(answers.installDep, cmdLnInput.installDep);
-      this.azureSubId = util.reconcileValue(answers.azureSubId, cmdLnInput.azureSubId, ``);
-      this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
-      this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
-      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder, ``);
-      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
-      this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath, ``);
-      this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
-      this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
-      this.servicePrincipalId = util.reconcileValue(answers.servicePrincipalId, cmdLnInput.servicePrincipalId, ``);
-      this.servicePrincipalKey = util.reconcileValue(answers.servicePrincipalKey, cmdLnInput.servicePrincipalKey, ``);
-      this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.type = util.reconcileValue(cmdLnInput.type, answers.type);
+      this.queue = util.reconcileValue(cmdLnInput.queue, answers.queue);
+      this.target = util.reconcileValue(cmdLnInput.target, answers.target);
+      this.groupId = util.reconcileValue(cmdLnInput.groupId, answers.groupId, ``);
+      this.azureSub = util.reconcileValue(cmdLnInput.azureSub, answers.azureSub, ``);
+      this.tenantId = util.reconcileValue(cmdLnInput.tenantId, answers.tenantId, ``);
+      this.installDep = util.reconcileValue(cmdLnInput.installDep, answers.installDep);
+      this.azureSubId = util.reconcileValue(cmdLnInput.azureSubId, answers.azureSubId, ``);
+      this.dockerHost = util.reconcileValue(cmdLnInput.dockerHost, answers.dockerHost, ``);
+      this.dockerPorts = util.reconcileValue(cmdLnInput.dockerPorts, answers.dockerPorts, ``);
+      this.customFolder = util.reconcileValue(cmdLnInput.customFolder, answers.customFolder, ``);
+      this.dockerRegistry = util.reconcileValue(cmdLnInput.dockerRegistry, answers.dockerRegistry, ``);
+      this.dockerCertPath = util.reconcileValue(cmdLnInput.dockerCertPath, answers.dockerCertPath, ``);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName, ``);
+      this.dockerRegistryId = util.reconcileValue(cmdLnInput.dockerRegistryId, answers.dockerRegistryId, ``);
+      this.servicePrincipalId = util.reconcileValue(cmdLnInput.servicePrincipalId, answers.servicePrincipalId, ``);
+      this.servicePrincipalKey = util.reconcileValue(cmdLnInput.servicePrincipalKey, answers.servicePrincipalKey, ``);
+      this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
    }.bind(this));
 }
 

@@ -41,16 +41,16 @@ function input() {
       prompts.tenantId(this),
       prompts.servicePrincipalId(this),
       prompts.servicePrincipalKey(this),
-   ]).then(function (a) {
+   ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
-      this.pat = util.reconcileValue(a.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(a.tfs, cmdLnInput.tfs);
-      this.azureSub = util.reconcileValue(a.azureSub, cmdLnInput.azureSub);
-      this.tenantId = util.reconcileValue(a.tenantId, cmdLnInput.tenantId);
-      this.azureSubId = util.reconcileValue(a.azureSubId, cmdLnInput.azureSubId);
-      this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
-      this.servicePrincipalId = util.reconcileValue(a.servicePrincipalId, cmdLnInput.servicePrincipalId);
-      this.servicePrincipalKey = util.reconcileValue(a.servicePrincipalKey, cmdLnInput.servicePrincipalKey);
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.azureSub = util.reconcileValue(cmdLnInput.azureSub, answers.azureSub);
+      this.tenantId = util.reconcileValue(cmdLnInput.tenantId, answers.tenantId);
+      this.azureSubId = util.reconcileValue(cmdLnInput.azureSubId, answers.azureSubId);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName);
+      this.servicePrincipalId = util.reconcileValue(cmdLnInput.servicePrincipalId, answers.servicePrincipalId);
+      this.servicePrincipalKey = util.reconcileValue(cmdLnInput.servicePrincipalKey, answers.servicePrincipalKey);
    }.bind(this));
 }
 

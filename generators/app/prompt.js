@@ -12,9 +12,13 @@ function profileCmd(obj) {
          // If the value was passed on the command line it will
          // not be set in answers which other prompts expect.
          // So, place it in answers now.
-         answers.profileCmd = obj.profileCmd;
+         // If you are reading from prompts don't overwrite
+         // what the user entered.
+         if (obj.profileCmd !== undefined) {
+            answers.profileCmd = obj.profileCmd;
+         }
 
-         return obj.profileCmd === undefined;
+         return answers.profileCmd === undefined;
       }
    };
 }
@@ -30,17 +34,21 @@ function tfsVersion(obj) {
       when: answers => {
          // You don't need this if you are just listing or deleting a 
          // profile
-         if(answers.profileCmd === `list` || answers.profileCmd === `delete` ){
+         if (answers.profileCmd === `list` || answers.profileCmd === `delete`) {
             return false;
          }
-         
+
          // If the value was passed on the command line it will
          // not be set in answers which other prompts expect.
          // So, place it in answers now.
-         answers.tfs = obj.tfs;
+         // If you are reading from prompts don't overwrite
+         // what the user entered.
+         if (obj.tfs !== undefined) {
+            answers.tfs = obj.tfs;
+         }
 
-         return util.isVSTS(obj.tfs) === false;
-      }   
+         return util.isVSTS(answers.tfs) === false;
+      }
    };
 }
 
@@ -52,7 +60,16 @@ function profileName(obj) {
       message: `Enter a name of the profile.`,
       validate: util.validateProfileName,
       when: answers => {
-         return answers.profileCmd !== `list`;
+         // If the value was passed on the command line it will
+         // not be set in answers which other prompts expect.
+         // So, place it in answers now.
+         // If you are reading from prompts don't overwrite
+         // what the user entered.
+         if (obj.profileName !== undefined) {
+            answers.profileName = obj.profileName;
+         }
+
+         return answers.profileCmd !== `list` && answers.profileName === undefined;
       }
    };
 }
@@ -69,15 +86,19 @@ function tfs(obj) {
          // If the value was passed on the command line it will
          // not be set in answers which other prompts expect.
          // So, place it in answers now.
-         answers.tfs = obj.tfs;
+         // If you are reading from prompts don't overwrite
+         // what the user entered.
+         if (obj.tfs !== undefined) {
+            answers.tfs = obj.tfs;
+         }
 
          // You don't need this if you are just listing or deleting a 
          // profile
-         if(answers.profileCmd === `list` || answers.profileCmd === `delete` ){
+         if (answers.profileCmd === `list` || answers.profileCmd === `delete`) {
             return false;
          }
 
-         return obj.tfs === undefined;
+         return answers.tfs === undefined;
       }
    };
 }
@@ -92,7 +113,7 @@ function pat(obj) {
       when: answers => {
          // You don't need this if you are just listing or deleting a 
          // profile
-         if(answers.profileCmd === `list` || answers.profileCmd === `delete` ){
+         if (answers.profileCmd === `list` || answers.profileCmd === `delete`) {
             return false;
          }
 
@@ -133,9 +154,13 @@ function applicationType(obj) {
          // If the value was passed on the command line it will
          // not be set in answers which other prompts expect.
          // So, place it in answers now.
-         answers.type = obj.type;
+         // If you are reading from prompts don't overwrite
+         // what the user entered.
+         if (obj.type !== undefined) {
+            answers.type = obj.type;
+         }
 
-         return obj.type === undefined;
+         return answers.type === undefined;
       }
    };
 }

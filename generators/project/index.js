@@ -27,9 +27,9 @@ function input() {
       prompts.applicationName(this)
    ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
-      this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
-      this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName);
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName);
    }.bind(this));
 }
 

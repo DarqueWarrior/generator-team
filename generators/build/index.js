@@ -47,16 +47,16 @@ function input() {
       // If the gave you a answer from the prompt use it. If not check the 
       // command line.  If that is blank for some return `` so code does not
       // crash with undefined later on.
-      this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
-      this.type = util.reconcileValue(answers.type, cmdLnInput.type);
-      this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
-      this.target = util.reconcileValue(answers.target, cmdLnInput.target);
-      this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
-      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder, ``);
-      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
-      this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
-      this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.type = util.reconcileValue(cmdLnInput.type, answers.type);
+      this.queue = util.reconcileValue(cmdLnInput.queue, answers.queue);
+      this.target = util.reconcileValue(cmdLnInput.target, answers.target);
+      this.dockerHost = util.reconcileValue(cmdLnInput.dockerHost, answers.dockerHost, ``);
+      this.customFolder = util.reconcileValue(cmdLnInput.customFolder, answers.customFolder, ``);
+      this.dockerRegistry = util.reconcileValue(cmdLnInput.dockerRegistry, answers.dockerRegistry, ``);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName, ``);
+      this.dockerRegistryId = util.reconcileValue(cmdLnInput.dockerRegistryId, answers.dockerRegistryId, ``);
    }.bind(this));
 }
 

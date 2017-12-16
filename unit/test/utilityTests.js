@@ -1850,6 +1850,17 @@ describe(`utility`, function () {
          // Assert
          assert.equal(expected, actual);
       });
+
+      it(`isVSTS true`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isVSTS(`https://demonstrations.visualstudio.com/`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
    });
 
    context(`urls`, function () {

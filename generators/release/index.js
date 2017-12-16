@@ -50,19 +50,19 @@ function input() {
    ]).then(function (answers) {
       // Transfer answers (a) to global object (cmdLnInput) for use in the rest
       // of the generator
-      this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
-      this.type = util.reconcileValue(answers.type, cmdLnInput.type);
-      this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
-      this.target = util.reconcileValue(answers.target, cmdLnInput.target);
-      this.azureSub = util.reconcileValue(answers.azureSub, cmdLnInput.azureSub, ``);
-      this.dockerHost = util.reconcileValue(answers.dockerHost, cmdLnInput.dockerHost, ``);
-      this.dockerPorts = util.reconcileValue(answers.dockerPorts, cmdLnInput.dockerPorts, ``);
-      this.customFolder = util.reconcileValue(answers.customFolder, cmdLnInput.customFolder, ``);
-      this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry);
-      this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
-      this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
-      this.dockerRegistryPassword = util.reconcileValue(answers.dockerRegistryPassword, cmdLnInput.dockerRegistryPassword, ``);
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.type = util.reconcileValue(cmdLnInput.type, answers.type);
+      this.queue = util.reconcileValue(cmdLnInput.queue, answers.queue);
+      this.target = util.reconcileValue(cmdLnInput.target, answers.target);
+      this.azureSub = util.reconcileValue(cmdLnInput.azureSub, answers.azureSub, ``);
+      this.dockerHost = util.reconcileValue(cmdLnInput.dockerHost, answers.dockerHost, ``);
+      this.dockerPorts = util.reconcileValue(cmdLnInput.dockerPorts, answers.dockerPorts, ``);
+      this.customFolder = util.reconcileValue(cmdLnInput.customFolder, answers.customFolder, ``);
+      this.dockerRegistry = util.reconcileValue(cmdLnInput.dockerRegistry, answers.dockerRegistry);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName, ``);
+      this.dockerRegistryId = util.reconcileValue(cmdLnInput.dockerRegistryId, answers.dockerRegistryId, ``);
+      this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
    }.bind(this));
 }
 

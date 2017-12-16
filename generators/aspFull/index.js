@@ -22,9 +22,9 @@ function input() {
 
    return this.prompt([
       prompts.applicationName(this)
-   ]).then(function (a) {
+   ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
-      this.applicationName = util.reconcileValue(a.applicationName, cmdLnInput.applicationName);
+      this.applicationName = util.reconcileValue(cmdLnInput.applicationName, answers.applicationName);
    }.bind(this));
 }
 

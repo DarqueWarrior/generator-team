@@ -33,11 +33,13 @@ function input() {
       prompts.tfsVersion(this)
    ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
-      this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
-      this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
-      this.profileCmd = util.reconcileValue(answers.profileCmd, cmdLnInput.profileCmd);
-      this.tfsVersion = util.reconcileValue(answers.tfsVersion, cmdLnInput.tfsVersion);
-      this.profileName = util.reconcileValue(answers.profileName, cmdLnInput.profileName);
+      // Pass the cmdLnInput first. This will make sure any command line values
+      // over ride any stored answers from previous runs. 
+      this.pat = util.reconcileValue(cmdLnInput.pat, answers.pat);
+      this.tfs = util.reconcileValue(cmdLnInput.tfs, answers.tfs);
+      this.profileCmd = util.reconcileValue(cmdLnInput.profileCmd, answers.profileCmd);
+      this.tfsVersion = util.reconcileValue(cmdLnInput.tfsVersion, answers.tfsVersion);
+      this.profileName = util.reconcileValue(cmdLnInput.profileName, answers.profileName);
    }.bind(this));
 }
 
@@ -50,11 +52,12 @@ function processProfile() {
          if (results.profiles !== null) {
 
             // Find longest string in each column
+            // Default to size of column headers + 1
             let lengths = {
-               Name: 0,
-               URL: 0,
-               Version: 0,
-               Type: 0
+               Name: 5,
+               URL: 4,
+               Version: 8,
+               Type: 5
             };
 
             results.profiles.forEach((p) => {
@@ -75,12 +78,14 @@ function processProfile() {
                }
             });
 
-            this.log(`${pad(`Name`, lengths.Name)}${pad(`URL`, lengths.URL)}${pad(`Version`, lengths.Version)}Type`);
+            this.log(`\r\n${pad(`Name`, lengths.Name)}${pad(`URL`, lengths.URL)}${pad(`Version`, lengths.Version)}Type`);
             this.log(`${pad(`----`, lengths.Name)}${pad(`---`, lengths.URL)}${pad(`-------`, lengths.Version)}----`);
-
+            
             results.profiles.forEach((p) => {
                this.log(`${pad(p.Name, lengths.Name)}${pad(p.URL, lengths.URL)}${pad(p.Version, lengths.Version)}${p.Type}`);
             });
+
+            this.log(`\r\n`);
          } else {
             this.log(`- ${results.error}`);
          }
@@ -88,6 +93,26 @@ function processProfile() {
          break;
 
       case `delete`:
+         if (results.profiles === null) {
+            results.profiles = [];
+         }
+
+         let nameToFind = this.profileName;
+         let foundByName = results.profiles.filter(function (i) {
+            return i.Name === nameToFind;
+         });
+
+         if (foundByName.length !== 0) {
+            // Find and remove item from an array
+            var i = results.profiles.indexOf(foundByName[0]);
+            if (i != -1) {
+               results.profiles.splice(i, 1);
+            }
+         }
+
+         fs.writeFileSync(util.PROFILE_PATH, JSON.stringify(results.profiles, null, 4));
+
+         this.log(`+ Profile Delete.`);
 
          break;
 
@@ -107,17 +132,17 @@ function processProfile() {
          // See if this item is already in there
          // I am testing URL because the user may provide a different
          // name and I don't want two with the same URL.
-         var tfsToFind = this.tfs;
-         var found = results.profiles.filter(function (i) {
+         let tfsToFind = this.tfs;
+         let foundByTfs = results.profiles.filter(function (i) {
             return i.URL === tfsToFind;
          });
 
-         if (found.length !== 0) {
-            found[0].Name = this.profileName;
-            found[0].URL = this.tfs;
-            found[0].Pat = util.encodePat(this.pat);
-            found[0].Type = `Pat`;
-            found[0].Version = this.tfsVersion;
+         if (foundByTfs.length !== 0) {
+            foundByTfs[0].Name = this.profileName;
+            foundByTfs[0].URL = this.tfs;
+            foundByTfs[0].Pat = util.encodePat(this.pat);
+            foundByTfs[0].Type = `Pat`;
+            foundByTfs[0].Version = this.tfsVersion;
          } else {
             results.profiles.push({
                Name: this.profileName,
@@ -128,9 +153,10 @@ function processProfile() {
             });
          }
 
-         fs.writeFileSync(util.PROFILE_PATH, results.profiles);
+         fs.writeFileSync(util.PROFILE_PATH, JSON.stringify(results.profiles, null, 4));
 
          this.log(`+ Profile Added.`);
+
          break;
    }
 }
