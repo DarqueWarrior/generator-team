@@ -239,7 +239,8 @@ function runTests(iteration) {
                function (e) {
                   // Get the build log
                   vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
-                     util.log(`buildResult:\r\n${result}\r\nlogs:\r\n${logs}`);
+                     util.log(`buildResult:\r\n${result}\r\nlogs:\r\n`);
+                     util.logJSON(logs);
                      assert.equal(result, `succeeded`, logs);
                      done(e);
                   });
