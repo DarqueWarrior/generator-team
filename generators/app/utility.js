@@ -804,15 +804,15 @@ function getProfileCommands(answers) {
    }];
 }
 
-function getAPIVersion(answers) {
+function getTFSVersion(answers) {
    "use strict";
 
    return [{
       name: `TFS2017`,
-      value: `tfs2017`
+      value: `TFS2017`
    }, {
       name: `TFS2018`,
-      value: `tfs2018`
+      value: `TFS2018`
    }];
 }
 
@@ -1092,7 +1092,7 @@ module.exports = {
    addUserAgent: addUserAgent,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
-   getAPIVersion: getAPIVersion,
+   getTFSVersion: getTFSVersion,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,

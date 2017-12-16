@@ -16,7 +16,7 @@ function construct() {
    args.profileName(this);
    args.tfs(this);
    args.pat(this);
-   args.apiVersion(this);
+   args.tfsVersion(this);
 }
 
 function input() {
@@ -30,13 +30,13 @@ function input() {
       prompts.profileName(this),
       prompts.tfs(this),
       prompts.pat(this),
-      prompts.apiVersion(this)
+      prompts.tfsVersion(this)
    ]).then(function (answers) {
       // Transfer answers to local object for use in the rest of the generator
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
       this.profileCmd = util.reconcileValue(answers.profileCmd, cmdLnInput.profileCmd);
-      this.apiVersion = util.reconcileValue(answers.apiVersion, cmdLnInput.apiVersion);
+      this.tfsVersion = util.reconcileValue(answers.tfsVersion, cmdLnInput.tfsVersion);
       this.profileName = util.reconcileValue(answers.profileName, cmdLnInput.profileName);
    }.bind(this));
 }
@@ -48,7 +48,7 @@ function processProfile() {
       case `list`:
 
          if (results.profiles !== null) {
-      
+
             // Find longest string in each column
             let lengths = {
                Name: 0,
@@ -58,19 +58,19 @@ function processProfile() {
             };
 
             results.profiles.forEach((p) => {
-               if(lengths.Name < p.Name.length) {
+               if (lengths.Name < p.Name.length) {
                   lengths.Name = p.Name.length + 1;
                }
 
-               if(lengths.URL < p.URL.length) {
+               if (lengths.URL < p.URL.length) {
                   lengths.URL = p.URL.length + 1;
                }
 
-               if(lengths.Version < p.Version.length) {
+               if (lengths.Version < p.Version.length) {
                   lengths.Version = p.Version.length + 1;
                }
 
-               if(lengths.Type < p.Type.length) {
+               if (lengths.Type < p.Type.length) {
                   lengths.Type = p.Type.length + 1;
                }
             });
@@ -92,6 +92,45 @@ function processProfile() {
          break;
 
       default:
+         // Profiles store the full url not just the 
+         // account name. Remember this is the same
+         // format used by the VSTeam PowerShell module.
+         if (util.isVSTS(this.tfs)) {
+            this.tfsVersion = 'VSTS';
+            this.tfs = `https://${this.tfs}.visualstudio.com`;
+         }
+
+         if (results.profiles === null) {
+            results.profiles = [];
+         }
+
+         // See if this item is already in there
+         // I am testing URL because the user may provide a different
+         // name and I don't want two with the same URL.
+         var tfsToFind = this.tfs;
+         var found = results.profiles.filter(function (i) {
+            return i.URL === tfsToFind;
+         });
+
+         if (found.length !== 0) {
+            found[0].Name = this.profileName;
+            found[0].URL = this.tfs;
+            found[0].Pat = util.encodePat(this.pat);
+            found[0].Type = `Pat`;
+            found[0].Version = this.tfsVersion;
+         } else {
+            results.profiles.push({
+               Name: this.profileName,
+               URL: this.tfs,
+               Pat: util.encodePat(this.pat),
+               Type: `Pat`,
+               Version: this.tfsVersion
+            });
+         }
+
+         fs.writeFileSync(util.PROFILE_PATH, results.profiles);
+
+         this.log(`+ Profile Added.`);
          break;
    }
 }

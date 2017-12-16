@@ -19,13 +19,13 @@ function profileCmd(obj) {
    };
 }
 
-function apiVersion(obj) {
+function tfsVersion(obj) {
    return {
       store: true,
       type: `list`,
-      name: `apiVersion`,
-      default: `TFS2017`,
-      choices: util.getAPIVersion,
+      name: `tfsVersion`,
+      default: `TFS2018`,
+      choices: util.getTFSVersion,
       message: `Select an API Version.`,
       when: answers => {
          // You don't need this if you are just listing or deleting a 
@@ -412,7 +412,7 @@ module.exports = {
    azureSubId: azureSubId,
    profileCmd: profileCmd,
    dockerHost: dockerHost,
-   apiVersion: apiVersion,
+   tfsVersion: tfsVersion,
    profileName: profileName,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,

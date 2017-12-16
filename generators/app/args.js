@@ -14,8 +14,8 @@ function profileName(obj) {
    });
 }
 
-function apiVersion(obj) {
-   obj.argument(`apiVersion`, {
+function tfsVersion(obj) {
+   obj.argument(`tfsVersion`, {
       required: false,
       desc: `api version to store in profile`
    });
@@ -179,7 +179,7 @@ module.exports = {
    gitAction: gitAction,
    profileCmd: profileCmd,
    profileName: profileName,
-   apiVersion: apiVersion,
+   tfsVersion: tfsVersion,
    azureSubId: azureSubId,
    installDep: installDep,
    dockerHost: dockerHost,
