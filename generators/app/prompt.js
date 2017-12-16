@@ -1,5 +1,62 @@
 const util = require(`./utility`);
 
+function profileCmd(obj) {
+   return {
+      store: true,
+      type: `list`,
+      name: `profileCmd`,
+      default: `Add`,
+      choices: util.getProfileCommands,
+      message: `Select a command.`,
+      when: answers => {
+         // If the value was passed on the command line it will
+         // not be set in answers which other prompts expect.
+         // So, place it in answers now.
+         answers.profileCmd = obj.profileCmd;
+
+         return obj.profileCmd === undefined;
+      }
+   };
+}
+
+function apiVersion(obj) {
+   return {
+      store: true,
+      type: `list`,
+      name: `apiVersion`,
+      default: `TFS2017`,
+      choices: util.getAPIVersion,
+      message: `Select an API Version.`,
+      when: answers => {
+         // You don't need this if you are just listing or deleting a 
+         // profile
+         if(answers.profileCmd === `list` || answers.profileCmd === `delete` ){
+            return false;
+         }
+         
+         // If the value was passed on the command line it will
+         // not be set in answers which other prompts expect.
+         // So, place it in answers now.
+         answers.tfs = obj.tfs;
+
+         return util.isVSTS(obj.tfs) === false;
+      }   
+   };
+}
+
+function profileName(obj) {
+   return {
+      name: `profileName`,
+      type: `input`,
+      store: true,
+      message: `Enter a name of the profile.`,
+      validate: util.validateProfileName,
+      when: answers => {
+         return answers.profileCmd !== `list`;
+      }
+   };
+}
+
 function tfs(obj) {
    return {
       name: `tfs`,
@@ -14,6 +71,12 @@ function tfs(obj) {
          // So, place it in answers now.
          answers.tfs = obj.tfs;
 
+         // You don't need this if you are just listing or deleting a 
+         // profile
+         if(answers.profileCmd === `list` || answers.profileCmd === `delete` ){
+            return false;
+         }
+
          return obj.tfs === undefined;
       }
    };
@@ -27,6 +90,12 @@ function pat(obj) {
       message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
       when: answers => {
+         // You don't need this if you are just listing or deleting a 
+         // profile
+         if(answers.profileCmd === `list` || answers.profileCmd === `delete` ){
+            return false;
+         }
+
          return util.readPatFromProfile(answers, obj);
       }
    };
@@ -341,7 +410,10 @@ module.exports = {
    gitAction: gitAction,
    installDep: installDep,
    azureSubId: azureSubId,
+   profileCmd: profileCmd,
    dockerHost: dockerHost,
+   apiVersion: apiVersion,
+   profileName: profileName,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
    customFolder: customFolder,

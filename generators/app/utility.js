@@ -10,6 +10,8 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
+const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
+
 var profile = null;
 var logging = process.env.LOGYO || `off`;
 
@@ -215,6 +217,10 @@ function validatePortMapping(input) {
 
 function validateGroupID(input) {
    return validateRequired(input, `You must provide a Group ID`);
+}
+
+function validateProfileName(input) {
+   return validateRequired(input, `You must provide a profile name`);
 }
 
 function validateCustomFolder(input) {
@@ -783,6 +789,33 @@ function getAzureSubs(answers) {
    });
 }
 
+function getProfileCommands(answers) {
+   "use strict";
+
+   return [{
+      name: `Add`,
+      value: `add`
+   }, {
+      name: `List`,
+      value: `list`
+   }, {
+      name: `Delete`,
+      value: `delete`
+   }];
+}
+
+function getAPIVersion(answers) {
+   "use strict";
+
+   return [{
+      name: `TFS2017`,
+      value: `tfs2017`
+   }, {
+      name: `TFS2018`,
+      value: `tfs2018`
+   }];
+}
+
 function getPools(answers) {
    "use strict";
 
@@ -817,24 +850,39 @@ function isDockerHub(dockerRegistry) {
    return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
 }
 
-// Reads profiles created by the VSTeam PowerShell module.
-function searchProfiles(input) {
-   let path = os.homedir() + '/vsteam_profiles.json';
-   
-   if (fs.existsSync(path)) {
-      try {
-         var profiles = JSON.parse(fs.readFileSync(path, 'utf8'));
+function loadProfiles() {
 
-         var found = profiles.filter(function (i) {
-            return i.Name === input && i.Type === `Pat`;
-         });
-   
-         if (found.length !== 0) {
-            return found[0];
-         }
+   let results = {
+      error: null,
+      profiles: null
+   };
+
+   if (fs.existsSync(PROFILE_PATH)) {
+      try {
+         results.profiles = JSON.parse(fs.readFileSync(PROFILE_PATH, 'utf8'));
       } catch (error) {
          // The file is invalid
-      }      
+         results.error = `Invalid file.`;
+      }
+   } else {
+      results.error = `No profiles file.`;
+   }
+
+   return results;
+}
+
+// Reads profiles created by the VSTeam PowerShell module.
+function searchProfiles(input) {
+   let results = loadProfiles();
+
+   if (results.profiles !== null) {
+      var found = results.profiles.filter(function (i) {
+         return i.Name === input && i.Type === `Pat`;
+      });
+
+      if (found.length !== 0) {
+         return found[0];
+      }
    }
 
    return null;
@@ -944,7 +992,11 @@ function isPaaS(answers, cmdLnInput) {
 }
 
 function isVSTS(instance) {
-   return instance.toLowerCase().match(/http/) === null;
+   if (instance) {
+      return instance.toLowerCase().match(/http/) === null;
+   }
+
+   return false;
 }
 
 //
@@ -1008,6 +1060,7 @@ module.exports = {
 
    // Exports the portions of the file we want to share with files that require
    // it.
+   PROFILE_PATH: PROFILE_PATH,
    BUILD_API_VERSION: BUILD_API_VERSION,
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,
@@ -1033,11 +1086,13 @@ module.exports = {
    isDockerHub: isDockerHub,
    getAzureSubs: getAzureSubs,
    findAzureSub: findAzureSub,
+   loadProfiles: loadProfiles,
    getPATPrompt: getPATPrompt,
    tryFindBuild: tryFindBuild,
    addUserAgent: addUserAgent,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
+   getAPIVersion: getAPIVersion,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,
@@ -1048,10 +1103,12 @@ module.exports = {
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
+   getProfileCommands: getProfileCommands,
    readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    validatePortMapping: validatePortMapping,
+   validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
    validateCustomFolder: validateCustomFolder,

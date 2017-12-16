@@ -1,5 +1,26 @@
 const util = require(`./utility`);
 
+function profileCmd(obj) {
+   obj.argument(`profileCmd`, {
+      required: false,
+      desc: `Add, Delete or List`
+   });
+}
+
+function profileName(obj) {
+   obj.argument(`profileName`, {
+      required: false,
+      desc: `name of the profile to store or load`
+   });
+}
+
+function apiVersion(obj) {
+   obj.argument(`apiVersion`, {
+      required: false,
+      desc: `api version to store in profile`
+   });
+}
+
 function applicationType(obj) {
    obj.argument(`type`, {
       required: false,
@@ -156,6 +177,9 @@ module.exports = {
    azureSub: azureSub,
    tenantId: tenantId,
    gitAction: gitAction,
+   profileCmd: profileCmd,
+   profileName: profileName,
+   apiVersion: apiVersion,
    azureSubId: azureSubId,
    installDep: installDep,
    dockerHost: dockerHost,
