@@ -22,7 +22,7 @@ var logMessage = function (msg) {
 
 var logJSON = function (msg) {
    if (logging === `on`) {
-      console.dir(JSON.parse(msg));
+      console.log(JSON.stringify(JSON.parse(msg), null, 2));
    }
 };
 

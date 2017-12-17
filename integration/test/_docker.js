@@ -263,7 +263,7 @@ function runTests(iteration) {
          if (iteration.target !== `docker`) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             it(`dev site should be accessible`, function (done) {
                // Sleep before calling again. If you have too many
@@ -294,7 +294,7 @@ function runTests(iteration) {
                         assert.fail(error);
                      }
                   });
-               }, 15000 + Math.floor((Math.random() * 1000) + 1));
+               }, 30000 + Math.floor((Math.random() * 1000) + 1));
             });
          }
       });
