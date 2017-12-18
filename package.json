@@ -19,6 +19,7 @@
       "generators/java",
       "generators/node",
       "generators/pipeline",
+      "generators/profile",
       "generators/project",
       "generators/registry",
       "generators/release"

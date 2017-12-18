@@ -50,6 +50,8 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 ## 0.3.9
 Added support to read profiles from [VSTeam](https://www.powershellgallery.com/packages/VSTeam/) Module. Only profiles of type Pat are supported. If you enter a profile name of type OnPremise you will still be prompted for a Pat.
 
+Added Profile sub generator to Add, List and Delete profiles. 
+
 # November 2017
 ## 0.3.8
 Upgraded .NET Core to 2.0.
