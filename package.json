@@ -41,7 +41,7 @@
    },
    "license": "ISC",
    "dependencies": {
-      "async": "^2.5.0",
+      "async": "^2.6.0",
       "node-env-file": "^0.1.8",
       "pad": "^2.0.3",
       "request": "^2.81.0",
@@ -52,7 +52,7 @@
    "devDependencies": {
       "azure-arm-resource": "^1.4.4-preview",
       "cheerio": "^1.0.0-rc.2",
-      "fs-extra": "^3.0.1",
+      "fs-extra": "^5.0.0",
       "gulp": "^3.9.1",
       "gulp-jshint": "^2.0.4",
       "gulp-mocha": "^4.3.1",
