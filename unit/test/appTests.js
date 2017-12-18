@@ -5,7 +5,7 @@ const assert = require(`yeoman-assert`);
 const util = require(`../../generators/app/utility`);
 
 describe(`app:index`, function () {
-   it(`arguments using fake dependencies dockerpaas linux`, function () {
+   it.only(`arguments using fake dependencies dockerpaas linux`, function () {
       // Arrange
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],

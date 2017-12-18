@@ -46,7 +46,7 @@
       "pad": "^2.0.3",
       "request": "^2.81.0",
       "uuid": "^3.1.0",
-      "yeoman-generator": "^0.24.1",
+      "yeoman-generator": "^2.0.1",
       "yosay": "^2.0.1"
    },
    "devDependencies": {
@@ -68,6 +68,7 @@
       "sinon-test": "^1.0.1",
       "supertest": "^3.0.0",
       "xunit-file": "^1.0.0",
+      "yeoman-assert": "^3.1.0",
       "yeoman-test": "^1.7.0",
       "yo": "^2.0.0"
    }
