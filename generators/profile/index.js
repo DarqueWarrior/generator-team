@@ -56,6 +56,8 @@ function processProfile() {
             let lengths = {
                Name: 5,
                URL: 4,
+               // This is longer than any possible value
+               // plus one so we do not adjust it below.
                Version: 8,
                Type: 5
             };
@@ -69,10 +71,6 @@ function processProfile() {
                   lengths.URL = p.URL.length + 1;
                }
 
-               if (lengths.Version < p.Version.length) {
-                  lengths.Version = p.Version.length + 1;
-               }
-
                if (lengths.Type < p.Type.length) {
                   lengths.Type = p.Type.length + 1;
                }
@@ -80,7 +78,7 @@ function processProfile() {
 
             this.log(`\r\n${pad(`Name`, lengths.Name)}${pad(`URL`, lengths.URL)}${pad(`Version`, lengths.Version)}Type`);
             this.log(`${pad(`----`, lengths.Name)}${pad(`---`, lengths.URL)}${pad(`-------`, lengths.Version)}----`);
-            
+
             results.profiles.forEach((p) => {
                this.log(`${pad(p.Name, lengths.Name)}${pad(p.URL, lengths.URL)}${pad(p.Version, lengths.Version)}${p.Type}`);
             });
@@ -103,11 +101,8 @@ function processProfile() {
          });
 
          if (foundByName.length !== 0) {
-            // Find and remove item from an array
-            var i = results.profiles.indexOf(foundByName[0]);
-            if (i != -1) {
-               results.profiles.splice(i, 1);
-            }
+            // Find and remove item from an array            
+            results.profiles.splice(results.profiles.indexOf(foundByName[0]), 1);
          }
 
          fs.writeFileSync(util.PROFILE_PATH, JSON.stringify(results.profiles, null, 4));

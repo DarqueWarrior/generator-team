@@ -817,6 +817,14 @@ describe(`utility`, function () {
 
    context(`validation`, function () {
 
+      it(`validateProfileName should return false`, function () {
+         assert.equal(util.validateProfileName(``), `You must provide a profile name`);
+      });
+
+      it(`validateCustomFolder should return false`, function () {
+         assert.equal(util.validateCustomFolder(``), `You must provide a custom template path`);
+      });
+
       it(`validatePortMapping should return true`, function () {
          assert.ok(util.validatePortMapping(`80:80`));
       });
@@ -1602,6 +1610,44 @@ describe(`utility`, function () {
       });
    }));
 
+   it(`extractInstance from profile`, sinon.test(function () {
+      // Arrange
+      var profiles = `
+      [
+         {
+            "Name": "unitTest",
+            "URL": "http://localhost:8080/tfs/defaultcollection",
+            "Pat": "",
+            "Type": "Pat",
+            "Version": "TFS2017"
+         },
+         {
+            "Name": "http://192.168.1.3:8080/tfs/defaultcollection",
+            "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+            "Pat": "OnE2cXpseHk0YXp3dHpz",
+            "Type": "Pat",
+            "Version": "TFS2017"
+         },
+         {
+            "Name": "test",
+            "URL": "https://test.visualstudio.com",
+            "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+            "Type": "Pat",
+            "Version": "VSTS"
+         }
+      ]`;
+
+      this.stub(fs, `existsSync`).returns(true);
+      this.stub(fs, `readFileSync`).returns(profiles);
+      var expected = `http://localhost:8080/tfs/defaultcollection`;
+
+      // Act
+      var actual = util.extractInstance(`unitTest`);
+
+      // Assert
+      assert.equal(expected, actual);
+   }));
+
    it(`extractInstance good`, function () {
       // Arrange
       var expected = `vsts`;
@@ -1827,6 +1873,17 @@ describe(`utility`, function () {
             assert.equal(expected, actual);
             done(e);
          });
+      });
+
+      it(`isVSTS passed null false`, function () {
+         // Arrange
+         var expected = false;
+
+         // Act
+         var actual = util.isVSTS();
+
+         // Assert
+         assert.equal(expected, actual);
       });
 
       it(`isVSTS false`, function () {
