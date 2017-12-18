@@ -27,7 +27,10 @@ function requestSite(applicationName, env, title, cb) {
       request({
          url: url
       }, function (err, res, body) {
-         assert.ifError(err);
+         if (err) {
+            // We want the test to try again.
+            return;
+         }
 
          var dom = cheerio.load(body);
          assert.equal(dom(`title`).text(), `${title}`);
@@ -275,7 +278,7 @@ function runTests(iteration) {
                },
                function (e) {
                   // Get the release log          
-                  util.log(`release in dev:\r\n${status}`);  
+                  util.log(`release in dev:\r\n${status}`);
                   assert.ok(status === `succeeded` || status === `partiallySucceeded`);
                   done(e);
                }
@@ -285,7 +288,7 @@ function runTests(iteration) {
          it(`dev site should be accessible`, function (done) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             requestSite(applicationName, "Dev", iteration.title, done);
          });
@@ -347,7 +350,7 @@ function runTests(iteration) {
          it(`qa site should be accessible`, function (done) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             requestSite(applicationName, "QA", iteration.title, done);
          });
@@ -397,7 +400,7 @@ function runTests(iteration) {
                   },
                   function (e) {
                      // Get the release log       
-                     util.log(`release in prod:\r\n${status}`);     
+                     util.log(`release in prod:\r\n${status}`);
                      assert.equal(status, `succeeded`);
                      done(e);
                   }
@@ -408,7 +411,7 @@ function runTests(iteration) {
          it(`prod site should be accessible`, function (done) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             requestSite(applicationName, "Prod", iteration.title, done);
          });

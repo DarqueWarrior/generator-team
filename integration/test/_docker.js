@@ -278,7 +278,10 @@ function runTests(iteration) {
                         request({
                            url: fullUrl
                         }, function (err, res, body) {
-                           assert.ifError(err);
+                           if (err) {
+                              // We want the test to try again.
+                              return;
+                           }
 
                            var dom = cheerio.load(body);
                            util.log(`Page Title:\r\n${dom(`title`).text()}`);
@@ -289,9 +292,7 @@ function runTests(iteration) {
                         });
 
                      } catch (error) {
-                        // We need to catch any timeouts or the test will exit without
-                        // re-trying. 
-                        assert.fail(error);
+                        // We want the test to try again.
                      }
                   });
                }, 30000 + Math.floor((Math.random() * 1000) + 1));
