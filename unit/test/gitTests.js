@@ -2,9 +2,9 @@ const path = require(`path`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
 const helpers = require(`yeoman-test`);
-const sinonTest = require(`sinon-test`);
+const sinonTestFactory = require(`sinon-test`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
 describe(`git:index clone`, function () {
    let spawnStub;
@@ -58,7 +58,7 @@ describe(`git:index commit`, function () {
             sinon.stub(process, `chdir`);
          })
          .on(`end`, function () {
-            // Using the yeoman helpers and sinon.test did not play nice
+            // Using the yeoman helpers and sinonTest did not play nice
             // so clean up your stubs
             cleanUp();
          });
@@ -114,7 +114,7 @@ describe(`git:index all`, function () {
             sinon.stub(process, `chdir`);
          })
          .on(`end`, function () {
-            // Using the yeoman helpers and sinon.test did not play nice
+            // Using the yeoman helpers and sinonTest did not play nice
             // so clean up your stubs
             cleanUp();
          });

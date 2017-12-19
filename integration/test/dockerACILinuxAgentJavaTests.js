@@ -2,7 +2,7 @@
 // is not on TFS.
 const docker = require('./_docker');
 
-describe.only(`Azure Container Instances (Linux) using Hosted Linux Preview queue`, function () {
+describe(`Azure Container Instances (Linux) using Hosted Linux Preview queue`, function () {
    "use strict";
 
    docker.runTests({

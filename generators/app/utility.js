@@ -893,14 +893,14 @@ function readPatFromProfile(answers, obj) {
       // Profiles are stored 64 bit encoded
       let b = new Buffer(profile.Pat, 'base64');
       // Skip the leading :
-      obj.pat = b.toString().substring(1);
+      obj.options.pat = b.toString().substring(1);
    }
    // If the value was passed on the command line it will
    // not be set in answers which other prompts expect.
    // So, place it in answers now.
-   answers.pat = obj.pat;
+   answers.pat = obj.options.pat;
 
-   return obj.pat === undefined;
+   return obj.options.pat === undefined;
 }
 
 function extractInstance(input) {

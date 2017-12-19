@@ -10,7 +10,7 @@
          "name": "Yeoman team",
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "args": [
-            "team:profile"
+            "team"
          ],
          "console": "integratedTerminal",
          "internalConsoleOptions": "neverOpen"

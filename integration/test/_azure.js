@@ -48,7 +48,7 @@ function deleteResourceGroup(resourceGroupName, callback) {
 function getAciIp(resourceGroupName, cb) {
    async.series([
          function (callback) {
-            resourceClient.resourceGroups.listResources(resourceGroupName, function (err, result, request, response) {
+            resourceClient.resources.listByResourceGroup(resourceGroupName, function (err, result, request, response) {
                if (err) {
                   return callback(err);
                }
@@ -87,7 +87,7 @@ function getAciIp(resourceGroupName, cb) {
 function getWebsiteURL(resourceGroupName, cb) {
    async.series([
          function (callback) {
-            resourceClient.resourceGroups.listResources(resourceGroupName, function (err, result, request, response) {
+            resourceClient.resources.listByResourceGroup(resourceGroupName, function (err, result, request, response) {
                if (err) {
                   return callback(err);
                }

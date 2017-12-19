@@ -1,12 +1,12 @@
 const fs = require(`fs`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
-const sinonTest = require(`sinon-test`);
 const proxyquire = require(`proxyquire`);
 const package = require('../../package.json');
+const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
 assert.linuxTargets = function (a) {
    assert.equal(a[0].name, `Azure Container Instances (Linux)`);
@@ -42,7 +42,7 @@ assert.windowsTargets = function (a) {
 describe(`utility`, function () {
 
    context(`profiles`, function () {
-      it(`file does not exist`, sinon.test(function () {
+      it(`file does not exist`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(false);
 
          let actual = util.searchProfiles(`unitTest`);
@@ -50,7 +50,7 @@ describe(`utility`, function () {
          assert.equal(actual, null);
       }));
 
-      it(`file is invalid`, sinon.test(function () {
+      it(`file is invalid`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(true);
          this.stub(fs, `readFileSync`).returns(`This is not json.`);
 
@@ -59,7 +59,7 @@ describe(`utility`, function () {
          assert.equal(actual, null);
       }));
 
-      it(`profile is OnPremise`, sinon.test(function () {
+      it(`profile is OnPremise`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(true);
          this.stub(fs, `readFileSync`).returns(`
          [
@@ -91,7 +91,7 @@ describe(`utility`, function () {
          assert.equal(actual, null);
       }));
 
-      it(`profile is found`, sinon.test(function () {
+      it(`profile is found`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(true);
          this.stub(fs, `readFileSync`).returns(`
          [
@@ -898,7 +898,7 @@ describe(`utility`, function () {
       });
    });
 
-   it(`checkStatus should run with no error`, sinon.test(function (done) {
+   it(`checkStatus should run with no error`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -934,7 +934,7 @@ describe(`utility`, function () {
    }));
 
    context(`queue`, function () {
-      it(`findQueue should find queue`, sinon.test(function (done) {
+      it(`findQueue should find queue`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -973,7 +973,7 @@ describe(`utility`, function () {
             });
       }));
 
-      it(`findQueue should returns error obj from server`, sinon.test(function (done) {
+      it(`findQueue should returns error obj from server`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1000,7 +1000,7 @@ describe(`utility`, function () {
             });
       }));
 
-      it(`findQueue should returns error`, sinon.test(function (done) {
+      it(`findQueue should returns error`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1084,7 +1084,7 @@ describe(`utility`, function () {
          assert.equal(expected, actual);
       });
 
-      it(`findDockerRegistryServiceEndpoint should short circuit with null or undefined dockerRegistry`, sinon.test(function (done) {
+      it(`findDockerRegistryServiceEndpoint should short circuit with null or undefined dockerRegistry`, sinonTest(function (done) {
          util.findDockerRegistryServiceEndpoint(null, null, undefined, null, (err, obj) => {
             assert.equal(err, null);
             assert.equal(obj, null);
@@ -1093,7 +1093,7 @@ describe(`utility`, function () {
          });
       }));
 
-      it(`tryFindDockerRegistryServiceEndpoint should return null`, sinon.test(function (done) {
+      it(`tryFindDockerRegistryServiceEndpoint should return null`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1116,7 +1116,7 @@ describe(`utility`, function () {
             });
       }));
 
-      it(`tryFindDockerRegistryServiceEndpoint should return endpoint`, sinon.test(function (done) {
+      it(`tryFindDockerRegistryServiceEndpoint should return endpoint`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1150,7 +1150,7 @@ describe(`utility`, function () {
             });
       }));
 
-      it(`findDockerServiceEndpoint should short circuit with null or undefined dockerHost`, sinon.test(function (done) {
+      it(`findDockerServiceEndpoint should short circuit with null or undefined dockerHost`, sinonTest(function (done) {
          util.findDockerServiceEndpoint(null, null, undefined, null, null, (err, obj) => {
             assert.equal(err, null);
             assert.equal(obj, null);
@@ -1159,7 +1159,7 @@ describe(`utility`, function () {
          });
       }));
 
-      it(`tryFindDockerServiceEndpoint should return undefined`, sinon.test(function (done) {
+      it(`tryFindDockerServiceEndpoint should return undefined`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1185,7 +1185,7 @@ describe(`utility`, function () {
             });
       }));
 
-      it(`tryFindDockerServiceEndpoint should return endpoint`, sinon.test(function (done) {
+      it(`tryFindDockerServiceEndpoint should return endpoint`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1213,7 +1213,7 @@ describe(`utility`, function () {
             });
       }));
 
-      it(`tryFindDockerServiceEndpoint should return error`, sinon.test(function (done) {
+      it(`tryFindDockerServiceEndpoint should return error`, sinonTest(function (done) {
          // Arrange
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1238,7 +1238,7 @@ describe(`utility`, function () {
       }));
    });
 
-   it(`tryFindAzureServiceEndpoint should short circuit`, sinon.test(function (done) {
+   it(`tryFindAzureServiceEndpoint should short circuit`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1266,7 +1266,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`tryFindAzureServiceEndpoint should return undefined`, sinon.test(function (done) {
+   it(`tryFindAzureServiceEndpoint should return undefined`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1294,7 +1294,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`tryFindAzureServiceEndpoint should return endpoint`, sinon.test(function (done) {
+   it(`tryFindAzureServiceEndpoint should return endpoint`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1336,7 +1336,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`tryFindProject should return project`, sinon.test(function (done) {
+   it(`tryFindProject should return project`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1362,7 +1362,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`tryFindProject should return undefined`, sinon.test(function (done) {
+   it(`tryFindProject should return undefined`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1386,7 +1386,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`FindProject should return error`, sinon.test(function (done) {
+   it(`FindProject should return error`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1410,7 +1410,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`FindProject should return error for auth issue`, sinon.test(function (done) {
+   it(`FindProject should return error for auth issue`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1434,7 +1434,7 @@ describe(`utility`, function () {
          });
    }));
 
-   it(`tryFindBuild should return build paas`, sinon.test(function (done) {
+   it(`tryFindBuild should return build paas`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1460,7 +1460,7 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`tryFindBuild should return build docker`, sinon.test(function (done) {
+   it(`tryFindBuild should return build docker`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1486,7 +1486,7 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`tryFindBuild should return undefined`, sinon.test(function (done) {
+   it(`tryFindBuild should return undefined`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1510,7 +1510,7 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`tryFindRelease should return release paas`, sinon.test(function (done) {
+   it(`tryFindRelease should return release paas`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1544,7 +1544,7 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`tryFindRelease should return release docker`, sinon.test(function (done) {
+   it(`tryFindRelease should return release docker`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1578,7 +1578,7 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`tryFindRelease should return undefined`, sinon.test(function (done) {
+   it(`tryFindRelease should return undefined`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1610,7 +1610,7 @@ describe(`utility`, function () {
       });
    }));
 
-   it(`extractInstance from profile`, sinon.test(function () {
+   it(`extractInstance from profile`, sinonTest(function () {
       // Arrange
       var profiles = `
       [
@@ -1955,7 +1955,7 @@ describe(`utility`, function () {
       });
    });
 
-   it('findAzureSub should find sub', sinon.test(function (done) {
+   it('findAzureSub should find sub', sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls

@@ -3,13 +3,13 @@ const path = require(`path`);
 const sinon = require(`sinon`);
 const stubs = require(`./stubs`);
 const helpers = require(`yeoman-test`);
-const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
+const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const release = require(`../../generators/release/app`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
 describe(`release:index`, function () {
    "use strict";
@@ -541,7 +541,7 @@ describe(`release:app`, function () {
    let expectedToken = `OnRva2Vu`;
    let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
 
-   it(`getRelease asp tfs 2017 paas`, sinon.test(function (done) {
+   it(`getRelease asp tfs 2017 paas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -628,7 +628,7 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease asp tfs 2017 docker`, sinon.test(function (done) {
+   it(`getRelease asp tfs 2017 docker`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_docker.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -661,7 +661,7 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease asp tfs 2017 dockerpaas`, sinon.test(function (done) {
+   it(`getRelease asp tfs 2017 dockerpaas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_dockerpaas.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -694,7 +694,7 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease asp tfs 2017 acilinux`, sinon.test(function (done) {
+   it(`getRelease asp tfs 2017 acilinux`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_acilinux.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -727,7 +727,7 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease java tfs 2017 dockerpaas`, sinon.test(function (done) {
+   it(`getRelease java tfs 2017 dockerpaas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_dockerpaas.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -760,7 +760,7 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease java tfs 2017 acilinux`, sinon.test(function (done) {
+   it(`getRelease java tfs 2017 acilinux`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_acilinux.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -923,7 +923,7 @@ describe(`release:app`, function () {
       });
    });
 
-   it(`getRelease node tfs 2017 acilinux`, sinon.test(function (done) {
+   it(`getRelease node tfs 2017 acilinux`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_acilinux.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -940,7 +940,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`getRelease node tfs 2017 dockerpaas`, sinon.test(function (done) {
+   it(`getRelease node tfs 2017 dockerpaas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_dockerpaas.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -957,7 +957,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`getRelease node tfs 2018 dockerpaas`, sinon.test(function (done) {
+   it(`getRelease node tfs 2018 dockerpaas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_2018_release_dockerpaas.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, true);
@@ -974,7 +974,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`getRelease node tfs 2017 docker`, sinon.test(function (done) {
+   it(`getRelease node tfs 2017 docker`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_docker.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -991,7 +991,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`getRelease node tfs 2017 paas`, sinon.test(function (done) {
+   it(`getRelease node tfs 2017 paas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
@@ -1008,7 +1008,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`getRelease node tfs 2018 paas`, sinon.test(function (done) {
+   it(`getRelease node tfs 2018 paas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_2018_release.json`;
       this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, true);
@@ -1025,7 +1025,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`run with existing release should run without error`, sinon.test(function (done) {
+   it(`run with existing release should run without error`, sinonTest(function (done) {
       // Arrange
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
       stubs.findDockerServiceEndpoint(expectedAccount, expectedToken, this);
@@ -1059,7 +1059,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`run with error should return error`, sinon.test(function (done) {
+   it(`run with error should return error`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `tryFindRelease`).callsArgWith(1, new Error("boom"), null);
       this.stub(util, `findBuild`).callsArgWith(4, null, {
@@ -1110,7 +1110,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`findOrCreateRelease should create release paas`, sinon.test(function (done) {
+   it(`findOrCreateRelease should create release paas`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1182,7 +1182,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`findOrCreateRelease should create release docker vsts`, sinon.test(function (done) {
+   it(`findOrCreateRelease should create release docker vsts`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -1256,7 +1256,7 @@ describe(`release:app`, function () {
       });
    }));
 
-   it(`findOrCreateRelease should return error if release create fails`, sinon.test(function (done) {
+   it(`findOrCreateRelease should return error if release create fails`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
