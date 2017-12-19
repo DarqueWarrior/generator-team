@@ -2,13 +2,13 @@ const fs = require(`fs`);
 const path = require(`path`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
-const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
+const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const project = require(`../../generators/project/app`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
 describe(`project:index`, function () {
    "use strict";
@@ -115,7 +115,7 @@ describe(`project:index`, function () {
 describe(`project:app`, function () {
    "use strict";
 
-   it(`run with error should return error`, sinon.test(function (done) {
+   it(`run with error should return error`, sinonTest(function (done) {
       // Arrange
       // return so the code thinks an error occurred 
       this.stub(util, `tryFindProject`).callsArgWith(4, new Error("boom"), null);
@@ -148,7 +148,7 @@ describe(`project:app`, function () {
       });
    }));
 
-   it(`findOrCreateProject should create project`, sinon.test(function (done) {
+   it(`findOrCreateProject should create project`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -208,7 +208,7 @@ describe(`project:app`, function () {
          });
    }));
 
-   it(`findOrCreateProject should fail calling final GET`, sinon.test(function (done) {
+   it(`findOrCreateProject should fail calling final GET`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -265,7 +265,7 @@ describe(`project:app`, function () {
          });
    }));
 
-   it(`findOrCreateProject should fail to find new project`, sinon.test(function (done) {
+   it(`findOrCreateProject should fail to find new project`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
