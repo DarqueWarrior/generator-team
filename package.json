@@ -55,7 +55,7 @@
       "fs-extra": "^5.0.0",
       "istanbul": "*",
       "jshint": "^2.9.4",
-      "mocha": "^3.5.3",
+      "mocha": "^4.0.1",
       "ms-rest-azure": "^2.4.5",
       "proxyquire": "*",
       "sinon": "^4.1.3",
