@@ -13,7 +13,7 @@ function addRelease(obj) {
       obj.log(`* Hosted Linux will be used for build and Hosted VS2017 for release. *`);
    }
 
-   obj.composeWith(require.resolve(`../release`), {
+   obj.composeWith(`team:release`, {
       arguments: [obj.type, obj.applicationName, obj.tfs,
          queue, obj.target,
          obj.azureSub,
@@ -24,7 +24,7 @@ function addRelease(obj) {
 }
 
 function addBuild(obj) {
-   obj.composeWith(require.resolve(`../build`), {
+   obj.composeWith(`team:build`, {
       arguments: [obj.type, obj.applicationName, obj.tfs,
          obj.queue, obj.target,
          obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId,
@@ -35,7 +35,7 @@ function addBuild(obj) {
 
 function addAzure(obj) {
    if (util.isPaaS(obj)) {
-      obj.composeWith(require.resolve(`../azure`), {
+      obj.composeWith(`team:azure`, {
          arguments: [obj.applicationName, obj.tfs,
             obj.azureSub, obj.azureSubId, obj.tenantId, obj.servicePrincipalId, obj.servicePrincipalKey,
             obj.pat
@@ -45,7 +45,7 @@ function addAzure(obj) {
 }
 
 function addProject(obj) {
-   obj.composeWith(require.resolve(`../project`), {
+   obj.composeWith(`team:project`, {
       arguments: [obj.applicationName, obj.tfs,
          obj.pat
       ]
@@ -54,7 +54,7 @@ function addProject(obj) {
 
 function addRegistry(obj) {
    if (util.needsRegistry(obj)) {
-      obj.composeWith(require.resolve(`../registry`), {
+      obj.composeWith(`team:registry`, {
          arguments: [obj.applicationName, obj.tfs,
             obj.dockerRegistry, obj.dockerRegistryId, obj.dockerRegistryPassword,
             obj.pat
@@ -65,7 +65,7 @@ function addRegistry(obj) {
 
 function addDockerHost(obj) {
    if (util.needsDockerHost(obj)) {
-      obj.composeWith(require.resolve(`../docker`), {
+      obj.composeWith(`team:docker`, {
          arguments: [obj.applicationName, obj.tfs,
             obj.dockerHost, obj.dockerCertPath,
             obj.pat
@@ -76,26 +76,26 @@ function addDockerHost(obj) {
 
 function addLanguage(obj) {
    if (obj.type === `asp`) {
-      obj.composeWith(require.resolve(`../asp`), {
+      obj.composeWith(`team:asp`, {
          arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
       });
    } else if (obj.type === `aspFull`) {
-      obj.composeWith(require.resolve(`../aspFull`), {
+      obj.composeWith(`team:aspFull`, {
          arguments: [obj.applicationName]
       });
    } else if (obj.type === `java`) {
-      obj.composeWith(require.resolve(`../java`), {
+      obj.composeWith(`team:java`, {
          arguments: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
       });
    } else if (obj.type === `node`) {
-      obj.composeWith(require.resolve(`../node`), {
+      obj.composeWith(`team:node`, {
          arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
       });
    }
 }
 
 function addGit(obj) {
-   obj.composeWith(require.resolve(`../git`), {
+   obj.composeWith(`team:git`, {
       arguments: [obj.applicationName, obj.tfs,
          `all`,
          obj.pat

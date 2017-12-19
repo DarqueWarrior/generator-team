@@ -5,7 +5,7 @@ const assert = require(`yeoman-assert`);
 const util = require(`../../generators/app/utility`);
 
 describe(`app:index`, function () {
-   it.only(`arguments using fake dependencies dockerpaas linux`, function () {
+   it(`arguments using fake dependencies dockerpaas linux`, function () {
       // Arrange
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
@@ -38,7 +38,7 @@ describe(`app:index`, function () {
       let pat = `token`;
 
       // Act
-      return helpers.run(path.join(__dirname, `../../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app`))
          .withGenerators(deps)
          .withArguments([type, name, tfs,
             azureSub, azureSubId, tenantId, servicePrincipalId,

@@ -38,7 +38,9 @@ describe(`app:prompt:tfsVersion`, function () {
       // Arrange
       var expected = false;
       var target = prompt.tfsVersion({
-         tfs: `test`
+         options: {
+            tfs: `test`
+         }
       });
 
       // Act
@@ -54,7 +56,9 @@ describe(`app:prompt:tfsVersion`, function () {
       // Arrange
       var expected = false;
       var target = prompt.tfsVersion({
-         tfs: `https://test.visualstudio.com/`
+         options: {
+            tfs: `https://test.visualstudio.com/`
+         }
       });
 
       // Act
@@ -70,7 +74,9 @@ describe(`app:prompt:tfsVersion`, function () {
       // Arrange
       var expected = true;
       var target = prompt.tfsVersion({
-         tfs: `http://localhost:8080/tfs/defaultcollection`
+         options: {
+            tfs: `http://localhost:8080/tfs/defaultcollection`
+         }
       });
 
       // Act
@@ -85,7 +91,9 @@ describe(`app:prompt:tfsVersion`, function () {
    it(`Add for VSTS by name from prompts should be false`, function () {
       // Arrange
       var expected = false;
-      var target = prompt.tfsVersion({});
+      var target = prompt.tfsVersion({
+         options: {}
+      });
 
       // Act
       var actual = target.when({
@@ -100,7 +108,9 @@ describe(`app:prompt:tfsVersion`, function () {
    it(`Add for VSTS by full URL from prompts should be false`, function () {
       // Arrange
       var expected = false;
-      var target = prompt.tfsVersion({});
+      var target = prompt.tfsVersion({
+         options: {}
+      });
 
       // Act
       var actual = target.when({
@@ -115,7 +125,9 @@ describe(`app:prompt:tfsVersion`, function () {
    it(`Add for TFS by full URL from prompts should be true`, function () {
       // Arrange
       var expected = true;
-      var target = prompt.tfsVersion({});
+      var target = prompt.tfsVersion({
+         options: {}
+      });
 
       // Act
       var actual = target.when({
@@ -132,7 +144,9 @@ describe(`app:prompt:profileName`, function () {
    it(`List from command line should be false`, function () {
       // Arrange
       var expected = false;
-      var target = prompt.profileName({});
+      var target = prompt.profileName({
+         options: {}
+      });
 
       // Act
       var actual = target.when({
@@ -147,12 +161,16 @@ describe(`app:prompt:profileName`, function () {
       // Arrange
       var expected = false;
       var target = prompt.profileName({
-         profileName: `test`,
-         profileCmd: `delete`
+         options: {
+            profileName: `test`,
+            profileCmd: `delete`
+         }
       });
 
       // Act
-      var actual = target.when({});
+      var actual = target.when({
+         options: {}
+      });
 
       // Assert
       assert.equal(expected, actual);
@@ -162,12 +180,16 @@ describe(`app:prompt:profileName`, function () {
       // Arrange
       var expected = false;
       var target = prompt.profileName({
-         profileCmd: `add`,
-         profileName: `test`
+         options: {
+            profileCmd: `add`,
+            profileName: `test`
+         }
       });
 
       // Act
-      var actual = target.when({});
+      var actual = target.when({
+         options: {}
+      });
 
       // Assert
       assert.equal(expected, actual);
@@ -176,7 +198,9 @@ describe(`app:prompt:profileName`, function () {
    it(`Add from prompts should be true`, function () {
       // Arrange
       var expected = true;
-      var target = prompt.profileName({});
+      var target = prompt.profileName({
+         options: {}
+      });
 
       // Act
       var actual = target.when({
