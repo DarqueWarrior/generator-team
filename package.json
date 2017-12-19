@@ -52,11 +52,11 @@
    "devDependencies": {
       "azure-arm-resource": "^1.4.4-preview",
       "cheerio": "^1.0.0-rc.2",
-      "fs-extra": "^5.0.0",     
+      "fs-extra": "^5.0.0",
       "istanbul": "*",
       "jshint": "^2.9.4",
       "mocha": "^3.5.3",
-      "ms-rest-azure": "^1.14.3",
+      "ms-rest-azure": "^2.4.5",
       "proxyquire": "*",
       "sinon": "^2.4.1",
       "sinon-test": "^1.0.1",

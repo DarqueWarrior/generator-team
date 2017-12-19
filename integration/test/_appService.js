@@ -8,7 +8,6 @@ const request = require('request');
 const cheerio = require('cheerio');
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
-const parallel = require('mocha.parallel');
 const exec = require('child_process').exec;
 
 const userAgent = `yo team`;
