@@ -127,16 +127,14 @@ describe(`utility`, function () {
    context(`registry from prompts`, function () {
       it(`needsRegistry paas`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {}
-         };
+         let options = {};
          const expected = false;
          let answers = {
             target: `paas`
          };
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -144,16 +142,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry paasslots`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {}
-         };
+         let options = {};
          const expected = false;
          let answers = {
             target: `paasslots`
          };
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -161,16 +157,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry docker`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {}
-         };
+         let options = {};
          const expected = true;
          let answers = {
             target: `docker`
          };
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -178,16 +172,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry dockerpaas`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {}
-         };
+         let options = {};
          const expected = true;
          let answers = {
             target: `dockerpaas`
          };
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -195,16 +187,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry acilinux`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {}
-         };
+         let options = {};
          const expected = true;
          let answers = {
             target: `acilinux`
          };
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -214,16 +204,14 @@ describe(`utility`, function () {
    context(`registry from cmdLnInput`, function () {
       it(`needsRegistry paas`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {
-               target: `paas`
-            }
+         let options = {
+            target: `paas`
          };
          const expected = false;
          let answers = {};
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -231,16 +219,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry paasslots`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {
-               target: `paasslots`
-            }
+         let options = {
+            target: `paasslots`
          };
          const expected = false;
          let answers = {};
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -248,16 +234,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry docker`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {
-               target: `docker`
-            }
+         let options = {
+            target: `docker`
          };
          const expected = true;
          let answers = {};
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -265,16 +249,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry dockerpaas`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {
-               target: `dockerpaas`
-            }
+         let options = {
+            target: `dockerpaas`
          };
          const expected = true;
          let answers = {};
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -282,16 +264,14 @@ describe(`utility`, function () {
 
       it(`needsRegistry acilinux`, function () {
          // Arrange
-         let cmdLnInput = {
-            options: {
-               target: `acilinux`
-            }
+         let options = {
+            target: `acilinux`
          };
          const expected = true;
          let answers = {};
 
          // Act
-         let actual = util.needsRegistry(answers, cmdLnInput);
+         let actual = util.needsRegistry(answers, options);
 
          // Assert
          assert.equal(expected, actual);
@@ -587,15 +567,13 @@ describe(`utility`, function () {
 
       let answers = {};
 
-      let cmdLnInput = {
-         options: {
-            queue: `Default`,
-            target: `dockerpaas`
-         }
+      let options = {
+         queue: `Default`,
+         target: `dockerpaas`
       };
 
       // Act
-      let actual = util.needsDockerHost(answers, cmdLnInput);
+      let actual = util.needsDockerHost(answers, options);
 
       // Assert
       assert.equal(expected, actual);
@@ -610,15 +588,51 @@ describe(`utility`, function () {
          queue: `Default`
       };
 
-      let cmdLnInput = {
-         options: {
-            queue: `Default`,
-            target: `dockerpaas`
-         }
+      let options = {
+         queue: `Default`,
+         target: `dockerpaas`
       };
 
       // Act
-      let actual = util.needsDockerHost(answers, cmdLnInput);
+      let actual = util.needsDockerHost(answers, options);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsDockerHost linux queue acilinux`, function () {
+
+      // Arrange
+      let expected = false;
+
+      let answers = {};
+
+      let options = {
+         queue: `Hosted Linux Preview`,
+         target: `acilinux`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, options);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsDockerHost default queue acilinux`, function () {
+
+      // Arrange
+      let expected = true;
+
+      let answers = {};
+
+      let options = {
+         queue: `Default`,
+         target: `acilinux`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, options);
 
       // Assert
       assert.equal(expected, actual);

@@ -299,7 +299,7 @@ function dockerHost(obj) {
       message: `What is your Docker host url and port (tcp://host:2376)?`,
       validate: util.validateDockerHost,
       when: answers => {
-         return util.needsDockerHost(answers, obj) && obj.options.dockerHost === undefined;
+         return util.needsDockerHost(answers, obj.options) && obj.options.dockerHost === undefined;
       }
    };
 }
@@ -312,7 +312,7 @@ function dockerCertPath(obj) {
       message: `What is your Docker Certificate path?`,
       validate: util.validateDockerCertificatePath,
       when: answers => {
-         return util.needsDockerHost(answers, obj) && obj.options.dockerCertPath === undefined;
+         return util.needsDockerHost(answers, obj.options) && obj.options.dockerCertPath === undefined;
       }
    };
 }
@@ -326,7 +326,7 @@ function dockerRegistry(obj) {
       message: `What is your Docker Registry URL?`,
       validate: util.validateDockerRegistry,
       when: answers => {
-         return util.needsRegistry(answers, obj) && obj.options.dockerRegistry === undefined;
+         return util.needsRegistry(answers, obj.options) && obj.options.dockerRegistry === undefined;
       }
    };
 }
@@ -339,7 +339,7 @@ function dockerRegistryUsername(obj) {
       message: `What is your Docker Registry username (case sensitive)?`,
       validate: util.validateDockerHubID,
       when: answers => {
-         return util.needsRegistry(answers, obj) && obj.options.dockerRegistryId === undefined;
+         return util.needsRegistry(answers, obj.options) && obj.options.dockerRegistryId === undefined;
       }
    };
 }
@@ -352,7 +352,7 @@ function dockerRegistryPassword(obj) {
       message: `What is your Docker Registry password?`,
       validate: util.validateDockerHubPassword,
       when: answers => {
-         return util.needsRegistry(answers, obj) && obj.options.dockerRegistryPassword === undefined;
+         return util.needsRegistry(answers, obj.options) && obj.options.dockerRegistryPassword === undefined;
       }
    };
 }
@@ -365,7 +365,7 @@ function dockerPorts(obj) {
       message: `What port should be exposed?`,
       validate: util.validatePortMapping,
       when: answers => {
-         return util.needsRegistry(answers, obj) && obj.options.dockerPorts === undefined;
+         return util.needsRegistry(answers, obj.options) && obj.options.dockerPorts === undefined;
       }
    };
 }

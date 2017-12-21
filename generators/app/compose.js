@@ -64,7 +64,7 @@ function addRegistry(obj) {
 }
 
 function addDockerHost(obj) {
-   if (util.needsDockerHost(obj)) {
+   if (util.needsDockerHost({}, obj)) {
       obj.composeWith(`team:docker`, {
          arguments: [obj.applicationName, obj.tfs,
             obj.dockerHost, obj.dockerCertPath,

@@ -429,6 +429,17 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
    'use strict';
 
    // There is nothing to do
+   // This will be true when the user selected Linux for the build queue. 
+   // Because we use ARM deployment with the Hosted VS2017 queue even if
+   // the user selected Linux for build the call to needsDockerHost may
+   // return true for build. However, if they select Linux for build they
+   // would not be prompted for a docker host and dockerHost will be empty.
+   // In that case just return. When user is calling from the command line
+   // and they pass in Linux they have to leave dockerHost empty.  If they
+   // pass in Linux and a dockerHost they will get an error saying the 
+   // docker service endpoint could not be found. That is because we did
+   // not create one because the Hosted Linux build has the docker tools
+   // so we don't need an external host so no service endpoint was created.
    if (!dockerHost) {
       callback(null, null);
       return;
@@ -929,14 +940,14 @@ function extractInstance(input) {
    return match[1];
 }
 
-function needsRegistry(answers, cmdLnInput) {
-   if (cmdLnInput !== undefined) {
+function needsRegistry(answers, options) {
+   if (options !== undefined) {
       return (answers.target === `docker` ||
-         cmdLnInput.options.target === `docker` ||
+         options.target === `docker` ||
          answers.target === `acilinux` ||
-         cmdLnInput.options.target === `acilinux` ||
+         options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.options.target === `dockerpaas`);
+         options.target === `dockerpaas`);
    } else {
       return (answers.target === `docker` ||
          answers.target === `acilinux` ||
@@ -944,25 +955,25 @@ function needsRegistry(answers, cmdLnInput) {
    }
 }
 
-function needsDockerHost(answers, cmdLnInput) {
+function needsDockerHost(answers, options) {
    let isDocker;
    let paasRequiresHost;
 
-   if (cmdLnInput !== undefined) {
+   if (options !== undefined) {
       // If you pass in the target on the command line 
-      // answers.target will be undefined so test cmdLnInput
-      isDocker = (answers.target === `docker` || cmdLnInput.options.target === `docker`);
+      // answers.target will be undefined so test options
+      isDocker = (answers.target === `docker` || options.target === `docker`);
 
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
-            cmdLnInput.options.target === `dockerpaas` ||
+            options.target === `dockerpaas` ||
             answers.target === `acilinux` ||
-            cmdLnInput.options.target === `acilinux`) &&
+            options.target === `acilinux`) &&
          ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
-            (cmdLnInput.options.queue === undefined || cmdLnInput.options.queue.indexOf(`Linux`) === -1));
+            (options.queue === undefined || options.queue.indexOf(`Linux`) === -1));
    } else {
       // If you pass in the target on the command line 
-      // answers.target will be undefined so test cmdLnInput
+      // answers.target will be undefined so test options
       isDocker = answers.target === `docker`;
 
       // This will be true the user did not select the Hosted Linux queue

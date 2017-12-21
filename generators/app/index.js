@@ -88,7 +88,7 @@ module.exports = class extends Generator {
          // Hosted Linux queue you should not provide a Docker Host. But if you do
          // it will mess things up. So I am going to try and determine if I need to clear
          // additional information that was provided but not required. 
-         if (!util.needsDockerHost(answers, cmdLnInput)) {
+         if (!util.needsDockerHost(answers, cmdLnInput.options)) {
             answers.dockerHost = undefined;
             cmdLnInput.dockerHost = undefined;
          }
