@@ -3,14 +3,33 @@
    // Hover to view descriptions of existing attributes.
    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
    "version": "0.2.0",
-   "configurations": [
-      {
+   "configurations": [{
          "type": "node",
          "request": "launch",
          "name": "Yeoman team",
          "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
          "args": [
-            "team"
+            "team",
+            "java",
+            "javaACITest30748ad0",
+            "demonstrations",
+            "PM_DonovanBrown",
+            "121d7d3b-2911-4154-9aa8-65132fe82e74",
+            "72f988bf-86f1-41af-91ab-2d7cd011db47",
+            "c6b2f494-b122-4fa9-8440-cb94719faa5a",
+            "Hosted Linux Preview",
+            "acilinux",
+            "false",
+            "integrationTest",
+            "tcp://my2016dockerhost.westus.cloudapp.azure.com:2376",
+            "C:\.docker",
+            "https://mydockerimages-microsoft.azurecr.io",
+            "mydockerimages",
+            "80 ",
+            "g=8//3p=c//XaX+Q+0Ln/ffL==rEQ=BQ",
+            "xzoqteSmkofJ+agV006e0P++NQxi8/jbaHBeO5fQSR4=",
+            "wkz4tdzpl37mu2pkysxfotpqb6lolly3w66klyjmwakdqupbh4za",
+            " "
          ],
          "console": "integratedTerminal",
          "internalConsoleOptions": "neverOpen"

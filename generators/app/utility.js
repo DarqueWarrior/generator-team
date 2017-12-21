@@ -932,11 +932,11 @@ function extractInstance(input) {
 function needsRegistry(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       return (answers.target === `docker` ||
-         cmdLnInput.target === `docker` ||
+         cmdLnInput.options.target === `docker` ||
          answers.target === `acilinux` ||
-         cmdLnInput.target === `acilinux` ||
+         cmdLnInput.options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.target === `dockerpaas`);
+         cmdLnInput.options.target === `dockerpaas`);
    } else {
       return (answers.target === `docker` ||
          answers.target === `acilinux` ||
@@ -951,15 +951,15 @@ function needsDockerHost(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       // If you pass in the target on the command line 
       // answers.target will be undefined so test cmdLnInput
-      isDocker = (answers.target === `docker` || cmdLnInput.target === `docker`);
+      isDocker = (answers.target === `docker` || cmdLnInput.options.target === `docker`);
 
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
-            cmdLnInput.target === `dockerpaas` ||
+            cmdLnInput.options.target === `dockerpaas` ||
             answers.target === `acilinux` ||
-            cmdLnInput.target === `acilinux`) &&
+            cmdLnInput.options.target === `acilinux`) &&
          ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
-            (cmdLnInput.queue === undefined || cmdLnInput.queue.indexOf(`Linux`) === -1));
+            (cmdLnInput.options.queue === undefined || cmdLnInput.options.queue.indexOf(`Linux`) === -1));
    } else {
       // If you pass in the target on the command line 
       // answers.target will be undefined so test cmdLnInput
@@ -976,13 +976,13 @@ function needsDockerHost(answers, cmdLnInput) {
 function isPaaS(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       return (answers.target === `paas` ||
-         cmdLnInput.target === `paas` ||
+         cmdLnInput.options.target === `paas` ||
          answers.target === `paasslots` ||
-         cmdLnInput.target === `paasslots` ||
+         cmdLnInput.options.target === `paasslots` ||
          answers.target === `acilinux` ||
-         cmdLnInput.target === `acilinux` ||
+         cmdLnInput.options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.target === `dockerpaas`);
+         cmdLnInput.options.target === `dockerpaas`);
    } else {
       return (answers.target === `paas` ||
          answers.target === `paasslots` ||

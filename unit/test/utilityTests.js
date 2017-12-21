@@ -124,10 +124,12 @@ describe(`utility`, function () {
       }));
    });
 
-   context(`registry`, function () {
+   context(`registry from prompts`, function () {
       it(`needsRegistry paas`, function () {
          // Arrange
-         let cmdLnInput = {};
+         let cmdLnInput = {
+            options: {}
+         };
          const expected = false;
          let answers = {
             target: `paas`
@@ -142,7 +144,9 @@ describe(`utility`, function () {
 
       it(`needsRegistry paasslots`, function () {
          // Arrange
-         let cmdLnInput = {};
+         let cmdLnInput = {
+            options: {}
+         };
          const expected = false;
          let answers = {
             target: `paasslots`
@@ -157,7 +161,9 @@ describe(`utility`, function () {
 
       it(`needsRegistry docker`, function () {
          // Arrange
-         let cmdLnInput = {};
+         let cmdLnInput = {
+            options: {}
+         };
          const expected = true;
          let answers = {
             target: `docker`
@@ -172,7 +178,9 @@ describe(`utility`, function () {
 
       it(`needsRegistry dockerpaas`, function () {
          // Arrange
-         let cmdLnInput = {};
+         let cmdLnInput = {
+            options: {}
+         };
          const expected = true;
          let answers = {
             target: `dockerpaas`
@@ -187,11 +195,100 @@ describe(`utility`, function () {
 
       it(`needsRegistry acilinux`, function () {
          // Arrange
-         let cmdLnInput = {};
+         let cmdLnInput = {
+            options: {}
+         };
          const expected = true;
          let answers = {
             target: `acilinux`
          };
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+   });
+
+   context(`registry from cmdLnInput`, function () {
+      it(`needsRegistry paas`, function () {
+         // Arrange
+         let cmdLnInput = {
+            options: {
+               target: `paas`
+            }
+         };
+         const expected = false;
+         let answers = {};
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry paasslots`, function () {
+         // Arrange
+         let cmdLnInput = {
+            options: {
+               target: `paasslots`
+            }
+         };
+         const expected = false;
+         let answers = {};
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry docker`, function () {
+         // Arrange
+         let cmdLnInput = {
+            options: {
+               target: `docker`
+            }
+         };
+         const expected = true;
+         let answers = {};
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry dockerpaas`, function () {
+         // Arrange
+         let cmdLnInput = {
+            options: {
+               target: `dockerpaas`
+            }
+         };
+         const expected = true;
+         let answers = {};
+
+         // Act
+         let actual = util.needsRegistry(answers, cmdLnInput);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`needsRegistry acilinux`, function () {
+         // Arrange
+         let cmdLnInput = {
+            options: {
+               target: `acilinux`
+            }
+         };
+         const expected = true;
+         let answers = {};
 
          // Act
          let actual = util.needsRegistry(answers, cmdLnInput);
@@ -491,8 +588,10 @@ describe(`utility`, function () {
       let answers = {};
 
       let cmdLnInput = {
-         queue: `Default`,
-         target: `dockerpaas`
+         options: {
+            queue: `Default`,
+            target: `dockerpaas`
+         }
       };
 
       // Act
@@ -512,8 +611,10 @@ describe(`utility`, function () {
       };
 
       let cmdLnInput = {
-         queue: `Default`,
-         target: `dockerpaas`
+         options: {
+            queue: `Default`,
+            target: `dockerpaas`
+         }
       };
 
       // Act
@@ -1742,7 +1843,9 @@ describe(`utility`, function () {
 
          // Act
          let actual = util.isPaaS({}, {
-            target: `paas`
+            options: {
+               target: `paas`
+            }
          });
 
          // Assert
@@ -1755,7 +1858,9 @@ describe(`utility`, function () {
 
          // Act
          let actual = util.isPaaS({}, {
-            target: `paasslots`
+            options: {
+               target: `paasslots`
+            }
          });
 
          // Assert
@@ -1768,7 +1873,9 @@ describe(`utility`, function () {
 
          // Act
          let actual = util.isPaaS({}, {
-            target: `dockerpaas`
+            options: {
+               target: `dockerpaas`
+            }
          });
 
          // Assert
@@ -1781,7 +1888,9 @@ describe(`utility`, function () {
 
          // Act
          let actual = util.isPaaS({}, {
-            target: `acilinux`
+            options: {
+               target: `acilinux`
+            }
          });
 
          // Assert
@@ -1794,7 +1903,9 @@ describe(`utility`, function () {
 
          // Act
          let actual = util.isPaaS({}, {
-            target: `docker`
+            options: {
+               target: `docker`
+            }
          });
 
          // Assert
