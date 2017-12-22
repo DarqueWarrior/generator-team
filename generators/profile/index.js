@@ -99,14 +99,10 @@ module.exports = class extends Generator {
                results.profiles = [];
             }
 
-            let nameToFind = this.profileName;
-            let foundByName = results.profiles.filter(function (i) {
-               return i.Name === nameToFind;
-            });
-
-            if (foundByName.length !== 0) {
-               // Find and remove item from an array            
-               results.profiles.splice(results.profiles.indexOf(foundByName[0]), 1);
+            // Find and remove item from an array
+            let index = results.profiles.findIndex(p=> p.Name.toLowerCase() === this.profileName.toLowerCase());
+            if (index !== -1) {
+               results.profiles.splice(index, 1);
             }
 
             fs.writeFileSync(util.PROFILE_PATH, JSON.stringify(results.profiles, null, 4));
@@ -133,7 +129,7 @@ module.exports = class extends Generator {
             // name and I don't want two with the same URL.
             let tfsToFind = this.tfs;
             let foundByTfs = results.profiles.filter(function (i) {
-               return i.URL === tfsToFind;
+               return i.URL.toLowerCase() === tfsToFind.toLowerCase();
             });
 
             if (foundByTfs.length !== 0) {

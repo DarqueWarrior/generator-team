@@ -256,8 +256,10 @@ describe(`profile:index cmdLine`, function () {
       var fsWriteFileSyncStub;
       var fsReadFileSyncStub;
 
+      // This test is making sure we can update an existing entry even if the 
+      // casing of the URL does not match.
       return helpers.run(path.join(__dirname, `../../generators/profile/index`))
-         .withArguments([`add`, `local`, `http://192.168.1.3:8080/tfs/defaultcollection`, `token`, `TFS2018`])
+         .withArguments([`add`, `local`, `http://192.168.1.3:8080/tfs/DefaultCollection`, `token`, `TFS2018`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
             fs.readFileSync.restore();
@@ -277,7 +279,7 @@ describe(`profile:index cmdLine`, function () {
 
                // Make sure the PAT was stored 64 bit encoded
                assert.equal(actual[1].Pat, `OnRva2Vu`);
-               assert.equal(actual[1].URL, `http://192.168.1.3:8080/tfs/defaultcollection`);
+               assert.equal(actual[1].URL, `http://192.168.1.3:8080/tfs/DefaultCollection`);
                assert.equal(actual[1].Name, `local`);
                assert.equal(actual[1].Version, `TFS2018`);
                assert.equal(actual[1].Type, `Pat`);
@@ -304,8 +306,9 @@ describe(`profile:index cmdLine`, function () {
       var fsWriteFileSyncStub;
       var fsReadFileSyncStub;
 
+      // This should delete even if the casing does not match. 
       return helpers.run(path.join(__dirname, `../../generators/profile/index`))
-         .withArguments([`delete`, `http://192.168.1.3:8080/tfs/defaultcollection`])
+         .withArguments([`delete`, `http://192.168.1.3:8080/TFS/DefaultCollection`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
             fs.readFileSync.restore();

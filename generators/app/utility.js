@@ -883,12 +883,13 @@ function loadProfiles() {
 }
 
 // Reads profiles created by the VSTeam PowerShell module.
+// Search ignores case.
 function searchProfiles(input) {
    let results = loadProfiles();
 
    if (results.profiles !== null) {
       var found = results.profiles.filter(function (i) {
-         return i.Name === input && i.Type === `Pat`;
+         return i.Name.toLowerCase() === input.toLowerCase() && i.Type === `Pat`;
       });
 
       if (found.length !== 0) {

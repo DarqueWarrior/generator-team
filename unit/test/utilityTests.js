@@ -118,7 +118,8 @@ describe(`utility`, function () {
             }
          ]`);
 
-         let actual = util.searchProfiles(`test`);
+         // This should work even with mixed case.
+         let actual = util.searchProfiles(`Test`);
 
          assert.notEqual(actual, null);
       }));
