@@ -117,6 +117,10 @@ function pat(obj) {
             return false;
          }
 
+         if (answers.profileCmd === `add`) {
+            return true;
+         }
+
          return util.readPatFromProfile(answers, obj);
       }
    };
