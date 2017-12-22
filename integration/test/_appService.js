@@ -20,23 +20,26 @@ env(__dirname + '/.env', {
 });
 
 function requestSite(applicationName, env, title, cb) {
-   azure.getWebsiteURL(`${applicationName}${env}`, function (e, url) {
-      assert.ifError(e);
-      util.log(`trying to access ${url}`);
-      request({
-         url: url
-      }, function (err, res, body) {
-         if (err) {
-            // We want the test to try again.
-            return;
-         }
+   // Wait before trying to access this site.
+   setTimeout(function () {
+      azure.getWebsiteURL(`${applicationName}${env}`, function (e, url) {
+         assert.ifError(e);
+         util.log(`trying to access ${url}`);
+         request({
+            url: url
+         }, function (err, res, body) {
+            if (err) {
+               // We want the test to try again.
+               return;
+            }
 
-         var dom = cheerio.load(body);
-         assert.equal(dom(`title`).text(), `${title}`);
+            var dom = cheerio.load(body);
+            assert.equal(dom(`title`).text(), `${title}`);
 
-         cb(err, res, body);
+            cb(err, res, body);
+         });
       });
-   });
+   }, 15000 + Math.floor((Math.random() * 1000) + 1));
 }
 
 function runTests(iteration) {
@@ -243,7 +246,7 @@ function runTests(iteration) {
                   vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
                      util.log(`buildResult:\r\n${result}\r\nlogs:\r\n`);
                      util.logJSON(logs);
-                     assert.equal(result, `succeeded`, logs);
+                     assert.equal(result, `succeeded`, JSON.stringify(JSON.parse(logs), null, 2));
                      done(e);
                   });
                }

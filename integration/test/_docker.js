@@ -220,7 +220,7 @@ function runTests(iteration) {
                   vsts.getBuildLog(tfs, iteration.projectId, pat, iteration.buildId, userAgent, (e, logs) => {
                      util.log(`buildResult:\r\n${iteration.buildResult}\r\nlogs:\r\n`);
                      util.logJSON(logs);
-                     assert.equal(iteration.buildResult, `succeeded`, logs);
+                     assert.equal(iteration.buildResult, `succeeded`, JSON.stringify(JSON.parse(logs), null, 2));
                      done(e);
                   });
                }
