@@ -58,6 +58,7 @@
                "version": "1.*",
                "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                "enabled": true,
+               "refName": "deploy",
                "alwaysRun": false,
                "continueOnError": false,
                "timeoutInMinutes": 0,

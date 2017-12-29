@@ -12,6 +12,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Install bower",
+         "refName": "install_bower",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -29,6 +30,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Run bower",
+         "refName": "run_bower",
          "timeoutInMinutes": 0,
          "task": {
             "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
@@ -47,6 +49,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "npm install for test",
+         "refName": "npm_install_test",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -64,6 +67,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "npm test",
+         "refName": "npm_test",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -81,6 +85,7 @@
          "continueOnError": false,
          "alwaysRun": true,
          "displayName": "Publish Test Results",
+         "refName": "publish_tests",
          "timeoutInMinutes": 0,
          "task": {
             "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
@@ -102,6 +107,7 @@
          "continueOnError": false,
          "alwaysRun": true,
          "displayName": "Publish Code Coverage Results",
+         "refName": "publish_codeCoverage",
          "timeoutInMinutes": 0,
          "task": {
             "id": "2a7ebc54-c13e-490e-81a5-d7561ab7cd97",
@@ -120,6 +126,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "npm install",
+         "refName": "npm_install",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -137,6 +144,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Archive files",
+         "refName": "archive_files",
          "timeoutInMinutes": 0,
          "task": {
             "id": "d8b84976-e99a-4b86-b885-4849694435b0",
@@ -157,6 +165,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Copy Files",
+         "refName": "copy_files",
          "timeoutInMinutes": 0,
          "task": {
             "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
@@ -177,6 +186,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Publish Artifact: drop",
+         "refName": "publish_artifacts",
          "timeoutInMinutes": 0,
          "task": {
             "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
