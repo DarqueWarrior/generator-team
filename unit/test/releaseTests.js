@@ -694,6 +694,24 @@ describe(`release:app`, function () {
       });
    }));
 
+   it(`getRelease asp tfs 2017 dockerpaas no Load Test`, sinonTest(function (done) {
+      // Arrange 
+      let expected = `tfs_release_dockerpaas.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`,
+         removeloadTest: true
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
    // The West Central US region of VSTS does not support Load Test.
    // So we need to create a release that does not use that task.
    it(`getRelease java vsts paas no Load Test`, function (done) {
@@ -704,6 +722,57 @@ describe(`release:app`, function () {
       release.getRelease({
          type: `java`,
          target: `paas`,
+         tfs: `vsts`,
+         removeloadTest: true
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java vsts paas slots no Load Test`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_slots.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `paasslots`,
+         tfs: `vsts`,
+         removeloadTest: true
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java vsts docker no Load Test`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_docker.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `docker`,
+         tfs: `vsts`,
+         removeloadTest: true
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java vsts acilinux no Load Test`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_acilinux.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `acilinux`,
          tfs: `vsts`,
          removeloadTest: true
       }, function (e, actual) {

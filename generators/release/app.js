@@ -129,7 +129,7 @@ function getRelease(args, callback) {
          if (result) {
 
             // see if they support load tests or not
-            if (args.removeloadTest) {
+            if (args.removeloadTest && args.target === `dockerpaas`) {
                release = `vsts_release_${args.target}_noloadtest.json`;
             } else {
                release = `vsts_release_${args.target}.json`;
