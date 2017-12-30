@@ -1039,7 +1039,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
@@ -1290,7 +1290,7 @@ describe(`utility`, function () {
          });
 
          var logger = this.stub();
-         logger.log = function () {};
+         logger.log = function () { };
 
          proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
             `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -1318,7 +1318,7 @@ describe(`utility`, function () {
          });
 
          var logger = this.stub();
-         logger.log = function () {};
+         logger.log = function () { };
 
          proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
             `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -1342,7 +1342,7 @@ describe(`utility`, function () {
          });
 
          var logger = this.stub();
-         logger.log = function () {};
+         logger.log = function () { };
 
          proxyApp.tryFindDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
             `e2eDemo`, `DockerHub`, `token`, logger, (err, obj) => {
@@ -1369,7 +1369,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1397,7 +1397,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1439,7 +1439,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindAzureServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, {
@@ -1467,7 +1467,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1491,7 +1491,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.tryFindProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1515,7 +1515,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1539,8 +1539,8 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
-      logger.log.error = function () {};
+      logger.log = function () { };
+      logger.log.error = function () { };
 
       proxyApp.findProject(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
@@ -1786,6 +1786,68 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
+   context('load test', function () {
+      it(`supportsLoadTests vsts true`, function (done) {
+         // Arrange
+         let expected = true;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  accountRegion: "South Central US"
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.supportsLoadTests(`vsts`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
+      });
+
+      it(`supportsLoadTests tfs false`, function (done) {
+         // Arrange
+         let expected = false;
+
+         // Act
+         util.supportsLoadTests(`http://localhost:8080/tfs/defaultcollection`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
+      });
+
+      it(`supportsLoadTests vsts false`, function (done) {
+         // Arrange
+         let expected = false;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  accountRegion: "West Central US"
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.supportsLoadTests(`vsts`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
+      });
+   });
+
    context(`is`, function () {
       it(`isPaaS paas true from answers`, function () {
          // Arrange
@@ -1929,7 +1991,7 @@ describe(`utility`, function () {
 
       it(`isTFSGreaterThan2017 false`, function (done) {
          // Arrange
-         var expected = false;
+         let expected = false;
 
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -2105,7 +2167,7 @@ describe(`utility`, function () {
       });
 
       var logger = this.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Act
       proxyApp.findAzureSub(

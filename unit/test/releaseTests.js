@@ -25,6 +25,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findAzureServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -52,6 +53,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `dockerpaas`, expectedToken);
@@ -105,7 +107,7 @@ describe(`release:index`, function () {
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
             sinon.stub(util, `getAzureSubs`);
-            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `dockerpaas`, expectedToken);
@@ -129,6 +131,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findAzureServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -156,6 +159,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
             stubs.findBuild(expectedAccount, `acilinux`, expectedToken);
@@ -231,6 +235,7 @@ describe(`release:index`, function () {
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -254,6 +259,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
@@ -326,6 +332,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findAzureServiceEndpoint.restore();
       };
 
@@ -347,6 +354,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `paasslots`, expectedToken);
@@ -369,6 +377,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findAzureServiceEndpoint.restore();
       };
 
@@ -390,6 +399,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `paas`, expectedToken);
@@ -411,6 +421,7 @@ describe(`release:index`, function () {
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -434,6 +445,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `javaDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
@@ -457,6 +469,7 @@ describe(`release:index`, function () {
          util.findProject.restore();
          util.getAzureSubs.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findAzureServiceEndpoint.restore();
       };
 
@@ -478,6 +491,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `javaDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `paas`, expectedToken);
@@ -499,6 +513,7 @@ describe(`release:index`, function () {
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
          util.findDockerServiceEndpoint.restore();
          util.findDockerRegistryServiceEndpoint.restore();
       };
@@ -522,6 +537,7 @@ describe(`release:index`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
             stubs.findProject(expectedAccount, `aspDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
@@ -677,6 +693,42 @@ describe(`release:app`, function () {
          done(e);
       });
    }));
+
+   // The West Central US region of VSTS does not support Load Test.
+   // So we need to create a release that does not use that task.
+   it(`getRelease java vsts paas no Load Test`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_noloadtest.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `paas`,
+         tfs: `vsts`,
+         removeloadTest: true
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease asp vsts dockerpaas no Load Test`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_dockerpaas_noloadtest.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `dockerpaas`,
+         tfs: `vsts`,
+         removeloadTest: true
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
 
    it(`getRelease asp vsts dockerpaas`, function (done) {
       // Arrange 

@@ -140,15 +140,15 @@ function getTargets(answers) {
 function getAppTypes(answers) {
    // Default to languages tha work on all agents
    let types = [{
-         name: `.NET Core`,
-         value: `asp`
-      }, {
-         name: `Node.js`,
-         value: `node`
-      }, {
-         name: `Java`,
-         value: `java`
-      }
+      name: `.NET Core`,
+      value: `asp`
+   }, {
+      name: `Node.js`,
+      value: `node`
+   }, {
+      name: `Java`,
+      value: `java`
+   }
       // , {
       //    name: `Custom`,
       //    value: `custom`
@@ -967,9 +967,9 @@ function needsDockerHost(answers, options) {
 
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
-            options.target === `dockerpaas` ||
-            answers.target === `acilinux` ||
-            options.target === `acilinux`) &&
+         options.target === `dockerpaas` ||
+         answers.target === `acilinux` ||
+         options.target === `acilinux`) &&
          ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
             (options.queue === undefined || options.queue.indexOf(`Linux`) === -1));
    } else {
@@ -1009,6 +1009,51 @@ function isVSTS(instance) {
    }
 
    return false;
+}
+
+function supportsLoadTests(account, token, callback) {
+   if (isVSTS(account)) {
+      let pat = encodePat(token);
+
+      // We can determine if this is 2017 or not by searching for a 
+      // specific docker task.
+      var options = addUserAgent({
+         "method": `GET`,
+         "headers": {
+            "cache-control": `no-cache`,
+            "authorization": `Basic ${pat}`
+         },
+         "url": `${getFullURL(account)}/_api/_account/GetAccountSettings?__v=5`
+      });
+
+      request(options, function (error, response, body) {
+         if (error) {
+            callback(error, undefined);
+         } else if (response.statusCode >= 200 && response.statusCode < 300) {
+            let obj = {};
+            let result = true;
+
+            try {
+               obj = JSON.parse(body);
+
+               if (obj.accountRegion === `West Central US`) {
+                  result = false;
+               }
+
+               callback(undefined, result);
+            } catch (error) {
+               // This a HTML page with an error message.
+               err = error;
+               console.log(body);
+               callback(err, true);
+            }
+         } else {
+            callback(undefined, true);
+         }
+      });
+   } else {
+      callback(undefined, false);
+   }
 }
 
 //
@@ -1115,6 +1160,7 @@ module.exports = {
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
+   supportsLoadTests: supportsLoadTests,
    getProfileCommands: getProfileCommands,
    readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,

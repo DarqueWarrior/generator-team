@@ -76,33 +76,37 @@ module.exports = class extends Generator {
       var _this = this;
       var done = this.async();
 
-      app.getRelease(this, function (e, result) {
-         var release = _this.templatePath(result);
+      util.supportsLoadTests(this.tfs, this.pat, function (e, supportsLoadTests) {
+         _this.removeloadTest = !supportsLoadTests;
 
-         if (_this.type === `custom`) {
-            release = path.join(_this.customFolder, result);
-         }
+         app.getRelease(_this, function (e, result) {
+            var release = _this.templatePath(result);
 
-         var args = {
-            pat: _this.pat,
-            tfs: _this.tfs,
-            queue: _this.queue,
-            target: _this.target,
-            releaseJson: release,
-            azureSub: _this.azureSub,
-            appName: _this.applicationName,
-            project: _this.applicationName
-         };
+            if (_this.type === `custom`) {
+               release = path.join(_this.customFolder, result);
+            }
 
-         if (util.needsRegistry(_this)) {
-            args.dockerHost = _this.dockerHost;
-            args.dockerPorts = _this.dockerPorts;
-            args.dockerRegistry = _this.dockerRegistry;
-            args.dockerRegistryId = _this.dockerRegistryId;
-            args.dockerRegistryPassword = _this.dockerRegistryPassword;
-         }
+            var args = {
+               pat: _this.pat,
+               tfs: _this.tfs,
+               queue: _this.queue,
+               target: _this.target,
+               releaseJson: release,
+               azureSub: _this.azureSub,
+               appName: _this.applicationName,
+               project: _this.applicationName
+            };
 
-         app.run(args, _this, done);
+            if (util.needsRegistry(_this)) {
+               args.dockerHost = _this.dockerHost;
+               args.dockerPorts = _this.dockerPorts;
+               args.dockerRegistry = _this.dockerRegistry;
+               args.dockerRegistryId = _this.dockerRegistryId;
+               args.dockerRegistryPassword = _this.dockerRegistryPassword;
+            }
+
+            app.run(args, _this, done);
+         });
       });
    }
 };
