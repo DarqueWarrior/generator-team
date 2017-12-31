@@ -20,26 +20,45 @@ env(__dirname + '/.env', {
 });
 
 function requestSite(applicationName, env, title, cb) {
+   // We need to try the AppService Docker sites at least twice. The first
+   // request downloads the image which can cause a server error. You just
+   // need to request the site a second time. 
    // Wait before trying to access this site.
-   setTimeout(function () {
-      azure.getWebsiteURL(`${applicationName}${env}`, function (e, url) {
-         assert.ifError(e);
-         util.log(`trying to access ${url}`);
-         request({
-            url: url
-         }, function (err, res, body) {
-            if (err) {
-               // We want the test to try again.
-               return;
-            }
+   azure.getWebsiteURL(`${applicationName}${env}`, function (e, url) {
+      assert.ifError(e);
+      util.log(`trying to access ${url}`);
 
+      request({
+         url: url,
+         // The Azure AppService Docker support takes forever the first
+         // request
+         timeout: 60000
+      }, function (err, res, body) {
+         if (!err) {
             var dom = cheerio.load(body);
             assert.equal(dom(`title`).text(), `${title}`);
 
             cb(err, res, body);
-         });
+         } else {
+            setTimeout(function () {
+               // Try one more time. I bet this was Azure AppService Docker timing out.
+               request({
+                  url: url,
+                  // The Azure AppService Docker support takes forever the first
+                  // request
+                  timeout: 60000
+               }, function (err, res, body) {
+                  if (!err) {
+                     var dom = cheerio.load(body);
+                     assert.equal(dom(`title`).text(), `${title}`);
+                  }
+
+                  cb(err, res, body);
+               });
+            }, 25000 + Math.floor((Math.random() * 1000) + 1));
+         }
       });
-   }, 15000 + Math.floor((Math.random() * 1000) + 1));
+   });
 }
 
 function runTests(iteration) {
