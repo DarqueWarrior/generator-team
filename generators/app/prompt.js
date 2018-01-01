@@ -263,7 +263,7 @@ function servicePrincipalId(obj) {
       message: `What is your Service Principal ID?`,
       validate: util.validateServicePrincipalID,
       when: answers => {
-         return util.isPaaS(answers, obj) && obj.options.servicePrincipalId === undefined && !util.isVSTS(answers.tfs);
+         return (util.isPaaS(answers, obj) && obj.options.servicePrincipalId === undefined && !util.isVSTS(answers.tfs)) || (util.isVSTS(answers.tfs) && answers.creationMode === `Manual`);
       }
    };
 }
@@ -289,7 +289,7 @@ function servicePrincipalKey(obj) {
       message: `What is your Service Principal Key?`,
       validate: util.validateServicePrincipalKey,
       when: answers => {
-         return util.isPaaS(answers, obj) && obj.options.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs);
+         return (util.isPaaS(answers, obj) && obj.options.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs)) || (util.isVSTS(answers.tfs) && answers.creationMode === `Manual`);
       }
    };
 }
@@ -388,6 +388,28 @@ function groupId(obj) {
    };
 }
 
+function creationMode(obj) {
+   return {
+      name: `creationMode`,
+      type: `list`,
+      store: true,
+      message: "Select a Service Principal Creation Mode",
+      default: `Automatic`,
+      choices: [{
+            name: `Automatic`,
+            value: `Automatic`
+         },
+         {
+            name: `Manual`,
+            value: `Manual`
+         }
+      ],
+      when: answers => {
+         return util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+      }
+   };
+}
+
 function installDep(obj) {
    return {
       name: `installDep`,
@@ -446,6 +468,7 @@ module.exports = {
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
    customFolder: customFolder,
+   creationMode: creationMode,
    azureSubInput: azureSubInput,
    dockerRegistry: dockerRegistry,
    dockerCertPath: dockerCertPath,

@@ -68,6 +68,7 @@ module.exports = class extends Generator {
          prompts.azureSubList(this),
          prompts.azureSubId(this),
          prompts.tenantId(this),
+         prompts.creationMode(this),
          prompts.servicePrincipalId(this),
          prompts.servicePrincipalKey(this),
          prompts.dockerHost(this),
