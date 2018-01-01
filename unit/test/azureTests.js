@@ -191,9 +191,9 @@ describe(`azure:app`, function () {
             assert.equal(ep.name, `endpoint`);
 
             assert.equal(`Manual`, requestStub.getCall(0).args[0].body.data.creationMode);
-            assert.equal(3, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalid, `serviceprincipalid is wrong`);
-            assert.equal(`key`, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalkey, `serviceprincipalkey is wrong`);
-            assert.equal(2, requestStub.getCall(0).args[0].body.authorization.parameters.tenantid, `tenantid is wrong`);
+            assert.equal(3, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalId, `servicePrincipalId is wrong`);
+            assert.equal(`key`, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalKey, `servicePrincipalKey is wrong`);
+            assert.equal(2, requestStub.getCall(0).args[0].body.authorization.parameters.tenantId, `tenantId is wrong`);
 
             done();
          });
@@ -222,9 +222,9 @@ describe(`azure:app`, function () {
             assert.equal(ep.name, `endpoint`);
 
             assert.equal(`Automatic`, requestStub.getCall(0).args[0].body.data.creationMode, `creationMode is wrong`);
-            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalid, `serviceprincipalid is wrong`);
-            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalkey, `serviceprincipalkey is wrong`);
-            assert.equal(5, requestStub.getCall(0).args[0].body.authorization.parameters.tenantid, `tenantid is wrong`);
+            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalId, `servicePrincipalId is wrong`);
+            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalKey, `servicePrincipalKey is wrong`);
+            assert.equal(5, requestStub.getCall(0).args[0].body.authorization.parameters.tenantId, `tenantId is wrong`);
 
             done();
          });

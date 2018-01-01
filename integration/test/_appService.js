@@ -448,8 +448,12 @@ function runTests(iteration) {
          // Delete files, project, and resource group.
          async.parallel([
             function (inParallel) {
-               util.log(`delete project: ${projectId}`);
-               vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
+               vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
+                  if (!e) {
+                     util.log(`delete project: ${p.id}`);
+                     vsts.deleteProject(tfs, p.id, pat, userAgent, inParallel);
+                  }
+               });
             },
             function (inParallel) {
                util.log(`delete folder: ${applicationName}`);
