@@ -9,19 +9,21 @@ const util = require(`../../generators/app/utility`);
 const sinonTest = sinonTestFactory(sinon);
 
 assert.linuxTargets = function (a) {
-   assert.equal(a[0].name, `Azure Container Instances (Linux)`);
-   assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
-   assert.equal(a[2].name, `Docker Host`);
-   assert.equal(a.length, 3, `Wrong number of entries`);
+   assert.equal(a[0].name, `Azure Container Service (managed Kubernetes)`);
+   assert.equal(a[1].name, `Azure Container Instances (Linux)`);
+   assert.equal(a[2].name, `Azure App Service Docker (Linux)`);
+   assert.equal(a[3].name, `Docker Host`);
+   assert.equal(a.length, 4, `Wrong number of entries`);
 };
 
 assert.allTargets = function (a) {
    assert.equal(a[0].name, `Azure App Service`);
    assert.equal(a[1].name, `Azure App Service (Deployment Slots)`);
-   assert.equal(a[2].name, `Azure Container Instances (Linux)`);
-   assert.equal(a[3].name, `Azure App Service Docker (Linux)`);
-   assert.equal(a[4].name, `Docker Host`);
-   assert.equal(a.length, 5, `Wrong number of entries`);
+   assert.equal(a[2].name, `Azure Container Service (managed Kubernetes)`);
+   assert.equal(a[3].name, `Azure Container Instances (Linux)`);
+   assert.equal(a[4].name, `Azure App Service Docker (Linux)`);
+   assert.equal(a[5].name, `Docker Host`);
+   assert.equal(a.length, 6, `Wrong number of entries`);
 };
 
 assert.customTargets = function (a) {
@@ -1151,6 +1153,17 @@ describe(`utility`, function () {
 
          // Act
          var actual = util.isDocker(`paas`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`isDocker aks`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isDocker(`aks`);
 
          // Assert
          assert.equal(expected, actual);

@@ -27,7 +27,7 @@ String.prototype.replaceAll = function (search, replacement) {
 };
 
 function isDocker(value) {
-   return value === `docker` || value === `dockerpaas` || value === `acilinux`;
+   return value === `docker` || value === `aks` || value === `dockerpaas` || value === `acilinux`;
 }
 
 function getDockerRegistryServer(server) {
@@ -107,6 +107,9 @@ function getTargets(answers) {
                }, {
                   name: `Azure App Service (Deployment Slots)`,
                   value: `paasslots`
+               }, {
+                  name: `Azure Container Service (managed Kubernetes)`,
+                  value: `aks`
                }, {
                   name: `Azure Container Instances (Linux)`,
                   value: `acilinux`

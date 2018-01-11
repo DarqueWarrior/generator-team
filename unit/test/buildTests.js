@@ -203,6 +203,54 @@ describe(`build:index`, function () {
          });
    });
 
+   it(`test prompts node:aks should not return error`, function () {
+      let cleanUp = function () {
+         util.getPools.restore();
+         util.findQueue.restore();
+         util.getTargets.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+         .withPrompts({
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `aks`,
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            queue: `Default`,
+            pat: `token`
+         })
+         .on(`error`, function (e) {
+            cleanUp();
+            assert.fail(e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
+            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+            sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
+         })
+         .on(`end`, function () {
+            // Using the yeoman helpers and sinonTest did not play nice
+            // so clean up your stubs
+            cleanUp();
+         });
+   });
+
    it(`test prompts node:docker should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
@@ -577,6 +625,23 @@ describe(`build:app`, function () {
       });
    });
 
+   it(`getBuild asp tfs 2017 aks`, sinonTest(function (done) {
+      // Arrange 
+      let expected = `tfs_asp_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      build.getBuild({
+         type: `asp`,
+         target: `aks`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
    it(`getBuild asp tfs 2017 docker`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_asp_docker_build.json`;
@@ -593,6 +658,22 @@ describe(`build:app`, function () {
          done(e);
       });
    }));
+
+   it(`getBuild asp vsts aks`, function (done) {
+      // Arrange 
+      let expected = `vsts_asp_docker_build.json`;
+
+      // Act
+      build.getBuild({
+         type: `asp`,
+         target: `aks`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
 
    it(`getBuild asp vsts docker`, function (done) {
       // Arrange 
@@ -676,6 +757,23 @@ describe(`build:app`, function () {
       });
    });
 
+   it(`getBuild java tfs 2017 aks`, sinonTest(function (done) {
+      // Arrange 
+      let expected = `tfs_java_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      build.getBuild({
+         type: `java`,
+         target: `aks`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
    it(`getBuild java tfs 2017 dockerpaas`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_java_docker_build.json`;
@@ -734,6 +832,22 @@ describe(`build:app`, function () {
       build.getBuild({
          type: `java`,
          target: `acilinux`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getBuild java vsts aks`, function (done) {
+      // Arrange 
+      let expected = `vsts_java_docker_build.json`;
+
+      // Act
+      build.getBuild({
+         type: `java`,
+         target: `aks`,
          tfs: `vsts`
       }, function (e, actual) {
          // Assert
@@ -824,6 +938,22 @@ describe(`build:app`, function () {
       });
    });
 
+   it(`getBuild node vsts aks`, function (done) {
+      // Arrange 
+      let expected = `vsts_node_docker_build.json`;
+
+      // Act
+      build.getBuild({
+         type: `node`,
+         target: `aks`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
    it(`getBuild node vsts paas`, function (done) {
       // Arrange 
       let expected = `vsts_node_build.json`;
@@ -866,6 +996,23 @@ describe(`build:app`, function () {
       build.getBuild({
          type: `node`,
          target: `dockerpaas`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getBuild node tfs 2017 aks`, sinonTest(function (done) {
+      // Arrange 
+      let expected = `tfs_node_docker_build.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      build.getBuild({
+         type: `node`,
+         target: `aks`,
          tfs: `http://tfs:8080/tfs/DefaultCollection`
       }, function (e, actual) {
          // Assert
@@ -924,7 +1071,7 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -954,7 +1101,7 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -1000,20 +1147,20 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create build
       requestStub.onCall(0).yields(null, {
          statusCode: 200
       }, {
-         name: `build`
-      });
+            name: `build`
+         });
 
       // Act
       proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-            name: `TeamProject`,
-            id: 1
-         },
+         name: `TeamProject`,
+         id: 1
+      },
          `token`, 1, null, null, null, `build.json`, `paas`, logger,
          function (e, bld) {
             assert.equal(e, null);
@@ -1043,20 +1190,20 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create build
       requestStub.onCall(0).yields(null, {
          statusCode: 200
       }, {
-         name: `build`
-      });
+            name: `build`
+         });
 
       // Act
       proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-            name: `TeamProject`,
-            id: 1
-         },
+         name: `TeamProject`,
+         id: 1
+      },
          `token`, 1, `dockerHostEndpoint`, {
             name: `dockerRegistryEndpoint`,
             url: ``,
@@ -1095,7 +1242,7 @@ describe(`build:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create build
       requestStub.onCall(0).yields(null, {
@@ -1107,9 +1254,9 @@ describe(`build:app`, function () {
       // because my method is async 
       assert.throws(function () {
          proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-               name: `TeamProject`,
-               id: 1
-            },
+            name: `TeamProject`,
+            id: 1
+         },
             `token`, 1, null, null, null, `build.json`, `paas`, logger, done);
       }, function (e) {
          done();
