@@ -294,6 +294,20 @@ function servicePrincipalKey(obj) {
    };
 }
 
+// AKS 
+function sshRSAPublicKey(obj) {
+   return {
+      type: `password`,
+      name: `sshRSAPublicKey`,
+      store: false,
+      message: `What is your SSH public key?`,
+      validate: util.validatesshRSAPublicKey,
+      when: answers => {
+         return obj.options.target === 'aks' || answers.target === 'aks';
+      }
+   };
+}
+
 // Docker
 function dockerHost(obj) {
    return {
@@ -396,13 +410,13 @@ function creationMode(obj) {
       message: "Select a Service Principal Creation Mode",
       default: `Automatic`,
       choices: [{
-            name: `Automatic`,
-            value: `Automatic`
-         },
-         {
-            name: `Manual`,
-            value: `Manual`
-         }
+         name: `Automatic`,
+         value: `Automatic`
+      },
+      {
+         name: `Manual`,
+         value: `Manual`
+      }
       ],
       when: answers => {
          return util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
@@ -418,13 +432,13 @@ function installDep(obj) {
       message: "Install dependencies?",
       default: `false`,
       choices: [{
-            name: `Yes`,
-            value: `true`
-         },
-         {
-            name: `No`,
-            value: `false`
-         }
+         name: `Yes`,
+         value: `true`
+      },
+      {
+         name: `No`,
+         value: `false`
+      }
       ],
       when: answers => {
          return answers.type !== `aspFull` && obj.options.installDep === undefined;
@@ -473,6 +487,7 @@ module.exports = {
    dockerRegistry: dockerRegistry,
    dockerCertPath: dockerCertPath,
    applicationType: applicationType,
+   sshRSAPublicKey: sshRSAPublicKey,
    applicationName: applicationName,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,

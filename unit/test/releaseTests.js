@@ -120,6 +120,112 @@ describe(`release:index`, function () {
          });
    });
 
+   it(`test prompts node aks vsts`, function () {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `vsts`;
+
+      let cleanUp = function () {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.supportsLoadTests.restore();
+         util.findAzureServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `vsts`,
+            pat: `token`,
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `aks`,
+            azureSub: `azureSub`,
+            dockerHost: `dockerHost`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, function (e) {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `supportsLoadTests`).callsArgWith(2, null, true);
+            stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
+            stubs.findBuild(expectedAccount, `aks`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `aks`, expectedToken);
+            stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
+            stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
+         })
+         .on(`end`, function (e) {
+            cleanUp();
+         });
+   });
+
+   it(`test prompts node aks tfs 2017`, function () {
+      let expectedToken = `OnRva2Vu`;
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+
+      let cleanUp = function () {
+         util.getPools.restore();
+         util.findBuild.restore();
+         util.findQueue.restore();
+         util.getTargets.restore();
+         util.findProject.restore();
+         util.getAzureSubs.restore();
+         util.tryFindRelease.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findAzureServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+         .withPrompts({
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            pat: `token`,
+            queue: `Hosted Linux Preview`,
+            type: `node`,
+            applicationName: `nodeDemo`,
+            target: `aks`,
+            azureSub: `azureSub`,
+            dockerHost: `dockerHost`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`,
+            dockerPorts: `3000:3000`
+         })
+         .on(`error`, function (e) {
+            cleanUp();
+            console.log(`Oh Noes!`, e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
+            sinon.stub(util, `getAzureSubs`);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+            stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
+            stubs.findQueue(expectedAccount, `Hosted Linux Preview`, expectedToken);
+            stubs.findBuild(expectedAccount, `aks`, expectedToken);
+            stubs.tryFindRelease(expectedAccount, `aks`, expectedToken);
+            stubs.findDockerRegistryServiceEndpoint(expectedAccount, expectedToken);
+            stubs.findAzureServiceEndpoint(expectedAccount, `azureSub`, expectedToken);
+         })
+         .on(`end`, function (e) {
+            cleanUp();
+         });
+   });
+
    it(`test prompts node acilinux vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
@@ -815,6 +921,22 @@ describe(`release:app`, function () {
       });
    });
 
+   it(`getRelease asp vsts aks`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_aks.json`;
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `aks`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
    it(`getRelease asp tfs 2017 acilinux`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_acilinux.json`;
@@ -873,6 +995,39 @@ describe(`release:app`, function () {
       release.getRelease({
          type: `java`,
          target: `dockerpaas`,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
+   it(`getRelease java tfs 2017 aks`, sinonTest(function (done) {
+      // Arrange 
+      let expected = `tfs_release_aks.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `aks`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
+   it(`getRelease java vsts aks`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_aks.json`;
+
+      // Act
+      release.getRelease({
+         type: `java`,
+         target: `aks`,
          tfs: `vsts`
       }, function (e, actual) {
          // Assert

@@ -32,8 +32,10 @@ describe(`team:java docker`, function () {
          `javaUnitTest/.gitignore`,
          `javaUnitTest/bower.json`,
          `javaUnitTest/Dockerfile`,
+         `javaUnitTest/templates/aks.json`,
          `javaUnitTest/templates/website.json`,
          `javaUnitTest/templates/parameters.xml`,
+         `javaUnitTest/templates/aks.parameters.json`,
          `javaUnitTest/templates/website.parameters.json`
       ]);
 

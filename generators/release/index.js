@@ -19,6 +19,7 @@ module.exports = class extends Generator {
       argUtils.queue(this);
       argUtils.target(this);
       argUtils.azureSub(this);
+      argUtils.sshRSAPublicKey(this);
       argUtils.dockerHost(this);
       argUtils.dockerRegistry(this);
       argUtils.dockerRegistryId(this);
@@ -45,6 +46,7 @@ module.exports = class extends Generator {
          prompts.target(this),
          prompts.azureSubInput(this),
          prompts.azureSubList(this),
+         prompts.sshRSAPublicKey(this),
          prompts.dockerHost(this),
          prompts.dockerRegistry(this),
          prompts.dockerRegistryUsername(this),
@@ -63,6 +65,7 @@ module.exports = class extends Generator {
          this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry);
+         this.sshRSAPublicKey = util.reconcileValue(cmdLnInput.options.sshRSAPublicKey, answers.sshRSAPublicKey, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);

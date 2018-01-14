@@ -37,6 +37,7 @@ module.exports = class extends Generator {
       argUtils.dockerRegistryPassword(this);
       argUtils.servicePrincipalKey(this);
       argUtils.pat(this);
+      argUtils.sshRSAPublicKey(this);
       argUtils.customFolder(this);
    }
 
@@ -71,6 +72,7 @@ module.exports = class extends Generator {
          prompts.creationMode(this),
          prompts.servicePrincipalId(this),
          prompts.servicePrincipalKey(this),
+         prompts.sshRSAPublicKey(this),
          prompts.dockerHost(this),
          prompts.dockerCertPath(this),
          prompts.dockerRegistry(this),
@@ -109,6 +111,7 @@ module.exports = class extends Generator {
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.dockerCertPath = util.reconcileValue(cmdLnInput.options.dockerCertPath, answers.dockerCertPath, ``);
+         this.sshRSAPublicKey = util.reconcileValue(cmdLnInput.options.sshRSAPublicKey, answers.sshRSAPublicKey, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);

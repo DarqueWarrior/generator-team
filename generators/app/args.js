@@ -70,6 +70,13 @@ function tenantId(obj) {
    });
 }
 
+function sshRSAPublicKey(obj) {
+   obj.argument(`sshRSAPublicKey`, {
+      required: false,
+      desc: `SSH public key for cluster`
+   });
+}
+
 function servicePrincipalId(obj) {
    obj.argument(`servicePrincipalId`, {
       required: false,
@@ -189,6 +196,7 @@ module.exports = {
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,
    applicationName: applicationName,
+   sshRSAPublicKey: sshRSAPublicKey,
    dockerRegistryId: dockerRegistryId,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,

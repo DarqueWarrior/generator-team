@@ -214,6 +214,10 @@ function validateRequired(input, msg) {
    return !input ? msg : true;
 }
 
+function validatesshRSAPublicKey(input) {
+   return validateRequired(input, `You must provide a SSH public key`);   
+}
+
 function validatePortMapping(input) {
    return validateRequired(input, `You must provide a Port Mapping`);
 }
@@ -950,11 +954,14 @@ function needsRegistry(answers, options) {
          options.target === `docker` ||
          answers.target === `acilinux` ||
          options.target === `acilinux` ||
+         answers.target === `aks` ||
+         options.target === `aks` ||
          answers.target === `dockerpaas` ||
          options.target === `dockerpaas`);
    } else {
       return (answers.target === `docker` ||
          answers.target === `acilinux` ||
+         answers.target === `aks` ||
          answers.target === `dockerpaas`);
    }
 }
@@ -971,6 +978,8 @@ function needsDockerHost(answers, options) {
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
          options.target === `dockerpaas` ||
+         answers.target === `aks` ||
+         options.target === `aks` ||
          answers.target === `acilinux` ||
          options.target === `acilinux`) &&
          ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
@@ -981,7 +990,7 @@ function needsDockerHost(answers, options) {
       isDocker = answers.target === `docker`;
 
       // This will be true the user did not select the Hosted Linux queue
-      paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux`) && answers.queue.indexOf(`Linux`) === -1;
+      paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux` || answers.target === `aks`) && answers.queue.indexOf(`Linux`) === -1;
    }
 
    logMessage(`needsDockerHost returning = ${isDocker || paasRequiresHost}`);
@@ -994,6 +1003,8 @@ function isPaaS(answers, cmdLnInput) {
          cmdLnInput.options.target === `paas` ||
          answers.target === `paasslots` ||
          cmdLnInput.options.target === `paasslots` ||
+         answers.target === `aks` ||
+         cmdLnInput.options.target === `aks` ||
          answers.target === `acilinux` ||
          cmdLnInput.options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
@@ -1001,6 +1012,7 @@ function isPaaS(answers, cmdLnInput) {
    } else {
       return (answers.target === `paas` ||
          answers.target === `paasslots` ||
+         answers.target === `aks` ||
          answers.target === `acilinux` ||
          answers.target === `dockerpaas`);
    }
@@ -1177,8 +1189,9 @@ module.exports = {
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
    validateApplicationName: validateApplicationName,
-   findAzureServiceEndpoint: findAzureServiceEndpoint,
    getDockerRegistryServer: getDockerRegistryServer,
+   validatesshRSAPublicKey: validatesshRSAPublicKey,
+   findAzureServiceEndpoint: findAzureServiceEndpoint,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
    validateServicePrincipalID: validateServicePrincipalID,
