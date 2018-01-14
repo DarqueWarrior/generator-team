@@ -304,6 +304,39 @@ describe(`app:prompt:pat`, function () {
    }));
 });
 
+describe(`java:prompt:groupid`, function () {
+   // run yo team:java
+   it(`from command line`, function () {
+      // Arrange
+      var expected = true;
+      var target = prompt.groupId({
+         options: {}
+      });
+
+      // Act
+      var actual = target.when({});
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`java:prompt:groupid from prompts`, function () {
+      // Arrange
+      var expected = true;
+      var target = prompt.groupId({
+         options: {}
+      });
+
+      // Act
+      var actual = target.when({
+         type: `java`
+      });
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+});
+
 describe(`app:prompt:profileName`, function () {
    it(`List from command line should be false`, function () {
       // Arrange

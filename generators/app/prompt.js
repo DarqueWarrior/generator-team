@@ -397,7 +397,7 @@ function groupId(obj) {
       message: "What is your Group ID?",
       validate: util.validateGroupID,
       when: answers => {
-         return answers.type === `java` && obj.options.groupId === undefined;
+         return (answers.type === `java` || answers.type === undefined) && obj.options.groupId === undefined;
       }
    };
 }
