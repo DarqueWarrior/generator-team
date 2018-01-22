@@ -43,7 +43,6 @@
    "license": "ISC",
    "dependencies": {
       "async": "^2.6.0",
-      "node-env-file": "^0.1.8",
       "pad": "^2.0.3",
       "request": "^2.83.0",
       "uuid": "^3.1.0",
@@ -52,6 +51,7 @@
    },
    "devDependencies": {
       "azure-arm-resource": "^3.0.0-preview",
+      "node-env-file": "^0.1.8",
       "cheerio": "^1.0.0-rc.2",
       "fs-extra": "^5.0.0",
       "istanbul": "*",

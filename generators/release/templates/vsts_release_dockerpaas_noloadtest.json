@@ -70,7 +70,7 @@
                "workflowTasks": [
                   {
                      "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                     "version": "1.*",
+                     "version": "2.*",
                      "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                      "enabled": true,
                      "refName": "arm",
@@ -184,7 +184,7 @@
                "workflowTasks": [
                   {
                      "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                     "version": "1.*",
+                     "version": "2.*",
                      "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                      "enabled": true,
                      "alwaysRun": false,
@@ -295,7 +295,7 @@
                "workflowTasks": [
                   {
                      "taskId": "94a74903-f93f-4075-884f-dc11f34058b4",
-                     "version": "1.*",
+                     "version": "2.*",
                      "name": "Azure Deployment:Create Or Update Resource Group action on {{WebAppName}}",
                      "enabled": true,
                      "alwaysRun": false,

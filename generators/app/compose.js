@@ -4,15 +4,6 @@ function addRelease(obj) {
 
    var queue = obj.queue;
 
-   if (util.isPaaS(obj) && queue.indexOf(`Linux`) !== -1) {
-      queue = `Hosted VS2017`;
-
-      // Inform user that if they selected Hosted Linux agent Hosted VS2017
-      // will be used for release. The release requires AZPowerShell which is
-      // not on the Linux build machine
-      obj.log(`* Hosted Linux will be used for build and Hosted VS2017 for release. *`);
-   }
-
    obj.composeWith(`team:release`, {
       arguments: [obj.type, obj.applicationName, obj.tfs,
          queue, obj.target,
