@@ -289,7 +289,11 @@ function servicePrincipalKey(obj) {
       message: `What is your Service Principal Key?`,
       validate: util.validateServicePrincipalKey,
       when: answers => {
-         return (util.isPaaS(answers, obj) && obj.options.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs)) || (util.isVSTS(answers.tfs) && answers.creationMode === `Manual`);
+         return (util.isPaaS(answers, obj) &&
+            obj.options.servicePrincipalKey === undefined &&
+            !util.isVSTS(answers.tfs)) ||
+            (util.isVSTS(answers.tfs) &&
+               answers.creationMode === `Manual`);
       }
    };
 }
@@ -303,7 +307,9 @@ function sshRSAPublicKey(obj) {
       message: `What is your SSH public key?`,
       validate: util.validatesshRSAPublicKey,
       when: answers => {
-         return obj.options.target === 'aks' || answers.target === 'aks';
+         return (obj.options.target === 'aks' ||
+            answers.target === 'aks') &&
+            obj.options.sshRSAPublicKey === undefined;
       }
    };
 }
@@ -383,7 +389,11 @@ function dockerPorts(obj) {
       message: `What port should be exposed?`,
       validate: util.validatePortMapping,
       when: answers => {
-         return util.needsRegistry(answers, obj.options) && obj.options.dockerPorts === undefined;
+         // For AKS don't prompt.  The port is in the YAML therefore the release
+         // can't change it.
+         return util.needsRegistry(answers, obj.options) &&
+            obj.options.dockerPorts === undefined &&
+            (obj.options.target !== `aks` && answers.target !== `aks`);
       }
    };
 }

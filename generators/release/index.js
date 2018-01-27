@@ -46,6 +46,9 @@ module.exports = class extends Generator {
          prompts.target(this),
          prompts.azureSubInput(this),
          prompts.azureSubList(this),
+         prompts.creationMode(this),
+         prompts.servicePrincipalId(this),
+         prompts.servicePrincipalKey(this),
          prompts.sshRSAPublicKey(this),
          prompts.dockerHost(this),
          prompts.dockerRegistry(this),
@@ -68,6 +71,8 @@ module.exports = class extends Generator {
          this.sshRSAPublicKey = util.reconcileValue(cmdLnInput.options.sshRSAPublicKey, answers.sshRSAPublicKey, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
+         this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
+         this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
          this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
       }.bind(this));
    }
@@ -97,9 +102,12 @@ module.exports = class extends Generator {
                releaseJson: release,
                azureSub: _this.azureSub,
                appName: _this.applicationName,
-               project: _this.applicationName
+               project: _this.applicationName,
+               sshRSAPublicKey: _this.sshRSAPublicKey,
+               servicePrincipalId: _this.servicePrincipalId,
+               servicePrincipalKey: _this.servicePrincipalKey
             };
-
+            
             if (util.needsRegistry(_this)) {
                args.dockerHost = _this.dockerHost;
                args.dockerPorts = _this.dockerPorts;

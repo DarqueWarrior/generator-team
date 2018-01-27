@@ -7,7 +7,7 @@ function addRelease(obj) {
    obj.composeWith(`team:release`, {
       arguments: [obj.type, obj.applicationName, obj.tfs,
          queue, obj.target,
-         obj.azureSub,
+         obj.azureSub, obj.sshRSAPublicKey,
          obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
          obj.dockerRegistryPassword, obj.pat, obj.customFolder
       ]

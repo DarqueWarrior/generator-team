@@ -9,11 +9,14 @@
          "isSecret": true         
       },
       "servicePrincipalClientId": {
-         "value": "{{spid}}"
+         "value": "{{servicePrincipalId}}"
       },
       "servicePrincipalClientSecret": {
-         "value": "{{spk}}",
+         "value": "{{servicePrincipalKey}}",
          "isSecret": true
+      },
+      "ResourceGroupName": {
+         "value": "{{WebAppName}}_RG"
       }
    },
    "environments": [
@@ -21,15 +24,6 @@
          "name": "Dev",
          "rank": 1,
          "variables": {
-            "ResourceGroupName": {
-               "value": "{{WebAppName}}Dev"
-            },
-            "webSiteName": {
-               "value": "{{WebAppName}}Dev{{uuid}}"
-            },
-            "hostingPlanName": {
-               "value": "{{WebAppName}}Dev"
-            }
          },
          "preDeployApprovals": {
             "approvals": [
@@ -81,7 +75,7 @@
                         "actionClassic": "Select Resource Group",
                         "resourceGroupName": "$(ResourceGroupName)",
                         "cloudService": "",
-                        "location": "West US",
+                        "location": "centralus",
                         "csmFile": "**/aks.json",
                         "csmParametersFile": "**/aks.parameters.json",
                         "overrideParameters": "-dnsNamePrefix {{WebAppName}} -sshRSAPublicKey \"$(sshRSAPublicKey)\" -servicePrincipalClientId \"$(servicePrincipalClientId)\" -servicePrincipalClientSecret \"$(servicePrincipalClientSecret)\"",
@@ -123,18 +117,6 @@
          "name": "QA",
          "rank": 2,
          "variables": {
-            "ResourceGroupName": {
-               "value": "{{WebAppName}}QA"
-            },
-            "webSiteName": {
-               "value": "{{WebAppName}}QA{{uuid}}"
-            },
-            "hostingPlanName": {
-               "value": "{{WebAppName}}QA"
-            },
-            "webSiteURL": {
-               "value": "http://{{WebAppName}}QA{{uuid}}.azurewebsites.net/"
-            }
          },
          "preDeployApprovals": {
             "approvals": [
@@ -195,7 +177,7 @@
                         "actionClassic": "Select Resource Group",
                         "resourceGroupName": "$(ResourceGroupName)",
                         "cloudService": "",
-                        "location": "West US",
+                        "location": "centralus",
                         "csmFile": "**/aks.json",
                         "csmParametersFile": "**/aks.parameters.json",
                         "overrideParameters": "-dnsNamePrefix {{WebAppName}} -sshRSAPublicKey \"$(sshRSAPublicKey)\" -servicePrincipalClientId \"$(servicePrincipalClientId)\" -servicePrincipalClientSecret \"$(servicePrincipalClientSecret)\"",
@@ -237,15 +219,6 @@
          "name": "Prod",
          "rank": 3,
          "variables": {
-            "ResourceGroupName": {
-               "value": "{{WebAppName}}Prod"
-            },
-            "webSiteName": {
-               "value": "{{WebAppName}}Prod{{uuid}}"
-            },
-            "hostingPlanName": {
-               "value": "{{WebAppName}}Prod"
-            }
          },
          "preDeployApprovals": {
             "approvals": [
@@ -306,7 +279,7 @@
                         "actionClassic": "Select Resource Group",
                         "resourceGroupName": "$(ResourceGroupName)",
                         "cloudService": "",
-                        "location": "West US",
+                        "location": "centralus",
                         "csmFile": "**/aks.json",
                         "csmParametersFile": "**/aks.parameters.json",
                         "overrideParameters": "-dnsNamePrefix {{WebAppName}} -sshRSAPublicKey \"$(sshRSAPublicKey)\" -servicePrincipalClientId \"$(servicePrincipalClientId)\" -servicePrincipalClientSecret \"$(servicePrincipalClientSecret)\"",
