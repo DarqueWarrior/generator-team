@@ -25,6 +25,8 @@ module.exports = class extends Generator {
       argUtils.dockerRegistryId(this);
       argUtils.dockerPorts(this);
       argUtils.dockerRegistryPassword(this);
+      argUtils.servicePrincipalId(this);
+      argUtils.servicePrincipalKey(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
    }
@@ -85,7 +87,7 @@ module.exports = class extends Generator {
       var done = this.async();
 
       util.supportsLoadTests(this.tfs, this.pat, function (e, supportsLoadTests) {
-         _this.removeloadTest = !supportsLoadTests;
+         _this.removeLoadTest = !supportsLoadTests;
 
          app.getRelease(_this, function (e, result) {
             var release = _this.templatePath(result);

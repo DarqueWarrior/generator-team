@@ -810,7 +810,7 @@ describe(`release:app`, function () {
          type: `asp`,
          target: `dockerpaas`,
          tfs: `http://tfs:8080/tfs/DefaultCollection`,
-         removeloadTest: true
+         removeLoadTest: true
       }, function (e, actual) {
          // Assert
          assert.equal(expected, actual);
@@ -829,7 +829,7 @@ describe(`release:app`, function () {
          type: `java`,
          target: `paas`,
          tfs: `vsts`,
-         removeloadTest: true
+         removeLoadTest: true
       }, function (e, actual) {
          // Assert
          assert.equal(expected, actual);
@@ -846,7 +846,7 @@ describe(`release:app`, function () {
          type: `java`,
          target: `paasslots`,
          tfs: `vsts`,
-         removeloadTest: true
+         removeLoadTest: true
       }, function (e, actual) {
          // Assert
          assert.equal(expected, actual);
@@ -863,7 +863,7 @@ describe(`release:app`, function () {
          type: `java`,
          target: `docker`,
          tfs: `vsts`,
-         removeloadTest: true
+         removeLoadTest: true
       }, function (e, actual) {
          // Assert
          assert.equal(expected, actual);
@@ -880,7 +880,7 @@ describe(`release:app`, function () {
          type: `java`,
          target: `acilinux`,
          tfs: `vsts`,
-         removeloadTest: true
+         removeLoadTest: true
       }, function (e, actual) {
          // Assert
          assert.equal(expected, actual);
@@ -897,7 +897,7 @@ describe(`release:app`, function () {
          type: `asp`,
          target: `dockerpaas`,
          tfs: `vsts`,
-         removeloadTest: true
+         removeLoadTest: true
       }, function (e, actual) {
          // Assert
          assert.equal(expected, actual);

@@ -9,7 +9,7 @@ function addRelease(obj) {
          queue, obj.target,
          obj.azureSub, obj.sshRSAPublicKey,
          obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
-         obj.dockerRegistryPassword, obj.pat, obj.customFolder
+         obj.dockerRegistryPassword, obj.servicePrincipalId, obj.servicePrincipalKey, obj.pat, obj.customFolder
       ]
    });
 }

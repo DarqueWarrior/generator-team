@@ -132,7 +132,7 @@ function getRelease(args, callback) {
          if (result) {
 
             // see if they support load tests or not
-            if (args.removeloadTest && args.target === `dockerpaas`) {
+            if (args.removeLoadTest && args.target === `dockerpaas`) {
                release = `vsts_release_${args.target}_noloadtest.json`;
             } else {
                release = `vsts_release_${args.target}.json`;
@@ -156,7 +156,7 @@ function getRelease(args, callback) {
                   release = `vsts_release_slots.json`;
                } else {
                   // see if they support load tests or not
-                  if (args.removeloadTest) {
+                  if (args.removeLoadTest) {
                      release = `vsts_release_noloadtest.json`;
                   } else {
                      release = `vsts_release.json`;
