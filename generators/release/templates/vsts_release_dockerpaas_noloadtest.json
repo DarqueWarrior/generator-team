@@ -208,26 +208,6 @@
                         "enableDeploymentPrerequisitesForSelect": "false",
                         "outputVariable": ""
                      }
-                  },
-                  {
-                     "taskId": "9648625c-1523-4eb5-b015-dfe7c685840c",
-                     "version": "1.*",
-                     "name": "Quick Web Performance Test Load Test",
-                     "enabled": true,
-                     "alwaysRun": false,
-                     "continueOnError": false,
-                     "timeoutInMinutes": 0,
-                     "definitionType": "task",
-                     "inputs": {
-                        "connectedServiceName": "",
-                        "websiteUrl": "$(webSiteURL)",
-                        "testName": "Load Test",
-                        "vuLoad": "25",
-                        "runDuration": "60",
-                        "geoLocation": "Default",
-                        "machineType": "0",
-                        "avgResponseTimeThreshold": "0"
-                     }
                   }
                ]
             }

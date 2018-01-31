@@ -11,6 +11,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "npm install bower",
+         "refName": "install_bower",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -28,6 +29,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Run bower",
+         "refName": "run_bower",
          "timeoutInMinutes": 0,
          "task": {
             "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
@@ -46,6 +48,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Maven pom.xml",
+         "refName": "maven",
          "timeoutInMinutes": 0,
          "task": {
             "id": "ac4ee482-65da-4485-a532-7b085873e532",
@@ -84,6 +87,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Extract war file",
+         "refName": "war",
          "timeoutInMinutes": 0,
          "task": {
             "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
@@ -104,6 +108,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Copy parameters.xml",
+         "refName": "copy_xml",
          "timeoutInMinutes": 0,
          "task": {
             "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
@@ -123,6 +128,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Zip as MSDeploy",
+         "refName": "zip",
          "timeoutInMinutes": 0,
          "task": {
             "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
@@ -143,6 +149,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Copy Files",
+         "refName": "copy_files",
          "timeoutInMinutes": 0,
          "task": {
             "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
@@ -162,6 +169,7 @@
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Publish Artifact: drop",
+         "refName": "publish_artifacts",
          "timeoutInMinutes": 0,
          "task": {
             "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",

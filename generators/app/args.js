@@ -1,30 +1,51 @@
 const util = require(`./utility`);
 
+function profileCmd(obj) {
+   obj.argument(`profileCmd`, {
+      required: false,
+      desc: `Add, Delete or List`
+   });
+}
+
+function profileName(obj) {
+   obj.argument(`profileName`, {
+      required: false,
+      desc: `Name of the profile to store or load`
+   });
+}
+
+function tfsVersion(obj) {
+   obj.argument(`tfsVersion`, {
+      required: false,
+      desc: `API version to store in profile`
+   });
+}
+
 function applicationType(obj) {
    obj.argument(`type`, {
       required: false,
-      desc: `project type to create (asp, node, java or custom)`
+      desc: `Project type to create (asp, node, java or aspFull)`
    });
 }
 
 function applicationName(obj) {
    obj.argument(`applicationName`, {
       required: false,
-      desc: `name of the application`
+      desc: `Name of the application`
    });
 }
 
 function customFolder(obj) {
    obj.argument(`customFolder`, {
       required: false,
-      desc: `path to folder of build & release templates`
+      desc: `Path to folder of build & release templates`
    });
 }
 
 function tfs(obj) {
    obj.argument(`tfs`, {
       required: false,
-      desc: `full tfs URL including collection or Team Services account name`
+      desc: `Full TFS URL with collection, VSTS account or Profile`
    });
 }
 
@@ -59,28 +80,28 @@ function servicePrincipalId(obj) {
 function queue(obj) {
    obj.argument(`queue`, {
       required: false,
-      desc: `agent queue name to use`
+      desc: `Agent queue to use`
    });
 }
 
 function target(obj) {
    obj.argument(`target`, {
       required: false,
-      desc: `docker or Azure app service`
+      desc: `Docker or Azure app service`
    });
 }
 
 function installDep(obj) {
    obj.argument(`installDep`, {
       required: false,
-      desc: `if true dependencies are installed`
+      desc: `If true dependencies are installed`
    });
 }
 
 function groupId(obj) {
    obj.argument(`groupId`, {
       required: false,
-      desc: `groupId of Java project`
+      desc: `Group ID of Java project`
    });
 }
 
@@ -94,35 +115,35 @@ function dockerHost(obj) {
 function dockerCertPath(obj) {
    obj.argument(`dockerCertPath`, {
       required: false,
-      desc: `path to Docker certs folder`
+      desc: `Path to Docker certs folder`
    });
 }
 
 function dockerRegistry(obj) {
    obj.argument(`dockerRegistry`, {
       required: false,
-      desc: `server of your Docker registry`
+      desc: `Server of your Docker registry`
    });
 }
 
 function dockerRegistryId(obj) {
    obj.argument(`dockerRegistryId`, {
       required: false,
-      desc: `username for Docker registry`
+      desc: `Username for Docker registry`
    });
 }
 
 function dockerPorts(obj) {
    obj.argument(`dockerPorts`, {
       required: false,
-      desc: `port mapping for container and host`
+      desc: `Port mapping for container and host`
    });
 }
 
 function dockerRegistryPassword(obj) {
    obj.argument(`dockerRegistryPassword`, {
       required: false,
-      desc: `password for your Docker registry`
+      desc: `Password for your Docker registry`
    });
 }
 
@@ -143,7 +164,7 @@ function pat(obj) {
 function gitAction(obj) {
    obj.argument(`action`, {
       required: false,
-      desc: `the Git action to take`
+      desc: `Git action to take`
    });
 }
 
@@ -156,6 +177,9 @@ module.exports = {
    azureSub: azureSub,
    tenantId: tenantId,
    gitAction: gitAction,
+   profileCmd: profileCmd,
+   profileName: profileName,
+   tfsVersion: tfsVersion,
    azureSubId: azureSubId,
    installDep: installDep,
    dockerHost: dockerHost,

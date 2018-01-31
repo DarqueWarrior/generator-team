@@ -1,3 +1,5 @@
+const fs = require('fs');
+const os = require('os');
 const url = require('url');
 const request = require(`request`);
 const package = require('../../package.json');
@@ -8,6 +10,9 @@ const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
 
+const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
+
+var profile = null;
 var logging = process.env.LOGYO || `off`;
 
 var logMessage = function (msg) {
@@ -144,10 +149,10 @@ function getAppTypes(answers) {
       name: `Java`,
       value: `java`
    }
-   // , {
-   //    name: `Custom`,
-   //    value: `custom`
-   // }
+      // , {
+      //    name: `Custom`,
+      //    value: `custom`
+      // }
    ];
 
    // If this is not a Linux based agent also show
@@ -179,7 +184,7 @@ function getPATPrompt(answers) {
 }
 
 function getInstancePrompt() {
-   return `Enter Team Services account name\n  ({account}.visualstudio.com)\n  Or full TFS URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)?`;
+   return `Enter VSTS account name\n  ({account}.visualstudio.com)\n  Or full TFS URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)\n  Or name of a stored Profile?`;
 }
 
 function getDefaultPortMapping(answers) {
@@ -212,6 +217,10 @@ function validatePortMapping(input) {
 
 function validateGroupID(input) {
    return validateRequired(input, `You must provide a Group ID`);
+}
+
+function validateProfileName(input) {
+   return validateRequired(input, `You must provide a profile name`);
 }
 
 function validateCustomFolder(input) {
@@ -420,6 +429,17 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
    'use strict';
 
    // There is nothing to do
+   // This will be true when the user selected Linux for the build queue. 
+   // Because we use ARM deployment with the Hosted VS2017 queue even if
+   // the user selected Linux for build the call to needsDockerHost may
+   // return true for build. However, if they select Linux for build they
+   // would not be prompted for a docker host and dockerHost will be empty.
+   // In that case just return. When user is calling from the command line
+   // and they pass in Linux they have to leave dockerHost empty.  If they
+   // pass in Linux and a dockerHost they will get an error saying the 
+   // docker service endpoint could not be found. That is because we did
+   // not create one because the Hosted Linux build has the docker tools
+   // so we don't need an external host so no service endpoint was created.
    if (!dockerHost) {
       callback(null, null);
       return;
@@ -780,6 +800,33 @@ function getAzureSubs(answers) {
    });
 }
 
+function getProfileCommands(answers) {
+   "use strict";
+
+   return [{
+      name: `Add`,
+      value: `add`
+   }, {
+      name: `List`,
+      value: `list`
+   }, {
+      name: `Delete`,
+      value: `delete`
+   }];
+}
+
+function getTFSVersion(answers) {
+   "use strict";
+
+   return [{
+      name: `TFS2017`,
+      value: `TFS2017`
+   }, {
+      name: `TFS2018`,
+      value: `TFS2018`
+   }];
+}
+
 function getPools(answers) {
    "use strict";
 
@@ -814,7 +861,67 @@ function isDockerHub(dockerRegistry) {
    return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
 }
 
+function loadProfiles() {
+
+   let results = {
+      error: null,
+      profiles: null
+   };
+
+   if (fs.existsSync(PROFILE_PATH)) {
+      try {
+         results.profiles = JSON.parse(fs.readFileSync(PROFILE_PATH, 'utf8'));
+      } catch (error) {
+         // The file is invalid
+         results.error = `Invalid file.`;
+      }
+   } else {
+      results.error = `No profiles file.`;
+   }
+
+   return results;
+}
+
+// Reads profiles created by the VSTeam PowerShell module.
+// Search ignores case.
+function searchProfiles(input) {
+   let results = loadProfiles();
+
+   if (results.profiles !== null) {
+      var found = results.profiles.filter(function (i) {
+         return i.Name.toLowerCase() === input.toLowerCase() && i.Type === `Pat`;
+      });
+
+      if (found.length !== 0) {
+         return found[0];
+      }
+   }
+
+   return null;
+}
+
+function readPatFromProfile(answers, obj) {
+   if (profile) {
+      // Profiles are stored 64 bit encoded
+      let b = new Buffer(profile.Pat, 'base64');
+      // Skip the leading :
+      obj.options.pat = b.toString().substring(1);
+   }
+   // If the value was passed on the command line it will
+   // not be set in answers which other prompts expect.
+   // So, place it in answers now.
+   answers.pat = obj.options.pat;
+
+   return obj.options.pat === undefined;
+}
+
 function extractInstance(input) {
+   profile = searchProfiles(input);
+
+   if (profile !== null) {
+      input = profile.URL;
+   }
+
    // When using VSTS we only want the account name but
    // people continue to give the entire url which will
    // cause issues later. So check to see if the value
@@ -834,14 +941,14 @@ function extractInstance(input) {
    return match[1];
 }
 
-function needsRegistry(answers, cmdLnInput) {
-   if (cmdLnInput !== undefined) {
+function needsRegistry(answers, options) {
+   if (options !== undefined) {
       return (answers.target === `docker` ||
-         cmdLnInput.target === `docker` ||
+         options.target === `docker` ||
          answers.target === `acilinux` ||
-         cmdLnInput.target === `acilinux` ||
+         options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.target === `dockerpaas`);
+         options.target === `dockerpaas`);
    } else {
       return (answers.target === `docker` ||
          answers.target === `acilinux` ||
@@ -849,25 +956,25 @@ function needsRegistry(answers, cmdLnInput) {
    }
 }
 
-function needsDockerHost(answers, cmdLnInput) {
+function needsDockerHost(answers, options) {
    let isDocker;
    let paasRequiresHost;
 
-   if (cmdLnInput !== undefined) {
+   if (options !== undefined) {
       // If you pass in the target on the command line 
-      // answers.target will be undefined so test cmdLnInput
-      isDocker = (answers.target === `docker` || cmdLnInput.target === `docker`);
+      // answers.target will be undefined so test options
+      isDocker = (answers.target === `docker` || options.target === `docker`);
 
       // This will be true if the user did not select the Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
-            cmdLnInput.target === `dockerpaas` ||
-            answers.target === `acilinux` ||
-            cmdLnInput.target === `acilinux`) &&
+         options.target === `dockerpaas` ||
+         answers.target === `acilinux` ||
+         options.target === `acilinux`) &&
          ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
-            (cmdLnInput.queue === undefined || cmdLnInput.queue.indexOf(`Linux`) === -1));
+            (options.queue === undefined || options.queue.indexOf(`Linux`) === -1));
    } else {
       // If you pass in the target on the command line 
-      // answers.target will be undefined so test cmdLnInput
+      // answers.target will be undefined so test options
       isDocker = answers.target === `docker`;
 
       // This will be true the user did not select the Hosted Linux queue
@@ -881,13 +988,13 @@ function needsDockerHost(answers, cmdLnInput) {
 function isPaaS(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       return (answers.target === `paas` ||
-         cmdLnInput.target === `paas` ||
+         cmdLnInput.options.target === `paas` ||
          answers.target === `paasslots` ||
-         cmdLnInput.target === `paasslots` ||
+         cmdLnInput.options.target === `paasslots` ||
          answers.target === `acilinux` ||
-         cmdLnInput.target === `acilinux` ||
+         cmdLnInput.options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.target === `dockerpaas`);
+         cmdLnInput.options.target === `dockerpaas`);
    } else {
       return (answers.target === `paas` ||
          answers.target === `paasslots` ||
@@ -897,7 +1004,56 @@ function isPaaS(answers, cmdLnInput) {
 }
 
 function isVSTS(instance) {
-   return instance.toLowerCase().match(/http/) === null;
+   if (instance) {
+      return instance.toLowerCase().match(/http/) === null || instance.toLowerCase().match(/visualstudio\.com/) !== null;
+   }
+
+   return false;
+}
+
+function supportsLoadTests(account, token, callback) {
+   if (isVSTS(account)) {
+      let pat = encodePat(token);
+
+      // We can determine if this is 2017 or not by searching for a 
+      // specific docker task.
+      var options = addUserAgent({
+         "method": `GET`,
+         "headers": {
+            "cache-control": `no-cache`,
+            "authorization": `Basic ${pat}`
+         },
+         "url": `${getFullURL(account)}/_api/_account/GetAccountSettings?__v=5`
+      });
+
+      request(options, function (error, response, body) {
+         if (error) {
+            callback(error, undefined);
+         } else if (response.statusCode >= 200 && response.statusCode < 300) {
+            let obj = {};
+            let result = true;
+
+            try {
+               obj = JSON.parse(body);
+
+               if (obj.accountRegion === `West Central US`) {
+                  result = false;
+               }
+
+               callback(undefined, result);
+            } catch (error) {
+               // This a HTML page with an error message.
+               err = error;
+               console.log(body);
+               callback(err, true);
+            }
+         } else {
+            callback(undefined, true);
+         }
+      });
+   } else {
+      callback(undefined, false);
+   }
 }
 
 //
@@ -961,6 +1117,7 @@ module.exports = {
 
    // Exports the portions of the file we want to share with files that require
    // it.
+   PROFILE_PATH: PROFILE_PATH,
    BUILD_API_VERSION: BUILD_API_VERSION,
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,
@@ -986,13 +1143,16 @@ module.exports = {
    isDockerHub: isDockerHub,
    getAzureSubs: getAzureSubs,
    findAzureSub: findAzureSub,
+   loadProfiles: loadProfiles,
    getPATPrompt: getPATPrompt,
    tryFindBuild: tryFindBuild,
    addUserAgent: addUserAgent,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
+   getTFSVersion: getTFSVersion,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
+   searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
@@ -1000,9 +1160,13 @@ module.exports = {
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
+   supportsLoadTests: supportsLoadTests,
+   getProfileCommands: getProfileCommands,
+   readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    validatePortMapping: validatePortMapping,
+   validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
    validateCustomFolder: validateCustomFolder,

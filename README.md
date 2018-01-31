@@ -3,9 +3,6 @@
 ## Build status
 ![](https://dlb.visualstudio.com/_apis/public/build/definitions/40202688-4713-4e5d-85ea-958146d71db6/53/badge)
 
-## Revision history
-[Changes](https://github.com/DarqueWarrior/generator-team/wiki)
-
 ## See it in action
 [Ignite New Zealand 2016](https://channel9.msdn.com/Events/Ignite/New-Zealand-2016/M328)
 
@@ -47,3 +44,97 @@ You can read how to use it at [DonovanBrown.com](http://donovanbrown.com/post/yo
 
 ## Debug
 You can debug the generator using [VS Code](http://code.visualstudio.com/). You need to update the launch.json. Replace any value in [] with your information.  Use [npm link](https://docs.npmjs.com/cli/link) from the root folder to load your local version.
+
+## Revision history
+# December 2017
+## 0.4.1
+Added support to read profiles from [VSTeam](https://www.powershellgallery.com/packages/VSTeam/) Module. Only profiles of type Pat are supported. If you enter a profile name of type OnPremise you will still be prompted for a Pat.
+
+Added Profile sub generator to Add, List and Delete profiles. 
+
+# November 2017
+## 0.3.8
+Upgraded .NET Core to 2.0.
+
+# October 2017
+## 0.3.7-6
+Now Supports Deployment slots with App Service.
+
+# September 2017
+## 0.3.6
+Now supports [Azure Container Instances](https://docs.microsoft.com/en-us/azure/container-instances/?WT.mc_id=docs-github-dbrown).  You can read how to find the public IP in my blog post [Yo Team, meet Azure Container Instances](http://www.donovanbrown.com/post/Yo-Team-meet-Azure-Container-Instances). 
+
+# July 2017
+## 0.3.5
+Merge [Pull Request](https://github.com/DarqueWarrior/generator-team/pull/7) from [Daniel Meixner](https://github.com/DanielMeixner) which included the following:
+- Install specific version of .NET Core for ASP.NET Core 
+
+## 0.3.4
+Fixed bug in Java Docker Build
+
+## 0.3.3
+Fixed spelling error
+
+# June 2017
+## 0.3.1
+Fixed dependencies so users do not need Mocha installed.
+
+## 0.3.0
+.NET Core
+- Migrated .net core to csproj and updated all references.
+- The Hosted build pool is no longer supported for the .NET Core project. The upgrade to csproj is not supported on Hosted. Use HostedVS2017, Hosted Linux or private agent.
+- Removed Code coverage from .NET Core because solution was not cross-platform. It only worked on Windows agents. 
+
+Node.js
+- Fixed issue with Node.js code coverage.
+
+Java, Node.js & .NET Core
+- Adding support for running [Docker images in Azure App Service](https://docs.microsoft.com/en-us/azure/app-service-web/app-service-linux-using-custom-docker-image). Working with Product team to see why images initial load takes so long.
+
+Release Defs
+- Updated task versions
+- The following task were not updated due to breaking changes:
+- Azure Resource Group Deployment
+- Azure App Service Deploy
+
+General
+- Updated generator npm dependencies.
+
+# March 2017
+## 0.2.5
+Updated the Azure Resource Manager Service Endpoints to work with the Azure Portal Continuous Delivery feature.
+Fixed bug in Azure sub generator that asked for information not needed when using VSTS.
+
+## 0.2.4
+Fixed some issues with TFS after locking versions for VSTS. Some of the build templates were used for both and locking versions caused issues on TFS.
+
+## 0.2.3
+Added Full .NET Framework support but only for Azure App Service.
+
+## 0.2.2
+Locked Tasks to specific version. This will prevent auto updates from breaking builds and releases.
+
+Changed release template for PaaS to include Web Performance Test.
+
+Changed release to default to latest version of build for manual releases.
+
+Changed ARM templates to add unique string after Website Name.  This will help make sure final website URL is globally unique.
+
+ASP sub generator only supports .net core 1.0 RC2. RC 3 and above switched to CSPROJ.  yo Team uses hosted agents as lowest common denominator and we will update as soon as CSPROJ is supported on hosted agents.
+
+# February 2017
+## 0.2.1
+Fixed a bug in the App Service deployment after adding ACR support.
+
+## 0.2.0
+Has breaking changes from previous version.  Removed the email parameter for Docker Registries and added support for Azure Container Registry.  Now you can use [Docker Hub](https://hub.docker.com/) or [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/).
+ 
+# January 2017
+## 0.1.3
+Improved build names from just build id to build definition name plus build id
+
+## 0.1.2
+Added User-Agent Header to request so calls could be identified by VSTS Team telemetry.
+
+## 0.1.0
+Initial release

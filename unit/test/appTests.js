@@ -38,7 +38,7 @@ describe(`app:index`, function () {
       let pat = `token`;
 
       // Act
-      return helpers.run(path.join(__dirname, `../../generators/app/index`))
+      return helpers.run(path.join(__dirname, `../../generators/app`))
          .withGenerators(deps)
          .withArguments([type, name, tfs,
             azureSub, azureSubId, tenantId, servicePrincipalId,

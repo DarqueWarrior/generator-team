@@ -1,18 +1,85 @@
+const fs = require(`fs`);
 const path = require(`path`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
-const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
+const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const project = require(`../../generators/project/app`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
-describe(`project:index cmdLine`, function () {
+describe(`project:index`, function () {
    "use strict";
 
-   it(`project should be found`, function () {
+   it(`project should be found prompts`, function () {
+      var profiles = `
+      [
+         {
+            "Name": "unitTest",
+            "URL": "http://localhost:8080/tfs/defaultcollection",
+            "Pat": "",
+            "Type": "Pat",
+            "Version": "TFS2017"
+         },
+         {
+            "Name": "http://192.168.1.3:8080/tfs/defaultcollection",
+            "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+            "Pat": "OnE2cXpseHk0YXp3dHpz",
+            "Type": "Pat",
+            "Version": "TFS2017"
+         },
+         {
+            "Name": "test",
+            "URL": "https://test.visualstudio.com",
+            "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+            "Type": "Pat",
+            "Version": "VSTS"
+         }
+      ]`;
+
+      var spy;
+      var utilTryFindProject;
+
+      return helpers.run(path.join(__dirname, `../../generators/project/index`))
+         .withPrompts({
+            applicationName: `unitTest`,
+            tfs: `unitTest`
+         })
+         .on(`error`, function (error) {
+            fs.existsSync.restore();
+            fs.readFileSync.restore();
+            util.tryFindProject.restore();
+
+            assert.fail(error);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before generator.run() is called
+            sinon.stub(fs, `existsSync`).returns(true);
+            sinon.stub(fs, `readFileSync`).returns(profiles);
+            generator.log = spy = sinon.spy();
+            utilTryFindProject = sinon.stub(util, `tryFindProject`).callsArgWith(4, null, JSON.stringify({
+               name: `unitTest`,
+               id: 1
+            }));
+         })
+         .on(`end`, function () {
+            fs.existsSync.restore();
+            fs.readFileSync.restore();
+            util.tryFindProject.restore();
+
+            var call = spy.getCall(0);
+            assert.ok(call, `generator.log was not called`);
+
+            var actual = call.args[0];
+            assert.equal(`+ Found Team project`, actual, `generator.log was called with wrong value`);
+
+            assert.equal(1, utilTryFindProject.callCount, `util.tryFindProject was not called`);
+         });
+   });
+
+   it(`project should be found cmdLine`, function () {
       var spy;
       var utilTryFindProject;
 
@@ -26,7 +93,10 @@ describe(`project:index cmdLine`, function () {
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
             generator.log = spy = sinon.spy();
-            utilTryFindProject = sinon.stub(util, `tryFindProject`).callsArgWith(4, null, JSON.stringify({ name: `unitTest`, id: 1 }));
+            utilTryFindProject = sinon.stub(util, `tryFindProject`).callsArgWith(4, null, JSON.stringify({
+               name: `unitTest`,
+               id: 1
+            }));
          })
          .on(`end`, function () {
             var call = spy.getCall(0);
@@ -45,7 +115,7 @@ describe(`project:index cmdLine`, function () {
 describe(`project:app`, function () {
    "use strict";
 
-   it(`run with error should return error`, sinon.test(function (done) {
+   it(`run with error should return error`, sinonTest(function (done) {
       // Arrange
       // return so the code thinks an error occurred 
       this.stub(util, `tryFindProject`).callsArgWith(4, new Error("boom"), null);
@@ -59,7 +129,7 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () { }
+         log: function () {}
       };
 
       // Act
@@ -78,12 +148,14 @@ describe(`project:app`, function () {
       });
    }));
 
-   it(`findOrCreateProject should create project`, sinon.test(function (done) {
+   it(`findOrCreateProject should create project`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../../generators/project/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/project/app`, {
+         "request": requestStub
+      });
 
       // Setup the stub. This stub will be called with two arguments.
       // The first is an options object and the second is a callback
@@ -95,12 +167,22 @@ describe(`project:app`, function () {
       // return so the code thinks the project was not found
       this.stub(util, `tryFindProject`).callsArgWith(4, null, undefined);
       // Create Project
-      requestStub.onCall(0).yields(null, null, { name: `myProject`, url: `http://localhost:8080/tfs/_apis/projects/2` });
+      requestStub.onCall(0).yields(null, null, {
+         name: `myProject`,
+         url: `http://localhost:8080/tfs/_apis/projects/2`
+      });
       // Check Status
-      this.stub(util, `checkStatus`).callsArgWith(3, null, { status: `succeeded` });
+      this.stub(util, `checkStatus`).callsArgWith(3, null, {
+         status: `succeeded`
+      });
 
       // Get Project
-      requestStub.onCall(1).yields(null, { statusCode: 200 }, JSON.stringify({ name: `myProject`, id: `myProjectID` }));
+      requestStub.onCall(1).yields(null, {
+         statusCode: 200
+      }, JSON.stringify({
+         name: `myProject`,
+         id: `myProjectID`
+      }));
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -111,7 +193,7 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () { }
+         log: function () {}
       };
 
       // Act
@@ -126,12 +208,14 @@ describe(`project:app`, function () {
          });
    }));
 
-   it(`findOrCreateProject should fail calling final GET`, sinon.test(function (done) {
+   it(`findOrCreateProject should fail calling final GET`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../../generators/project/app.js`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/project/app.js`, {
+         "request": requestStub
+      });
 
       // Setup the stub. This stub will be called with two arguments.
       // The first is an options object and the second is a callback
@@ -144,13 +228,19 @@ describe(`project:app`, function () {
       this.stub(util, `tryFindProject`).callsArgWith(4, null, undefined);
 
       // Create Project
-      requestStub.onCall(0).yields(null, null, JSON.stringify({ name: `myProject` }));
+      requestStub.onCall(0).yields(null, null, JSON.stringify({
+         name: `myProject`
+      }));
 
       // Check Status
-      this.stub(util, `checkStatus`).callsArgWith(3, null, { status: `succeeded` });
+      this.stub(util, `checkStatus`).callsArgWith(3, null, {
+         status: `succeeded`
+      });
 
       // Get Project
-      requestStub.onCall(1).yields({ message: `Error sending request` }, null, undefined);
+      requestStub.onCall(1).yields({
+         message: `Error sending request`
+      }, null, undefined);
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -161,7 +251,7 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () { }
+         log: function () {}
       };
 
       // Act
@@ -175,12 +265,14 @@ describe(`project:app`, function () {
          });
    }));
 
-   it(`findOrCreateProject should fail to find new project`, sinon.test(function (done) {
+   it(`findOrCreateProject should fail to find new project`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
       var requestStub = sinon.stub();
-      const proxyApp = proxyquire(`../../generators/project/app`, { "request": requestStub });
+      const proxyApp = proxyquire(`../../generators/project/app`, {
+         "request": requestStub
+      });
 
       // Setup the stub. This stub will be called with two arguments.
       // The first is an options object and the second is a callback
@@ -193,12 +285,18 @@ describe(`project:app`, function () {
       this.stub(util, `tryFindProject`).callsArgWith(4, null, undefined);
 
       // Create Project
-      requestStub.onCall(0).yields(null, null, JSON.stringify({ name: `myProject` }));
+      requestStub.onCall(0).yields(null, null, JSON.stringify({
+         name: `myProject`
+      }));
       // Check Status
-      this.stub(util, `checkStatus`).callsArgWith(3, null, { status: `succeeded` });
+      this.stub(util, `checkStatus`).callsArgWith(3, null, {
+         status: `succeeded`
+      });
 
       // Get Project
-      requestStub.onCall(1).yields(null, { statusCode: 404 }, null);
+      requestStub.onCall(1).yields(null, {
+         statusCode: 404
+      }, null);
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -209,10 +307,10 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () { }
+         log: function () {}
       };
 
-      args.log.error = function () { };
+      args.log.error = function () {};
 
       // Act
       proxyApp.findOrCreateProject(

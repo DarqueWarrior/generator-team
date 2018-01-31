@@ -1,13 +1,13 @@
 const path = require(`path`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
-const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
+const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const azure = require(`../../generators/azure/app`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
 describe(`azure:index`, function () {
    it(`prompts vsts`, function () {
@@ -45,7 +45,7 @@ describe(`azure:index`, function () {
 describe(`azure:app`, function () {
    "use strict";
 
-   it(`run with existing endpoint should run without error tfs`, sinon.test(function (done) {
+   it(`run with existing endpoint should run without error tfs`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, { name: `endpoint`, id: 1 });
@@ -73,7 +73,7 @@ describe(`azure:app`, function () {
       });
    }));
 
-   it(`run with existing endpoint should run without error vsts`, sinon.test(function (done) {
+   it(`run with existing endpoint should run without error vsts`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, null, { name: `endpoint`, id: 1 });
@@ -102,7 +102,7 @@ describe(`azure:app`, function () {
       });
    }));
 
-   it(`run with error should return error vsts`, sinon.test(function (done) {
+   it(`run with error should return error vsts`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `findAzureSub`).callsArgWith(4, null, undefined);
       this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
@@ -133,7 +133,7 @@ describe(`azure:app`, function () {
       });
    }));
 
-   it(`run with error should return error`, sinon.test(function (done) {
+   it(`run with error should return error`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
       this.stub(util, `tryFindAzureServiceEndpoint`).callsArgWith(5, new Error("boom"), null);
@@ -169,7 +169,7 @@ describe(`azure:app`, function () {
       });
    }));
 
-   it(`findOrCreateAzureServiceEndpoint should create endpoint Manual`, sinon.test(function (done) {
+   it(`findOrCreateAzureServiceEndpoint should create endpoint Manual`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -191,15 +191,15 @@ describe(`azure:app`, function () {
             assert.equal(ep.name, `endpoint`);
 
             assert.equal(`Manual`, requestStub.getCall(0).args[0].body.data.creationMode);
-            assert.equal(3, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalid, `serviceprincipalid is wrong`);
-            assert.equal(`key`, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalkey, `serviceprincipalkey is wrong`);
-            assert.equal(2, requestStub.getCall(0).args[0].body.authorization.parameters.tenantid, `tenantid is wrong`);
+            assert.equal(3, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalId, `servicePrincipalId is wrong`);
+            assert.equal(`key`, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalKey, `servicePrincipalKey is wrong`);
+            assert.equal(2, requestStub.getCall(0).args[0].body.authorization.parameters.tenantId, `tenantId is wrong`);
 
             done();
          });
    }));
 
-   it(`findOrCreateAzureServiceEndpoint should create endpoint Automatic`, sinon.test(function (done) {
+   it(`findOrCreateAzureServiceEndpoint should create endpoint Automatic`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -222,15 +222,15 @@ describe(`azure:app`, function () {
             assert.equal(ep.name, `endpoint`);
 
             assert.equal(`Automatic`, requestStub.getCall(0).args[0].body.data.creationMode, `creationMode is wrong`);
-            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalid, `serviceprincipalid is wrong`);
-            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.serviceprincipalkey, `serviceprincipalkey is wrong`);
-            assert.equal(5, requestStub.getCall(0).args[0].body.authorization.parameters.tenantid, `tenantid is wrong`);
+            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalId, `servicePrincipalId is wrong`);
+            assert.equal(``, requestStub.getCall(0).args[0].body.authorization.parameters.servicePrincipalKey, `servicePrincipalKey is wrong`);
+            assert.equal(5, requestStub.getCall(0).args[0].body.authorization.parameters.tenantId, `tenantId is wrong`);
 
             done();
          });
    }));
 
-   it(`findOrCreateAzureServiceEndpoint should return error if checkstatus fails`, sinon.test(function (done) {
+   it(`findOrCreateAzureServiceEndpoint should return error if checkstatus fails`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -256,7 +256,7 @@ describe(`azure:app`, function () {
          });
    }));
 
-   it(`findOrCreateAzureServiceEndpoint should return error if checkstatus has server error`, sinon.test(function (done) {
+   it(`findOrCreateAzureServiceEndpoint should return error if checkstatus has server error`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -282,7 +282,7 @@ describe(`azure:app`, function () {
          });
    }));
 
-   it(`findOrCreateAzureServiceEndpoint should return error`, sinon.test(function (done) {
+   it(`findOrCreateAzureServiceEndpoint should return error`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
