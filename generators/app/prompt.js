@@ -175,7 +175,6 @@ function applicationXamarinType(obj) {
         type: `list`,
         store: true,
         message: `What Xamarin application do you want to create?`,
-        default: obj.type,
         choices: util.getXamarinTypes,
         when: answers => {
             return answers.type === `xamarin`;
@@ -204,7 +203,7 @@ function applicationName(obj) {
         message: `What is the name of your application?`,
         validate: util.validateApplicationName,
         when: () => {
-            return obj.applicationName === undefined;
+            return obj.options.applicationName === undefined;
         }
     };
 }
@@ -217,7 +216,7 @@ function packageName(obj) {
       message: `What is the name of your package? (com.compagny)`,
       validate: util.validateApplicationName,
       when: () => {
-          return obj.packageName === undefined;
+          return obj.options.packageName === undefined;
       }
    };
 }

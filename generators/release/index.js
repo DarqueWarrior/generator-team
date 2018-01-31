@@ -80,39 +80,42 @@ module.exports = class extends Generator {
          _this.removeloadTest = !supportsLoadTests;
 
          app.getRelease(_this, function (e, result) {
-            var release = _this.templatePath(result);
-            var releaseName = '';
+         var release = '';
+         var releaseName = '';
+         var i = 0;
+             do {
+                 if(_this.type === `custom`) {
+                     release = path.join(_this.customFolder, result[i]);
+                 } else if (_this.type === `xamarin`){
+                     releaseName = result[i][0];
+                     release = _this.templatePath(result[i][1]);
+                 } else {
+                     release = _this.templatePath(result[i]);
+                 }
 
-            if (_this.type === `custom`) {
-               release = path.join(_this.customFolder, result);
-            } else if (_this.type === `xamarin`){
-               releaseName = result[i][0];
-               release = _this.templatePath(result[i][1]);
-             } else {
-               release = _this.templatePath(result[i]);
-             }
+                  var args = {
+                     pat: _this.pat,
+                     tfs: _this.tfs,
+                     queue: _this.queue,
+                     target: _this.target,
+                     releaseJson: release,
+                     releaseName: releaseName,
+                     azureSub: _this.azureSub,
+                     appName: _this.applicationName,
+                     project: _this.applicationName
+                  };
 
-            var args = {
-               pat: _this.pat,
-               tfs: _this.tfs,
-               queue: _this.queue,
-               target: _this.target,
-               releaseJson: release,
-               releaseName: releaseName,
-               azureSub: _this.azureSub,
-               appName: _this.applicationName,
-               project: _this.applicationName
-            };
+                  if (util.needsRegistry(_this)) {
+                     args.dockerHost = _this.dockerHost;
+                     args.dockerPorts = _this.dockerPorts;
+                     args.dockerRegistry = _this.dockerRegistry;
+                     args.dockerRegistryId = _this.dockerRegistryId;
+                     args.dockerRegistryPassword = _this.dockerRegistryPassword;
+                  }
 
-            if (util.needsRegistry(_this)) {
-               args.dockerHost = _this.dockerHost;
-               args.dockerPorts = _this.dockerPorts;
-               args.dockerRegistry = _this.dockerRegistry;
-               args.dockerRegistryId = _this.dockerRegistryId;
-               args.dockerRegistryPassword = _this.dockerRegistryPassword;
-            }
-
-            app.run(args, _this, done);
+                  app.run(args, _this, done);
+                  i++;
+            } while (result[i]);
          });
       });
    }
