@@ -14,7 +14,7 @@ function addRelease(obj) {
    }
 
    obj.composeWith(`team:release`, {
-      args: [obj.type, obj.applicationName, obj.tfs,
+      arguments: [obj.type, obj.applicationName, obj.tfs,
          queue, obj.target,
          obj.azureSub,
          obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
@@ -25,7 +25,7 @@ function addRelease(obj) {
 
 function addBuild(obj) {
    obj.composeWith(`team:build`, {
-      args: [obj.type, obj.applicationName, obj.tfs,
+      arguments: [obj.type, obj.applicationName, obj.tfs,
          obj.queue, obj.target,
          obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId,
          obj.pat, obj.customFolder
@@ -36,7 +36,7 @@ function addBuild(obj) {
 function addAzure(obj) {
    if (util.isPaaS(obj)) {
       obj.composeWith(`team:azure`, {
-         args: [obj.applicationName, obj.tfs,
+         arguments: [obj.applicationName, obj.tfs,
             obj.azureSub, obj.azureSubId, obj.tenantId, obj.servicePrincipalId, obj.servicePrincipalKey,
             obj.pat
          ]
@@ -46,7 +46,7 @@ function addAzure(obj) {
 
 function addProject(obj) {
    obj.composeWith(`team:project`, {
-      args: [obj.applicationName, obj.tfs,
+      arguments: [obj.applicationName, obj.tfs,
          obj.pat
       ]
    });
@@ -55,7 +55,7 @@ function addProject(obj) {
 function addRegistry(obj) {
    if (util.needsRegistry(obj)) {
       obj.composeWith(`team:registry`, {
-         args: [obj.applicationName, obj.tfs,
+         arguments: [obj.applicationName, obj.tfs,
             obj.dockerRegistry, obj.dockerRegistryId, obj.dockerRegistryPassword,
             obj.pat
          ]
@@ -64,9 +64,9 @@ function addRegistry(obj) {
 }
 
 function addDockerHost(obj) {
-   if (util.needsDockerHost(obj)) {
+   if (util.needsDockerHost({}, obj)) {
       obj.composeWith(`team:docker`, {
-         args: [obj.applicationName, obj.tfs,
+         arguments: [obj.applicationName, obj.tfs,
             obj.dockerHost, obj.dockerCertPath,
             obj.pat
          ]
@@ -77,17 +77,20 @@ function addDockerHost(obj) {
 function addLanguage(obj) {
    if (obj.type === `asp`) {
       obj.composeWith(`team:asp`, {
-         args: [obj.applicationName, obj.installDep, obj.dockerPorts]
+         arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
       });
    } else if (obj.type === `aspFull`) {
       obj.composeWith(`team:aspFull`, {
-         args: [obj.applicationName]
+         arguments: [obj.applicationName]
       });
    } else if (obj.type === `java`) {
       obj.composeWith(`team:java`, {
-         args: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
+         arguments: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
       });
    } else if (obj.type === `node`) {
+      obj.composeWith(`team:node`, {
+         arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
+      });
        obj.composeWith(`team:node`, {
            args: [obj.applicationName, obj.installDep, obj.dockerPorts]
        });
@@ -106,7 +109,7 @@ function addLanguage(obj) {
 
 function addGit(obj) {
    obj.composeWith(`team:git`, {
-      args: [obj.applicationName, obj.tfs,
+      arguments: [obj.applicationName, obj.tfs,
          `all`,
          obj.pat
       ]

@@ -10,6 +10,7 @@ localtest.ps1
 **/.env_vsts
 **/.env_tfs
 integration/temp.js
+integration/fullRegression.ps1
 
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -27,9 +28,11 @@ Components/
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
-[Rr]elease/
+generators/xamarin/[Rr]elease/
+generators/xamarinForms/[Rr]elease/
 x64/
-build/
+generators/xamarin/build/
+generators/xamarinForms/build/
 bld/
 [Bb]in/
 [Oo]bj/

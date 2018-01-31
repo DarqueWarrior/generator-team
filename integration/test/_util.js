@@ -20,6 +20,12 @@ var logMessage = function (msg) {
    }
 };
 
+var logJSON = function (msg) {
+   if (logging === `on`) {
+      console.log(JSON.stringify(JSON.parse(msg), null, 2));
+   }
+};
+
 var deleteFolderRecursive = function (path) {
    if (fs.existsSync(path)) {
       fs.readdirSync(path).forEach(function (file, index) {
@@ -43,5 +49,6 @@ module.exports = {
 
    rmdir: deleteFolderRecursive,
    log: logMessage,
+   logJSON: logJSON,
    isVSTS: isVSTS
 };

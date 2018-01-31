@@ -2,13 +2,13 @@ const path = require(`path`);
 const fs = require(`fs-extra`);
 const sinon = require(`sinon`);
 const helpers = require(`yeoman-test`);
-const sinonTest = require(`sinon-test`);
 const assert = require(`yeoman-assert`);
 const proxyquire = require(`proxyquire`);
+const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const registry = require(`../../generators/registry/app`);
 
-sinon.test = sinonTest.configureTest(sinon);
+const sinonTest = sinonTestFactory(sinon);
 
 describe(`registry:index`, function () {
    "use strict";
@@ -43,7 +43,7 @@ describe(`registry:index`, function () {
             });
          })
          .on(`end`, function () {
-            // Using the yeoman helpers and sinon.test did not play nice
+            // Using the yeoman helpers and sinonTest did not play nice
             // so clean up your stubs         
             cleanUp();
          });
@@ -80,7 +80,7 @@ describe(`registry:index`, function () {
             });
          })
          .on(`end`, function () {
-            // Using the yeoman helpers and sinon.test did not play nice
+            // Using the yeoman helpers and sinonTest did not play nice
             // so clean up your stubs         
             cleanUp();
          });
@@ -90,7 +90,7 @@ describe(`registry:index`, function () {
 describe(`registry:app`, function () {
    "use strict";
 
-   it(`run with existing endpoint should run without error`, sinon.test(function (done) {
+   it(`run with existing endpoint should run without error`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `findProject`).callsArgWith(4, null, {
          value: "TeamProject",
@@ -121,7 +121,7 @@ describe(`registry:app`, function () {
       });
    }));
 
-   it(`run with error should return error`, sinon.test(function (done) {
+   it(`run with error should return error`, sinonTest(function (done) {
       // Arrange
       this.stub(util, `findProject`).callsArgWith(4, null, {
          value: "TeamProject",
@@ -157,7 +157,7 @@ describe(`registry:app`, function () {
       });
    }));
 
-   it(`findOrCreateDockerRegistryServiceEndpoint should create endpoint`, sinon.test(function (done) {
+   it(`findOrCreateDockerRegistryServiceEndpoint should create endpoint`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -188,7 +188,7 @@ describe(`registry:app`, function () {
          });
    }));
 
-   it(`findOrCreateDockerRegistryServiceEndpoint should create endpoint`, sinon.test(function (done) {
+   it(`findOrCreateDockerRegistryServiceEndpoint should create endpoint`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
       // without this there would be no way to stub the request calls
@@ -227,7 +227,7 @@ describe(`registry:app`, function () {
       });
    }));
 
-   it(`findOrCreateDockerRegistryServiceEndpoint should short circuit`, sinon.test(function (done) {
+   it(`findOrCreateDockerRegistryServiceEndpoint should short circuit`, sinonTest(function (done) {
       // Arrange
 
       var logger = sinon.stub();

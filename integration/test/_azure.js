@@ -13,8 +13,8 @@ env(__dirname + '/.env', {
 var resourceClient;
 var domain = process.env.AZURE_TENANT_ID;
 var subscriptionId = process.env.AZURE_SUB_ID;
-var secret = process.env.SERVICE_PRINCIPAL_KEY;
-var clientId = process.env.SERVICE_PRINCIPAL_ID;
+var secret = process.env.AZURE_SECRET || process.env.SERVICE_PRINCIPAL_KEY;
+var clientId = process.env.AZURE_CLIENT_ID || process.env.SERVICE_PRINCIPAL_ID;
 
 function connectToAzure(cb) {
    // Entry point of the cleanup script
@@ -48,7 +48,7 @@ function deleteResourceGroup(resourceGroupName, callback) {
 function getAciIp(resourceGroupName, cb) {
    async.series([
          function (callback) {
-            resourceClient.resourceGroups.listResources(resourceGroupName, function (err, result, request, response) {
+            resourceClient.resources.listByResourceGroup(resourceGroupName, function (err, result, request, response) {
                if (err) {
                   return callback(err);
                }
@@ -87,7 +87,7 @@ function getAciIp(resourceGroupName, cb) {
 function getWebsiteURL(resourceGroupName, cb) {
    async.series([
          function (callback) {
-            resourceClient.resourceGroups.listResources(resourceGroupName, function (err, result, request, response) {
+            resourceClient.resources.listByResourceGroup(resourceGroupName, function (err, result, request, response) {
                if (err) {
                   return callback(err);
                }

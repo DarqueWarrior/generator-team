@@ -8,7 +8,6 @@ const request = require('request');
 const cheerio = require('cheerio');
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
-const parallel = require('mocha.parallel');
 const exec = require('child_process').exec;
 
 const userAgent = `yo team`;
@@ -21,18 +20,43 @@ env(__dirname + '/.env', {
 });
 
 function requestSite(applicationName, env, title, cb) {
+   // We need to try the AppService Docker sites at least twice. The first
+   // request downloads the image which can cause a server error. You just
+   // need to request the site a second time. 
+   // Wait before trying to access this site.
    azure.getWebsiteURL(`${applicationName}${env}`, function (e, url) {
       assert.ifError(e);
       util.log(`trying to access ${url}`);
+
       request({
-         url: url
+         url: url,
+         // The Azure AppService Docker support takes forever the first
+         // request
+         timeout: 60000
       }, function (err, res, body) {
-         assert.ifError(err);
+         if (!err) {
+            var dom = cheerio.load(body);
+            assert.equal(dom(`title`).text(), `${title}`);
 
-         var dom = cheerio.load(body);
-         assert.equal(dom(`title`).text(), `${title}`);
+            cb(err, res, body);
+         } else {
+            setTimeout(function () {
+               // Try one more time. I bet this was Azure AppService Docker timing out.
+               request({
+                  url: url,
+                  // The Azure AppService Docker support takes forever the first
+                  // request
+                  timeout: 60000
+               }, function (err, res, body) {
+                  if (!err) {
+                     var dom = cheerio.load(body);
+                     assert.equal(dom(`title`).text(), `${title}`);
+                  }
 
-         cb(err, res, body);
+                  cb(err, res, body);
+               });
+            }, 25000 + Math.floor((Math.random() * 1000) + 1));
+         }
       });
    });
 }
@@ -239,8 +263,9 @@ function runTests(iteration) {
                function (e) {
                   // Get the build log
                   vsts.getBuildLog(tfs, projectId, pat, id, userAgent, (e, logs) => {
-                     util.log(`buildResult:\r\n${result}\r\nlogs:\r\n${logs}`);
-                     assert.equal(result, `succeeded`, logs);
+                     util.log(`buildResult:\r\n${result}\r\nlogs:\r\n`);
+                     util.logJSON(logs);
+                     assert.equal(result, `succeeded`, JSON.stringify(JSON.parse(logs), null, 2));
                      done(e);
                   });
                }
@@ -274,7 +299,7 @@ function runTests(iteration) {
                },
                function (e) {
                   // Get the release log          
-                  util.log(`release in dev:\r\n${status}`);  
+                  util.log(`release in dev:\r\n${status}`);
                   assert.ok(status === `succeeded` || status === `partiallySucceeded`);
                   done(e);
                }
@@ -284,7 +309,7 @@ function runTests(iteration) {
          it(`dev site should be accessible`, function (done) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             requestSite(applicationName, "Dev", iteration.title, done);
          });
@@ -346,7 +371,7 @@ function runTests(iteration) {
          it(`qa site should be accessible`, function (done) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             requestSite(applicationName, "QA", iteration.title, done);
          });
@@ -396,7 +421,7 @@ function runTests(iteration) {
                   },
                   function (e) {
                      // Get the release log       
-                     util.log(`release in prod:\r\n${status}`);     
+                     util.log(`release in prod:\r\n${status}`);
                      assert.equal(status, `succeeded`);
                      done(e);
                   }
@@ -407,7 +432,7 @@ function runTests(iteration) {
          it(`prod site should be accessible`, function (done) {
             // Retry test up to 10 times
             // Some sites take a while to jit.
-            this.retries(10);
+            this.retries(30);
 
             requestSite(applicationName, "Prod", iteration.title, done);
          });
@@ -423,8 +448,12 @@ function runTests(iteration) {
          // Delete files, project, and resource group.
          async.parallel([
             function (inParallel) {
-               util.log(`delete project: ${projectId}`);
-               vsts.deleteProject(tfs, projectId, pat, userAgent, inParallel);
+               vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
+                  if (!e) {
+                     util.log(`delete project: ${p.id}`);
+                     vsts.deleteProject(tfs, p.id, pat, userAgent, inParallel);
+                  }
+               });
             },
             function (inParallel) {
                util.log(`delete folder: ${applicationName}`);
