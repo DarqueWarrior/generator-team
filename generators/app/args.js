@@ -1,17 +1,31 @@
 const util = require(`./utility`);
 
 function applicationType(obj) {
-   obj.argument(`type`, {
-      required: false,
-      desc: `project type to create (asp, node, java or custom)`
-   });
+    obj.argument(`type`, {
+        required: false,
+        desc: `project type to create (asp, node, java or custom)`
+    });
+}
+
+function applicationXamarinType(obj) {
+    obj.argument(`xamarinType`, {
+        required: false,
+        desc: `Xamarin type to create (Xamarin.Forms, Xamarin.iOS and Xamarin.Droid)`
+    });
 }
 
 function applicationName(obj) {
-   obj.argument(`applicationName`, {
-      required: false,
-      desc: `name of the application`
-   });
+    obj.argument(`applicationName`, {
+        required: false,
+        desc: `name of the application`
+    });
+}
+
+function packageName(obj) {
+    obj.argument(`packageName`, {
+        required: false,
+        desc: `name of the package`
+    });
 }
 
 function customFolder(obj) {
@@ -164,7 +178,9 @@ module.exports = {
    dockerCertPath: dockerCertPath,
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,
+   applicationXamarinType: applicationXamarinType,
    applicationName: applicationName,
+   packageName: packageName,
    dockerRegistryId: dockerRegistryId,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,

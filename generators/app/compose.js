@@ -92,9 +92,15 @@ function addLanguage(obj) {
            args: [obj.applicationName, obj.installDep, obj.dockerPorts]
        });
    } else if (obj.type === `xamarin`) {
-       obj.composeWith(`team:xamarin`, {
-           args: [obj.applicationName]
-       });
+      if(obj.xamarinType === 'native'){
+          obj.composeWith(`team:xamarin`, {
+              args: [obj.applicationName, obj.packageName]
+          });
+      }else{
+          obj.composeWith(`team:xamarinForms`, {
+              args: [obj.applicationName, obj.packageName]
+          });
+      }
    }
 }
 

@@ -17,7 +17,9 @@ function construct() {
    // These are position based arguments for this generator. If they are not provided
    // via the command line they will be queried during the prompting priority
    args.applicationType(this);
+   args.applicationXamarinType(this);
    args.applicationName(this);
+   args.packageName(this);
    args.tfs(this);
    args.azureSub(this);
    args.azureSubId(this);
@@ -57,7 +59,9 @@ function input() {
       prompts.pat(this),
       prompts.queue(this),
       prompts.applicationType(this),
+      prompts.applicationXamarinType(this),
       prompts.applicationName(this),
+      prompts.packageName(this),
       prompts.customFolder(this),      
       prompts.target(this),
       prompts.azureSubInput(this),
@@ -92,6 +96,7 @@ function input() {
       this.pat = util.reconcileValue(answers.pat, cmdLnInput.pat);
       this.tfs = util.reconcileValue(answers.tfs, cmdLnInput.tfs);
       this.type = util.reconcileValue(answers.type, cmdLnInput.type);
+      this.xamarinType = util.reconcileValue(answers.xamarinType, cmdLnInput.xamarinType);
       this.queue = util.reconcileValue(answers.queue, cmdLnInput.queue);
       this.target = util.reconcileValue(answers.target, cmdLnInput.target);
       this.groupId = util.reconcileValue(answers.groupId, cmdLnInput.groupId, ``);
@@ -105,6 +110,7 @@ function input() {
       this.dockerRegistry = util.reconcileValue(answers.dockerRegistry, cmdLnInput.dockerRegistry, ``);
       this.dockerCertPath = util.reconcileValue(answers.dockerCertPath, cmdLnInput.dockerCertPath, ``);
       this.applicationName = util.reconcileValue(answers.applicationName, cmdLnInput.applicationName, ``);
+      this.packageName = util.reconcileValue(answers.packageName, cmdLnInput.packageName, ``);
       this.dockerRegistryId = util.reconcileValue(answers.dockerRegistryId, cmdLnInput.dockerRegistryId, ``);
       this.servicePrincipalId = util.reconcileValue(answers.servicePrincipalId, cmdLnInput.servicePrincipalId, ``);
       this.servicePrincipalKey = util.reconcileValue(answers.servicePrincipalKey, cmdLnInput.servicePrincipalKey, ``);

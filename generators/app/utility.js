@@ -138,36 +138,49 @@ function getTargets(answers) {
 }
 
 function getAppTypes(answers) {
-   // Default to languages tha work on all agents
-   let types = [{
-      name: `.NET Core`,
-      value: `asp`
-   }, {
-      name: `Node.js`,
-      value: `node`
-   }, {
-      name: `Java`,
-      value: `java`
-   }, {
-      name: `Xamarin`,
-      value: `xamarin`
-   }
-   // , {
-   //    name: `Custom`,
-   //    value: `custom`
-   // }
-   ];
+    // Default to languages tha work on all agents
+    let types = [{
+        name: `.NET Core`,
+        value: `asp`
+    }, {
+        name: `Node.js`,
+        value: `node`
+    }, {
+        name: `Java`,
+        value: `java`
+    }, {
+        name: `Xamarin`,
+        value: `xamarin`
+    }
+        // , {
+        //    name: `Custom`,
+        //    value: `custom`
+        // }
+    ];
 
-   // If this is not a Linux based agent also show
-   // .NET Full
-   if (answers.queue.indexOf(`Linux`) === -1) {
-      types.splice(1, 0, {
-         name: `.NET Framework`,
-         value: `aspFull`
-      });
-   }
+    // If this is not a Linux based agent also show
+    // .NET Full
+    if (answers.queue.indexOf(`Linux`) === -1) {
+        types.splice(1, 0, {
+            name: `.NET Framework`,
+            value: `aspFull`
+        });
+    }
 
-   return types;
+    return types;
+}
+
+function getXamarinTypes(answers) {
+    // Default to languages tha work on all agents
+    let xamarinTypes = [{
+        name: `Xamarin Forms`,
+        value: `forms`
+    }, {
+        name: `Xamarin Native`,
+        value: `native`
+    }];
+
+    return xamarinTypes;
 }
 
 function getPATPrompt(answers) {
@@ -995,6 +1008,7 @@ module.exports = {
    logMessage: logMessage,
    getTargets: getTargets,
    getAppTypes: getAppTypes,
+   getXamarinTypes: getXamarinTypes,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,

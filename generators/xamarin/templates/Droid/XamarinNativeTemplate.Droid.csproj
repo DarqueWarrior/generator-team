@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0F74E388-AD58-49F5-A4B0-97AEFE3B1FA6}</ProjectGuid>
+    <ProjectGuid>{B69F4627-9399-4EB7-B2D4-0D1EF42E37DC}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace><%= name %>.Droid</RootNamespace>
@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\<%= name %>\<%= name %>.csproj">
-      <Project>{79BE932A-6A73-4ECE-BB43-2784914D4E92}</Project>
+      <Project>{1E8BCF35-BBFC-4D56-A811-667CF544D552}</Project>
       <Name><%= name %></Name>
     </ProjectReference>
   </ItemGroup>

@@ -46,16 +46,22 @@ function writeFiles() {
     var root = this.applicationName;
 
     // Root files
-    this.fs.copyTpl(`${src}/XamarinNativeTemplate.sln`, `${root}/${this.applicationName}.sln`, tokens);
-    this.fs.copyTpl(`${src}/README.md`, `${root}/README.md`, tokens);
     this.copy(`${src}/gitignore`, `${root}/.gitignore`);
+    this.fs.copyTpl(`${src}/README.md`, `${root}/README.md`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplate.sln`, `${root}/${this.applicationName}.sln`, tokens);
 
 // .Net Standard project
-    src = `${this.sourceRoot()}/XamarinNativeTemplate`;
+    src = `${this.sourceRoot()}/XamarinFormsTemplate`;
     root = `${this.applicationName}/${this.applicationName}`;
 
     // Root Net Standard project files
-    this.fs.copyTpl(`${src}/XamarinNativeTemplate.csproj`, `${root}/${this.applicationName}.csproj`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplatePage.xaml.cs`, `${root}/${this.applicationName}Page.xaml.cs`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplatePage.xaml`, `${root}/${this.applicationName}Page.xaml`, tokens);
+    this.fs.copyTpl(`${src}/App.xaml.cs`, `${root}/App.xaml.cs`, tokens);
+    this.fs.copyTpl(`${src}/App.xaml`, `${root}/App.xaml`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplate.nuget.props`, `${root}/${this.applicationName}.nuget.props`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplate.csproj`, `${root}/${this.applicationName}.csproj`, tokens);
+    this.copy(`${src}/project.json`, `${root}/project.json`);
 
     // Properties .Net Standard files
     this.fs.copyTpl(`${src}/Properties/AssemblyInfo.cs`, `${root}/Properties/AssemblyInfo.cs`, tokens);
@@ -66,7 +72,7 @@ function writeFiles() {
 
     // Root Droid files
     this.fs.copyTpl(`${src}/MainActivity.cs`, `${root}/MainActivity.cs`, tokens);
-    this.fs.copyTpl(`${src}/XamarinNativeTemplate.Droid.csproj`, `${root}/${this.applicationName}.Droid.csproj`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplate.Droid.csproj`, `${root}/${this.applicationName}.Droid.csproj`, tokens);
 
     // Properties Droid files
     this.fs.copyTpl(`${src}/Properties/AndroidManifest.xml`, `${root}/Properties/AndroidManifest.xml`, tokens);
@@ -75,14 +81,13 @@ function writeFiles() {
     // Ressources Droid files
     this.fs.copyTpl(`${src}/Resources/Resource.designer.cs`, `${root}/Resources/Resource.designer.cs`, tokens);
     this.directory(`${src}/Resources/layout`, `${root}/Resources/layout`);
-    this.directory(`${src}/Resources/mipmap-hdpi`, `${root}/Resources/mipmap-hdpi`);
-    this.directory(`${src}/Resources/mipmap-mdpi`, `${root}/Resources/mipmap-mdpi`);
-    this.directory(`${src}/Resources/mipmap-xhdpi`, `${root}/Resources/mipmap-xhdpi`);
-    this.directory(`${src}/Resources/mipmap-xxhdpi`, `${root}/Resources/mipmap-xxhdpi`);
-    this.directory(`${src}/Resources/mipmap-xxxhdpi`, `${root}/Resources/mipmap-xxxhdpi`);
-    this.fs.copyTpl(`${src}/Resources/values/Strings.xml`, `${root}/Resources/values/Strings.xml`, tokens);
+    this.directory(`${src}/Resources/drawable`, `${root}/Resources/drawable`);
+    this.directory(`${src}/Resources/drawable-hdpi`, `${root}/Resources/drawable-hdpi`);
+    this.directory(`${src}/Resources/drawable-xhdpi`, `${root}/Resources/drawable-xhdpi`);
+    this.directory(`${src}/Resources/drawable-xxhdpi`, `${root}/Resources/drawable-xxhdpi`);
+    this.directory(`${src}/Resources/values`, `${root}/Resources/values`);
     this.copy(`${src}/Resources/AboutResources.txt`, `${root}/Resources/AboutResources.txt`);
-
+    this.copy(`${src}/packages.config`, `${root}/packages.config`);
     // Assets Droid files
     this.directory(`${src}/Assets`, `${root}/Assets`);
 
@@ -94,18 +99,14 @@ function writeFiles() {
     this.fs.copyTpl(`${src}/AppDelegate.cs`, `${root}/AppDelegate.cs`, tokens);
     this.fs.copyTpl(`${src}/Info.plist`, `${root}/Info.plist`, tokens);
     this.fs.copyTpl(`${src}/Main.cs`, `${root}/Main.cs`, tokens);
-    this.fs.copyTpl(`${src}/XamarinNativeTemplate.iOS.csproj`, `${root}/${this.applicationName}.iOS.csproj`, tokens);
-    this.fs.copyTpl(`${src}/ViewController.cs`, `${root}/ViewController.cs`, tokens);
-    this.fs.copyTpl(`${src}/ViewController.designer.cs`, `${root}/ViewController.designer.cs`, tokens);
+    this.fs.copyTpl(`${src}/XamarinFormsTemplate.iOS.csproj`, `${root}/${this.applicationName}.iOS.csproj`, tokens);
     this.copy(`${src}/Entitlements.plist`, `${root}/Entitlements.plist`);
     this.copy(`${src}/LaunchScreen.storyboard`, `${root}/LaunchScreen.storyboard`);
-    this.copy(`${src}/Main.storyboard`, `${root}/Main.storyboard`);
+    this.copy(`${src}/packages.config`, `${root}/packages.config`);
 
     // Assets iOS files
     this.directory(`${src}/Assets.xcassets`, `${root}/Assets.xcassets`);
-
-    // Ressources iOS files
-    this.directory(`${src}/Ressources`, `${root}/Ressources`);
+    this.directory(`${src}/Resources`, `${root}/Resources`);
 }
 
 module.exports = generators.Base.extend({

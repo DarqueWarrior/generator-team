@@ -58,22 +58,36 @@ function queue(obj) {
 }
 
 function applicationType(obj) {
-   return {
-      name: `type`,
-      type: `list`,
-      store: true,
-      message: `What type of application do you want to create?`,
-      default: obj.type,
-      choices: util.getAppTypes,
-      when: answers => {
-         // If the value was passed on the command line it will
-         // not be set in answers which other prompts expect.
-         // So, place it in answers now.
-         answers.type = obj.type;
+    return {
+        name: `type`,
+        type: `list`,
+        store: true,
+        message: `What type of application do you want to create?`,
+        default: obj.type,
+        choices: util.getAppTypes,
+        when: answers => {
+            // If the value was passed on the command line it will
+            // not be set in answers which other prompts expect.
+            // So, place it in answers now.
+            answers.type = obj.type;
 
-         return obj.type === undefined;
-      }
-   };
+            return obj.type === undefined;
+        }
+    };
+}
+
+function applicationXamarinType(obj) {
+    return {
+        name: `xamarinType`,
+        type: `list`,
+        store: true,
+        message: `What Xamarin application do you want to create?`,
+        default: obj.type,
+        choices: util.getXamarinTypes,
+        when: answers => {
+            return answers.type === `xamarin`;
+        }
+    };
 }
 
 function customFolder(obj) {
@@ -90,14 +104,27 @@ function customFolder(obj) {
 }
 
 function applicationName(obj) {
+    return {
+        name: `applicationName`,
+        type: `input`,
+        store: true,
+        message: `What is the name of your application?`,
+        validate: util.validateApplicationName,
+        when: () => {
+            return obj.applicationName === undefined;
+        }
+    };
+}
+
+function packageName(obj) {
    return {
-      name: `applicationName`,
+      name: `packageName`,
       type: `input`,
       store: true,
-      message: `What is the name of your application?`,
+      message: `What is the name of your package? (com.compagny)`,
       validate: util.validateApplicationName,
       when: () => {
-         return obj.applicationName === undefined;
+          return obj.packageName === undefined;
       }
    };
 }
@@ -354,7 +381,9 @@ module.exports = {
    dockerRegistry: dockerRegistry,
    dockerCertPath: dockerCertPath,
    applicationType: applicationType,
+   applicationXamarinType: applicationXamarinType,
    applicationName: applicationName,
+   packageName: packageName,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,

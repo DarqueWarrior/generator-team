@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProjectGuid>{7003E406-474C-4C44-98F8-B3B477F25BE0}</ProjectGuid>
+    <ProjectGuid>{<%= uuid3 %>}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace><%= name %>.iOS</RootNamespace>
@@ -22,8 +22,7 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchFastDev>true</MtouchFastDev>
-    <MtouchProfiling>true</MtouchProfiling>
-    <IOSDebuggerPort>19201</IOSDebuggerPort>
+    <IOSDebuggerPort>19958</IOSDebuggerPort>
     <MtouchLink>None</MtouchLink>
     <MtouchArch>x86_64</MtouchArch>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
@@ -69,10 +68,9 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchFastDev>true</MtouchFastDev>
-    <MtouchProfiling>true</MtouchProfiling>
     <MtouchFloat32>true</MtouchFloat32>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <IOSDebuggerPort>33313</IOSDebuggerPort>
+    <IOSDebuggerPort>42464</IOSDebuggerPort>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchArch>ARM64</MtouchArch>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
@@ -86,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\<%= name %>\<%= name %>.csproj">
-      <Project>{79BE932A-6A73-4ECE-BB43-2784914D4E92}</Project>
+      <Project>{<%= uuid1 %>}</Project>
       <Name><%= name %></Name>
     </ProjectReference>
   </ItemGroup>
