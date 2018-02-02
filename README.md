@@ -37,6 +37,8 @@ It allows you to deploy to the following platforms:
 - [Docker Toolbox](https://github.com/docker/toolbox/releases)
 
 ## Install
+'npm install yo'
+'npm install generator-team'
 You can read how to use it at [DonovanBrown.com](http://donovanbrown.com/post/yo-Team). 
 
 ## To test
