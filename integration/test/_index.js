@@ -298,7 +298,7 @@ function findBuildDefinition(account, projectId, pat, name, userAgent, callback)
       var obj = JSON.parse(body);
 
       var bld = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       callback(e, bld);
@@ -388,7 +388,7 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       callback(e, rel);
@@ -520,7 +520,7 @@ function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, call
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
-         return i.data.subscriptionName === name;
+         return i.data.subscriptionName !== undefined && i.data.subscriptionName.toLowerCase() === name.toLowerCase();
       });
 
       // Down stream we need the full endpoint so call again with the ID. This will return more data

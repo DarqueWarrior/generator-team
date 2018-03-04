@@ -32,7 +32,7 @@ module.exports = class extends Generator {
       // we have to make sure the prompts below realize they
       // need to get a subscription. If we don't setup everything
       // right now the user will not be asked for a subscription.
-      cmdLnInput.target = `paas`;
+      cmdLnInput.options.target = `paas`;
 
       return this.prompt([
          prompts.tfs(this),
@@ -42,6 +42,7 @@ module.exports = class extends Generator {
          prompts.azureSubList(this),
          prompts.azureSubId(this),
          prompts.tenantId(this),
+         prompts.creationMode(this),
          prompts.servicePrincipalId(this),
          prompts.servicePrincipalKey(this),
       ]).then(function (answers) {

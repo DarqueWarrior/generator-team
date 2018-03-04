@@ -377,7 +377,7 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
       // a second REST call once you know the ID of the dockerregistry type service endpoint.
       // For now assume any dockerregistry service endpoint is safe to use.
       var endpoint = obj.value.find(function (i) {
-         return i.type === `dockerregistry`;
+         return i.type.toLowerCase() === `dockerregistry`;
       });
 
       if (endpoint === undefined) {
@@ -470,7 +470,7 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
       // The i.url is returned with a trailing / so just use starts with just in case
       // the dockerHost is passed in without it
       var endpoint = obj.value.find(function (i) {
-         return i.url.startsWith(dockerHost);
+         return i.url.toLowerCase().startsWith(dockerHost.toLowerCase());
       });
 
       if (endpoint === undefined) {
@@ -524,7 +524,7 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
-         return i.data.subscriptionName === sub.name;
+         return i.data.subscriptionName !== undefined && i.data.subscriptionName.toLowerCase() === sub.name.toLowerCase();
       });
 
       if (endpoint === undefined) {
@@ -556,7 +556,7 @@ function findAzureSub(account, subName, token, gen, callback) {
       var obj = JSON.parse(body);
 
       var sub = obj.value.find(function (i) {
-         return i.displayName === subName;
+         return i.displayName.toLowerCase() === subName.toLowerCase();
       });
 
       callback(error, sub);
@@ -702,7 +702,7 @@ function findBuild(account, teamProject, token, target, callback) {
       var obj = JSON.parse(body);
 
       var bld = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       if (!bld) {
@@ -749,7 +749,7 @@ function findRelease(args, callback) {
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       if (!rel) {
