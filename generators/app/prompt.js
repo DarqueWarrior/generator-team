@@ -453,8 +453,8 @@ function installDep(obj) {
          }
       ],
       when: answers => {
-         return answers.type !== `aspFull` && obj.options.installDep === undefined;
-      }
+           return answers.type !== `xamarin` &&  answers.type !== `aspFull` && obj.options.installDep === undefined;
+       }
    };
 }
 
