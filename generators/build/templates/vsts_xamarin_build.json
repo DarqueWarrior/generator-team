@@ -12,6 +12,170 @@
       "enabled": true,
       "continueOnError": false,
       "alwaysRun": false,
+      "displayName": "Bump iOS Versions in iOS/Info.plist",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "task": {
+        "id": "42284b34-be85-4034-890f-8755ad9f6249",
+        "versionSpec": "0.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "sourcePath": "iOS/Info.plist",
+        "versionCode": "$(Build.BuildId)",
+        "versionCodeOffset": "100",
+        "versionName": "$(Build.BuildNumber)",
+        "printFile": "true"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Change identifier in iOS/Info.plist",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "task": {
+        "id": "77f3c5c9-713f-4eb6-bd73-42324109ea2e",
+        "versionSpec": "0.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "sourcePath": "iOS/Info.plist",
+        "bundleIdentifier": "$(PackageName)",
+        "bundleName": "$(ApplicationName)",
+        "bundleDisplayName": "$(ApplicationName)",
+        "printFile": "true"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Bump Android Versions in Droid/Properties/AndroidManifest.xml",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "task": {
+        "id": "99796404-38d2-487b-887e-5b581b5c47eb",
+        "versionSpec": "0.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "sourcePath": "Droid/Properties/AndroidManifest.xml",
+        "versionCode": "$(Build.BuildId)",
+        "versionCodeOffset": "100",
+        "versionName": "$(Build.BuildNumber)",
+        "printFile": "true"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Change package name in Droid/Properties/AndroidManifest.xml",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "task": {
+        "id": "a0393340-3465-4b5d-bbc4-0f6b1cd5ae4c",
+        "versionSpec": "0.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "sourcePath": "Droid/Properties/AndroidManifest.xml",
+        "packageName": "$(PackageName)",
+        "appLabel": "$(ApplicationName)",
+        "printFile": "true"
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "NuGet restore",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "task": {
+        "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+        "versionSpec": "2.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "command": "restore",
+        "solution": "**/*.sln",
+        "selectOrConfig": "select",
+        "feedRestore": "",
+        "includeNuGetOrg": "true",
+        "nugetConfigPath": "",
+        "externalEndpoints": "",
+        "noCache": "false",
+        "packagesDirectory": "",
+        "verbosityRestore": "Detailed",
+        "searchPatternPush": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
+        "nuGetFeedType": "internal",
+        "feedPublish": "",
+        "allowPackageConflicts": "false",
+        "externalEndpoint": "",
+        "verbosityPush": "Detailed",
+        "searchPatternPack": "**/*.csproj",
+        "configurationToPack": "$(BuildConfiguration)",
+        "outputDir": "$(Build.ArtifactStagingDirectory)",
+        "versioningScheme": "off",
+        "includeReferencedProjects": "false",
+        "versionEnvVar": "",
+        "requestedMajorVersion": "1",
+        "requestedMinorVersion": "0",
+        "requestedPatchVersion": "0",
+        "packTimezone": "utc",
+        "includeSymbols": "false",
+        "toolPackage": "false",
+        "buildProperties": "",
+        "verbosityPack": "Detailed",
+        "arguments": ""
+      }
+    },
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
+      "displayName": "Build Xamarin.Android App",
+      "timeoutInMinutes": 0,
+      "condition": "succeeded()",
+      "task": {
+        "id": "27edd013-36fd-43aa-96a3-7d73e1e35285",
+        "versionSpec": "1.*",
+        "definitionType": "task"
+      },
+      "inputs": {
+        "project": "Droid/{{BuildDefName}}.Droid.csproj",
+        "target": "",
+        "outputDir": "",
+        "configuration": "$(BuildConfiguration)",
+        "createAppPackage": "true",
+        "clean": "true",
+        "msbuildLocationMethod": "version",
+        "msbuildVersion": "latest",
+        "msbuildLocation": "",
+        "msbuildArchitecture": "x86",
+        "msbuildArguments": "",
+        "jdkSelection": "JDKVersion",
+        "jdkVersion": "default",
+        "jdkUserInputPath": "",
+        "jdkArchitecture": "x64"
+      }
+    },
+
+
+
+    {
+      "environment": {},
+      "enabled": true,
+      "continueOnError": false,
+      "alwaysRun": false,
       "displayName": "Install an Apple certificate",
       "timeoutInMinutes": 0,
       "refName": "InstallAppleCertificate_1",
@@ -56,58 +220,7 @@
       "enabled": true,
       "continueOnError": false,
       "alwaysRun": false,
-      "displayName": "NuGet restore Sources/{{BuildDefName}}.sln",
-      "timeoutInMinutes": 0,
-      "refName": "NuGetInstaller_3",
-      "task": {
-        "id": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
-        "versionSpec": "2.*",
-        "definitionType": "task"
-      },
-      "inputs": {
-        "solution": "Sources/{{BuildDefName}}.sln",
-        "nugetConfigPath": "Sources/NuGet.config",
-        "restoreMode": "restore",
-        "noCache": "false",
-        "nuGetRestoreArgs": "",
-        "verbosity": "-",
-        "nuGetVersion": "3.3.0",
-        "nuGetPath": "",
-        "command": "restore",
-        "selectOrConfig": "select",
-        "feedRestore": "",
-        "includeNuGetOrg": "true",
-        "externalEndpoints": "",
-        "packagesDirectory": "",
-        "verbosityRestore": "Detailed",
-        "searchPatternPush": "$(Build.ArtifactStagingDirectory)/*.nupkg",
-        "nuGetFeedType": "internal",
-        "feedPublish": "",
-        "allowPackageConflicts": "false",
-        "externalEndpoint": "",
-        "verbosityPush": "Detailed",
-        "searchPatternPack": "**/*.csproj",
-        "configurationToPack": "$(BuildConfiguration)",
-        "outputDir": "$(Build.ArtifactStagingDirectory)",
-        "versioningScheme": "off",
-        "includeReferencedProjects": "false",
-        "versionEnvVar": "",
-        "requestedMajorVersion": "1",
-        "requestedMinorVersion": "0",
-        "requestedPatchVersion": "0",
-        "packTimezone": "utc",
-        "includeSymbols": "false",
-        "buildProperties": "",
-        "verbosityPack": "Detailed",
-        "arguments": ""
-      }
-    },
-    {
-      "environment": {},
-      "enabled": true,
-      "continueOnError": false,
-      "alwaysRun": false,
-      "displayName": "Build Xamarin.iOS solution Sources/{{BuildDefName}}.sln",
+      "displayName": "Build Xamarin.iOS App",
       "timeoutInMinutes": 0,
       "refName": "XamariniOS_4",
       "task": {
@@ -142,38 +255,7 @@
       "enabled": true,
       "continueOnError": false,
       "alwaysRun": false,
-      "displayName": "Build Xamarin.Android Project Sources/Droid/{{BuildDefName}}.Droid.csproj",
-      "timeoutInMinutes": 0,
-      "refName": "XamarinAndroid_5",
-      "task": {
-        "id": "27edd013-36fd-43aa-96a3-7d73e1e35285",
-        "versionSpec": "1.*",
-        "definitionType": "task"
-      },
-      "inputs": {
-        "project": "Sources/Droid/{{BuildDefName}}.Droid.csproj",
-        "target": "",
-        "outputDir": "",
-        "configuration": "$(BuildConfiguration)",
-        "createAppPackage": "true",
-        "clean": "false",
-        "msbuildLocationMethod": "version",
-        "msbuildVersion": "latest",
-        "msbuildLocation": "",
-        "msbuildArchitecture": "x64",
-        "msbuildArguments": "",
-        "jdkSelection": "JDKVersion",
-        "jdkVersion": "default",
-        "jdkUserInputPath": "",
-        "jdkArchitecture": "x86"
-      }
-    },
-    {
-      "environment": {},
-      "enabled": true,
-      "continueOnError": false,
-      "alwaysRun": false,
-      "displayName": "Copy Files to: $(Build.StagingDirectory)/ios",
+      "displayName": "Copy IPA to: $(Build.StagingDirectory)/ios",
       "timeoutInMinutes": 0,
       "condition": "succeeded()",
       "refName": "CopyFiles1",
@@ -196,7 +278,7 @@
       "enabled": true,
       "continueOnError": false,
       "alwaysRun": false,
-      "displayName": "Copy Files to: $(Build.StagingDirectory)/android",
+      "displayName": "Copy APK to: $(Build.StagingDirectory)/android",
       "timeoutInMinutes": 0,
       "condition": "succeeded()",
       "refName": "CopyFiles2",
@@ -293,7 +375,14 @@
       "triggerType": 2
     }
   ],
+  "buildNumberFormat": "1.0.$(Build.BuildId)",
   "variables": {
+    "ApplicationName": {
+      "value": "Edenred Sample"
+    },
+    "PackageName": {
+      "value": "com.cellenza.edenred"
+    },
     "androidCertificatPwd": {
       "value": null,
       "isSecret": true
@@ -312,19 +401,8 @@
       "value": null,
       "isSecret": true
     },
-    "version.major": {
-      "value": "1",
-      "allowOverride": true
-    },
-    "version.minor": {
-      "value": "1",
-      "allowOverride": true
-    },
     "UUID": {
       "value": "d795fbf1-c7ef-4b96-ac38-d57dcf780d02"
-    },
-    "variableCFBundleIdentifier": {
-      "value": "com.meglem.xamarin"
     }
   },
   "retentionRules": [
