@@ -42,6 +42,9 @@ data/
 
 *.Cache
 
+##Ignore IDEA
+*.idea
+
 
 
 
