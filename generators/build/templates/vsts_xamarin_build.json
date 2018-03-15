@@ -378,10 +378,10 @@
   "buildNumberFormat": "1.0.$(Build.BuildId)",
   "variables": {
     "ApplicationName": {
-      "value": "Edenred Sample"
+      "value": "{{Project}}"
     },
     "PackageName": {
-      "value": "com.cellenza.edenred"
+      "value": "{{PackageName}}.{{Project}}"
     },
     "androidCertificatPwd": {
       "value": null,

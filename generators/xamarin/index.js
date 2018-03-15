@@ -43,7 +43,7 @@ module.exports = class extends Generator {
             uuid2: uuidV4(),
             uuid3: uuidV4(),
             name_lowercase: this.applicationName.toLowerCase(),
-            package_name: this.packageName
+            package_name: this.packageName.toLowerCase()
         };
 
         var src = this.sourceRoot();

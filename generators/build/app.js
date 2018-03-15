@@ -106,6 +106,7 @@ function createBuild(account, teamProject, token, queueId,
    var contents = fs.readFileSync(filename, 'utf8');
    var tokens = {
       '{{BuildDefName}}': buildDefName,
+      '{{PackageName}}': teamProject.packageName,
       '{{TFS}}': account,
       '{{Project}}': teamProject.name,
       '{{QueueId}}': queueId,

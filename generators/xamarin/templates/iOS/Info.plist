@@ -5,7 +5,7 @@
 	<key>CFBundleName</key>
 	<string><%= name %></string>
 	<key>CFBundleIdentifier</key>
-	<string>com.cellenza.<%= name %></string>
+	<string><%= package_name %>.<%= name %></string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

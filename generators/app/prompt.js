@@ -215,9 +215,9 @@ function packageName(obj) {
       store: true,
       message: `What is the name of your package? (com.compagny)`,
       validate: util.validateApplicationName,
-      when: () => {
-          return obj.options.packageName === undefined;
-      }
+       when: answers => {
+           return answers.type === `xamarin`;
+       }
    };
 }
 

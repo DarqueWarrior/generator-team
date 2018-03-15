@@ -21,6 +21,7 @@ module.exports = class extends Generator {
       argUtils.applicationType(this);
       argUtils.applicationXamarinType(this);
       argUtils.applicationName(this);
+      argUtils.packageName(this);
       argUtils.tfs(this);
       argUtils.azureSub(this);
       argUtils.azureSubId(this);
@@ -64,6 +65,7 @@ module.exports = class extends Generator {
          prompts.applicationType(this),
          prompts.applicationXamarinType(this),
          prompts.applicationName(this),
+         prompts.packageName(this),
          prompts.customFolder(this),
          prompts.target(this),
          prompts.azureSubInput(this),
@@ -113,6 +115,7 @@ module.exports = class extends Generator {
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.dockerCertPath = util.reconcileValue(cmdLnInput.options.dockerCertPath, answers.dockerCertPath, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
+         this.packageName = util.reconcileValue(cmdLnInput.options.packageName, answers.packageName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
