@@ -110,6 +110,6 @@ module.exports = class extends Generator {
 
         // Assets iOS files
         this.fs.copy(`${src}/Assets.xcassets`, `${root}/Assets.xcassets`);
-        this.fs.copy(`${src}/Resources`, `${root}/Resources`);
+        //this.fs.copy(`${src}/Resources`, `${root}/Resources`);
     }
 };
