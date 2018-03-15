@@ -2,7 +2,6 @@
   "name": "{{BuildDefName}}",
   "type": "build",
   "quality": "definition",
-  "buildNumberFormat": "$(version.major).$(version.minor).$(Year:yy)$(DayOfYear)$(Rev:.rr)",
   "queue": {
     "id": "{{QueueId}}"
   },
