@@ -77,31 +77,7 @@
             "configuration": "$(BuildConfiguration)",
             "publishRunAttachments": "true"
          }
-      },
-      {
-         "enabled": true,
-         "continueOnError": true,
-         "alwaysRun": false,
-         "displayName": "Publish symbols path",
-         "refName": "publish_symbols",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "0675668a-7bba-4ccb-901d-5ad6554ca653",
-            "versionSpec": "*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "SymbolsPath": "",
-            "SearchPattern": "**\\bin\\**\\*.pdb",
-            "SymbolsFolder": "",
-            "SkipIndexing": "false",
-            "TreatNotIndexedAsWarning": "false",
-            "SymbolsMaximumWaitTime": "",
-            "SymbolsProduct": "",
-            "SymbolsVersion": "",
-            "SymbolsArtifactName": "Symbols_$(BuildConfiguration)"
-         }
-      },
+      },    
       {
          "enabled": true,
          "continueOnError": false,
