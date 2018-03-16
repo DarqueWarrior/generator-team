@@ -70,70 +70,59 @@ function reconcileValue(first, second, fallback) {
 function getTargets(answers) {
 
    return new Promise(function (resolve, reject) {
-      let pat = encodePat(answers.pat);
+      let targets = [];
 
-      isTFSGreaterThan2017(answers.tfs, pat, function (e, result) {
-         if (e) {
-            reject(e);
-            return;
+      if (answers.type === `custom`) {
+         targets = [{
+            name: `Azure`,
+            value: `paas`
+         }, {
+            name: `Docker`,
+            value: `docker`
+         }, {
+            name: `Both`,
+            value: `dockerpaas`
+         }];
+      } else if (answers.type === `aspFull`) {
+         targets = [{
+            name: `Azure App Service`,
+            value: `paas`
+         }, {
+            name: `Azure App Service (Deployment Slots)`,
+            value: `paasslots`
+         }];
+      } else {
+         targets = [{
+            name: `Azure App Service`,
+            value: `paas`
+         }, {
+            name: `Azure App Service (Deployment Slots)`,
+            value: `paasslots`
+         }, {
+            name: `Azure Container Instances (Linux)`,
+            value: `acilinux`
+         }, {
+            name: `Azure App Service Docker (Linux)`,
+            value: `dockerpaas`
+         }, {
+            name: `Docker Host`,
+            value: `docker`
+         }];
+
+         // TODO: Investigate if we need to remove these
+         // options. I think you can offer paas and paasslots
+         // for this combination. 
+         if (answers.type === `java` &&
+            answers.queue === `Hosted Linux Preview`) {
+            // Remove Azure App Service
+            targets.splice(0, 1);
+
+            // Remove Azure App Service (Deployment Slots)
+            targets.splice(0, 1);
          }
+      }
 
-         let targets = [];
-
-         if (result) {
-            if (answers.type === `custom`) {
-               targets = [{
-                  name: `Azure`,
-                  value: `paas`
-               }, {
-                  name: `Docker`,
-                  value: `docker`
-               }, {
-                  name: `Both`,
-                  value: `dockerpaas`
-               }];
-            } else if (answers.type === `aspFull`) {
-               targets = [{
-                  name: `Azure App Service`,
-                  value: `paas`
-               }, {
-                  name: `Azure App Service (Deployment Slots)`,
-                  value: `paasslots`
-               }];
-            } else {
-               targets = [{
-                  name: `Azure App Service`,
-                  value: `paas`
-               }, {
-                  name: `Azure App Service (Deployment Slots)`,
-                  value: `paasslots`
-               }, {
-                  name: `Azure Container Instances (Linux)`,
-                  value: `acilinux`
-               }, {
-                  name: `Azure App Service Docker (Linux)`,
-                  value: `dockerpaas`
-               }, {
-                  name: `Docker Host`,
-                  value: `docker`
-               }];
-
-               // TODO: Investigate if we need to remove these
-               // options. I think you can offer paas and paasslots
-               // for this combination. 
-               if (answers.type === `java` &&
-                  answers.queue === `Hosted Linux Preview`) {
-                  // Remove Azure App Service
-                  targets.splice(0, 1);
-
-                  // Remove Azure App Service (Deployment Slots)
-                  targets.splice(0, 1);
-               }
-            }
-         }
-
-         resolve(targets);
-      });
+      resolve(targets);
    });
 }
 
@@ -1063,24 +1052,31 @@ function isTFSGreaterThan2017(account, token, callback) {
    if (isVSTS(account)) {
       callback(undefined, true);
    } else {
-      // We can determine if this is 2017 or not by searching for a 
-      // specific docker task.
+      // We can determine if this is 2017 or not by reviewing
+      // the values from teh serviceLevel
       var options = addUserAgent({
          "method": `GET`,
          "headers": {
             "cache-control": `no-cache`,
             "authorization": `Basic ${token}`
          },
-         "url": `${getFullURL(account)}/_apis/distributedtask/tasks/e28912f1-0114-4464-802a-a3a35437fd16`
+         "url": `${getFullURL(account)}/_apis/servicelevel`
       });
 
       request(options, function (error, response, body) {
          if (error) {
-            callback(error, undefined);
+            callback(error, true);
          } else if (response.statusCode === 200) {
-            callback(undefined, true);
+
+            var obj = JSON.parse(body);
+
+            if (obj.configurationDatabaseServiceLevel.startsWith(`Dev15`)) {
+               callback(undefined, false);
+            } else {
+               callback(undefined, true);
+            }
          } else {
-            callback(undefined, false);
+            callback(undefined, true);
          }
       });
    }

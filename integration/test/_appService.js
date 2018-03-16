@@ -244,7 +244,7 @@ function runTests(iteration) {
             // Wait for build to succeed or fail
             async.whilst(
                function () {
-                  return result !== `failed` && result !== `succeeded`;
+                  return result !== `failed` && result !== `succeeded` && result !== `partiallySucceeded`;
                },
                function (finished) {
                   // Sleep before calling again. If you have too many
