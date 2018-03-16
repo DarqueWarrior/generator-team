@@ -15,6 +15,7 @@ module.exports = class extends Generator {
       // Order is important 
       argUtils.applicationType(this);
       argUtils.applicationName(this);
+      argUtils.packageName(this);
       argUtils.tfs(this);
       argUtils.queue(this);
       argUtils.target(this);
@@ -38,6 +39,7 @@ module.exports = class extends Generator {
          prompts.queue(this),
          prompts.applicationType(this),
          prompts.applicationName(this),
+         prompts.packageName(this),
          prompts.customFolder(this),
          prompts.target(this),
          prompts.dockerHost(this),
@@ -58,6 +60,7 @@ module.exports = class extends Generator {
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
+         this.packageName = util.reconcileValue(cmdLnInput.options.packageName, answers.packageName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
       }.bind(this));
    }
@@ -83,6 +86,7 @@ module.exports = class extends Generator {
             queue: _this.queue,
             target: _this.target,
             appName: _this.applicationName,
+            packageName: _this.packageName,
             project: _this.applicationName
          };
 

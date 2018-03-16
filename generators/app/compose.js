@@ -25,7 +25,7 @@ function addRelease(obj) {
 
 function addBuild(obj) {
    obj.composeWith(`team:build`, {
-      arguments: [obj.type, obj.applicationName, obj.tfs,
+      arguments: [obj.type, obj.applicationName, obj.packageName, obj.tfs,
          obj.queue, obj.target,
          obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId,
          obj.pat, obj.customFolder

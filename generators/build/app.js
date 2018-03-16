@@ -51,7 +51,7 @@ function run(args, gen, done) {
             ], mainSeries);
          },
          function (mainSeries) {
-            findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+            findOrCreateBuild(args.tfs, teamProject, args.packageName, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
          }
       ],
       function (err, results) {
@@ -68,7 +68,7 @@ function run(args, gen, done) {
       });
 }
 
-function findOrCreateBuild(account, teamProject, token, queueId,
+function findOrCreateBuild(account, teamProject, packageName, token, queueId,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
@@ -79,7 +79,7 @@ function findOrCreateBuild(account, teamProject, token, queueId,
       }
 
       if (!bld) {
-         createBuild(account, teamProject, token, queueId,
+         createBuild(account, teamProject, packageName, token, queueId,
             dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
             filename, target, gen, callback);
       } else {
@@ -89,7 +89,7 @@ function findOrCreateBuild(account, teamProject, token, queueId,
    });
 }
 
-function createBuild(account, teamProject, token, queueId,
+function createBuild(account, teamProject, packageName, token, queueId,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
@@ -106,7 +106,7 @@ function createBuild(account, teamProject, token, queueId,
    var contents = fs.readFileSync(filename, 'utf8');
    var tokens = {
       '{{BuildDefName}}': buildDefName,
-      '{{PackageName}}': teamProject.packageName,
+      '{{PackageName}}': packageName,
       '{{TFS}}': account,
       '{{Project}}': teamProject.name,
       '{{QueueId}}': queueId,
