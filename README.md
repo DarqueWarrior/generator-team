@@ -65,6 +65,7 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 ### 0.4.4
 
 Updated all the dependencies.
+Dropped support for TFS 2017 Update 2. Only update 3 is supported.
 
 ## December 2017
 
