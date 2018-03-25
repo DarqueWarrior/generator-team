@@ -354,7 +354,7 @@ function getBuilds(account, projectId, pat, userAgent, callback) {
 
    request(options, function (e, response, body) {
       util.log(`getBuilds response:\r\n`);
-      util.logJSON(body);
+      util.logBuildResponse(body);
       util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
@@ -395,7 +395,7 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
    });
 }
 
-function getReleases(account, projectId, pat, userAgent, callback) {
+function getReleases(account, projectId, pat, userAgent, stage, callback) {
    "use strict";
 
    let token = encodePat(pat);
@@ -420,8 +420,8 @@ function getReleases(account, projectId, pat, userAgent, callback) {
       let obj = {};
 
       try {
-         util.log(`getReleases response:\r\n`);
-         util.logJSON(body);
+         util.log(`getReleases ${stage} response:\r\n`);
+         util.logReleaseResponse(body);
          util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
 
          obj = JSON.parse(body);

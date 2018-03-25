@@ -243,7 +243,7 @@ function runTests(iteration) {
                   // test running at the same time VSTS will start to 
                   // Timeout. Might be DOS protection.
                   setTimeout(function () {
-                     vsts.getReleases(tfs, iteration.projectId, pat, userAgent, (err, r) => {
+                     vsts.getReleases(tfs, iteration.projectId, pat, userAgent, `Dev`, (err, r) => {
                         if (r.length > 0) {
                            iteration.status = r[0].environments[0].status;
                         }

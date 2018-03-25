@@ -290,7 +290,7 @@ function runTests(iteration) {
                   // test running at the same time VSTS will start to 
                   // Timeout. Might be DOS protection.
                   setTimeout(function () {
-                     vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                     vsts.getReleases(tfs, projectId, pat, userAgent, `Dev`, (err, r) => {
                         if (r !== undefined && r.length > 0) {
                            status = r[0].environments[0].status;
                         }
@@ -352,7 +352,7 @@ function runTests(iteration) {
                      // test running at the same time VSTS will start to 
                      // Timeout. Might be DOS protection.
                      setTimeout(function () {
-                        vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                        vsts.getReleases(tfs, projectId, pat, userAgent, `QA`, (err, r) => {
                            if (r !== undefined && r.length > 0) {
                               status = r[0].environments[1].status;
                            }
@@ -413,7 +413,7 @@ function runTests(iteration) {
                      // test running at the same time VSTS will start to 
                      // Timeout. Might be DOS protection.
                      setTimeout(function () {
-                        vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                        vsts.getReleases(tfs, projectId, pat, userAgent, `Prod`, (err, r) => {
                            if (r !== undefined && r.length > 0) {
                               status = r[0].environments[2].status;
                            }

@@ -26,6 +26,31 @@ var logJSON = function (msg) {
    }
 };
 
+var logReleaseResponse = function (msg) {
+   if (logging === `on`) {
+      let rel = JSON.parse(msg);
+
+      console.log(`status: ${rel.value[0].status}`);
+
+      for (let i = 0, len = rel.value[0].environments.length; i < len; i++) {
+         let e = rel.value[0].environments[i];
+         console.log(`${e.name}: ${e.status}`);
+      }
+   }
+};
+
+var logBuildResponse = function (msg) {
+   if (logging === `on`) {
+      let rel = JSON.parse(msg);
+
+      console.log(`status: ${rel.value[0].status}`);
+      console.log(`result: ${rel.value[0].result}`);
+      console.log(`queueTime: ${rel.value[0].queueTime}`);
+      console.log(`startTime: ${rel.value[0].startTime}`);
+      console.log(`finishTime: ${rel.value[0].finishTime}`);
+   }
+};
+
 var deleteFolderRecursive = function (path) {
    if (fs.existsSync(path)) {
       fs.readdirSync(path).forEach(function (file, index) {
@@ -50,5 +75,7 @@ module.exports = {
    rmdir: deleteFolderRecursive,
    log: logMessage,
    logJSON: logJSON,
+   logBuildResponse: logBuildResponse,
+   logReleaseResponse: logReleaseResponse,
    isVSTS: isVSTS
 };
