@@ -6,9 +6,9 @@ const package = require('../../package.json');
 
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
-const RELEASE_API_VERSION = `3.0-preview.3`;
-const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
-const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+const RELEASE_API_VERSION = `3.0-preview`;
+const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
+const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
 
 const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
 

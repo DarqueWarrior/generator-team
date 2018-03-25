@@ -12,6 +12,8 @@ const exec = require('child_process').exec;
 
 const userAgent = `yo team`;
 
+var __basedir = process.cwd();
+
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
 env(__dirname + '/.env', {
@@ -213,8 +215,8 @@ function runTests(iteration) {
 
       context(`Push code to remote`, function () {
          it(`git push should succeed`, function (done) {
-            util.log(`cd to: ${__dirname}${levelsUp}${applicationName}`);
-            process.chdir(`${__dirname}${levelsUp}${applicationName}`);
+            util.log(`cd to: ${__basedir}${levelsUp}${applicationName}`);
+            process.chdir(`${__basedir}${levelsUp}${applicationName}`);
 
             util.log(`git push`);
             exec(`git push`, (error, stdout, stderr) => {
