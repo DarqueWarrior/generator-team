@@ -164,7 +164,11 @@ function getRelease(args, callback) {
                release = `tfs_2018_release.json`;
             }
          } else {
-            release = `tfs_release.json`;
+            if (args.target === `paasslots`) {
+               release = `vsts_release_slots.json`;
+            } else {
+               release = `tfs_release.json`;
+            }
          }
 
          callback(e, release);

@@ -574,6 +574,23 @@ describe(`release:app`, function () {
       });
    }));
 
+   it(`getRelease asp tfs 2017 paasslots`, sinonTest(function (done) {
+      // Arrange 
+      let expected = `vsts_release_slots.json`;
+      this.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+
+      // Act
+      release.getRelease({
+         type: `asp`,
+         target: `paasslots`,
+         tfs: `http://tfs:8080/tfs/DefaultCollection`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   }));
+
    it(`getRelease asp vsts paasslots`, function (done) {
       // Arrange 
       let expected = `vsts_release_slots.json`;
