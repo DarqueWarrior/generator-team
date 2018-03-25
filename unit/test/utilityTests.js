@@ -279,7 +279,7 @@ describe(`utility`, function () {
       });
    });
 
-   context.only(`targets`, function () {
+   context(`targets`, function () {
       it(`getTargets Default queue, Custom app type`, function (done) {
          // Arrange
          let answers = {
