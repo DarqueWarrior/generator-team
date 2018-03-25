@@ -6,7 +6,8 @@
    "queue": {
       "id": "{{QueueId}}"
    },
-   "build": [{
+   "build": [
+      {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,

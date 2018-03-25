@@ -43,8 +43,8 @@
                "name": "Run on agent",
                "workflowTasks": [
                   {
-                     "taskId": "b93c4522-5bea-4118-97ae-2b560628a157",
-                     "version": "*",
+                     "taskId": "e28912f1-0114-4464-802a-a3a35437fd16",
+                     "version": "0.*",
                      "name": "Remove running containers",
                      "enabled": true,
                      "refName": "remove",
@@ -53,7 +53,10 @@
                      "timeoutInMinutes": 0,
                      "definitionType": "task",
                      "inputs": {
+                        "containerregistrytype": "Container Registry",
                         "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
+                        "azureSubscriptionEndpoint": "",
+                        "azureContainerRegistry": "",
                         "action": "Run a Docker command",
                         "dockerFile": "**/Dockerfile",
                         "buildArguments": "",
@@ -81,8 +84,8 @@
                      }
                   },
                   {
-                     "taskId": "b93c4522-5bea-4118-97ae-2b560628a157",
-                     "version": "*",
+                     "taskId": "e28912f1-0114-4464-802a-a3a35437fd16",
+                     "version": "0.*",
                      "name": "Run an image",
                      "enabled": true,
                      "refName": "run",
@@ -91,6 +94,7 @@
                      "timeoutInMinutes": 0,
                      "definitionType": "task",
                      "inputs": {
+                        "containerregistrytype": "Container Registry",
                         "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
                         "action": "Run an image",
                         "dockerFile": "**/Dockerfile",
