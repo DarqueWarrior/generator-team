@@ -141,7 +141,15 @@ function createBuild(account, teamProject, packageName, token, queueId,
       if (response.statusCode >= 400) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.env.error("x " + response.body.message.replace('\n', ' '));
+          if(!util.isDocker(target)){
+              if(body.message.includes("42284b34-be85-4034-890f-8755ad9f6249") ||
+                  body.message.includes("77f3c5c9-713f-4eb6-bd73-42324109ea2e"))
+              {
+                  gen.log("! Make sure the Mobile App Tasks for iOS and Android extension is installed (by James Montemagno)");
+              }
+          }else{
+              gen.env.error("x " + response.body.message.replace('\n', ' '));
+          }
       }
 
       callback(error, body);

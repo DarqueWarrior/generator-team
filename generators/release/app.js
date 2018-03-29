@@ -270,7 +270,12 @@ function createRelease(args, gen, callback) {
 
             if (resp.statusCode == 400) {
                status = "failed";
-               finished(new Error("x " + resp.body.message), null);
+                let message = resp.body.message;
+                if(body.message.includes("Resign IPA file"))
+                {
+                    message = "! Make sure the Apple App Store extension is installed (by Microsoft)";
+                }
+               finished(new Error("x " + message), null);
             } else if (resp.statusCode >= 300) {
                status = "in progress";
                finished(err, null);
