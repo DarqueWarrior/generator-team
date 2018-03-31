@@ -91,7 +91,7 @@ describe(`utility`, function () {
          assert.equal(actual, null);
       }));
 
-      it(`profile is found`, sinonTest(function () {
+      it(`profile is found by name`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(true);
          this.stub(fs, `readFileSync`).returns(`
          [
@@ -120,6 +120,39 @@ describe(`utility`, function () {
 
          // This should work even with mixed case.
          let actual = util.searchProfiles(`Test`);
+
+         assert.notEqual(actual, null);
+      }));
+
+      it(`profile is found by URL`, sinonTest(function () {
+         this.stub(fs, `existsSync`).returns(true);
+         this.stub(fs, `readFileSync`).returns(`
+         [
+            {
+               "Name": "unitTest",
+               "URL": "http://localhost:8080/tfs/defaultcollection",
+               "Pat": "",
+               "Type": "OnPremise",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "TFS",
+               "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "Pat": "OnE2cXpseHk0YXp3dHpz",
+               "Type": "Pat",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "test",
+               "URL": "https://test.visualstudio.com",
+               "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+               "Type": "Pat",
+               "Version": "VSTS"
+            }
+         ]`);
+
+         // This should work even with mixed case.
+         let actual = util.searchProfiles(`http://192.168.1.3:8080/tfs/defaultcollection`);
 
          assert.notEqual(actual, null);
       }));
