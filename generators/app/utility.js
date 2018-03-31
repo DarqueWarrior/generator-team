@@ -873,12 +873,18 @@ function loadProfiles() {
 
 // Reads profiles created by the VSTeam PowerShell module.
 // Search ignores case.
+// Yo team stores the full URL of TFS and the account name
+// for VSTS.  The profile name might not match the account
+// name or full URL.  So when you run Yo Team again it will
+// default to the full URL or account name and fail to find
+// the profile and prompt for the PAT.  Therefore, here you 
+// need to seach the profile name and URL 
 function searchProfiles(input) {
    let results = loadProfiles();
 
    if (results.profiles !== null) {
       var found = results.profiles.filter(function (i) {
-         return i.Name.toLowerCase() === input.toLowerCase() && i.Type === `Pat`;
+         return (i.Name.toLowerCase() === input.toLowerCase() || i.URL.toLowerCase() === input.toLowerCase())&& i.Type === `Pat`;
       });
 
       if (found.length !== 0) {
