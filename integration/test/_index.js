@@ -298,7 +298,7 @@ function findBuildDefinition(account, projectId, pat, name, userAgent, callback)
       var obj = JSON.parse(body);
 
       var bld = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       callback(e, bld);
@@ -354,7 +354,7 @@ function getBuilds(account, projectId, pat, userAgent, callback) {
 
    request(options, function (e, response, body) {
       util.log(`getBuilds response:\r\n`);
-      util.logJSON(body);
+      util.logBuildResponse(body);
       util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
 
       var obj = JSON.parse(body);
@@ -388,14 +388,14 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       callback(e, rel);
    });
 }
 
-function getReleases(account, projectId, pat, userAgent, callback) {
+function getReleases(account, projectId, pat, userAgent, stage, callback) {
    "use strict";
 
    let token = encodePat(pat);
@@ -420,8 +420,8 @@ function getReleases(account, projectId, pat, userAgent, callback) {
       let obj = {};
 
       try {
-         util.log(`getReleases response:\r\n`);
-         util.logJSON(body);
+         util.log(`getReleases ${stage} response:\r\n`);
+         util.logReleaseResponse(body);
          util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
 
          obj = JSON.parse(body);
@@ -520,7 +520,7 @@ function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, call
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
-         return i.data.subscriptionName === name;
+         return i.data.subscriptionName !== undefined && i.data.subscriptionName.toLowerCase() === name.toLowerCase();
       });
 
       // Down stream we need the full endpoint so call again with the ID. This will return more data

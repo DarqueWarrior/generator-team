@@ -12,6 +12,8 @@ const exec = require('child_process').exec;
 
 const userAgent = `yo team`;
 
+var __basedir = process.cwd();
+
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
 env(__dirname + '/.env', {
@@ -213,8 +215,8 @@ function runTests(iteration) {
 
       context(`Push code to remote`, function () {
          it(`git push should succeed`, function (done) {
-            util.log(`cd to: ${__dirname}${levelsUp}${applicationName}`);
-            process.chdir(`${__dirname}${levelsUp}${applicationName}`);
+            util.log(`cd to: ${__basedir}${levelsUp}${applicationName}`);
+            process.chdir(`${__basedir}${levelsUp}${applicationName}`);
 
             util.log(`git push`);
             exec(`git push`, (error, stdout, stderr) => {
@@ -244,7 +246,7 @@ function runTests(iteration) {
             // Wait for build to succeed or fail
             async.whilst(
                function () {
-                  return result !== `failed` && result !== `succeeded`;
+                  return result !== `failed` && result !== `succeeded` && result !== `partiallySucceeded`;
                },
                function (finished) {
                   // Sleep before calling again. If you have too many
@@ -288,7 +290,7 @@ function runTests(iteration) {
                   // test running at the same time VSTS will start to 
                   // Timeout. Might be DOS protection.
                   setTimeout(function () {
-                     vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                     vsts.getReleases(tfs, projectId, pat, userAgent, `Dev`, (err, r) => {
                         if (r !== undefined && r.length > 0) {
                            status = r[0].environments[0].status;
                         }
@@ -350,7 +352,7 @@ function runTests(iteration) {
                      // test running at the same time VSTS will start to 
                      // Timeout. Might be DOS protection.
                      setTimeout(function () {
-                        vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                        vsts.getReleases(tfs, projectId, pat, userAgent, `QA`, (err, r) => {
                            if (r !== undefined && r.length > 0) {
                               status = r[0].environments[1].status;
                            }
@@ -411,7 +413,7 @@ function runTests(iteration) {
                      // test running at the same time VSTS will start to 
                      // Timeout. Might be DOS protection.
                      setTimeout(function () {
-                        vsts.getReleases(tfs, projectId, pat, userAgent, (err, r) => {
+                        vsts.getReleases(tfs, projectId, pat, userAgent, `Prod`, (err, r) => {
                            if (r !== undefined && r.length > 0) {
                               status = r[0].environments[2].status;
                            }

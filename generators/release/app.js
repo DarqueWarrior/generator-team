@@ -83,6 +83,7 @@ function run(args, gen, done) {
          var relArgs = {
             token: token,
             build: build,
+            type: args.type,
             queueId: queueId,
             account: args.tfs,
             target: args.target,
@@ -169,7 +170,11 @@ function getRelease(args, callback) {
                release = [`tfs_2018_release.json`];
             }
          } else {
-            release = [`tfs_release.json`];
+            if (args.target === `paasslots`) {
+               release = [`vsts_release_slots.json`];
+            } else {
+               release = [`tfs_release.json`];
+            }
          }
 
          callback(e, release);
@@ -229,6 +234,7 @@ function createRelease(args, gen, callback) {
       '{{dockerPorts}}': args.dockerPorts ? args.dockerPorts : null,
       '{{ApproverUniqueName}}': args.approverUniqueName.replace("\\", "\\\\"),
       '{{dockerHostEndpoint}}': args.dockerHostEndpoint ? args.dockerHostEndpoint.id : null,
+      '{{TemplateFolder}}': args.type === 'aspFull' ? `${args.appName}.IaC` : `templates`,
       '{{dockerRegistryId}}': dockerNamespace,
       '{{containerregistry}}': args.dockerRegistry,
       '{{containerregistry_noprotocol}}': args.dockerRegistry ? util.getDockerRegistryServer(args.dockerRegistry) : null,

@@ -90,15 +90,15 @@
          "refName": "build_image",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
-            "versionSpec": "*",
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
             "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Build an image",
-            "dockerFile": "dockerfile",
+            "dockerFile": "Dockerfile",
             "imageName": "{{dockerRegistryId}}/{{ProjectLowerCase}}:$(Build.BuildId)",
             "context": "$(Build.SourcesDirectory)",
             "containerName": "",
@@ -118,11 +118,12 @@
          "refName": "push_image",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "b93c4522-5bea-4118-97ae-2b560628a157",
-            "versionSpec": "*",
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
+            "containerregistrytype": "Container Registry",
             "dockerHostEndpoint": "{{dockerHostEndpoint}}",
             "dockerRegistryEndpoint": "{{dockerRegistryEndpoint}}",
             "action": "Push an image",

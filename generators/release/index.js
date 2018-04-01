@@ -96,6 +96,7 @@ module.exports = class extends Generator {
                   var args = {
                      pat: _this.pat,
                      tfs: _this.tfs,
+                     type: _this.type,
                      queue: _this.queue,
                      target: _this.target,
                      releaseJson: release,

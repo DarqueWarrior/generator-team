@@ -12,6 +12,8 @@ const exec = require('child_process').exec;
 
 const userAgent = `yo team`;
 
+var __basedir = process.cwd();
+
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
 env(__dirname + '/.env', {
@@ -171,8 +173,8 @@ function runTests(iteration) {
 
       context(`Push code to remote`, function () {
          it(`git push should succeed`, function (done) {
-            util.log(`cd to: ${__dirname}${levelsUp}${iteration.applicationName}`);
-            process.chdir(`${__dirname}${levelsUp}${iteration.applicationName}`);
+            util.log(`cd to: ${__basedir}${levelsUp}${iteration.applicationName}`);
+            process.chdir(`${__basedir}${levelsUp}${iteration.applicationName}`);
 
             util.log(`git push`);
             exec(`git push`, (error, stdout, stderr) => {
@@ -243,7 +245,7 @@ function runTests(iteration) {
                   // test running at the same time VSTS will start to 
                   // Timeout. Might be DOS protection.
                   setTimeout(function () {
-                     vsts.getReleases(tfs, iteration.projectId, pat, userAgent, (err, r) => {
+                     vsts.getReleases(tfs, iteration.projectId, pat, userAgent, `Dev`, (err, r) => {
                         if (r.length > 0) {
                            iteration.status = r[0].environments[0].status;
                         }

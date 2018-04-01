@@ -91,7 +91,7 @@ describe(`utility`, function () {
          assert.equal(actual, null);
       }));
 
-      it(`profile is found`, sinonTest(function () {
+      it(`profile is found by name`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(true);
          this.stub(fs, `readFileSync`).returns(`
          [
@@ -120,6 +120,39 @@ describe(`utility`, function () {
 
          // This should work even with mixed case.
          let actual = util.searchProfiles(`Test`);
+
+         assert.notEqual(actual, null);
+      }));
+
+      it(`profile is found by URL`, sinonTest(function () {
+         this.stub(fs, `existsSync`).returns(true);
+         this.stub(fs, `readFileSync`).returns(`
+         [
+            {
+               "Name": "unitTest",
+               "URL": "http://localhost:8080/tfs/defaultcollection",
+               "Pat": "",
+               "Type": "OnPremise",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "TFS",
+               "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "Pat": "OnE2cXpseHk0YXp3dHpz",
+               "Type": "Pat",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "test",
+               "URL": "https://test.visualstudio.com",
+               "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+               "Type": "Pat",
+               "Version": "VSTS"
+            }
+         ]`);
+
+         // This should work even with mixed case.
+         let actual = util.searchProfiles(`http://192.168.1.3:8080/tfs/defaultcollection`);
 
          assert.notEqual(actual, null);
       }));
@@ -551,6 +584,41 @@ describe(`utility`, function () {
 
          // Act
          util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.windowsTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
+
+      it(`getTargets Default queue, aspFull app type 2017`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `aspFull`,
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            pat: `token`
+         };
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  configurationDatabaseServiceLevel: `Dev15.M125.1`,
+                  deploymentHostServiceLevel: `Dev15.M125.1`,
+                  accountDatabaseServiceLevel: `Dev15.M125.1`,
+                  accountHostServiceLevel: `Dev15.M125.1`
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.getTargets(answers).then(function (actual) {
             // Assert
             assert.windowsTargets(actual);
             done();
@@ -1989,9 +2057,9 @@ describe(`utility`, function () {
          assert.equal(actual, expected);
       });
 
-      it(`isTFSGreaterThan2017 false`, function (done) {
+      it(`isTFSGreaterThan2017 return 404 true`, function (done) {
          // Arrange
-         let expected = false;
+         let expected = true;
 
          // This allows me to take control of the request requirement
          // without this there would be no way to stub the request calls
@@ -1999,16 +2067,7 @@ describe(`utility`, function () {
             "request": (options, callback) => {
                callback(null, {
                   statusCode: 404
-               }, JSON.stringify({
-                  count: 2,
-                  value: [{
-                     id: `1e78dc1b-9132-4b18-9c75-0e7ecc634b74`,
-                     name: `Xcode`
-                  }, {
-                     id: `bcb64569-d51a-4af0-9c01-ea5d05b3b622`,
-                     name: `ManualIntervention`
-                  }]
-               }));
+               });
             }
          });
 
@@ -2022,7 +2081,7 @@ describe(`utility`, function () {
 
       it(`isTFSGreaterThan2017 passed VSTS true`, function (done) {
          // Arrange
-         var expected = true;
+         let expected = true;
 
          // Act
          util.isTFSGreaterThan2017(`vsts`, 'token', (e, actual) => {
@@ -2032,7 +2091,34 @@ describe(`utility`, function () {
          });
       });
 
-      it(`isTFSGreaterThan2017 true`, function (done) {
+      it(`isTFSGreaterThan2017 2017 false`, function (done) {
+         // Arrange
+         var expected = false;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  configurationDatabaseServiceLevel: `Dev15.M125.1`,
+                  deploymentHostServiceLevel: `Dev15.M125.1`,
+                  accountDatabaseServiceLevel: `Dev15.M125.1`,
+                  accountHostServiceLevel: `Dev15.M125.1`
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.isTFSGreaterThan2017(`http://tfs2017:8080/tfs/DefaultCollection`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+            done(e);
+         });
+      });
+
+      it(`isTFSGreaterThan2017 2018 true`, function (done) {
          // Arrange
          var expected = true;
 
@@ -2043,14 +2129,10 @@ describe(`utility`, function () {
                callback(null, {
                   statusCode: 200
                }, JSON.stringify({
-                  count: 2,
-                  value: [{
-                     id: `1e78dc1b-9132-4b18-9c75-0e7ecc634b74`,
-                     name: `Xcode`
-                  }, {
-                     id: `e28912f1-0114-4464-802a-a3a35437fd16`,
-                     name: `Docker`
-                  }]
+                  configurationDatabaseServiceLevel: `Dev16.M121.2`,
+                  deploymentHostServiceLevel: `Dev16.M121.2`,
+                  accountDatabaseServiceLevel: `Dev16.M121.2`,
+                  accountHostServiceLevel: `Dev16.M121.2`
                }));
             }
          });

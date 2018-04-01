@@ -6,9 +6,9 @@ const package = require('../../package.json');
 
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
-const RELEASE_API_VERSION = `3.0-preview.3`;
-const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
-const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+const RELEASE_API_VERSION = `3.0-preview`;
+const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
+const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
 
 const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
 
@@ -69,77 +69,66 @@ function reconcileValue(first, second, fallback) {
 // to convert the war file into a zip file.
 function getTargets(answers) {
 
-   return new Promise(function (resolve, reject) {
-      let pat = encodePat(answers.pat);
+    return new Promise(function (resolve, reject) {
+        let targets = [];
 
-      isTFSGreaterThan2017(answers.tfs, pat, function (e, result) {
-         if (e) {
-            reject(e);
-            return;
-         }
+        if (answers.type === `custom`) {
+            targets = [{
+                name: `Azure`,
+                value: `paas`
+            }, {
+                name: `Docker`,
+                value: `docker`
+            }, {
+                name: `Both`,
+                value: `dockerpaas`
+            }];
+        } else if (answers.type === `aspFull`) {
+            targets = [{
+                name: `Azure App Service`,
+                value: `paas`
+            }, {
+                name: `Azure App Service (Deployment Slots)`,
+                value: `paasslots`
+            }];
+        } else if (answers.type === `xamarin`) {
+            targets = [{
+                name: `App Center`,
+                value: `appcenter`
+            }];
+        } else {
+            targets = [{
+                name: `Azure App Service`,
+                value: `paas`
+            }, {
+                name: `Azure App Service (Deployment Slots)`,
+                value: `paasslots`
+            }, {
+                name: `Azure Container Instances (Linux)`,
+                value: `acilinux`
+            }, {
+                name: `Azure App Service Docker (Linux)`,
+                value: `dockerpaas`
+            }, {
+                name: `Docker Host`,
+                value: `docker`
+            }];
 
-         let targets = [];
+            // TODO: Investigate if we need to remove these
+            // options. I think you can offer paas and paasslots
+            // for this combination.
+            if (answers.type === `java` &&
+                answers.queue === `Hosted Linux Preview`) {
+                // Remove Azure App Service
+                targets.splice(0, 1);
 
-         if (result) {
-            if (answers.type === `custom`) {
-               targets = [{
-                  name: `Azure`,
-                  value: `paas`
-               }, {
-                  name: `Docker`,
-                  value: `docker`
-               }, {
-                  name: `Both`,
-                  value: `dockerpaas`
-               }];
-            } else if (answers.type === `aspFull`) {
-               targets = [{
-                  name: `Azure App Service`,
-                  value: `paas`
-               }, {
-                  name: `Azure App Service (Deployment Slots)`,
-                  value: `paasslots`
-               }];
-            } else if (answers.type === `xamarin`) {
-               targets = [{
-                  name: `App Center`,
-                  value: `appcenter`
-               }];
-            } else {
-               targets = [{
-                  name: `Azure App Service`,
-                  value: `paas`
-               }, {
-                  name: `Azure App Service (Deployment Slots)`,
-                  value: `paasslots`
-               }, {
-                  name: `Azure Container Instances (Linux)`,
-                  value: `acilinux`
-               }, {
-                  name: `Azure App Service Docker (Linux)`,
-                  value: `dockerpaas`
-               }, {
-                  name: `Docker Host`,
-                  value: `docker`
-               }];
-
-               // TODO: Investigate if we need to remove these
-               // options. I think you can offer paas and paasslots
-               // for this combination. 
-               if (answers.type === `java` &&
-                  answers.queue === `Hosted Linux Preview`) {
-                  // Remove Azure App Service
-                  targets.splice(0, 1);
-
-                  // Remove Azure App Service (Deployment Slots)
-                  targets.splice(0, 1);
-               }
+                // Remove Azure App Service (Deployment Slots)
+                targets.splice(0, 1);
             }
-         }
+        }
 
-         resolve(targets);
-      });
-   });
+        resolve(targets);
+    });
 }
 
 function getAppTypes(answers) {
@@ -398,7 +387,7 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
       // a second REST call once you know the ID of the dockerregistry type service endpoint.
       // For now assume any dockerregistry service endpoint is safe to use.
       var endpoint = obj.value.find(function (i) {
-         return i.type === `dockerregistry`;
+         return i.type.toLowerCase() === `dockerregistry`;
       });
 
       if (endpoint === undefined) {
@@ -491,7 +480,7 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
       // The i.url is returned with a trailing / so just use starts with just in case
       // the dockerHost is passed in without it
       var endpoint = obj.value.find(function (i) {
-         return i.url.startsWith(dockerHost);
+         return i.url.toLowerCase().startsWith(dockerHost.toLowerCase());
       });
 
       if (endpoint === undefined) {
@@ -545,7 +534,7 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
-         return i.data.subscriptionName === sub.name;
+         return i.data.subscriptionName !== undefined && i.data.subscriptionName.toLowerCase() === sub.name.toLowerCase();
       });
 
       if (endpoint === undefined) {
@@ -577,7 +566,7 @@ function findAzureSub(account, subName, token, gen, callback) {
       var obj = JSON.parse(body);
 
       var sub = obj.value.find(function (i) {
-         return i.displayName === subName;
+         return i.displayName.toLowerCase() === subName.toLowerCase();
       });
 
       callback(error, sub);
@@ -723,7 +712,7 @@ function findBuild(account, teamProject, token, target, callback) {
       var obj = JSON.parse(body);
 
       var bld = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       if (!bld) {
@@ -778,7 +767,7 @@ function findRelease(args, callback) {
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
-         return i.name === name;
+         return i.name.toLowerCase() === name.toLowerCase();
       });
 
       if (!rel) {
@@ -913,12 +902,18 @@ function loadProfiles() {
 
 // Reads profiles created by the VSTeam PowerShell module.
 // Search ignores case.
+// Yo team stores the full URL of TFS and the account name
+// for VSTS.  The profile name might not match the account
+// name or full URL.  So when you run Yo Team again it will
+// default to the full URL or account name and fail to find
+// the profile and prompt for the PAT.  Therefore, here you 
+// need to seach the profile name and URL 
 function searchProfiles(input) {
    let results = loadProfiles();
 
    if (results.profiles !== null) {
       var found = results.profiles.filter(function (i) {
-         return i.Name.toLowerCase() === input.toLowerCase() && i.Type === `Pat`;
+         return (i.Name.toLowerCase() === input.toLowerCase() || i.URL.toLowerCase() === input.toLowerCase())&& i.Type === `Pat`;
       });
 
       if (found.length !== 0) {
@@ -1092,24 +1087,31 @@ function isTFSGreaterThan2017(account, token, callback) {
    if (isVSTS(account)) {
       callback(undefined, true);
    } else {
-      // We can determine if this is 2017 or not by searching for a 
-      // specific docker task.
+      // We can determine if this is 2017 or not by reviewing
+      // the values from teh serviceLevel
       var options = addUserAgent({
          "method": `GET`,
          "headers": {
             "cache-control": `no-cache`,
             "authorization": `Basic ${token}`
          },
-         "url": `${getFullURL(account)}/_apis/distributedtask/tasks/e28912f1-0114-4464-802a-a3a35437fd16`
+         "url": `${getFullURL(account)}/_apis/servicelevel`
       });
 
       request(options, function (error, response, body) {
          if (error) {
-            callback(error, undefined);
+            callback(error, true);
          } else if (response.statusCode === 200) {
-            callback(undefined, true);
+
+            var obj = JSON.parse(body);
+
+            if (obj.configurationDatabaseServiceLevel.startsWith(`Dev15`)) {
+               callback(undefined, false);
+            } else {
+               callback(undefined, true);
+            }
          } else {
-            callback(undefined, false);
+            callback(undefined, true);
          }
       });
    }

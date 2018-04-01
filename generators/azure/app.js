@@ -104,9 +104,9 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
       body: {
          authorization: {
             parameters: {
-               servicePrincipalId: (sub.servicePrincipalId && creationMode === `Manual`) ? sub.servicePrincipalId : ``,
-               servicePrincipalKey: (sub.servicePrincipalKey && creationMode === `Manual`) ? sub.servicePrincipalKey : ``,
-               tenantId: sub.tenantId
+               serviceprincipalid: (sub.servicePrincipalId && creationMode === `Manual`) ? sub.servicePrincipalId : ``,
+               serviceprincipalkey: (sub.servicePrincipalKey && creationMode === `Manual`) ? sub.servicePrincipalKey : ``,
+               tenantid: sub.tenantId
             },
             scheme: 'ServicePrincipal'
          },
