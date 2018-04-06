@@ -1,15 +1,25 @@
+// Collection of utility functions used by other generators. 
+
 const fs = require('fs');
 const os = require('os');
 const url = require('url');
 const request = require(`request`);
 const package = require('../../package.json');
 
+// The version of the API used to talk to TFS and VSTS.  In future
+// versions this might be changed depending on the version of TFS/VSTS
+// we are talking too.  However, the shape of the build and release
+// JSON changes from version to version. The versions used below are 
+// supported in TFS 2017 U3, 2018 U1 and VSTS.
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
 
+// This location is the same as the VSTeam PowerShell module. Therefore,
+// the profiles can be shared between Yo Team and the VSTeam PowerShell
+// module.
 const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
 
 var profile = null;
@@ -51,6 +61,7 @@ function addUserAgent(options) {
    return options;
 }
 
+// Setting the User Agent allows these calls to be identified in the VSTS telemetry.
 function getUserAgent() {
    return `Yo Team/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 }
@@ -127,7 +138,7 @@ function getTargets(answers) {
 }
 
 function getAppTypes(answers) {
-   // Default to languages tha work on all agents
+   // Default to languages that work on all agents
    let types = [{
       name: `.NET Core`,
       value: `asp`
@@ -144,9 +155,10 @@ function getAppTypes(answers) {
       // }
    ];
 
-   // If this is not a Linux based agent also show
+   // If this is not a Linux or Mac based agent also show
    // .NET Full
-   if (answers.queue.indexOf(`Linux`) === -1) {
+   if (answers.queue.indexOf(`Linux`) === -1 &&
+       answers.queue.indexOf(`macOS`) === -1 ) {
       types.splice(1, 0, {
          name: `.NET Framework`,
          value: `aspFull`

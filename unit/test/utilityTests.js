@@ -754,6 +754,20 @@ describe(`utility`, function () {
       assert.equal(3, actual.length, `Wrong number of items returned`);
    });
 
+   it(`getAppTypes macOS`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Hosted macOS Preview'
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(3, actual.length, `Wrong number of items returned`);
+   });
+
    it(`getAppTypes default`, function () {
 
       // Arrange
