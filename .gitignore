@@ -11,3 +11,4 @@ localtest.ps1
 **/.env_tfs
 integration/temp.js
 integration/fullRegression.ps1
+unit.xml
