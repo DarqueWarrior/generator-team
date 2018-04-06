@@ -80,7 +80,6 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
 
       if (results[0] === undefined) {
          gen.env.error("x No files found. Check path to docker certs.");
-         callback("No files found");
       }
 
       caContents = results[0].toString();

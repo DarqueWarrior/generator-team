@@ -11,6 +11,55 @@ const util = require(`../../generators/app/utility`);
 const sinonTest = sinonTestFactory(sinon);
 
 describe(`build:index`, function () {
+   it(`test prompts tfs 2017 custom:paas should not return error`, function () {
+      let cleanUp = function () {
+         util.getPools.restore();
+         util.findQueue.restore();
+         util.getTargets.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.isTFSGreaterThan2017.restore();
+         util.findDockerServiceEndpoint.restore();
+         util.findDockerRegistryServiceEndpoint.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/build`))
+         .withPrompts({
+            type: `custom`,
+            applicationName: `aspDemo`,
+            customFolder: `myFolder`,
+            target: `paas`,
+            tfs: `http://localhost:8080/tfs/DefaultCollection`,
+            queue: `Default`,
+            pat: `token`
+         })
+         .on(`error`, function (e) {
+            cleanUp();
+            assert.fail(e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called
+            sinon.stub(util, `getPools`);
+            sinon.stub(util, `getTargets`);
+            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
+            sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
+            sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
+         })
+         .on(`end`, function () {
+            // Using the yeoman helpers and sinonTest did not play nice
+            // so clean up your stubs
+            cleanUp();
+         });
+   });
+
    it(`test prompts tfs 2017 asp:paas should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();

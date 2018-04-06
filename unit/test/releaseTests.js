@@ -14,7 +14,7 @@ const sinonTest = sinonTestFactory(sinon);
 describe(`release:index`, function () {
    "use strict";
 
-   it(`test prompts node dockerpaas vsts`, function () {
+   it(`test prompts custom dockerpaas vsts`, function () {
       let expectedToken = `OnRva2Vu`;
       let expectedAccount = `vsts`;
 
@@ -35,8 +35,9 @@ describe(`release:index`, function () {
             tfs: `vsts`,
             pat: `token`,
             queue: `Hosted Linux Preview`,
-            type: `node`,
+            type: `custom`,
             applicationName: `nodeDemo`,
+            customFolder: `myFolder`,
             target: `dockerpaas`,
             azureSub: `azureSub`,
             dockerHost: `dockerHost`,
@@ -1296,6 +1297,7 @@ describe(`release:app`, function () {
             name: `e2eDemo-CI`
          },
          queueId: `1`,
+         type: `aspFull`,
          appName: `e2eDemo`,
          approverId: `aid`,
          account: `http://localhost:8080/tfs/DefaultCollection`,

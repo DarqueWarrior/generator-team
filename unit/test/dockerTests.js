@@ -238,6 +238,45 @@ describe(`docker:app`, function () {
       });
    }));
 
+   it(`findOrCreateDockerServiceEndpoint should not find files`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      var requestStub = sinon.stub();
+      const proxyApp = proxyquire(`../../generators/docker/app`, {
+         "request": requestStub
+      });
+
+      this.stub(util, `tryFindDockerServiceEndpoint`).callsArgWith(5, null, undefined);
+
+      this.stub(fs, `readFile`).callsFake((files, options, cb) => {
+         if (cb === undefined) {
+            cb = options;
+         }
+
+         cb(null, undefined);
+      });
+
+      var logger = sinon.stub();
+      logger.log = function () {};
+
+      // Create Project
+      requestStub.onCall(0).yields(null, {
+         statusCode: 400
+      }, null);
+
+      // Act
+      // I use the custom error validation method to call done
+      // because my method is async 
+      assert.throws(function () {
+         proxyApp.findOrCreateDockerServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,
+            `DockerHost`, `dockerCertPath`, `token`, logger, done);
+      }, function (e) {
+         done();
+         return true;
+      });
+   }));
+
    it(`findOrCreateDockerServiceEndpoint should short circuit`, sinonTest(function (done) {
       // Arrange
 

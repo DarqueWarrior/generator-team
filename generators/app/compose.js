@@ -87,7 +87,7 @@ function addLanguage(obj) {
       obj.composeWith(`team:java`, {
          arguments: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
       });
-   } else if (obj.type === `node`) {
+   } else {
       obj.composeWith(`team:node`, {
          arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
       });
