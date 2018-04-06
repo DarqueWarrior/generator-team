@@ -1,3 +1,8 @@
+// Many of the generators use the same prompts in their prompting stage so 
+// these functions make it easy to reuse in other generators.
+// This removed a lot of duplicate code and makes sure the prompts are all
+// handled in the same way in each generator.
+
 const util = require(`./utility`);
 
 function profileCmd(obj) {

@@ -41,6 +41,28 @@ assert.windowsTargets = function (a) {
 
 describe(`utility`, function () {
 
+   context(`logMessage`, function () {
+      it(`should not log`, sinonTest(function () {
+         let stub = this.stub(console, `log`);
+
+         process.env.LOGYO = `off`;
+
+         util.logMessage(`testing`);
+
+         assert.equal(stub.callCount, 0);
+      }));
+
+      it(`should log`, sinonTest(function () {
+         let stub = this.stub(console, `log`);
+
+         process.env.LOGYO = `on`;
+
+         util.logMessage(`testing`);
+
+         assert.equal(stub.calledOnce, true);
+      }));
+   });
+
    context(`profiles`, function () {
       it(`file does not exist`, sinonTest(function () {
          this.stub(fs, `existsSync`).returns(false);
@@ -681,6 +703,24 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
+   it(`needsDockerHost no options`, function () {
+
+      // Arrange
+      let expected = true;
+
+      let answers = {
+         queue: `Default`,
+         target: `acilinux`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, undefined);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+
    it(`needsDockerHost default queue dockerpaas`, function () {
 
       // Arrange
@@ -1159,6 +1199,37 @@ describe(`utility`, function () {
       // Act
       proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
          assert.equal(e, null);
+
+         done();
+      });
+   }));
+
+   it(`checkStatus should run with html error`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            // Confirm the request was formatted correctly
+            assert.equal(`GET`, options.method, `wrong method`);
+            assert.equal(`Basic token`, options.headers.authorization, `wrong authorization`);
+            assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
+
+            // Respond
+            callback(null, {
+               statusCode: 200
+            }, `<html><head></head><body>boom!</body></html>`);
+         }
+      });
+
+      this.stub(console, `log`);
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Act
+      proxyApp.checkStatus(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, `token`, logger, (e, data) => {
+         assert.notEqual(e, null);
 
          done();
       });
@@ -1901,6 +1972,48 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
+   it(`readPatFromProfile`, sinonTest(function () {
+      // Arrange
+      var profiles = `
+      [
+         {
+            "Name": "unitTest",
+            "URL": "http://localhost:8080/tfs/defaultcollection",
+            "Pat": "",
+            "Type": "Pat",
+            "Version": "TFS2017"
+         },
+         {
+            "Name": "http://192.168.1.3:8080/tfs/defaultcollection",
+            "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+            "Pat": "OnE2cXpseHk0YXp3dHpz",
+            "Type": "Pat",
+            "Version": "TFS2017"
+         },
+         {
+            "Name": "test",
+            "URL": "https://test.visualstudio.com",
+            "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+            "Type": "Pat",
+            "Version": "VSTS"
+         }
+      ]`;
+
+      this.stub(fs, `existsSync`).returns(true);
+      this.stub(fs, `readFileSync`).returns(profiles);
+      let expected = false;
+      let profile = util.extractInstance(`test`);
+      let answers = {};
+      let obj = { options: { pat: `` } };
+
+      // Act
+      let actual = util.readPatFromProfile(answers, obj);
+
+      // Assert
+      assert.equal(expected, actual);
+   }));
+
+
    context('load test', function () {
       it(`supportsLoadTests vsts true`, function (done) {
          // Arrange
@@ -1961,6 +2074,82 @@ describe(`utility`, function () {
             done(e);
          });
       });
+
+      it(`supportsLoadTests error with html`, sinonTest(function (done) {
+         // Arrange
+         let expected = undefined;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, `<html><head></head><body>boom!</body></html>`);
+            }
+         });
+
+         this.stub(console, `log`);
+
+         // Act
+         proxyApp.supportsLoadTests(`vsts`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+
+            // e will be an error as expected and if we pass it to done
+            // the test will fail;
+            done();
+         });
+      }));
+   
+      it(`supportsLoadTests errors undefined`, function (done) {
+         // Arrange
+         let expected = undefined;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback({message: `boom`}, undefined);
+            }
+         });
+
+         // Act
+         proxyApp.supportsLoadTests(`vsts`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+
+            // e will be an error as expected and if we pass it to done
+            // the test will fail;
+            done();
+         });
+      });
+
+      it(`supportsLoadTests 404 undefined`, function (done) {
+         // Arrange
+         let expected = undefined;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 404
+               });
+            }
+         });
+
+         // Act
+         proxyApp.supportsLoadTests(`vsts`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+
+            // e will be an error as expected and if we pass it to done
+            // the test will fail;
+            done();
+         });
+      });
+
    });
 
    context(`is`, function () {
@@ -2102,6 +2291,29 @@ describe(`utility`, function () {
 
          // Assert
          assert.equal(actual, expected);
+      });
+
+      it(`isTFSGreaterThan2017 return error`, function (done) {
+         // Arrange
+         let expected = undefined;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback({ message: `boom` });
+            }
+         });
+
+         // Act
+         proxyApp.isTFSGreaterThan2017(`http://tfs2017:8080/tfs/DefaultCollection`, 'token', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+
+            // e will be an error as expected and if we pass it to done
+            // the test will fail;
+            done();
+         });
       });
 
       it(`isTFSGreaterThan2017 return 404 true`, function (done) {

@@ -23,10 +23,9 @@ const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
 const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
 
 var profile = null;
-var logging = process.env.LOGYO || `off`;
 
 var logMessage = function (msg) {
-   if (logging === `on`) {
+   if (process.env.LOGYO === `on`) {
       console.log(msg);
    }
 };
@@ -896,10 +895,20 @@ function searchProfiles(input) {
 
    if (results.profiles !== null) {
       var found = results.profiles.filter(function (i) {
-         return (i.Name.toLowerCase().includes(input.toLowerCase()) || i.URL.toLowerCase().includes(input.toLowerCase())) && i.Type === `Pat`;
+         return (i.Name.toLowerCase().includes(input.toLowerCase()) || 
+                 i.URL.toLowerCase().includes(input.toLowerCase())) &&
+                 i.Type === `Pat`;
       });
 
-      if (found.length !== 0) {
+      if (found.length > 1) {
+         // Try to find the correct entry 
+         found = results.profiles.filter(function (i) {
+            return (i.Name.toLowerCase() === input.toLowerCase() || 
+                    i.URL.toLowerCase() === input.toLowerCase());
+         });
+      } 
+
+      if (found.length === 1) {
          return found[0];
       }
    }
@@ -907,6 +916,10 @@ function searchProfiles(input) {
    return null;
 }
 
+// Used to determine if we need to prompt the user for a PAT
+// If the PAT was read from the profile this method returns
+// false letting the prompt know it does not need to ask for 
+// a PAT.
 function readPatFromProfile(answers, obj) {
    if (profile) {
       // Profiles are stored 64 bit encoded
@@ -914,6 +927,7 @@ function readPatFromProfile(answers, obj) {
       // Skip the leading :
       obj.options.pat = b.toString().substring(1);
    }
+   
    // If the value was passed on the command line it will
    // not be set in answers which other prompts expect.
    // So, place it in answers now.
@@ -1052,10 +1066,10 @@ function supportsLoadTests(account, token, callback) {
                // This a HTML page with an error message.
                err = error;
                console.log(body);
-               callback(err, true);
+               callback(err, undefined);
             }
          } else {
-            callback(undefined, true);
+            callback(undefined, undefined);
          }
       });
    } else {
@@ -1083,7 +1097,7 @@ function isTFSGreaterThan2017(account, token, callback) {
 
       request(options, function (error, response, body) {
          if (error) {
-            callback(error, true);
+            callback(error, undefined);
          } else if (response.statusCode === 200) {
 
             var obj = JSON.parse(body);
