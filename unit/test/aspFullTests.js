@@ -7,7 +7,7 @@ describe(`team:aspFull paas`, function () {
    var bowerStub;
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/aspFull/index`))
+      return helpers.run(path.join(__dirname, `../../generators/aspFull`))
          .withArguments([`aspFullUnitTest`])
          .on(`error`, function (e) {
             assert.fail(e);

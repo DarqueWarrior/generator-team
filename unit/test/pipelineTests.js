@@ -9,9 +9,9 @@ describe(`team:pipeline`, function () {
    it(`using real dependencies`, function () {
       var deps = [
          // No docker gens are listed
-         path.join(__dirname, `../../generators/azure/index`),
-         path.join(__dirname, `../../generators/build/index`),
-         path.join(__dirname, `../../generators/release/index`)
+         path.join(__dirname, `../../generators/azure`),
+         path.join(__dirname, `../../generators/build`),
+         path.join(__dirname, `../../generators/release`)
       ];
 
       let expectedToken = `OnRva2Vu`;
@@ -49,7 +49,7 @@ describe(`team:pipeline`, function () {
       let servicePrincipalKey = `servicePrincipalKey`;
       let tfs = `http://localhost:8080/tfs/defaultcollection`;
 
-      return helpers.run(path.join(__dirname, `../../generators/pipeline/index`))
+      return helpers.run(path.join(__dirname, `../../generators/pipeline`))
          .withGenerators(deps)
          .withArguments([type, applicationName, tfs,
             queue, target, azureSub, azureSubId, tenantId, servicePrincipalId,

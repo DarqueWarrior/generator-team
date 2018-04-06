@@ -30,7 +30,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -83,7 +83,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `http://localhost:8080/tfs/DefaultCollection`,
             pat: `token`,
@@ -136,7 +136,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -188,7 +188,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `http://localhost:8080/tfs/DefaultCollection`,
             pat: `token`,
@@ -240,7 +240,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -288,7 +288,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `http://localhost:8080/tfs/DefaultCollection`,
             pat: `token`,
@@ -336,7 +336,7 @@ describe(`release:index`, function () {
          util.findAzureServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -381,7 +381,7 @@ describe(`release:index`, function () {
          util.findAzureServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -426,7 +426,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -473,7 +473,7 @@ describe(`release:index`, function () {
          util.findAzureServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,
@@ -518,7 +518,7 @@ describe(`release:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/release/index`))
+      return helpers.run(path.join(__dirname, `../../generators/release`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,

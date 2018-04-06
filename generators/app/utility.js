@@ -884,7 +884,7 @@ function searchProfiles(input) {
 
    if (results.profiles !== null) {
       var found = results.profiles.filter(function (i) {
-         return (i.Name.toLowerCase() === input.toLowerCase() || i.URL.toLowerCase() === input.toLowerCase())&& i.Type === `Pat`;
+         return (i.Name.toLowerCase().includes(input.toLowerCase()) || i.URL.toLowerCase().includes(input.toLowerCase())) && i.Type === `Pat`;
       });
 
       if (found.length !== 0) {

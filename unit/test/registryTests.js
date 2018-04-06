@@ -18,7 +18,7 @@ describe(`registry:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/registry/index`))
+      return helpers.run(path.join(__dirname, `../../generators/registry`))
          .withPrompts({
             pat: `token`,
             applicationName: `aspDemo`,
@@ -55,7 +55,7 @@ describe(`registry:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/registry/index`))
+      return helpers.run(path.join(__dirname, `../../generators/registry`))
          .withArguments([
             `aspDemo`,
             `http://localhost:8080/tfs/DefaultCollection`,

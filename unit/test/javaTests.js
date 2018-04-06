@@ -8,7 +8,7 @@ describe(`team:java docker`, function () {
    var spawnStub;
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/java/index`))
+      return helpers.run(path.join(__dirname, `../../generators/java`))
          .withArguments([`javaUnitTest`, `docker`, `false`])
          .on(`error`, function (e) {
             assert.fail(e);
@@ -49,7 +49,7 @@ describe(`team:java paas`, function () {
    var bowerStub;
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/java/index`))
+      return helpers.run(path.join(__dirname, `../../generators/java`))
          .withArguments([`javaUnitTest`, `testGroupID`, `true`, `80`])
          .on(`error`, function (e) {
             assert.fail(e);

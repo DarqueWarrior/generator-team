@@ -18,7 +18,7 @@ describe(`docker:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/docker/index`))
+      return helpers.run(path.join(__dirname, `../../generators/docker`))
          .withPrompts({
             pat: `token`,
             applicationName: `aspDemo`,
@@ -57,7 +57,7 @@ describe(`docker:index`, function () {
          util.findProject.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/docker/index`))
+      return helpers.run(path.join(__dirname, `../../generators/docker`))
          .withArguments([
             `aspDemo`,
             `http://localhost:8080/tfs/DefaultCollection`,

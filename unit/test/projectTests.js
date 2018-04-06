@@ -42,7 +42,7 @@ describe(`project:index`, function () {
       var spy;
       var utilTryFindProject;
 
-      return helpers.run(path.join(__dirname, `../../generators/project/index`))
+      return helpers.run(path.join(__dirname, `../../generators/project`))
          .withPrompts({
             applicationName: `unitTest`,
             tfs: `unitTest`
@@ -83,7 +83,7 @@ describe(`project:index`, function () {
       var spy;
       var utilTryFindProject;
 
-      return helpers.run(path.join(__dirname, `../../generators/project/index`))
+      return helpers.run(path.join(__dirname, `../../generators/project`))
          .withArguments([`unitTest`, `http://localhost:8080/tfs/DefaultCollection`, `token`])
          .on(`error`, function (error) {
             util.tryFindProject.restore();

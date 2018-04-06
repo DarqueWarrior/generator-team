@@ -156,6 +156,39 @@ describe(`utility`, function () {
 
          assert.notEqual(actual, null);
       }));
+
+      it(`profile is found by Account name that does not match profile name`, sinonTest(function () {
+         this.stub(fs, `existsSync`).returns(true);
+         this.stub(fs, `readFileSync`).returns(`
+         [
+            {
+               "Name": "unitTest",
+               "URL": "http://localhost:8080/tfs/defaultcollection",
+               "Pat": "",
+               "Type": "OnPremise",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "TFS",
+               "URL": "http://192.168.1.3:8080/tfs/defaultcollection",
+               "Pat": "OnE2cXpseHk0YXp3dHpz",
+               "Type": "Pat",
+               "Version": "TFS2017"
+            },
+            {
+               "Name": "test",
+               "URL": "https://testWestUS2.visualstudio.com",
+               "Pat": "OndrejR0ZHpwbDM3bXUycGt5c3hm",
+               "Type": "Pat",
+               "Version": "VSTS"
+            }
+         ]`);
+
+         // This should work even with mixed case.
+         let actual = util.searchProfiles(`testWestUS2`);
+
+         assert.notEqual(actual, null);
+      }));
    });
 
    context(`registry from prompts`, function () {

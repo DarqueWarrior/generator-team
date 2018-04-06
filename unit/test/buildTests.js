@@ -23,7 +23,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `asp`,
             applicationName: `aspDemo`,
@@ -71,7 +71,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `aspFull`,
             applicationName: `aspDemo`,
@@ -119,7 +119,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `java`,
             applicationName: `javaDemo`,
@@ -167,7 +167,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `node`,
             applicationName: `nodeDemo`,
@@ -215,7 +215,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `node`,
             applicationName: `nodeDemo`,
@@ -263,7 +263,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `asp`,
             applicationName: `aspDemo`,
@@ -311,7 +311,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withPrompts({
             type: `java`,
             applicationName: `javaDemo`,
@@ -359,7 +359,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withArguments([`node`, `nodeDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -400,7 +400,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withArguments([`java`, `javaDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -443,7 +443,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
@@ -488,7 +488,7 @@ describe(`build:index`, function () {
          util.findDockerRegistryServiceEndpoint.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/build/index`))
+      return helpers.run(path.join(__dirname, `../../generators/build`))
          .withArguments([`asp`, `aspDemo`, `http://localhost:8080/tfs/DefaultCollection`,
             `Default`, `docker`,
             `DockerHost`, `DockerRegistryId`,
