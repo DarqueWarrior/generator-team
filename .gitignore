@@ -12,3 +12,4 @@ localtest.ps1
 integration/temp.js
 integration/fullRegression.ps1
 unit.xml
+.DS_Store
