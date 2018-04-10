@@ -54,6 +54,7 @@ function findProject(expectedAccount, expectedName, expectedToken, context) {
 
       callback(null, {
          value: "TeamProject",
+         name: project,
          id: 1
       });
    });

@@ -1,3 +1,8 @@
+// Many of the generators use the same arguments in their constructors so 
+// these functions make it easy to reuse in other generators.
+// This removed a lot of duplicate code and makes sure argument names match
+// in each generator.
+
 const util = require(`./utility`);
 
 function profileCmd(obj) {

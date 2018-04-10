@@ -77,6 +77,11 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
    var caContents, keyContents, certContents;
 
    async.map([ca, key, cert], fs.readFile, function (err, results) {
+
+      if (results[0] === undefined) {
+         gen.env.error("x No files found. Check path to docker certs.");
+      }
+
       caContents = results[0].toString();
       keyContents = results[1].toString();
       certContents = results[2].toString();
@@ -89,15 +94,15 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
          qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
          body: {
             authorization:
-            {
-               parameters: {
-                  cacert: caContents,
-                  cert: certContents,
-                  certificate: '',
-                  key: keyContents
+               {
+                  parameters: {
+                     cacert: caContents,
+                     cert: certContents,
+                     certificate: '',
+                     key: keyContents
+                  },
+                  scheme: 'Certificate'
                },
-               scheme: 'Certificate'
-            },
             data: {},
             name: 'Docker',
             type: 'dockerhost',

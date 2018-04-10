@@ -10,7 +10,7 @@ describe(`git:index clone`, function () {
    let spawnStub;
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/git/index`))
+      return helpers.run(path.join(__dirname, `../../generators/git`))
          .withPrompts({
             action: `clone`,
             applicationName: `aspDemo`,
@@ -41,7 +41,7 @@ describe(`git:index commit`, function () {
    };
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/git/index`))
+      return helpers.run(path.join(__dirname, `../../generators/git`))
          .withPrompts({
             action: `commit`,
             applicationName: `aspDemo`,
@@ -97,7 +97,7 @@ describe(`git:index all`, function () {
    };
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/git/index`))
+      return helpers.run(path.join(__dirname, `../../generators/git`))
          .withPrompts({
             action: `all`,
             applicationName: `aspDemo`,

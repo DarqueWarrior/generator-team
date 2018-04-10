@@ -8,7 +8,7 @@ describe(`team:node docker`, function () {
    var spawnStub;
 
    before(function () {
-      return helpers.run(path.join(__dirname, `../../generators/node/index`))
+      return helpers.run(path.join(__dirname, `../../generators/node`))
          .withArguments([`nodeDemo`, `false`, `80`])
          .on(`error`, function (e) {
             assert.fail(e);

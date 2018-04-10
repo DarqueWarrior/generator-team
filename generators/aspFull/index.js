@@ -79,9 +79,9 @@ module.exports = class extends Generator {
       this.fs.copyTpl(`${src}/Global.asax`, `${root}/Global.asax`, tokens);
       this.fs.copyTpl(`${src}/Global.asax.cs`, `${root}/Global.asax.cs`, tokens);
       this.fs.copy(`${src}/packages.config`, `${root}/packages.config`);
-      this.fs.copy(`${src}/web.config`, `${root}/web.config`);
-      this.fs.copy(`${src}/web.Debug.config`, `${root}/web.Debug.config`);
-      this.fs.copy(`${src}/web.Release.config`, `${root}/web.Release.config`);
+      this.fs.copy(`${src}/Web.config`, `${root}/web.config`);
+      this.fs.copy(`${src}/Web.Debug.config`, `${root}/web.Debug.config`);
+      this.fs.copy(`${src}/Web.Release.config`, `${root}/web.Release.config`);
 
       this.fs.copyTpl(`${src}/webapp.csproj`, `${root}/${this.applicationName}.csproj`, tokens);
 

@@ -13,7 +13,7 @@ describe(`azure:index`, function () {
    it(`prompts vsts`, function () {
       var azureStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/azure/index`))
+      return helpers.run(path.join(__dirname, `../../generators/azure`))
          .withPrompts({
             tfs: `vsts`,
             pat: `token`,

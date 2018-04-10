@@ -62,6 +62,14 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 
 ## Revision history
 
+## April 2018
+
+### 0.4.5
+
+Updated code to find profile by name for VSTS even if the profile name does not match the VSTS account name.
+
+Got all tests passing on macOS, Linux and Windows.
+
 ## March 2018
 
 ### 0.4.4

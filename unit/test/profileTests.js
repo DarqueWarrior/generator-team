@@ -38,7 +38,7 @@ describe(`profile:index prompt`, function () {
       var fsExistsSyncStub;
       var fsReadFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withPrompts({
             profileCmd: `list`
          })
@@ -79,7 +79,7 @@ describe(`profile:index cmdLine`, function () {
       var spy;
       var fsStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`list`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -106,7 +106,7 @@ describe(`profile:index cmdLine`, function () {
       var fsExistsSyncStub;
       var fsReadFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`list`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -137,7 +137,7 @@ describe(`profile:index cmdLine`, function () {
       var fsExistsSyncStub;
       var fsReadFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`list`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -173,7 +173,7 @@ describe(`profile:index cmdLine`, function () {
       var fsExistsSyncStub;
       var fsWriteFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`add`, `local`, `http://localhost:8080/tfs/DefaultCollection`, `token`, `TFS2018`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -214,7 +214,7 @@ describe(`profile:index cmdLine`, function () {
       var fsExistsSyncStub;
       var fsWriteFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`add`, `test`, `test`, `token`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -258,7 +258,7 @@ describe(`profile:index cmdLine`, function () {
 
       // This test is making sure we can update an existing entry even if the 
       // casing of the URL does not match.
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`add`, `local`, `http://192.168.1.3:8080/tfs/DefaultCollection`, `token`, `TFS2018`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -307,7 +307,7 @@ describe(`profile:index cmdLine`, function () {
       var fsReadFileSyncStub;
 
       // This should delete even if the casing does not match. 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`delete`, `http://192.168.1.3:8080/TFS/DefaultCollection`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -362,7 +362,7 @@ describe(`profile:index cmdLine`, function () {
       var fsWriteFileSyncStub;
       var fsReadFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`delete`, `http://192.168.1.3:8080/tfs/defaultcollection`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
@@ -405,7 +405,7 @@ describe(`profile:index cmdLine`, function () {
       var fsWriteFileSyncStub;
       var fsReadFileSyncStub;
 
-      return helpers.run(path.join(__dirname, `../../generators/profile/index`))
+      return helpers.run(path.join(__dirname, `../../generators/profile`))
          .withArguments([`delete`, `http://192.168.1.3:8080/tfs/defaultcollection`])
          .on(`error`, function (error) {
             fs.existsSync.restore();
