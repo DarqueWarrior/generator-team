@@ -22,7 +22,8 @@
       "generators/profile",
       "generators/project",
       "generators/registry",
-      "generators/release"
+      "generators/release",
+      "generators/k8helmpipeline"
    ],
    "keywords": [
       "yeoman-generator",
@@ -33,7 +34,9 @@
       "Visual Studio",
       "DevOps",
       "RubDevOpsOnIt",
-      "Blackshirt"
+      "Blackshirt",
+      "k8",
+      "kubernetes"
    ],
    "author": "@DonovanBrown",
    "repository": {

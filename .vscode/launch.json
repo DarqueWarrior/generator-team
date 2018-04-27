@@ -7,9 +7,9 @@
          "type": "node",
          "request": "launch",
          "name": "Yeoman team",
-         "program": "${workspaceRoot}/node_modules/yo/lib/cli.js",
+         "program": "/usr/local/lib/node_modules/yo/lib/cli.js",
          "args": [
-            "team"
+            "team:k8helmpipeline"
          ],
          "console": "integratedTerminal",
          "internalConsoleOptions": "neverOpen"
