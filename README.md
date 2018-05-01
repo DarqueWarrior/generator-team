@@ -2,7 +2,7 @@
 
 ## Build status
 
-!["Build Status"](https://dlb.visualstudio.com/_apis/public/build/definitions/40202688-4713-4e5d-85ea-958146d71db6/53/badge)
+[![Build badge](https://loecda.visualstudio.com/_apis/public/build/definitions/4ead775f-7f7b-4f57-9c97-80f30a6d7fbf/10/badge)](https://loecda.visualstudio.com/Yo%20Team/_build/index?context=mine&path=%5C&definitionId=10&_a=completed) 
 
 ## See it in action
 
