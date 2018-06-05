@@ -2101,7 +2101,7 @@ describe(`utility`, function () {
             done();
          });
       }));
-   
+
       it(`supportsLoadTests errors undefined`, function (done) {
          // Arrange
          let expected = undefined;
@@ -2110,7 +2110,7 @@ describe(`utility`, function () {
          // without this there would be no way to stub the request calls
          const proxyApp = proxyquire(`../../generators/app/utility`, {
             "request": (options, callback) => {
-               callback({message: `boom`}, undefined);
+               callback({ message: `boom` }, undefined);
             }
          });
 
@@ -2291,6 +2291,52 @@ describe(`utility`, function () {
 
          // Assert
          assert.equal(actual, expected);
+      });
+
+      it(`isExtensionInstalled return error`, function (done) {
+         // Arrange
+         let expected = false;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback({ message: `boom` });
+            }
+         });
+
+         // Act
+         proxyApp.isExtensionInstalled(`http://tfs2017:8080/tfs/DefaultCollection`, 'token', 'SomePublisher', 'SomeExtension', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+
+            // e will be an error as expected and if we pass it to done
+            // the test will fail;
+            done();
+         });
+      });
+
+      it(`isExtensionInstalled`, function (done) {
+         // Arrange
+         let expected = true;
+
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(undefined, { extensionName: `SomeExtension` });
+            }
+         });
+
+         // Act
+         proxyApp.isExtensionInstalled(`http://tfs2017:8080/tfs/DefaultCollection`, 'token', 'SomePublisher', 'SomeExtension', (e, actual) => {
+            // Assert
+            assert.equal(expected, actual);
+
+            // e will be an error as expected and if we pass it to done
+            // the test will fail;
+            done();
+         });
       });
 
       it(`isTFSGreaterThan2017 return error`, function (done) {
@@ -2477,7 +2523,7 @@ describe(`utility`, function () {
          var expected = `https://vsts.vsrm.visualstudio.com/DefaultCollection`;
 
          // Act
-         var actual = util.getFullURL(`vsts`, true, true);
+         var actual = util.getFullURL(`vsts`, true, util.RELEASE_MANAGEMENT_SUB_DOMAIN);
 
          // Assert
          assert.equal(expected, actual);
