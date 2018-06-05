@@ -218,7 +218,7 @@ function packageName(obj) {
       name: `packageName`,
       type: `input`,
       store: true,
-      message: `What is the name of your package? (com.compagny)`,
+      message: `What is the name of your package? (com.company)`,
        when: answers => {
            return obj.options.packageName === undefined && answers.type === `xamarin`;
        }
