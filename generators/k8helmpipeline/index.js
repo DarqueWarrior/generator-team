@@ -50,6 +50,7 @@ module.exports = class extends Generator {
          prompts.applicationName(this),
          prompts.customFolder(this),
          prompts.target(this),
+         prompts.configUpdate(this),
          prompts.azureSubInput(this),
          prompts.azureSubList(this),
          prompts.azureSubId(this),

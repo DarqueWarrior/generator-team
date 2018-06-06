@@ -458,17 +458,10 @@ function gitAction(obj) {
 
 function configUpdate(obj){
    return {
-      type: `list`,
-      name: `action`,
+      type: `input`,
+      name: `kubeConfig`,
       store: false,
-      message: `Is your config file updated with your kubeconfig file?`,
-      choices: [{
-         name: `Yes`,
-         value: `yes`
-      }, {
-         name: `No`,
-         value: `no`
-      }],
+      message: `Is your config file updated with your kubeconfig file? (yes or no)`,
       validate: util.validateConfigUpdate,
       when: function () {
          return obj.options.action === undefined;

@@ -284,7 +284,8 @@ function validateServicePrincipalKey(input) {
 }
 
 function validateConfigUpdate(input){
-   return validateRequired(input, 'This file must be updated with the correct config file before you select "Yes" ')
+   let valid = input.toLowerCase() === 'yes' ? input : '';
+   return validateRequired(valid, 'This file must be updated with the correct config file before you select "Yes" ');
 }
 
 function tokenize(input, nvp) {
