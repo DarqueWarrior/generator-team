@@ -142,21 +142,6 @@ function getTargets(answers) {
    });
 }
 
-function getKubeTargets(answers){
-   return new Promise(function (resolve, reject) {
-      let targets = [];
-
-         targets = [{
-            name: `Azure Kubernetes Services`,
-            value: `aks`
-         }, {
-            name: `Azure Container Services`,
-            value: `acs`
-         }];
-      resolve(targets);
-   });
-}
-
 function getAppTypes(answers) {
    // Default to languages that work on all agents
    let types = [{
@@ -1184,7 +1169,6 @@ module.exports = {
    getFullURL: getFullURL,
    logMessage: logMessage,
    getTargets: getTargets,
-   getKubeTargets: getKubeTargets,
    getAppTypes: getAppTypes,
    checkStatus: checkStatus,
    findProject: findProject,
