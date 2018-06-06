@@ -456,6 +456,26 @@ function gitAction(obj) {
    };
 }
 
+function configUpdate(obj){
+   return {
+      type: `list`,
+      name: `action`,
+      store: false,
+      message: `Is your config file updated with your kubeconfig file?`,
+      choices: [{
+         name: `Yes`,
+         value: `yes`
+      }, {
+         name: `No`,
+         value: `no`
+      }],
+      validate: util.validateConfigUpdate,
+      when: function () {
+         return obj.options.action === undefined;
+      }
+   };
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -482,5 +502,6 @@ module.exports = {
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
-   dockerRegistryUsername: dockerRegistryUsername
+   dockerRegistryUsername: dockerRegistryUsername,
+   configUpdate:configUpdate
 };

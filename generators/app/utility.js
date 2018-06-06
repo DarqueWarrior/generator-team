@@ -283,6 +283,10 @@ function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
 }
 
+function validateConfigUpdate(input){
+   return validateRequired(input, 'This file must be updated with the correct config file before you select "Yes" ')
+}
+
 function tokenize(input, nvp) {
    for (var key in nvp) {
       input = input.replaceAll(key, nvp[key]);
@@ -1213,5 +1217,6 @@ module.exports = {
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
-   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint
+   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
+   validateConfigUpdate,validateConfigUpdate
 };
