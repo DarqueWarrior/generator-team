@@ -12,8 +12,6 @@ module.exports = class extends Generator {
       // Calling the super constructor is important so our generator is correctly set up
       super(args, opts);
 
-      this.kube = true;
-
       // Order is important
       // These are position based arguments for this generator. If they are not provided
       // via the command line they will be queried during the prompting priority

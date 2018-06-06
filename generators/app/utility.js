@@ -117,6 +117,12 @@ function getTargets(answers) {
          }, {
             name: `Docker Host`,
             value: `docker`
+         }, {
+            name: 'Kubernetes: Azure Kubernetes Service',
+            value: 'aks'
+         }, {
+            name: 'Kubernetes: Azure Container Services',
+            value: 'acs'
          }];
 
          // TODO: Investigate if we need to remove these
