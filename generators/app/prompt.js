@@ -201,12 +201,13 @@ function applicationName(obj) {
 }
 
 function target(obj) {
+   var isKube = obj.hasOwnProperty('kube');
    return {
       name: `target`,
       type: `list`,
       store: true,
       message: `Where would you like to deploy?`,
-      choices: util.getTargets,
+      choices: isKube ? util.getKubeTargets :util.getTargets,
       when: answers => {
          return obj.options.target === undefined;
       }
