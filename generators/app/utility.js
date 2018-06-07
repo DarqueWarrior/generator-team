@@ -93,6 +93,14 @@ function getTargets(answers) {
             name: `Both`,
             value: `dockerpaas`
          }];
+      } else if (answers.type === 'kubernetes') {
+         targets = [{
+            name: 'Kubernetes: Azure Kubernetes Service',
+            value: 'aks'
+         }, {
+            name: 'Kubernetes: Azure Container Services',
+            value: 'acs'
+         }];
       } else if (answers.type === `aspFull`) {
          targets = [{
             name: `Azure App Service`,
@@ -117,6 +125,12 @@ function getTargets(answers) {
          }, {
             name: `Docker Host`,
             value: `docker`
+         }, {
+            name: 'Kubernetes: Azure Kubernetes Service',
+            value: 'aks'
+         }, {
+            name: 'Kubernetes: Azure Container Services',
+            value: 'acs'
          }];
 
          // TODO: Investigate if we need to remove these
@@ -147,6 +161,9 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
+   }, {
+      name: 'Kubernetes: Default (nginx)',
+      value: 'kubernetes'
    }
       // , {
       //    name: `Custom`,
