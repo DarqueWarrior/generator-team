@@ -124,11 +124,11 @@ function getRelease(args, callback) {
    var release = ``;
 
    let pat = util.encodePat(args.pat);
+   let kubeDeployment = util.kubeDeployment(args.target);
 
    if (util.isDocker(args.target)) {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if (result) {
-
             // see if they support load tests or not
             if (args.removeloadTest && args.target === `dockerpaas`) {
                release = `vsts_release_${args.target}_noloadtest.json`;
@@ -147,7 +147,10 @@ function getRelease(args, callback) {
       });
    } else {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
-         if (result) {
+         if (kubeDeployment) {
+            release = `vsts_release_kube_${args.target}.json`;
+
+         } else if (result) {
             if (util.isVSTS(args.tfs)) {
 
                if (args.target === `paasslots`) {
@@ -196,7 +199,9 @@ function findOrCreateRelease(args, gen, callback) {
 function createRelease(args, gen, callback) {
    'use strict';
 
-   let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
+   let kubeDeployment = util.kubeDeployment(args.target);
+   let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : kubeDeployment ? `${args.teamProject.name}-kube-${kubeDeployment}`:`${args.teamProject.name}-CD`;
+
 
    gen.log(`+ Creating ${releaseDefName} release definition`);
 

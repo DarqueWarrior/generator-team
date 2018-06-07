@@ -687,6 +687,12 @@ function findQueue(name, account, teamProject, token, callback) {
    });
 }
 
+function kubeDeployment(target){
+   let kube = (target === 'acs' || target === 'aks' ? target : undefined);
+
+   return kube;
+}
+
 function tryFindBuild(account, teamProject, token, target, callback) {
    'use strict';
 
@@ -701,8 +707,12 @@ function tryFindBuild(account, teamProject, token, target, callback) {
 
 function findBuild(account, teamProject, token, target, callback) {
    'use strict';
+   
+   let kube = kubeDeployment(target);
 
-   var name = isDocker(target) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
+   var name = isDocker(target) ? `${teamProject.name}-Docker-CI` : kube ? `${teamProject.name}-${kube}-CI` : `${teamProject.name}-CI`;
+              
+
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -748,7 +758,8 @@ function tryFindRelease(args, callback) {
 function findRelease(args, callback) {
    "use strict";
 
-   var name = isDocker(args.target) ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
+   let kube = kubeDeployment(args.target);
+   var name = isDocker(args.target) ? `${args.appName}-Docker-CD` : kube ? `${args.appName}-kube-${kube}`:`${args.appName}-CD`;
 
    var options = addUserAgent({
       "method": `GET`,
@@ -1230,5 +1241,6 @@ module.exports = {
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
-   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint
+   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
+   kubeDeployment:kubeDeployment
 };

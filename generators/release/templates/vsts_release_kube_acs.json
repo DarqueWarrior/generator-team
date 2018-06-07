@@ -1,0 +1,153 @@
+{
+   "name": "{{ReleaseDefName}}",
+   "variables": {
+      "system.debug": {
+         "value": "false"
+      }
+   },
+   "environments": [
+      {
+         "name": "Dev",
+         "rank": 1,
+         "variables": {},
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "parallelExecution": {
+                  "parallelExecutionType": "none"
+               },
+               "skipArtifactsDownload": false,
+               "artifactsDownloadInput": {
+                  "downloadInputs": [{
+                     "artifactItems": [],
+                     "alias": "{{BuildName}}",
+                     "artifactType": "Build",
+                     "artifactDownloadMode": "All"
+                  }]
+               },
+               "queueId": 14,
+               "demands": [],
+               "enableAccessToken": false,
+               "timeoutInMinutes": 0,
+               "jobCancelTimeoutInMinutes": 1,
+               "condition": "succeeded()",
+               "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+               "taskId": "4bbc6ca0-59b2-11e7-83fe-c360e4fd66d4",
+               "version": "1.*",
+               "name": "downloader ",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "k8sService": "179331ba-956a-4d12-8401-0bbbfd80a8d2",
+                  "kubectlBinary": "",
+                  "downloadVersion": "",
+                  "hasIstio": "false",
+                  "IstioVersion": "0.1.6",
+                  "hasHelm": "true",
+                  "helmVersion": "2.5.0"
+               }
+            }, {
+               "taskId": "79d92bb0-5cae-11e7-94c2-fff61a32ec2a",
+               "version": "1.*",
+               "name": "helm upgrade",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "subCommand": "upgrade",
+                  "arguments": ""
+               }
+            }]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "ReleaseStarted",
+               "conditionType": 1,
+               "value": ""
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      }
+   ],
+   "artifacts": [
+      {
+         "sourceId": "{{ProjectId}}:{{BuildId}}",
+         "type": "Build",
+         "alias": "{{BuildName}}",
+         "definitionReference": {
+            "defaultVersionType": {
+            "id": "latestType",
+            "name": "Latest"
+            },
+            "definition": {
+               "id": "{{BuildId}}",
+               "name": "{{BuildName}}"
+            },
+            "project": {
+               "id": "{{ProjectId}}",
+               "name": "{{ProjectName}}"
+            }
+         },
+         "isPrimary": true
+      }
+   ],
+   "triggers": [
+      {
+         "artifactAlias": "{{BuildName}}",
+         "triggerType": 1
+      }
+   ],
+   "releaseNameFormat": "Release-$(rev:r)",
+   "retentionPolicy": null
+}
