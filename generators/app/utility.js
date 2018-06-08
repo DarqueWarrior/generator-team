@@ -709,7 +709,6 @@ function findBuild(account, teamProject, token, target, callback) {
    'use strict';
    
    let kube = kubeDeployment(target);
-
    var name = isDocker(target) ? `${teamProject.name}-Docker-CI` : kube ? `${teamProject.name}-${kube}-CI` : `${teamProject.name}-CI`;
               
 
