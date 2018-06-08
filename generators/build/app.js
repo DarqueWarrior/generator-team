@@ -164,11 +164,11 @@ function getBuild(args, callback) {
 
          callback(e, build);
       });
+   } else if (kubeDeployment){
+      build = `vsts_kube_${kubeDeployment}_build.json`;
    } else {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
-         if (result && kubeDeployment) {
-            build = `vsts_kube_${args.target}_build.json`;
-         } else if (result) {
+         if (result) {
             build = `vsts_${args.type}_build.json`;
          }
           else {
