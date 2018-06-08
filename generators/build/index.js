@@ -68,6 +68,7 @@ module.exports = class extends Generator {
       // getBuild so store it here.
       var _this = this;
       var done = this.async();
+      console.log("In writing of build/index");
 
       app.getBuild(this, function (e, result) {
          var build = _this.templatePath(result);

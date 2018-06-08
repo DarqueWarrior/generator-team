@@ -43,7 +43,7 @@
                      "artifactDownloadMode": "All"
                   }]
                },
-               "queueId": 14,
+               "queueId": "{{QueueId}}",
                "demands": [],
                "enableAccessToken": false,
                "timeoutInMinutes": 0,
@@ -67,7 +67,7 @@
                "overrideInputs": {},
                "condition": "succeeded()",
                "inputs": {
-                  "k8sService": "179331ba-956a-4d12-8401-0bbbfd80a8d2",
+                  "k8sService": "bb79ef71-f463-4e55-8193-5de5ed532e62",
                   "kubectlBinary": "",
                   "downloadVersion": "",
                   "hasIstio": "false",
@@ -89,7 +89,7 @@
                "condition": "succeeded()",
                "inputs": {
                   "subCommand": "upgrade",
-                  "arguments": ""
+                  "arguments": "{{ProjectName}} {{BuildName}}/chart/{{ProjectName}} -i -f {{BuildName}}/chart/{{ProjectName}}/values.yaml"
                }
             }]
          }],

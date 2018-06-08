@@ -20,7 +20,7 @@
                "definitionType": "task"
             },
             "inputs": {
-               "k8sService": "179331ba-956a-4d12-8401-0bbbfd80a8d2",
+               "k8sService": "",
                "kubectlBinary": "",
                "downloadVersion": "",
                "hasIstio": "false",
@@ -42,7 +42,7 @@
             },
             "inputs": {
                "subCommand": "lint",
-               "arguments": "./charts/hello-world"
+               "arguments": "./chart/{{Project}}"
             }
          }, {
             "enabled": true,
