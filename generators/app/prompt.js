@@ -461,7 +461,7 @@ function configUpdate(obj){
       type: `input`,
       name: `kubeConfig`,
       store: false,
-      message: `Is your config file updated with your kubeconfig file? (yes or no)`,
+      message: `Have you configured your Kubernetes service endpoint? (yes or no)`,
       validate: util.validateConfigUpdate,
       when: function () {
          return obj.options.action === undefined;

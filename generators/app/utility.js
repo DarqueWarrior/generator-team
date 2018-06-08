@@ -302,7 +302,7 @@ function validateServicePrincipalKey(input) {
 
 function validateConfigUpdate(input){
    let valid = input.toLowerCase() === 'yes' ? input : '';
-   return validateRequired(valid, 'This file must be updated with the correct config file before you select "Yes" ');
+   return validateRequired(valid, 'You must configure your Kubernetes endpoint before you answer "Yes". Check docs for more info ');
 }
 
 function tokenize(input, nvp) {
