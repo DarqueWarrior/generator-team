@@ -1246,6 +1246,6 @@ module.exports = {
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
    tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
-   validateConfigUpdate:validateConfigUpdate,
-   kubeDeployment: kubeDeployment
+   validateConfigUpdate: validateConfigUpdate,
+   kubeDeployment: kubeDeployment,
 };
