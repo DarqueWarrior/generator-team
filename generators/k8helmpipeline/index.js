@@ -152,6 +152,8 @@ module.exports = class extends Generator {
 
    // 7. Where installation are run (npm, bower)
    install() {
+      util.acsExtensionsCheck(this.tfs, this.pat);
+
       // Based on the users answers compose all the required generators.
       compose.addDockerHost(this);
       compose.addRegistry(this);

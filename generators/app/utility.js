@@ -1270,6 +1270,40 @@ function getFullURL(instance, includeCollection, forRM) {
    return vstsURL;
 }
 
+function acsExtensionsCheck(account_name, pat){
+   let token = encodePat(pat);
+   let author = 'tsuyoshiushio';
+   let extension = 'k8s-endpoint'
+
+   let options = {
+   "method": `GET`,
+   "headers": {
+      "Cache-control": `no-cache`,
+      "Authorization": `Basic ${token}`
+   },
+   "url": `https://${account_name}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
+   };
+
+   request(options, function (error, response, body) {
+      // Need downloader, helm task
+         if(error) {
+            return console.log(err);
+         }
+
+         let obj = JSON.parse(body);
+
+         if (!obj.hasOwnProperty('extensionId') || obj['extensionId'] !== 'k8s-endpoint'){
+               acsExtensionsInstall();
+            }
+
+      });
+}
+
+function acsExtensionsInstall(){
+   console.log("You need to install the k8s extension on the vsts marketplace");
+   // Install here
+}
+
 module.exports = {
 
    // Exports the portions of the file we want to share with files that require
@@ -1349,5 +1383,6 @@ module.exports = {
    kubeDeployment: kubeDeployment,
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
-   getReleaseDefName: getReleaseDefName
+   getReleaseDefName: getReleaseDefName,
+   acsExtensionsCheck: acsExtensionsCheck
 };
