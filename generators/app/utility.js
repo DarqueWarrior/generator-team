@@ -305,6 +305,10 @@ function validateConfigUpdate(input){
    return validateRequired(valid, 'You must configure your Kubernetes endpoint before you answer "Yes". Check docs for more info ');
 }
 
+function validateKubeEndpoint(input) {
+   return validateRequired(input, `You must provide a Kubernetes Service Endpoint!`);
+}
+
 function tokenize(input, nvp) {
    for (var key in nvp) {
       input = input.replaceAll(key, nvp[key]);
@@ -822,6 +826,47 @@ function getAzureSubs(answers) {
    });
 }
 
+function getKubeEndpoint(answers) {
+   "use strict";
+
+   var token = encodePat(answers.pat);
+   let account_name = answers.tfs;
+   let project = answers.applicationName;
+
+   var options = {
+      "method": `GET`,
+      "headers": {
+         "Cache-control": `no-cache`,
+         "Authorization": `Basic ${token}`
+      },
+      "url": `https://${account_name}.visualstudio.com/${project}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
+   
+   };
+
+   return new Promise(function (resolve, reject) {
+      request(options, function (e, response, body) {
+         if (e) {
+            reject(e);
+            return;
+         }
+
+         var obj = JSON.parse(body);
+
+         var result = [];
+
+         // Passing in Endpoint name as display name, but saving the endpoint ID to be used later
+         obj.value.forEach((endpoint) => {
+            result.push({
+               name: endpoint.name,
+               value: endpoint.id
+            });
+         });
+
+         resolve(result);
+      });
+   });
+}
+
 function getProfileCommands(answers) {
    "use strict";
 
@@ -1236,5 +1281,8 @@ module.exports = {
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
    tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
-   validateConfigUpdate,validateConfigUpdate
+   validateConfigUpdate: validateConfigUpdate,
+   getKubeEndpoint: getKubeEndpoint,
+   validateKubeEndpoint: validateKubeEndpoint,
+
 };

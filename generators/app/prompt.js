@@ -247,6 +247,27 @@ function azureSubList(obj) {
    };
 }
 
+function kubeEndpointList(obj) {
+   return {
+      name: `kubeEndpoint`,
+      type: `list`,
+      store: true,
+      message: `Which Kubernetes Endpoint would you like to use?`,
+      choices: util.getKubeEndpoint,
+      validate: util.validateKubeEndpoint,
+      when: answers => {
+         // var result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         var result = obj.options.kubeEndpoint === undefined;
+
+         if (result) {
+            obj.log(`  Getting Kubernetes Endpoints... `);
+         }
+
+         return result;
+      }
+   };
+}
+
 function azureSubId(obj) {
    return {
       name: `azureSubId`,
@@ -496,5 +517,6 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername,
-   configUpdate:configUpdate
+   configUpdate: configUpdate,
+   kubeEndpointList: kubeEndpointList
 };
