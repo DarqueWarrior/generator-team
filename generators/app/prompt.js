@@ -256,7 +256,6 @@ function kubeEndpointList(obj) {
       choices: util.getKubeEndpoint,
       validate: util.validateKubeEndpoint,
       when: answers => {
-         // var result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
          var result = obj.options.kubeEndpoint === undefined;
 
          if (result) {
