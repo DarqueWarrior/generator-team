@@ -1270,7 +1270,7 @@ function getFullURL(instance, includeCollection, forRM) {
    return vstsURL;
 }
 
-function acsExtensionsCheck(account_name, pat){
+function acsExtensionsCheckOrInstall(account_name, pat) {
    let token = encodePat(pat);
    let author = 'tsuyoshiushio';
    let extension = 'k8s-endpoint'
@@ -1284,6 +1284,11 @@ function acsExtensionsCheck(account_name, pat){
    "url": `https://${account_name}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
    };
 
+   acsExtensionsCheck(options,acsExtensionsInstall);
+}
+
+function acsExtensionsCheck(options,callback) {
+
    request(options, function (error, response, body) {
       // Need downloader, helm task
          if(error) {
@@ -1292,16 +1297,28 @@ function acsExtensionsCheck(account_name, pat){
 
          let obj = JSON.parse(body);
 
-         if (!obj.hasOwnProperty('extensionId') || obj['extensionId'] !== 'k8s-endpoint'){
-               acsExtensionsInstall();
+         if (obj['extensionId'] !== 'k8s-endpoint'){
+            callback(options);
             }
 
       });
+   console.log("The extensions are installed!");
 }
 
-function acsExtensionsInstall(){
-   console.log("You need to install the k8s extension on the vsts marketplace");
-   // Install here
+function acsExtensionsInstall(options) {
+   options["method"] = `POST`;
+
+   request(options, function (error, response, body) {
+      // Need downloader, helm task
+         if(error) {
+            return console.log(err);
+         }
+
+         let obj = JSON.parse(body);
+
+         console.log("Installing extensions...");
+
+      });
 }
 
 module.exports = {
@@ -1384,5 +1401,6 @@ module.exports = {
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
    getReleaseDefName: getReleaseDefName,
-   acsExtensionsCheck: acsExtensionsCheck
+   acsExtensionsCheck: acsExtensionsCheck,
+   acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall
 };
