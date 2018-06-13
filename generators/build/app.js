@@ -95,7 +95,7 @@ function createBuild(account, teamProject, token, queueId,
    'use strict';
 
    let kubeDeployment = util.kubeDeployment(target);
-   let buildDefName = util.isDocker(target) ? `${teamProject.name}-Docker-CI` : kubeDeployment ? `${teamProject.name}-${kubeDeployment}-CI` : `${teamProject.name}-CI`;
+   let buildDefName = getBuildDefName(target,teamProject.name);
 
    gen.log(`+ Creating ${buildDefName} build definition`);
 
@@ -149,7 +149,7 @@ function createBuild(account, teamProject, token, queueId,
 }
 
 function getBuild(args, callback) {
-   var build = ``;
+   let build = ``;
 
    let pat = util.encodePat(args.pat);
    let kubeDeployment = util.kubeDeployment(args.target);
@@ -166,10 +166,9 @@ function getBuild(args, callback) {
       });
    } else {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
-         if (kubeDeployment) {
-            build = `vsts_kube_${kubeDeployment}_build.json`;
-         } else if(result){
-            build = `vsts_${args.type}_build.json`;
+         if(result){
+            let argument = kubeDeployment ? kubeDeployment : args.type;
+            build = `vsts_${argument}_build.json`;
          }
           else {
             build = `tfs_${args.type}_build.json`;
@@ -178,6 +177,25 @@ function getBuild(args, callback) {
          callback(e, build);
       });
    }
+}
+
+function getBuildDefName(target, projectName){
+   let kubeDeployment = util.kubeDeployment(target);
+   let dockerDeployment = util.dockerDeployment(target);
+
+   let buildDefName = undefined;
+   switch(target){
+      case kubeDeployment:
+         buildDefName = `${projectName}-${kubeDeployment}-CI`;
+         break;
+      case dockerDeployment:
+         buildDefName = `${projectName}-Docker-CI`;
+         break;
+      default:
+         buildDefName = `${projectName}-CI`;
+   }
+
+   return buildDefName;
 }
 
 module.exports = {

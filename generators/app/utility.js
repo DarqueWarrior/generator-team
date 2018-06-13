@@ -693,9 +693,23 @@ function findQueue(name, account, teamProject, token, callback) {
 }
 
 function kubeDeployment(target){
-   let kube = (target === 'acs' || target === 'aks' ? target : undefined);
+   let kube = undefined;
+
+   if (target === 'acs' || target === 'aks'){
+      kube = target;
+   }
 
    return kube;
+}
+
+function dockerDeployment(target) {
+   let docker = undefined;
+
+   if (target === `docker` || target === `dockerpaas` || target === `acilinux`){
+      docker = target;
+   }
+
+   return docker;
 }
 
 function tryFindBuild(account, teamProject, token, target, callback) {
@@ -714,9 +728,15 @@ function findBuild(account, teamProject, token, target, callback) {
    'use strict';
    
    let kube = kubeDeployment(target);
-   var name = isDocker(target) ? `${teamProject.name}-Docker-CI` : kube ? `${teamProject.name}-${kube}-CI` : `${teamProject.name}-CI`;
-              
+   var name = `${teamProject.name}-CI`;
 
+   if (isDocker(target)){
+      name = `${teamProject.name}-Docker-CI`;
+   }
+   else if (kube){
+      name = `${teamProject.name}-${kube}-CI`
+   }
+              
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -763,7 +783,13 @@ function findRelease(args, callback) {
    "use strict";
 
    let kube = kubeDeployment(args.target);
-   var name = isDocker(args.target) ? `${args.appName}-Docker-CD` : kube ? `${args.appName}-kube-${kube}`:`${args.appName}-CD`;
+   var name = `${args.appName}-CD`;
+   if (isDocker(args.target)){
+      name = `${args.appName}-Docker-CD`;
+   }
+   else if(kube){
+      name = `${args.appName}-kube-${kube}`;
+   }
 
    var options = addUserAgent({
       "method": `GET`,
@@ -1248,4 +1274,5 @@ module.exports = {
    tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
    validateConfigUpdate: validateConfigUpdate,
    kubeDeployment: kubeDeployment,
+   dockerDeployment: dockerDeployment
 };
