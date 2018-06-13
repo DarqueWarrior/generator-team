@@ -29,7 +29,7 @@ function tfsVersion(obj) {
 function applicationType(obj) {
    obj.argument(`type`, {
       required: false,
-      desc: `Project type to create (asp, node, java or aspFull)`
+      desc: `Project type to create (asp, node, java, aspFull, or default)`
    });
 }
 

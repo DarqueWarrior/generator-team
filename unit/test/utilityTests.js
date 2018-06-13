@@ -12,7 +12,9 @@ assert.linuxTargets = function (a) {
    assert.equal(a[0].name, `Azure Container Instances (Linux)`);
    assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[2].name, `Docker Host`);
-   assert.equal(a.length, 3, `Wrong number of entries`);
+   assert.equal(a[3].name, `Kubernetes: Azure Kubernetes Service`);
+   assert.equal(a[4].name, `Kubernetes: Azure Container Services`);
+   assert.equal(a.length, 5, `Wrong number of entries`);
 };
 
 assert.allTargets = function (a) {
@@ -21,7 +23,9 @@ assert.allTargets = function (a) {
    assert.equal(a[2].name, `Azure Container Instances (Linux)`);
    assert.equal(a[3].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[4].name, `Docker Host`);
-   assert.equal(a.length, 5, `Wrong number of entries`);
+   assert.equal(a[5].name, `Kubernetes: Azure Kubernetes Service`);
+   assert.equal(a[6].name, `Kubernetes: Azure Container Services`);
+   assert.equal(a.length, 7, `Wrong number of entries`);
 };
 
 assert.customTargets = function (a) {
@@ -31,6 +35,14 @@ assert.customTargets = function (a) {
 
    // Make sure it did not return too many.
    assert.equal(a.length, 3, `Wrong number of entries`);
+};
+
+assert.kubernetesTargets = function (a) {
+   assert.equal(a[0].name, `Kubernetes: Azure Kubernetes Service`);
+   assert.equal(a[1].name, `Kubernetes: Azure Container Services`);
+
+   // Make sure it did not return too many.
+   assert.equal(a.length, 2, `Wrong number of entries`);
 };
 
 assert.windowsTargets = function (a) {
@@ -648,6 +660,26 @@ describe(`utility`, function () {
          });
       });
 
+      it(`getTargets Default queue, default app type`, function (done) {
+         // Arrange
+         let answers = {
+            queue: `Default`,
+            type: `kubernetes`,
+            tfs: `vsts`,
+            pat: `token`
+         };
+
+         // Act
+         util.getTargets(answers).then(function (actual) {
+            // Assert
+            assert.kubernetesTargets(actual);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      });
+
       it(`getTargets Default queue, aspFull app type 2017`, function (done) {
          // Arrange
          let answers = {
@@ -791,7 +823,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(3, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes macOS`, function () {
@@ -805,7 +837,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(3, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes default`, function () {
@@ -819,7 +851,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(5, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {
@@ -1812,6 +1844,58 @@ describe(`utility`, function () {
       });
    }));
 
+   it(`tryFindBuild should return build acs`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-acs-CI"
+               }]
+            }));
+         }
+      });
+
+      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+         name: "e2eDemo"
+      }, `token`, "acs", (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj.name, "e2eDemo-acs-CI");
+
+         done();
+      });
+   }));
+
+   it(`tryFindBuild should return build aks`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-aks-CI"
+               }]
+            }));
+         }
+      });
+
+      proxyApp.tryFindBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+         name: "e2eDemo"
+      }, `token`, "aks", (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj.name, "e2eDemo-aks-CI");
+
+         done();
+      });
+   }));
+
    it(`tryFindRelease should return release paas`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement
@@ -1911,6 +1995,114 @@ describe(`utility`, function () {
          done();
       });
    }));
+
+   it(`tryFindRelease should return release acs`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-acs-CD"
+               }]
+            }));
+         }
+      });
+
+      var args = {
+         token: `token`,
+         target: `acs`,
+         appName: `e2eDemo`,
+         teamProject: {
+            name: `e2eDemo`
+         },
+         account: `http://localhost:8080/tfs/DefaultCollection`
+      };
+
+      proxyApp.tryFindRelease(args, (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj.name, "e2eDemo-acs-CD");
+
+         done();
+      });
+   }));
+
+   it(`tryFindRelease should return release acs`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: "e2eDemo-aks-CD"
+               }]
+            }));
+         }
+      });
+
+      var args = {
+         token: `token`,
+         target: `aks`,
+         appName: `e2eDemo`,
+         teamProject: {
+            name: `e2eDemo`
+         },
+         account: `http://localhost:8080/tfs/DefaultCollection`
+      };
+
+      proxyApp.tryFindRelease(args, (err, obj) => {
+         assert.equal(err, null);
+         assert.equal(obj.name, "e2eDemo-aks-CD");
+
+         done();
+      });
+   }));
+
+   it(`getReleaseDefName should return kube deploy`, function() {
+      projectName = `demo-project`;
+      target = 'acs'
+
+      expected = `${projectName}-${target}-CD`;
+      actual = util.getReleaseDefName(target,projectName);
+
+      assert.equal(actual,expected);
+      });
+
+      it(`getReleaseDefName should return kube deploy`, function() {
+         projectName = `demo-project`;
+         target = 'aks'
+   
+         expected = `${projectName}-${target}-CD`;
+         actual = util.getReleaseDefName(target,projectName);
+   
+         assert.equal(actual,expected);
+         });
+
+   it(`getReleaseDefName should return docker deploy`, function() {
+      projectName = `demo-project`;
+      target = 'docker'
+
+      expected = `${projectName}-Docker-CD`;
+      actual = util.getReleaseDefName(target,projectName);
+
+      assert.equal(actual,expected);
+      });
+
+   it(`getReleaseDefName should return docker deploy`, function() {
+      projectName = `demo-project`;
+      target = 'default'
+
+      expected = `${projectName}-CD`;
+      actual = util.getReleaseDefName(target,projectName);
+
+      assert.equal(actual,expected);
+      });
 
    it(`extractInstance from profile`, sinonTest(function () {
       // Arrange
@@ -2591,6 +2783,52 @@ describe(`utility`, function () {
       }, function (e) {
          assert.fail();
          done();
+      });
+   });
+
+   context(`kubeDeployment`, function () {
+      it(`return acs`, function () {
+         // Arrange
+         var expected = `acs`;
+
+         // Act
+         var actual = util.kubeDeployment('acs');
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`return aks`, function () {
+         // Arrange
+         var expected = `aks`;
+
+         // Act
+         var actual = util.kubeDeployment(`aks`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`return undefined`, function () {
+         // Arrange
+         var expected = undefined;
+
+         // Act
+         var actual = util.kubeDeployment(`vsts`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`return undefined`, function () {
+         // Arrange
+         var expected = undefined;
+
+         // Act
+         var actual = util.kubeDeployment("anything else");
+
+         // Assert
+         assert.equal(expected, actual);
       });
    });
 });

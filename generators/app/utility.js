@@ -710,8 +710,9 @@ function tryFindBuild(account, teamProject, token, target, callback) {
 
 function findBuild(account, teamProject, token, target, callback) {
    'use strict';
-
-   var name = isDocker(target) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
+   
+   let name = getBuildDefName(target,teamProject.name);
+              
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -742,6 +743,25 @@ function findBuild(account, teamProject, token, target, callback) {
    });
 }
 
+function getBuildDefName(target, projectName){
+   let kubeDeploy = kubeDeployment(target);
+   let dockerDeploy = dockerDeployment(target);
+
+   let buildDefName = undefined;
+   switch(target){
+      case kubeDeploy:
+         buildDefName = `${projectName}-${kubeDeploy}-CI`;
+         break;
+      case dockerDeploy:
+         buildDefName = `${projectName}-Docker-CI`;
+         break;
+      default:
+         buildDefName = `${projectName}-CI`;
+   }
+
+   return buildDefName;
+}
+
 function tryFindRelease(args, callback) {
    'use strict';
 
@@ -757,7 +777,7 @@ function tryFindRelease(args, callback) {
 function findRelease(args, callback) {
    "use strict";
 
-   var name = isDocker(args.target) ? `${args.appName}-Docker-CD` : `${args.appName}-CD`;
+   let name = getReleaseDefName(args.target, args.teamProject.name);
 
    var options = addUserAgent({
       "method": `GET`,
@@ -787,6 +807,48 @@ function findRelease(args, callback) {
          callback(e, rel);
       }
    });
+}
+
+function getReleaseDefName(target, projectName){
+
+   let kubeDeploy = kubeDeployment(target);
+   let dockerDeploy = dockerDeployment(target);
+
+   let releaseDefName = undefined;
+   switch(target) {
+      case kubeDeploy:
+         releaseDefName = `${projectName}-${kubeDeploy}-CD`;
+         break;
+
+      case dockerDeploy:
+         releaseDefName = `${projectName}-Docker-CD`;
+         break;
+
+      default:
+         releaseDefName = `${projectName}-CD`;
+   }
+
+   return releaseDefName;
+}
+
+function kubeDeployment(target){
+   let kube = undefined;
+
+   if (target === 'acs' || target === 'aks'){
+      kube = target;
+   }
+
+   return kube;
+}
+
+function dockerDeployment(target) {
+   let docker = undefined;
+
+   if (target === `docker` || target === `dockerpaas` || target === `acilinux`){
+      docker = target;
+   }
+
+   return docker;
 }
 
 function getAzureSubs(answers) {
@@ -1284,5 +1346,8 @@ module.exports = {
    validateConfigUpdate: validateConfigUpdate,
    getKubeEndpoint: getKubeEndpoint,
    validateKubeEndpoint: validateKubeEndpoint,
-
+   kubeDeployment: kubeDeployment,
+   dockerDeployment: dockerDeployment,
+   getBuildDefName: getBuildDefName,
+   getReleaseDefName: getReleaseDefName
 };
