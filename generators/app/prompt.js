@@ -256,7 +256,7 @@ function kubeEndpointList(obj) {
       choices: util.getKubeEndpoint,
       validate: util.validateKubeEndpoint,
       when: answers => {
-         var result = obj.options.kubeEndpoint === undefined;
+         let result = obj.options.kubeEndpoint === undefined;
 
          if (result) {
             obj.log(`  Getting Kubernetes Endpoints... `);

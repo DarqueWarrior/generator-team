@@ -829,17 +829,17 @@ function getAzureSubs(answers) {
 function getKubeEndpoint(answers) {
    "use strict";
 
-   var token = encodePat(answers.pat);
-   let account_name = answers.tfs;
-   let project = answers.applicationName;
+   let token = encodePat(answers.pat);
+   let accountName = answers.tfs;
+   let projectName = answers.applicationName;
 
-   var options = {
+   let options = {
       "method": `GET`,
       "headers": {
          "Cache-control": `no-cache`,
          "Authorization": `Basic ${token}`
       },
-      "url": `https://${account_name}.visualstudio.com/${project}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
+      "url": `https://${account_name}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
    
    };
 
@@ -850,9 +850,9 @@ function getKubeEndpoint(answers) {
             return;
          }
 
-         var obj = JSON.parse(body);
+         let obj = JSON.parse(body);
 
-         var result = [];
+         let result = [];
 
          // Passing in Endpoint name as display name, but saving the endpoint ID to be used later
          obj.value.forEach((endpoint) => {
