@@ -1,0 +1,103 @@
+{
+   "name": "{{BuildDefName}}",
+   "type": "build",
+   "quality": "definition",
+   "buildNumberFormat": "$(BuildDefinitionName)-$(BuildID)",
+   "queue": {
+      "id": "{{QueueId}}"
+   },
+   "build": [
+         {
+            "enabled": true,
+            "continueOnError": false,
+            "alwaysRun": false,
+            "displayName": "downloader ",
+            "timeoutInMinutes": 0,
+            "condition": "succeeded()",
+            "task": {
+               "id": "4bbc6ca0-59b2-11e7-83fe-c360e4fd66d4",
+               "versionSpec": "1.*",
+               "definitionType": "task"
+            },
+            "inputs": {
+               "k8sService": "",
+               "kubectlBinary": "",
+               "downloadVersion": "",
+               "hasIstio": "false",
+               "IstioVersion": "0.1.6",
+               "hasHelm": "true",
+               "helmVersion": "2.5.0"
+            }
+         }, {
+            "enabled": true,
+            "continueOnError": false,
+            "alwaysRun": false,
+            "displayName": "helm lint",
+            "timeoutInMinutes": 0,
+            "condition": "succeeded()",
+            "task": {
+               "id": "79d92bb0-5cae-11e7-94c2-fff61a32ec2a",
+               "versionSpec": "1.*",
+               "definitionType": "task"
+            },
+            "inputs": {
+               "subCommand": "lint",
+               "arguments": "./chart/{{Project}}"
+            }
+         }, {
+            "enabled": true,
+            "continueOnError": false,
+            "alwaysRun": false,
+            "displayName": "Publish Artifact: chart",
+            "timeoutInMinutes": 0,
+            "refName": "publish_artifacts",
+            "task": {
+               "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+               "versionSpec": "1.*",
+               "definitionType": "task"
+            },
+            "inputs": {
+               "PathtoPublish": "chart",
+               "ArtifactName": "chart",
+               "ArtifactType": "Container",
+               "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
+               "Parallel": "false",
+               "ParallelCount": "8"
+            }
+         }],
+   "triggers": [{
+      "branchFilters": [
+         "+refs/heads/master"
+      ],
+      "pathFilters": [],
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "triggerType": "continuousIntegration"
+   }],
+   "variables": {
+      "system.debug": {
+         "value": "false",
+         "allowOverride": true
+      },
+      "BuildConfiguration": {
+         "value": "release",
+         "allowOverride": true
+      },
+      "BuildPlatform": {
+         "value": "any cpu",
+         "allowOverride": true
+      }
+   },
+   "repository": {
+      "properties": {
+         "labelSources": "0",
+         "reportBuildStatus": "true"
+      },
+      "type": "TfsGit",
+      "name": "{{Project}}",
+      "url": "{{TFS}}/_git/{{Project}}",
+      "defaultBranch": "refs/heads/master",
+      "clean": "false",
+      "checkoutSubmodules": false
+   }
+}
