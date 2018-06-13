@@ -813,7 +813,7 @@ function getReleaseDefName(target, projectName){
    let releaseDefName = undefined;
    switch(target) {
       case kubeDeploy:
-         releaseDefName = `${projectName}-kube-${kubeDeploy}`;
+         releaseDefName = `${projectName}-${kubeDeploy}-CD`;
          break;
 
       case dockerDeploy:
