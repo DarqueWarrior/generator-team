@@ -198,7 +198,7 @@ function findOrCreateRelease(args, gen, callback) {
 function createRelease(args, gen, callback) {
    'use strict';
 
-   let releaseDefName = getReleaseDefName(args.target, args.teamProject.name);
+   let releaseDefName = util.getReleaseDefName(args.target, args.teamProject.name);
 
    gen.log(`+ Creating ${releaseDefName} release definition`);
 
@@ -284,27 +284,6 @@ function createRelease(args, gen, callback) {
    );
 }
 
-function getReleaseDefName(target, projectName){
-
-   let kubeDeployment = util.kubeDeployment(target);
-   let dockerDeployment = util.dockerDeployment(target);
-
-   let releaseDefName = undefined;
-   switch(target) {
-      case kubeDeployment:
-         releaseDefName = `${projectName}-kube-${kubeDeployment}`;
-         break;
-
-      case dockerDeployment:
-         releaseDefName = `${projectName}-Docker-CD`;
-         break;
-
-      default:
-         releaseDefName = `${projectName}-CD`;
-   }
-
-   return releaseDefName;
-}
 
 module.exports = {
 

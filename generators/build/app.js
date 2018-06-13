@@ -93,9 +93,8 @@ function createBuild(account, teamProject, token, queueId,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
-
-   let kubeDeployment = util.kubeDeployment(target);
-   let buildDefName = getBuildDefName(target,teamProject.name);
+   
+   let buildDefName = util.getBuildDefName(target,teamProject.name);
 
    gen.log(`+ Creating ${buildDefName} build definition`);
 
@@ -177,25 +176,6 @@ function getBuild(args, callback) {
          callback(e, build);
       });
    }
-}
-
-function getBuildDefName(target, projectName){
-   let kubeDeployment = util.kubeDeployment(target);
-   let dockerDeployment = util.dockerDeployment(target);
-
-   let buildDefName = undefined;
-   switch(target){
-      case kubeDeployment:
-         buildDefName = `${projectName}-${kubeDeployment}-CI`;
-         break;
-      case dockerDeployment:
-         buildDefName = `${projectName}-Docker-CI`;
-         break;
-      default:
-         buildDefName = `${projectName}-CI`;
-   }
-
-   return buildDefName;
 }
 
 module.exports = {
