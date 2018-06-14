@@ -27,7 +27,7 @@ function acsExtensionsCheck(options,callback) {
    request(options, function (error, response, body) {
       // Need downloader, helm task
          if(error) {
-            return console.log(err);
+            return console.log(error);
          }
 
          let obj = JSON.parse(body);
@@ -46,7 +46,7 @@ function acsExtensionsInstall(options) {
    request(options, function (error, response, body) {
       // Need downloader, helm task
          if(error) {
-            return console.log(err);
+            return console.log(error);
          }
 
          let obj = JSON.parse(body);
@@ -61,5 +61,6 @@ module.exports = {
    // Exports the portions of the file we want to share with files that require 
    // it.
    acsExtensionsCheck: acsExtensionsCheck,
-   acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall
+   acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall,
+   acsExtensionsInstall: acsExtensionsInstall
 };

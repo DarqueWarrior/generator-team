@@ -1351,5 +1351,4 @@ module.exports = {
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
    getReleaseDefName: getReleaseDefName
-   
 };
