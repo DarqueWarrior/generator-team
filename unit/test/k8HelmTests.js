@@ -7,6 +7,7 @@ const proxyquire = require(`proxyquire`);
 const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const build = require(`../../generators/build/app`);
+const kubernetes = require(`../../generators/k8helmpipeline/app`);
 //const kubernetes = require(`../../generators/k8helmpipeline/app`);
 
 const sinonTest = sinonTestFactory(sinon);
@@ -108,3 +109,143 @@ describe(`k8helmpipeline:index`, function(){
          });
    });
 });
+
+describe(`k8helmpipeline:app`, function(){
+   context(`acsExtensionsCheckOrInstall`, function () {
+      it(`should not fail`, sinonTest(function () {
+         sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  'extensionId': 'k8s-endpoint'
+               }));
+            }
+         });
+   
+         // Act
+         proxyApp.acsExtensionsCheckOrInstall("default","token",(e, data) => {
+            assert.equal(e, null);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      }));
+
+      it(`should return error`, sinonTest(function () {
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(true, {
+                  statusCode: 400
+               }, JSON.stringify({
+                  'extensionId': 'k8s-endpoint'
+               }));
+            }
+         });
+   
+         // Act
+         proxyApp.acsExtensionsCheckOrInstall("default","token",(e, data) => {
+            assert.equal(e, true);
+            kubernetes.acsExtensionsInstall.restore();
+            done();
+         }, function (e) {
+            assert.fail();
+            kubernetes.acsExtensionsInstall.restore();
+            done();
+         });
+      }));
+   });
+
+   context(`acsExtensionsCheck`, function () {
+      it(`should not fail`, sinonTest(function () {
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  "extensionId": "k8s-endpoint"
+               }));
+            }
+         });
+   
+         // Act
+         proxyApp.acsExtensionsCheck("default",(e, data) => {
+            assert.equal(e, null);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      }));
+
+      it(`should fail`, sinonTest(function () {
+         //sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(true, {
+                  statusCode: 400
+               }, JSON.stringify({
+                  "default": "default"
+               }));
+            }
+         });
+   
+         // Act
+         proxyApp.acsExtensionsCheck("default",(e, data) => {
+            assert.equal(e, true);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      }));
+   });
+
+   context(`acsExtensionsInstall`, function () {
+      it(`should not fail`, sinonTest(function () {
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  "extensionId": "k8s-endpoint"
+               }));
+            }
+         });
+   
+         // Act
+         proxyApp.acsExtensionsInstall("default",(e, data) => {
+            assert.equal(e, null);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      }));
+
+      it(`should fail`, sinonTest(function () {
+         //sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(true, {
+                  statusCode: 400
+               }, JSON.stringify({
+                  "default": "default"
+               }));
+            }
+         });
+   
+         // Act
+         proxyApp.acsExtensionsInstall("default",(e, data) => {
+            assert.equal(e, true);
+            done();
+         }, function (e) {
+            assert.fail();
+            done();
+         });
+      }));
+   });
+});
+

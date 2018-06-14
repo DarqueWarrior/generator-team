@@ -3,7 +3,6 @@ const fs = require('fs');
 const async = require('async');
 const request = require('request');
 const util = require('../app/utility');
-const build = require('../build/index');
 
 function run(args, gen, done) {
    'use strict';

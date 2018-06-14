@@ -1076,6 +1076,7 @@ describe(`build:app`, function () {
       };
       proxyApp.findOrCreateBuild(
          objs, logger,
+
          function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);
@@ -1180,7 +1181,7 @@ describe(`build:app`, function () {
                name: `TeamProject`,
                id: 1
             },
-            `token`, 1, null, null, null, `build.json`, `paas`, logger, done);
+            `token`, 1, null, null, null, `build.json`, `paas`, logger, null, done);
       }, function (e) {
          done();
          return true;
