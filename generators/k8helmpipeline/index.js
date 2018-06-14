@@ -5,6 +5,7 @@ const argUtils = require(`../app/args`);
 const prompts = require(`../app/prompt`);
 const compose = require(`../app/compose`);
 const Generator = require(`yeoman-generator`);
+const app = require(`./app`);
 
 module.exports = class extends Generator {
 
@@ -152,7 +153,7 @@ module.exports = class extends Generator {
 
    // 7. Where installation are run (npm, bower)
    install() {
-      util.acsExtensionsCheckOrInstall(this.tfs, this.pat);
+      app.acsExtensionsCheckOrInstall(this.tfs, this.pat);
 
       // Based on the users answers compose all the required generators.
       compose.addDockerHost(this);
