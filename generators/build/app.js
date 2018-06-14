@@ -3,6 +3,7 @@ const fs = require('fs');
 const async = require('async');
 const request = require('request');
 const util = require('../app/utility');
+const build = require('../build/index');
 
 function run(args, gen, done) {
    'use strict';
@@ -51,7 +52,7 @@ function run(args, gen, done) {
             ], mainSeries);
          },
          function (mainSeries) {
-            findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+            findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, args.kubeEndpoint, mainSeries);
          }
       ],
       function (err, results) {
@@ -70,7 +71,7 @@ function run(args, gen, done) {
 
 function findOrCreateBuild(account, teamProject, token, queueId,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
-   filename, target, gen, callback) {
+   filename, target, gen, kubeEndpoint, callback) {
    'use strict';
 
    util.tryFindBuild(account, teamProject, token, target, function (e, bld) {
@@ -81,7 +82,7 @@ function findOrCreateBuild(account, teamProject, token, queueId,
       if (!bld) {
          createBuild(account, teamProject, token, queueId,
             dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
-            filename, target, gen, callback);
+            filename, target, gen, kubeEndpoint, callback);
       } else {
          gen.log(`+ Found build definition`);
          callback(e, bld);
@@ -91,7 +92,7 @@ function findOrCreateBuild(account, teamProject, token, queueId,
 
 function createBuild(account, teamProject, token, queueId,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
-   filename, target, gen, callback) {
+   filename, target, gen, kubeEndpoint, callback) {
    'use strict';
    
    let buildDefName = util.getBuildDefName(target,teamProject.name);
@@ -112,7 +113,8 @@ function createBuild(account, teamProject, token, queueId,
       '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : ``,
       '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : ``,
       '{{dockerRegistryId}}': dockerNamespace,
-      '{{ProjectLowerCase}}': teamProject.name.toLowerCase()
+      '{{ProjectLowerCase}}': teamProject.name.toLowerCase(),
+      '{{KubeEndpoint}}': kubeEndpoint
    };
 
    contents = util.tokenize(contents, tokens);

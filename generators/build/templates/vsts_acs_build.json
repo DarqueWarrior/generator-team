@@ -20,7 +20,7 @@
                "definitionType": "task"
             },
             "inputs": {
-               "k8sService": "",
+               "k8sService": "{{KubeEndpoint}}",
                "kubectlBinary": "",
                "downloadVersion": "",
                "hasIstio": "false",
