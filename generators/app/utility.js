@@ -1270,56 +1270,6 @@ function getFullURL(instance, includeCollection, forRM) {
    return vstsURL;
 }
 
-function acsExtensionsCheckOrInstall(account_name, pat) {
-   let token = encodePat(pat);
-   let author = 'tsuyoshiushio';
-   let extension = 'k8s-endpoint'
-
-   let options = {
-   "method": `GET`,
-   "headers": {
-      "Cache-control": `no-cache`,
-      "Authorization": `Basic ${token}`
-   },
-   "url": `https://${account_name}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
-   };
-
-   acsExtensionsCheck(options,acsExtensionsInstall);
-}
-
-function acsExtensionsCheck(options,callback) {
-
-   request(options, function (error, response, body) {
-      // Need downloader, helm task
-         if(error) {
-            return console.log(err);
-         }
-
-         let obj = JSON.parse(body);
-
-         if (obj['extensionId'] !== 'k8s-endpoint'){
-            callback(options);
-            }
-
-      });
-   console.log("The extensions are installed!");
-}
-
-function acsExtensionsInstall(options) {
-   options["method"] = `POST`;
-
-   request(options, function (error, response, body) {
-      // Need downloader, helm task
-         if(error) {
-            return console.log(err);
-         }
-
-         let obj = JSON.parse(body);
-
-         console.log("Installing extensions...");
-
-      });
-}
 
 module.exports = {
 
@@ -1400,7 +1350,6 @@ module.exports = {
    kubeDeployment: kubeDeployment,
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
-   getReleaseDefName: getReleaseDefName,
-   acsExtensionsCheck: acsExtensionsCheck,
-   acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall
+   getReleaseDefName: getReleaseDefName
+   
 };
