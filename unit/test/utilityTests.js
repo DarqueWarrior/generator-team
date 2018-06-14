@@ -1199,6 +1199,10 @@ describe(`utility`, function () {
       it(`validateServicePrincipalKey should return error`, function () {
          assert.equal(`You must provide a Service Principal Key`, util.validateServicePrincipalKey(null));
       });
+
+      it(`validateKubeEndpoint should return error`, function () {
+         assert.equal(`You must provide a Kubernetes Service Endpoint!`, util.validateKubeEndpoint(null));
+      });
    });
 
    it(`checkStatus should run with no error`, sinonTest(function (done) {
@@ -2787,6 +2791,44 @@ describe(`utility`, function () {
    });
 
    context(`kubeDeployment`, function () {
+      it(`getKubeEndpoint should return Endpoint`, sinonTest(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         let token = util.encodePat('token');
+         let accountName = "AccountName";
+         let appName = "DemoApp";
+
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               // Confirm the request was formatted correctly
+               assert.equal(`GET`, options.method, `wrong method`);
+               assert.equal(`Basic ${token}`, options.headers.Authorization, `The authorization is wrong. `);
+               assert.equal(`https://${accountName}.visualstudio.com/${appName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`, options.url, `wrong url`);
+
+               // Respond
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  value: [{
+                     name: "Default",
+                     id: 1
+                  }]
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.getKubeEndpoint(
+            {
+               name: "in",
+               pat: "token",
+               tfs: accountName,
+               applicationName: appName,
+            });
+            done();
+      }));
+
       it(`return acs`, function () {
          // Arrange
          var expected = `acs`;

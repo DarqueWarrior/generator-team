@@ -22,6 +22,7 @@ module.exports = class extends Generator {
       argUtils.target(this);
       argUtils.azureSub(this);
       argUtils.azureSubId(this);
+      argUtils.kubeEndpoint(this);
       argUtils.tenantId(this);
       argUtils.servicePrincipalId(this);
       argUtils.dockerHost(this);
@@ -51,6 +52,7 @@ module.exports = class extends Generator {
          prompts.customFolder(this),
          prompts.target(this),
          prompts.configUpdate(this),
+         prompts.kubeEndpointList(this),
          prompts.azureSubInput(this),
          prompts.azureSubList(this),
          prompts.azureSubId(this),
@@ -73,6 +75,7 @@ module.exports = class extends Generator {
          this.queue = util.reconcileValue(cmdLnInput.options.queue, answers.queue);
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
+         this.kubeEndpoint = util.reconcileValue(cmdLnInput.option.kubeEndpoint, answers.kubeEndpoint, ``);
          this.tenantId = util.reconcileValue(cmdLnInput.options.tenantId, answers.tenantId, ``);
          this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
          this.dockerHost = util.reconcileValue(cmdLnInput.options.dockerHost, answers.dockerHost, ``);

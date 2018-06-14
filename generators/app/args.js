@@ -61,6 +61,13 @@ function azureSub(obj) {
    });
 }
 
+function kubeEndpoint(obj){
+   obj.argument(`kubeEndpoint`, {
+      required: false,
+      desc: `Kubernetes Endpoint Name`
+   });
+}
+
 function azureSubId(obj) {
    obj.argument(`azureSubId`, {
       required: false,
@@ -198,4 +205,5 @@ module.exports = {
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
+   kubeEndpoint: kubeEndpoint,
 };
