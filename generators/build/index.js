@@ -23,6 +23,7 @@ module.exports = class extends Generator {
       argUtils.dockerRegistryId(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
+      argUtils.kubeEndpoint(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -59,6 +60,7 @@ module.exports = class extends Generator {
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
+         this.kubeEndpoint = util.reconcileValue(cmdLnInput.options.kubeEndpoint, answers.kubeEndpoint, ``);
       }.bind(this));
    }
 
@@ -68,7 +70,6 @@ module.exports = class extends Generator {
       // getBuild so store it here.
       var _this = this;
       var done = this.async();
-
       app.getBuild(this, function (e, result) {
          var build = _this.templatePath(result);
 
@@ -83,7 +84,8 @@ module.exports = class extends Generator {
             queue: _this.queue,
             target: _this.target,
             appName: _this.applicationName,
-            project: _this.applicationName
+            project: _this.applicationName,
+            kubeEndpoint: _this.kubeEndpoint
          };
 
          if (util.isDocker(_this.target)) {

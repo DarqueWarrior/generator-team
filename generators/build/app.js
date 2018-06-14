@@ -3,6 +3,7 @@ const fs = require('fs');
 const async = require('async');
 const request = require('request');
 const util = require('../app/utility');
+const build = require('../build/index');
 
 function run(args, gen, done) {
    'use strict';
@@ -51,7 +52,6 @@ function run(args, gen, done) {
             ], mainSeries);
          },
          function (mainSeries) {
-
             // Help extension of yeoman generators by bundling arguments
             let objs = {
                "tfs": args.tfs,
@@ -62,10 +62,12 @@ function run(args, gen, done) {
                "dockerRegistryEndpoint": dockerRegistryEndpoint,
                "dockerRegistryId": args.dockerRegistryId,
                "buildJson": args.buildJson,
-               "target": args.target
+               "target": args.target,
+               "kubeEndpoint": args.kubeEndpoint
             };
             
             findOrCreateBuild(objs, gen, mainSeries);
+
          }
       ],
       function (err, results) {
@@ -125,9 +127,7 @@ function createBuild(args, gen, callback) {
 
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
-
    let tokens = getBuildTokens(args, buildDefName, dockerNamespace);
-
    contents = util.tokenize(contents, tokens);
 
    // Validates my contents is valid JSON and stripes all the new lines
@@ -224,6 +224,9 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
                tokens['{{dockerRegistryEndpoint}}'] = val.id;         
             }
             break;
+         case "kubeEndpoint":
+               tokens['{{KubeEndpoint}}'] = val;
+               break;
       };
    };
 
