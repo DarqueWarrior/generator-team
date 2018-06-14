@@ -901,7 +901,7 @@ function getKubeEndpoint(answers) {
          "Cache-control": `no-cache`,
          "Authorization": `Basic ${token}`
       },
-      "url": `https://${account_name}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
+      "url": `https://${accountName}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
    
    };
 

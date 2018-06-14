@@ -30,6 +30,7 @@ describe(`k8helmpipeline:index`, function(){
          util.tryFindRelease.restore();
          util.isTFSGreaterThan2017.restore();
          util.findBuild.restore();
+         util.getKubeEndpoint.restore();
       };
 
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
@@ -40,7 +41,8 @@ describe(`k8helmpipeline:index`, function(){
             applicationName: applicationName,
             target: `acs`,
             tfs: `http://localhost:8080/tfs/DefaultCollection`,
-            queue: `Hosted Linux Preview`
+            queue: `Hosted Linux Preview`,
+            kubeEndpointList: `Default`
          })
          .on(`error`, function (e) {
             cleanUp();
@@ -49,6 +51,9 @@ describe(`k8helmpipeline:index`, function(){
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
+               return ['Default'];
+            });
             sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
