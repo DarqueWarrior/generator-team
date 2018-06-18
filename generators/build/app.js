@@ -196,8 +196,8 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
       '{{BuildDefName}}': buildDefName,
       '{{dockerRegistryId}}': dockerNamespace
    };
-
-   Object.keys(args).forEach(function(key){
+   
+   for (let key in args) {
       let val = args[key];
       switch(key){
          case "tfs":
@@ -225,7 +225,7 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
             }
             break;
       };
-   });
+   };
 
       return tokens;
 
