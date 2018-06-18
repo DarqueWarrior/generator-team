@@ -1076,7 +1076,6 @@ describe(`build:app`, function () {
       };
       proxyApp.findOrCreateBuild(
          objs, logger,
-
          function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);

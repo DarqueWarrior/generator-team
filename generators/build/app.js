@@ -66,7 +66,6 @@ function run(args, gen, done) {
             };
             
             findOrCreateBuild(objs, gen, mainSeries);
-
          }
       ],
       function (err, results) {
@@ -84,6 +83,7 @@ function run(args, gen, done) {
 }
 
 function findOrCreateBuild(args, gen, callback) {
+
    'use strict';
 
    let account = args.tfs;
@@ -127,6 +127,7 @@ function createBuild(args, gen, callback) {
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
    let tokens = getBuildTokens(args, buildDefName, dockerNamespace);
+
    contents = util.tokenize(contents, tokens);
 
    // Validates my contents is valid JSON and stripes all the new lines
