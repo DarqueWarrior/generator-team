@@ -51,7 +51,21 @@ function run(args, gen, done) {
             ], mainSeries);
          },
          function (mainSeries) {
-            findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+
+            // Help extension of yeoman generators by bundling arguments
+            let objs = {
+               "tfs": args.tfs,
+               "teamProject": teamProject,
+               "token": token,
+               "queueId": queueId,
+               "dockerEndpoint": dockerEndpoint,
+               "dockerRegistryEndpoint": dockerRegistryEndpoint,
+               "dockerRegistryId": args.dockerRegistryId,
+               "buildJson": args.buildJson,
+               "target": args.target
+            };
+            
+            findOrCreateBuild(objs, gen, mainSeries);
          }
       ],
       function (err, results) {
@@ -68,10 +82,13 @@ function run(args, gen, done) {
       });
 }
 
-function findOrCreateBuild(account, teamProject, token, queueId,
-   dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
-   filename, target, gen, callback) {
+function findOrCreateBuild(args, gen, callback) {
    'use strict';
+
+   let account = args.tfs;
+   let teamProject = args.teamProject;
+   let token = args.token;
+   let target = args.target;
 
    util.tryFindBuild(account, teamProject, token, target, function (e, bld) {
       if (e) {
@@ -79,9 +96,7 @@ function findOrCreateBuild(account, teamProject, token, queueId,
       }
 
       if (!bld) {
-         createBuild(account, teamProject, token, queueId,
-            dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
-            filename, target, gen, callback);
+         createBuild(args, gen, callback);
       } else {
          gen.log(`+ Found build definition`);
          callback(e, bld);
@@ -89,12 +104,18 @@ function findOrCreateBuild(account, teamProject, token, queueId,
    });
 }
 
-function createBuild(account, teamProject, token, queueId,
-   dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
-   filename, target, gen, callback) {
+function createBuild(args, gen, callback) {
    'use strict';
-   
-   let buildDefName = util.getBuildDefName(target,teamProject.name);
+
+   let target = args.target;
+   let teamProject = args.teamProject;
+   let dockerRegistryId = args.dockerRegistryId;
+   let dockerRegistryEndpoint = args.dockerRegistryEndpoint;
+   let filename = args.buildJson;
+   let token = args.token;
+   let account = args.tfs;
+
+   let buildDefName = util.getBuildDefName(target, teamProject.name);
 
    gen.log(`+ Creating ${buildDefName} build definition`);
 
@@ -104,16 +125,8 @@ function createBuild(account, teamProject, token, queueId,
 
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
-   var tokens = {
-      '{{BuildDefName}}': buildDefName,
-      '{{TFS}}': account,
-      '{{Project}}': teamProject.name,
-      '{{QueueId}}': queueId,
-      '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : ``,
-      '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : ``,
-      '{{dockerRegistryId}}': dockerNamespace,
-      '{{ProjectLowerCase}}': teamProject.name.toLowerCase()
-   };
+
+   let tokens = getBuildTokens(args, buildDefName, dockerNamespace);
 
    contents = util.tokenize(contents, tokens);
 
@@ -177,6 +190,46 @@ function getBuild(args, callback) {
       });
    }
 }
+
+function getBuildTokens(args, buildDefName, dockerNamespace) {
+   let tokens = {
+      '{{BuildDefName}}': buildDefName,
+      '{{dockerRegistryId}}': dockerNamespace
+   };
+   
+   for (let key in args) {
+      let val = args[key];
+      switch(key){
+         case "tfs":
+            tokens['{{TFS}}'] = val;
+            break;
+
+         case "teamProject":
+            tokens['{{Project}}'] = val.name;
+            tokens['{{ProjectLowerCase'] = val.name.toLowerCase();
+            break;
+
+         case "queueId":
+            tokens['{{QueueId}}'] = val;
+            break;
+
+         case "dockerEndpoint":
+            if (val){
+               tokens['{{dockerHostEndpoint}}'] = val.id;
+            }
+            break;
+
+         case "dockerRegistryEndpoint":
+            if (val){
+               tokens['{{dockerRegistryEndpoint}}'] = val.id;         
+            }
+            break;
+      };
+   };
+
+      return tokens;
+
+};
 
 module.exports = {
 
