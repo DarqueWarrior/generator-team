@@ -1172,15 +1172,33 @@ describe(`build:app`, function () {
          statusCode: 400
       }, undefined);
 
+      let objs = {
+         "tfs": `http://localhost:8080/tfs/DefaultCollection`,
+         "teamProject": {
+            name: `TeamProject`,
+            id: 1
+         },
+         "token": 'token',
+         "queueId": 1,
+         "dockerEndpoint": "dockerHostEndpoint",
+         "dockerRegistryEndpoint": {
+            name: `dockerRegistryEndpoint`,
+            url: ``,
+            authorization: {
+               parameters: {
+                  registry: ``
+               }
+            }
+         },
+         "dockerRegistryId": "dockerRegistryId",
+         "buildJson": "build.json",
+         "target": 'docker'
+      };
       // Act
       // I use the custom error validation method to call done
       // because my method is async 
       assert.throws(function () {
-         proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
-               name: `TeamProject`,
-               id: 1
-            },
-            `token`, 1, null, null, null, `build.json`, `paas`, logger, null, done);
+         proxyApp.findOrCreateBuild(objs,null, done);
       }, function (e) {
          done();
          return true;
