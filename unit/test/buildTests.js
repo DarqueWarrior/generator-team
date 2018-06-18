@@ -1059,11 +1059,23 @@ describe(`build:app`, function () {
       });
 
       // Act
-      proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+
+      let objs = {
+         "tfs": `http://localhost:8080/tfs/DefaultCollection`,
+         "teamProject": {
             name: `TeamProject`,
             id: 1
          },
-         `token`, 1, null, null, null, `build.json`, `paas`, logger,
+         "token": 'token',
+         "queueId": 1,
+         "dockerEndpoint": null,
+         "dockerRegistryEndpoint": null,
+         "dockerRegistryId": null,
+         "buildJson": "build.json",
+         "target": 'paas'
+      };
+      proxyApp.findOrCreateBuild(
+         objs, logger,
          function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);
@@ -1101,12 +1113,16 @@ describe(`build:app`, function () {
          name: `build`
       });
 
-      // Act
-      proxyApp.findOrCreateBuild(`http://localhost:8080/tfs/DefaultCollection`, {
+      let objs = {
+         "tfs": `http://localhost:8080/tfs/DefaultCollection`,
+         "teamProject": {
             name: `TeamProject`,
             id: 1
          },
-         `token`, 1, `dockerHostEndpoint`, {
+         "token": 'token',
+         "queueId": 1,
+         "dockerEndpoint": "dockerHostEndpoint",
+         "dockerRegistryEndpoint": {
             name: `dockerRegistryEndpoint`,
             url: ``,
             authorization: {
@@ -1115,7 +1131,12 @@ describe(`build:app`, function () {
                }
             }
          },
-         `dockerRegistryId`, `build.json`, `docker`, logger,
+         "dockerRegistryId": "dockerRegistryId",
+         "buildJson": "build.json",
+         "target": 'docker'
+      };
+      // Act
+      proxyApp.findOrCreateBuild(objs, logger,
          function (e, bld) {
             assert.equal(e, null);
             assert.equal(bld.name, `build`);
