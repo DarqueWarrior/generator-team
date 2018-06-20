@@ -1270,6 +1270,7 @@ function getFullURL(instance, includeCollection, forRM) {
    return vstsURL;
 }
 
+
 module.exports = {
 
    // Exports the portions of the file we want to share with files that require

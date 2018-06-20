@@ -51,7 +51,6 @@ function run(args, gen, done) {
             ], mainSeries);
          },
          function (mainSeries) {
-
             // Help extension of yeoman generators by bundling arguments
             let objs = {
                "tfs": args.tfs,
@@ -62,7 +61,8 @@ function run(args, gen, done) {
                "dockerRegistryEndpoint": dockerRegistryEndpoint,
                "dockerRegistryId": args.dockerRegistryId,
                "buildJson": args.buildJson,
-               "target": args.target
+               "target": args.target,
+               "kubeEndpoint": args.kubeEndpoint
             };
             
             findOrCreateBuild(objs, gen, mainSeries);
@@ -83,6 +83,7 @@ function run(args, gen, done) {
 }
 
 function findOrCreateBuild(args, gen, callback) {
+
    'use strict';
 
    let account = args.tfs;
@@ -125,7 +126,6 @@ function createBuild(args, gen, callback) {
 
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
-
    let tokens = getBuildTokens(args, buildDefName, dockerNamespace);
 
    contents = util.tokenize(contents, tokens);
@@ -224,6 +224,9 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
                tokens['{{dockerRegistryEndpoint}}'] = val.id;         
             }
             break;
+         case "kubeEndpoint":
+               tokens['{{KubeEndpoint}}'] = val;
+               break;
       };
    };
 
