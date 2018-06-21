@@ -39,6 +39,10 @@ function isDocker(value) {
    return value === `docker` || value === `dockerpaas` || value === `acilinux`;
 }
 
+function isKubernetes(target) {
+   return target === 'acs' || target === 'aks';
+}
+
 function getDockerRegistryServer(server) {
    let parts = url.parse(server);
 
@@ -1350,5 +1354,6 @@ module.exports = {
    kubeDeployment: kubeDeployment,
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
-   getReleaseDefName: getReleaseDefName
+   getReleaseDefName: getReleaseDefName,
+   isKubernetes: isKubernetes
 };
