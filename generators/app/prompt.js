@@ -476,19 +476,6 @@ function gitAction(obj) {
    };
 }
 
-function configUpdate(obj){
-   return {
-      type: `input`,
-      name: `kubeConfig`,
-      store: false,
-      message: `Have you configured your Kubernetes service endpoint? (yes or no)`,
-      validate: util.validateConfigUpdate,
-      when: function () {
-         return obj.options.action === undefined;
-      }
-   };
-}
-
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -516,6 +503,5 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername,
-   configUpdate: configUpdate,
    kubeEndpointList: kubeEndpointList
 };
