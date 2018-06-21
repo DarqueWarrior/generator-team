@@ -74,14 +74,16 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
          };
 
          azApp.createAzureServiceEndpoint(tfs, applicationName, azureSub, token, gen, function(error, body){
+            let endpointId;
             if (error){
                console.log(error);
             }
             if (body){
-               let endpointId = body.id;
+               endpointId = body.id;
+               console.log("Endpoint Id: " + endpointId);
             }
+            callback(azureSub, gen, endpointId);
          });
-         callback(azureSub, gen, endpointId);
       }
    });
 

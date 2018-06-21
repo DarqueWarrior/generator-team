@@ -180,6 +180,13 @@ function gitAction(obj) {
    });
 }
 
+function serviceEndpoint(obj){
+   obj.argument(`serviceEndpoint`, {
+      required: false,
+      desc: `VSTS Service EndpointId`
+   });
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -206,4 +213,5 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    kubeEndpoint: kubeEndpoint,
+   serviceEndpoint: serviceEndpoint
 };
