@@ -588,7 +588,7 @@ function findAzureSub(account, subName, token, gen, callback) {
       var sub = obj.value.find(function (i) {
          return i.displayName.toLowerCase() === subName.toLowerCase();
       });
-
+      
       callback(error, sub);
    });
 }
@@ -905,7 +905,7 @@ function getKubeEndpoint(answers) {
          "Cache-control": `no-cache`,
          "Authorization": `Basic ${token}`
       },
-      "url": `https://${accountName}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
+      "url": `https://${accountName}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?type=kubernetes&api-version=4.1-preview.1`,
    
    };
 

@@ -236,7 +236,9 @@ function azureSubList(obj) {
       choices: util.getAzureSubs,
       validate: util.validateAzureSub,
       when: answers => {
-         var result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let azSub = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let kube = util.isKubernetes(answers.target);
+         let result = azSub || kube;
 
          if (result) {
             obj.log(`  Getting Azure subscriptions...`);
@@ -430,7 +432,9 @@ function creationMode(obj) {
          }
       ],
       when: answers => {
-         return util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let kube = answers.target === 'kubernetes';
+         return result || kube;
       }
    };
 }

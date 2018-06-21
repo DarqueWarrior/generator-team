@@ -65,7 +65,8 @@ module.exports = class extends Generator {
          prompts.dockerRegistry(this),
          prompts.dockerRegistryUsername(this),
          prompts.dockerRegistryPassword(this),
-         prompts.dockerPorts(this),
+         prompts.dockerPorts(this)
+
       ]).then(function (answers) {
          // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
          // of the generator
@@ -152,13 +153,17 @@ module.exports = class extends Generator {
 
    // 7. Where installation are run (npm, bower)
    install() {
+      let _this = this;
       app.acsExtensionsCheckOrInstall(this.tfs, this.pat);
+      app.createArm(this.tfs, this.azureSub, this.pat, this, this.applicationName, function (sub, gen, endpointId) {
+         gen.azureSub = sub.name;
+         gen.azureSubId = sub.id;
+         gen.tenantId = sub.tenantId;
+         gen.serviceEndpointId = endpointId;
 
-      // Based on the users answers compose all the required generators.
-      compose.addDockerHost(this);
-      compose.addRegistry(this);
-      compose.addAzure(this);
-      compose.addBuild(this);
-      compose.addRelease(this);
+         // Based on the users answers compose all the required generators.
+         compose.addBuild(gen);
+         compose.addRelease(gen);
+      });
    }
 };

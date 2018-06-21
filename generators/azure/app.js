@@ -172,5 +172,6 @@ module.exports = {
    // it.
 
    run: run,
-   findOrCreateAzureServiceEndpoint: findOrCreateAzureServiceEndpoint
+   findOrCreateAzureServiceEndpoint: findOrCreateAzureServiceEndpoint,
+   createAzureServiceEndpoint: createAzureServiceEndpoint
 };
