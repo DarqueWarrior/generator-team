@@ -2804,7 +2804,7 @@ describe(`utility`, function () {
                // Confirm the request was formatted correctly
                assert.equal(`GET`, options.method, `wrong method`);
                assert.equal(`Basic ${token}`, options.headers.Authorization, `The authorization is wrong. `);
-               assert.equal(`https://${accountName}.visualstudio.com/${appName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`, options.url, `wrong url`);
+               assert.equal(`https://${accountName}.visualstudio.com/${appName}/_apis/serviceendpoint/endpoints?type=kubernetes&api-version=4.1-preview.1`, options.url, 'wrong url');
 
                // Respond
                callback(null, {

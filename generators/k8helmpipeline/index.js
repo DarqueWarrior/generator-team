@@ -53,19 +53,8 @@ module.exports = class extends Generator {
          prompts.customFolder(this),
          prompts.target(this),
          prompts.kubeEndpointList(this),
-         prompts.azureSubInput(this),
          prompts.azureSubList(this),
-         prompts.azureSubId(this),
-         prompts.tenantId(this),
-         prompts.creationMode(this),
-         prompts.servicePrincipalId(this),
-         prompts.servicePrincipalKey(this),
-         prompts.dockerHost(this),
-         prompts.dockerCertPath(this),
-         prompts.dockerRegistry(this),
-         prompts.dockerRegistryUsername(this),
-         prompts.dockerRegistryPassword(this),
-         prompts.dockerPorts(this)
+         prompts.creationMode(this)
 
       ]).then(function (answers) {
          // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
@@ -153,7 +142,6 @@ module.exports = class extends Generator {
 
    // 7. Where installation are run (npm, bower)
    install() {
-      let _this = this;
       app.acsExtensionsCheckOrInstall(this.tfs, this.pat);
       app.createArm(this.tfs, this.azureSub, this.pat, this, this.applicationName, function (sub, gen, endpointId) {
          gen.azureSub = sub.name;

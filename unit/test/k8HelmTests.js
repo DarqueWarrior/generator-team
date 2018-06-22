@@ -22,7 +22,6 @@ describe(`k8helmpipeline:index`, function(){
    it(`test prompts k8helmpipeline should not return error for acs`, function () {
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
       let expectedToken = `OnRva2Vu`;
-      let applicationName = 'kubeDemo';
       let cleanUp = function() {
          util.getPools.restore();
          util.findQueue.restore();
@@ -34,24 +33,45 @@ describe(`k8helmpipeline:index`, function(){
          util.getKubeEndpoint.restore();
       };
 
+      let type = `kubernetes`;
+      let pat = `token`;
+      let target = `acs`;
+      let dockerHost = ``;
+      let dockerPorts = ``;
+      let customFolder = ` `;
+      let queue = `Hosted Linux Queue`;
+      let dockerCertPath = ``;
+      let dockerRegistry = ``;
+      let azureSub = `AzureSub`;
+      let tenantId = `TenantId`;
+      let dockerRegistryId = ``;
+      let azureSubId = `AzureSubId`;
+      let applicationName = 'kubeDemo';
+      let dockerRegistryPassword = ``;
+      let servicePrincipalId = `servicePrincipalId`;
+      let servicePrincipalKey = `servicePrincipalKey`;
+      let tfs = `http://localhost:8080/tfs/defaultcollection`;
+      let kubeEndpointList = `Default`;
+      let creationMode = `Automatic`;
+
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
-         .withPrompts({
-            pat: `token`,
-            type: 'kubernetes',
-            applicationName: applicationName,
-            target: `acs`,
-            tfs: `http://localhost:8080/tfs/DefaultCollection`,
-            queue: `Hosted Linux Preview`,
-            kubeEndpointList: `Default`
-         })
+         .withArguments([type, applicationName, tfs, queue, target, azureSub, azureSubId, kubeEndpointList,
+            tenantId, servicePrincipalId
+         ])
          .on(`error`, function (e) {
-            cleanUp();
             assert.fail(e);
          })
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util,`getAzureSubs`).callsFake(function(){
+               return ['Default'];
+            });
+
+            sinon.stub(kubernetes, `createArm`).callsFake(function(){
+               return;
+            });
             sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
                return ['Default'];
             });
