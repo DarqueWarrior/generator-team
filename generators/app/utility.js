@@ -587,8 +587,7 @@ function findAzureSub(account, subName, token, gen, callback) {
 
       var sub = obj.value.find(function (i) {
          return i.displayName.toLowerCase() === subName.toLowerCase();
-      });
-      
+      });      
       callback(error, sub);
    });
 }

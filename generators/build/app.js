@@ -207,7 +207,7 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
 
          case "teamProject":
             tokens['{{Project}}'] = val.name;
-            tokens['{{ProjectLowerCase'] = val.name.toLowerCase();
+            tokens['{{ProjectLowerCase}}'] = val.name.toLowerCase();
             break;
 
          case "queueId":
@@ -245,5 +245,6 @@ module.exports = {
 
    run: run,
    getBuild: getBuild,
-   findOrCreateBuild: findOrCreateBuild
+   findOrCreateBuild: findOrCreateBuild,
+   getBuildTokens: getBuildTokens
 };

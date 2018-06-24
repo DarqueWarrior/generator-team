@@ -26,12 +26,6 @@ module.exports = class extends Generator {
       argUtils.kubeEndpoint(this);
       argUtils.tenantId(this);
       argUtils.servicePrincipalId(this);
-      argUtils.dockerHost(this);
-      argUtils.dockerCertPath(this);
-      argUtils.dockerRegistry(this);
-      argUtils.dockerRegistryId(this);
-      argUtils.dockerPorts(this);
-      argUtils.dockerRegistryPassword(this);
       argUtils.servicePrincipalKey(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
@@ -66,18 +60,10 @@ module.exports = class extends Generator {
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
          this.kubeEndpoint = util.reconcileValue(cmdLnInput.option.kubeEndpoint, answers.kubeEndpoint, ``);
-         this.tenantId = util.reconcileValue(cmdLnInput.options.tenantId, answers.tenantId, ``);
-         this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
-         this.dockerHost = util.reconcileValue(cmdLnInput.options.dockerHost, answers.dockerHost, ``);
-         this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
-         this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
-         this.dockerCertPath = util.reconcileValue(cmdLnInput.options.dockerCertPath, answers.dockerCertPath, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
-         this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
-         this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
       }.bind(this));
    }
 
@@ -143,12 +129,16 @@ module.exports = class extends Generator {
    // 7. Where installation are run (npm, bower)
    install() {
       app.acsExtensionsCheckOrInstall(this.tfs, this.pat);
-      app.createArm(this.tfs, this.azureSub, this.pat, this, this.applicationName, function (sub, gen, endpointId) {
+      app.createArm(this.tfs, this.azureSub, this.pat, this, this.applicationName, function (error, sub, gen, endpointId) {
+         if (error){
+            console.log(error);
+         }
+         else{
          gen.azureSub = sub.name;
          gen.azureSubId = sub.id;
          gen.tenantId = sub.tenantId;
          gen.serviceEndpointId = endpointId;
-
+         }
          // Based on the users answers compose all the required generators.
          compose.addBuild(gen);
          compose.addRelease(gen);

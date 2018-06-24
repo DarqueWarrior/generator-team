@@ -80,11 +80,11 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
             }
             if (body){
                endpointId = body.id;
-               console.log("Endpoint Id: " + endpointId);
             }
-            callback(azureSub, gen, endpointId);
+            callback(error, azureSub, gen, endpointId);
          });
       }
+      callback("Unable to create Service Endpoint. Configure manually", undefined, undefined, undefined);
    });
 
 }

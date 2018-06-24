@@ -146,11 +146,10 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
                      // this line would throw
                      status = ep.operationStatus.state;
                   }
-                  // console.log("ERR: " + err);
-                  // console.log("EP: " + utility.inspect(ep.operationStatus));
 
                   finished(err, ep);
-               })},
+               }
+            )},
             function (err, body) {
 
                if (!err && body.operationStatus.state === 'Failed') {
