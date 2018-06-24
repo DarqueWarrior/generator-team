@@ -8,6 +8,7 @@ const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const build = require(`../../generators/build/app`);
 const kubernetes = require(`../../generators/k8helmpipeline/app`);
+const azure = require(`../../generators/azure/app`);
 //const kubernetes = require(`../../generators/k8helmpipeline/app`);
 
 const sinonTest = sinonTestFactory(sinon);
@@ -266,6 +267,53 @@ describe(`k8helmpipeline:app`, function(){
             done();
          });
       }));
+   });
+
+   context(`createArm`, function(){
+      let tfs = "tfs";
+      let azureSub = "azureSub";
+      let pat = "pat";
+      let gen = "gen";
+      let applicationName = "applicationName";
+
+      function clean(){
+         azure.createAzureServiceEndpoint.restore();
+         util.findAzureSub.restore();
+      }
+
+      it(`should not fail`, sinonTest(function(){
+         sinon.stub(util, 'findAzureSub').callsFake(function(){
+            let azureSub = {
+               "name": "name",
+               "id": "id",
+               "tenantId": "tenantId"
+            };
+
+         });
+         sinon.stub(azure, 'createAzureServiceEndpoint').callsFake(function(){
+            let endpointId = "stubEndpoint";
+            callback(azureSub, gen, endpointId);
+         });
+
+         kubernetes.createArm(tfs, azureSub, pat, gen, applicationName, function(){
+            assert.equal(azureSub.name, "name", "Subscription name not set");
+            assert.equal(azureSub.id, "id", "Subscription id not set");
+            assert.equal(azureSub.tenantId, "tenantId", "Subscription tenantId not set");
+            assert.equal(gen, "gen", "Generator not set");
+            assert.equal(endpointId, "stubEndpoint", "EndpointId not set");
+         });
+
+         clean();
+      }));
+
+      it(`should fail`, sinonTest(function(){
+         kubernetes.createArm(tfs, azureSub, pat, gen, applicationName, function(error, sub, gen, endpointId){
+            assert.equal(error, "Unable to create Service Endpoint. Configure manually", "Wrong error");
+            assert.equal(sub, undefined, "Subscription should be undefined");
+            assert.equal(gen, undefined, "Generator should be undefined");
+            assert.equal(endpointId, undefined, "EndpointId should be undefined");
+         })
+      }))
    });
 });
 

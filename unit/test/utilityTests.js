@@ -2851,6 +2851,39 @@ describe(`utility`, function () {
          assert.equal(expected, actual);
       });
 
+      it(`return true`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isKubernetes(`aks`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`return true`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isKubernetes(`acs`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`return false`, function () {
+         // Arrange
+         var expected = false;
+
+         // Act
+         var actual = util.isKubernetes('anything');
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
       it(`return undefined`, function () {
          // Arrange
          var expected = undefined;
