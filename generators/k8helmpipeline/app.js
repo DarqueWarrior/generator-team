@@ -63,8 +63,8 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
    util.findAzureSub(tfs, azureSub, token, gen, function (err, sub) {
       if (sub === undefined) {
-         err = { message: `${sub.displayName} Azure subscription not found` };
-         gen.log.error(`${sub.displayName} Azure subscription not found.`);
+         err = { message: `${sub.displayName} Azure subscription not found. Configure Service Endpoint manually.` };
+         callback(err, sub, gen, endpointId);
       } else {
          gen.log(`+ Found ${sub.displayName} Azure subscription`);
          let azureSub = {
@@ -76,7 +76,8 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
          azApp.createAzureServiceEndpoint(tfs, applicationName, azureSub, token, gen, function(error, body){
             let endpointId;
             if (error){
-               console.log(error);
+               let err = error + ". Configure Service Endpoint Manually.";
+               callback(err, sub, gen, endpointId);
             }
             if (body){
                endpointId = body.id;
@@ -84,7 +85,6 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
             callback(error, azureSub, gen, endpointId);
          });
       }
-      callback("Unable to create Service Endpoint. Configure manually", undefined, undefined, undefined);
    });
 
 }

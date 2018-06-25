@@ -2,7 +2,8 @@
    "name": "{{BuildDefName}}",
    "type": "build",
    "quality": "definition",
-   "buildNumberFormat": "$(BuildDefinitionName)-$(BuildID)",
+   "buildNumberFormat": "$(MajorVersion).$(MinorVersion)$(Rev:.r)",
+
    "queue": {
       "id": "{{QueueId}}"
    },
@@ -30,7 +31,7 @@
             "buildArguments": "",
             "defaultContext": "true",
             "context": "",
-            "imageName": "$(Build.Repository.Name):$(Build.BuildId)",
+            "imageName": "$(Build.Repository.Name):$(Build.BuildNumber)",
             "imageNamesPath": "",
             "qualifyImageName": "true",
             "additionalImageTags": "",
@@ -77,7 +78,7 @@
             "buildArguments": "",
             "defaultContext": "true",
             "context": "",
-            "imageName": "$(Build.Repository.Name):$(Build.BuildId)",
+            "imageName": "$(Build.Repository.Name):$(Build.BuildNumber)",
             "imageNamesPath": "",
             "qualifyImageName": "true",
             "additionalImageTags": "",
@@ -180,6 +181,12 @@
       "BuildPlatform": {
          "value": "any cpu",
          "allowOverride": true
+      },
+      "MajorVersion": {
+         "value": "0"
+      },
+      "MinorVersion": {
+         "value": "0"
       }
    },
    "repository": {
