@@ -236,7 +236,9 @@ function azureSubList(obj) {
       choices: util.getAzureSubs,
       validate: util.validateAzureSub,
       when: answers => {
-         var result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let azSub = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let kube = util.isKubernetes(answers.target);
+         let result = azSub || kube;
 
          if (result) {
             obj.log(`  Getting Azure subscriptions...`);
@@ -430,7 +432,9 @@ function creationMode(obj) {
          }
       ],
       when: answers => {
-         return util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
+         let kube = answers.target === 'kubernetes';
+         return result || kube;
       }
    };
 }
@@ -476,19 +480,6 @@ function gitAction(obj) {
    };
 }
 
-function configUpdate(obj){
-   return {
-      type: `input`,
-      name: `kubeConfig`,
-      store: false,
-      message: `Have you configured your Kubernetes service endpoint? (yes or no)`,
-      validate: util.validateConfigUpdate,
-      when: function () {
-         return obj.options.action === undefined;
-      }
-   };
-}
-
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -516,6 +507,5 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername,
-   configUpdate: configUpdate,
    kubeEndpointList: kubeEndpointList
 };

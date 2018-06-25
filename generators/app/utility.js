@@ -39,6 +39,10 @@ function isDocker(value) {
    return value === `docker` || value === `dockerpaas` || value === `acilinux`;
 }
 
+function isKubernetes(target) {
+   return target === 'acs' || target === 'aks';
+}
+
 function getDockerRegistryServer(server) {
    let parts = url.parse(server);
 
@@ -583,8 +587,7 @@ function findAzureSub(account, subName, token, gen, callback) {
 
       var sub = obj.value.find(function (i) {
          return i.displayName.toLowerCase() === subName.toLowerCase();
-      });
-
+      });      
       callback(error, sub);
    });
 }
@@ -901,7 +904,7 @@ function getKubeEndpoint(answers) {
          "Cache-control": `no-cache`,
          "Authorization": `Basic ${token}`
       },
-      "url": `https://${accountName}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?api-version=4.1-preview.1`,
+      "url": `https://${accountName}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?type=kubernetes&api-version=4.1-preview.1`,
    
    };
 
@@ -1350,5 +1353,6 @@ module.exports = {
    kubeDeployment: kubeDeployment,
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
-   getReleaseDefName: getReleaseDefName
+   getReleaseDefName: getReleaseDefName,
+   isKubernetes: isKubernetes
 };

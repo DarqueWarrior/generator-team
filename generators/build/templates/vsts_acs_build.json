@@ -2,7 +2,8 @@
    "name": "{{BuildDefName}}",
    "type": "build",
    "quality": "definition",
-   "buildNumberFormat": "$(BuildDefinitionName)-$(BuildID)",
+   "buildNumberFormat": "$(MajorVersion).$(MinorVersion)$(Rev:.r)",
+
    "queue": {
       "id": "{{QueueId}}"
    },
@@ -23,14 +24,14 @@
          "inputs": {
             "containerregistrytype": "Azure Container Registry",
             "dockerRegistryEndpoint": "",
-            "azureSubscriptionEndpoint": "",
+            "azureSubscriptionEndpoint": "{{ServiceEndpoint}}",
             "azureContainerRegistry": "",
             "action": "Build an image",
             "dockerFile": "Dockerfile",
             "buildArguments": "",
             "defaultContext": "true",
             "context": "",
-            "imageName": "$(Build.Repository.Name):$(Build.BuildId)",
+            "imageName": "$(Build.Repository.Name):$(Build.BuildNumber)",
             "imageNamesPath": "",
             "qualifyImageName": "true",
             "additionalImageTags": "",
@@ -70,14 +71,14 @@
          "inputs": {
             "containerregistrytype": "Azure Container Registry",
             "dockerRegistryEndpoint": "",
-            "azureSubscriptionEndpoint": "",
+            "azureSubscriptionEndpoint": "{{ServiceEndpoint}}",
             "azureContainerRegistry": "",
             "action": "Push an image",
             "dockerFile": "Dockerfile",
             "buildArguments": "",
             "defaultContext": "true",
             "context": "",
-            "imageName": "$(DockerImageName):$(Build.BuildNumber)",
+            "imageName": "$(Build.Repository.Name):$(Build.BuildNumber)",
             "imageNamesPath": "",
             "qualifyImageName": "true",
             "additionalImageTags": "",
@@ -180,6 +181,12 @@
       "BuildPlatform": {
          "value": "any cpu",
          "allowOverride": true
+      },
+      "MajorVersion": {
+         "value": "0"
+      },
+      "MinorVersion": {
+         "value": "0"
       }
    },
    "repository": {

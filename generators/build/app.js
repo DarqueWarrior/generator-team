@@ -62,7 +62,8 @@ function run(args, gen, done) {
                "dockerRegistryId": args.dockerRegistryId,
                "buildJson": args.buildJson,
                "target": args.target,
-               "kubeEndpoint": args.kubeEndpoint
+               "kubeEndpoint": args.kubeEndpoint,
+               "serviceEndpoint": args.serviceEndpoint
             };
             
             findOrCreateBuild(objs, gen, mainSeries);
@@ -206,7 +207,7 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
 
          case "teamProject":
             tokens['{{Project}}'] = val.name;
-            tokens['{{ProjectLowerCase'] = val.name.toLowerCase();
+            tokens['{{ProjectLowerCase}}'] = val.name.toLowerCase();
             break;
 
          case "queueId":
@@ -225,8 +226,11 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
             }
             break;
          case "kubeEndpoint":
-               tokens['{{KubeEndpoint}}'] = val;
-               break;
+            tokens['{{KubeEndpoint}}'] = val;
+            break;
+         case "serviceEndpoint":
+            tokens['{{ServiceEndpoint}}'] = val;
+            break;
       };
    };
 
@@ -241,5 +245,6 @@ module.exports = {
 
    run: run,
    getBuild: getBuild,
-   findOrCreateBuild: findOrCreateBuild
+   findOrCreateBuild: findOrCreateBuild,
+   getBuildTokens: getBuildTokens
 };

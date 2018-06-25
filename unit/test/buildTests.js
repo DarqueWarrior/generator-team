@@ -1145,6 +1145,66 @@ describe(`build:app`, function () {
          });
    }));
 
+   it(`getBuildTokens should return correctly`, sinonTest(function (done) {
+      // Arrange
+      let buildDefName = "Build";
+      let dockerNamespace = "Docker";
+      let tfs = "tfs";
+      let teamProject = "teamProject";
+
+      let expected = {
+         '{{BuildDefName}}': buildDefName,
+         '{{dockerRegistryId}}': dockerNamespace,
+         '{{TFS}}': tfs,
+         '{{Project}}': teamProject,
+         '{{ProjectLowerCase}}': teamProject.toLowerCase()
+      };
+
+      let args = {
+         "tfs": "tfs",
+         "teamProject": { "name" : "teamProject"}
+      };
+
+      // Act
+      let actual = build.getBuildTokens(args, "Build", "Docker")
+
+      const utility = require('util');
+
+      assert.equal(expected["{{BuildDefName}}"], actual["{{BuildDefName}}"], "Build Definition name is wrong");
+      assert.equal(expected["{{dockerRegistryId}}"], actual["{{dockerRegistryId}}"], "Docker Registry is wrong");
+      assert.equal(expected["{{TFS}}"], actual["{{TFS}}"], "TFS is wrong");
+      assert.equal(expected["{{Project}}"], actual["{{Project}}"], "Project Name is wrong");
+      assert.equal(expected["{{ProjectLowerCase}}"], actual["{{ProjectLowerCase}}"], "Project Name is wrong");
+
+      done();
+   }));
+
+   it(`getBuildTokens should return correctly`, sinonTest(function (done) {
+      // Arrange
+      let buildDefName = "Build";
+      let dockerNamespace = "Docker";
+      let tfs = "tfs";
+      let teamProject = "teamProject";
+
+      let expected = {
+         '{{BuildDefName}}': buildDefName,
+         '{{dockerRegistryId}}': dockerNamespace,
+      };
+
+      let args = {
+         "tft": "tfs",
+         "teamProjects": { "name" : "teamProject"}
+      };
+
+      // Act
+      let actual = build.getBuildTokens(args, "Build", "Docker")
+
+      const utility = require('util');
+
+      assert.equal(expected["{{BuildDefName}}"], actual["{{BuildDefName}}"], "Build Definition name is wrong");
+      assert.equal(expected["{{dockerRegistryId}}"], actual["{{dockerRegistryId}}"], "Docker Registry is wrong");
+      done();
+   }));
    it(`findOrCreateBuild should return error if build create fails`, sinonTest(function (done) {
       // Arrange
       // This allows me to take control of the request requirement

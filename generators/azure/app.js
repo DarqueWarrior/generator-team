@@ -148,8 +148,8 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
                   }
 
                   finished(err, ep);
-               });
-            },
+               }
+            )},
             function (err, body) {
 
                if (!err && body.operationStatus.state === 'Failed') {
@@ -172,5 +172,6 @@ module.exports = {
    // it.
 
    run: run,
-   findOrCreateAzureServiceEndpoint: findOrCreateAzureServiceEndpoint
+   findOrCreateAzureServiceEndpoint: findOrCreateAzureServiceEndpoint,
+   createAzureServiceEndpoint: createAzureServiceEndpoint
 };

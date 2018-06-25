@@ -8,6 +8,7 @@ const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const build = require(`../../generators/build/app`);
 const kubernetes = require(`../../generators/k8helmpipeline/app`);
+const azure = require(`../../generators/azure/app`);
 //const kubernetes = require(`../../generators/k8helmpipeline/app`);
 
 const sinonTest = sinonTestFactory(sinon);
@@ -22,7 +23,6 @@ describe(`k8helmpipeline:index`, function(){
    it(`test prompts k8helmpipeline should not return error for acs`, function () {
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
       let expectedToken = `OnRva2Vu`;
-      let applicationName = 'kubeDemo';
       let cleanUp = function() {
          util.getPools.restore();
          util.findQueue.restore();
@@ -34,24 +34,45 @@ describe(`k8helmpipeline:index`, function(){
          util.getKubeEndpoint.restore();
       };
 
+      let type = `kubernetes`;
+      let pat = `token`;
+      let target = `acs`;
+      let dockerHost = ``;
+      let dockerPorts = ``;
+      let customFolder = ` `;
+      let queue = `Hosted Linux Queue`;
+      let dockerCertPath = ``;
+      let dockerRegistry = ``;
+      let azureSub = `AzureSub`;
+      let tenantId = `TenantId`;
+      let dockerRegistryId = ``;
+      let azureSubId = `AzureSubId`;
+      let applicationName = 'kubeDemo';
+      let dockerRegistryPassword = ``;
+      let servicePrincipalId = `servicePrincipalId`;
+      let servicePrincipalKey = `servicePrincipalKey`;
+      let tfs = `http://localhost:8080/tfs/defaultcollection`;
+      let kubeEndpointList = `Default`;
+      let creationMode = `Automatic`;
+
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
-         .withPrompts({
-            pat: `token`,
-            type: 'kubernetes',
-            applicationName: applicationName,
-            target: `acs`,
-            tfs: `http://localhost:8080/tfs/DefaultCollection`,
-            queue: `Hosted Linux Preview`,
-            kubeEndpointList: `Default`
-         })
+         .withArguments([type, applicationName, tfs, queue, target, azureSub, azureSubId, kubeEndpointList,
+            tenantId, servicePrincipalId
+         ])
          .on(`error`, function (e) {
-            cleanUp();
             assert.fail(e);
          })
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
+            sinon.stub(util,`getAzureSubs`).callsFake(function(){
+               return ['Default'];
+            });
+
+            sinon.stub(kubernetes, `createArm`).callsFake(function(){
+               return;
+            });
             sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
                return ['Default'];
             });
@@ -246,6 +267,53 @@ describe(`k8helmpipeline:app`, function(){
             done();
          });
       }));
+   });
+
+   context(`createArm`, function(){
+      let tfs = "tfs";
+      let azureSub = "azureSub";
+      let pat = "pat";
+      let gen = "gen";
+      let applicationName = "applicationName";
+
+      function clean(){
+         azure.createAzureServiceEndpoint.restore();
+         util.findAzureSub.restore();
+      }
+
+      it(`should not fail`, sinonTest(function(){
+         sinon.stub(util, 'findAzureSub').callsFake(function(){
+            let azureSub = {
+               "name": "name",
+               "id": "id",
+               "tenantId": "tenantId"
+            };
+
+         });
+         sinon.stub(azure, 'createAzureServiceEndpoint').callsFake(function(){
+            let endpointId = "stubEndpoint";
+            callback(azureSub, gen, endpointId);
+         });
+
+         kubernetes.createArm(tfs, azureSub, pat, gen, applicationName, function(){
+            assert.equal(azureSub.name, "name", "Subscription name not set");
+            assert.equal(azureSub.id, "id", "Subscription id not set");
+            assert.equal(azureSub.tenantId, "tenantId", "Subscription tenantId not set");
+            assert.equal(gen, "gen", "Generator not set");
+            assert.equal(endpointId, "stubEndpoint", "EndpointId not set");
+         });
+
+         clean();
+      }));
+
+      it(`should fail`, sinonTest(function(){
+         kubernetes.createArm(tfs, azureSub, pat, gen, applicationName, function(error, sub, gen, endpointId){
+            assert.equal(error, "Unable to create Service Endpoint. Configure manually", "Wrong error");
+            assert.equal(sub, undefined, "Subscription should be undefined");
+            assert.equal(gen, undefined, "Generator should be undefined");
+            assert.equal(endpointId, undefined, "EndpointId should be undefined");
+         })
+      }))
    });
 });
 

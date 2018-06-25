@@ -26,6 +26,7 @@ describe(`team:pipeline`, function () {
          util.isTFSGreaterThan2017.restore();
          util.findAzureServiceEndpoint.restore();
          util.tryFindAzureServiceEndpoint.restore();
+         util.getAzureSubs.restore();
       };
 
       // Defining the arguments this way and calling the function under test
