@@ -208,6 +208,11 @@ function getInstancePrompt() {
    return `Enter VSTS account name\n  ({account}.visualstudio.com)\n  Or full TFS URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)\n  Or name of a stored Profile?`;
 }
 
+function getAcrPrompt(){
+   return `Enter ACR name\n  What is the name of your ACR? ({name}.azurecr.io) `;
+
+}
+
 function getDefaultPortMapping(answers) {
    if (answers.target === `docker`) {
       if (answers.type === `java`) {
@@ -304,13 +309,12 @@ function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
 }
 
-function validateConfigUpdate(input){
-   let valid = input.toLowerCase() === 'yes' ? input : '';
-   return validateRequired(valid, 'You must configure your Kubernetes endpoint before you answer "Yes". Check docs for more info ');
-}
-
 function validateKubeEndpoint(input) {
    return validateRequired(input, `You must provide a Kubernetes Service Endpoint!`);
+}
+
+function validateAcr(input) {
+   return validateRequired(input, `You must provide an Azure Container Registry login`);
 }
 
 function tokenize(input, nvp) {
@@ -1347,12 +1351,12 @@ module.exports = {
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
    tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
-   validateConfigUpdate: validateConfigUpdate,
    getKubeEndpoint: getKubeEndpoint,
    validateKubeEndpoint: validateKubeEndpoint,
    kubeDeployment: kubeDeployment,
    dockerDeployment: dockerDeployment,
    getBuildDefName: getBuildDefName,
    getReleaseDefName: getReleaseDefName,
-   isKubernetes: isKubernetes
+   validateAcr: validateAcr,
+   getAcrPrompt: getAcrPrompt
 };

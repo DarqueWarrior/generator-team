@@ -249,6 +249,23 @@ function azureSubList(obj) {
    };
 }
 
+function azureRegistryName(obj) {
+   return {
+      name: `azureRegistryName`,
+      type: `input`,
+      store: true,
+      message: util.getAcrPrompt,
+      validate: util.validateAzureAcr,
+      when: answers => {
+         let kube = util.isKubernetes(answers.target);
+         let defined = obj.options.acr === undefined;
+
+         return kube && defined;
+
+      }
+   }
+}
+
 function kubeEndpointList(obj) {
    return {
       name: `kubeEndpoint`,
@@ -507,5 +524,6 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername,
-   kubeEndpointList: kubeEndpointList
+   kubeEndpointList: kubeEndpointList,
+   azureRegistryName: azureRegistryName
 };

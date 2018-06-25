@@ -187,6 +187,13 @@ function serviceEndpoint(obj){
    });
 }
 
+function azureRegistryName(obj) {
+   obj.argument(`azureRegistryName`, {
+      required: false,
+      desc: `Azure Container Registry`
+   });
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -213,5 +220,9 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    kubeEndpoint: kubeEndpoint,
+<<<<<<< HEAD
    serviceEndpoint: serviceEndpoint
+=======
+   azureRegistryName: azureRegistryName
+>>>>>>> 820bb2b... Skeleton for supporting acr input
 };

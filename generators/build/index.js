@@ -25,6 +25,7 @@ module.exports = class extends Generator {
       argUtils.customFolder(this);
       argUtils.kubeEndpoint(this);
       argUtils.serviceEndpoint(this);
+      argUtils.azureRegistryName(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -62,12 +63,15 @@ module.exports = class extends Generator {
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.kubeEndpoint = util.reconcileValue(cmdLnInput.options.kubeEndpoint, answers.kubeEndpoint, ``);
-         this.serviceEndpoint = util.reconcileValue(cmdLnInput.options.serviceEndpoint, '', '');
+         this.serviceEndpoint = util.reconcileValue(cmdLnInput.options.serviceEndpoint, ``, ``);
+         this.azureRegistryName = util.reconcileValue(cmdLnInput.options.azureRegistryName, ``, ``);
       }.bind(this));
    }
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
+
+      console.log("ACR: " + this.azureRegistryName);
       // This will not match in callback of
       // getBuild so store it here.
       var _this = this;
@@ -88,7 +92,8 @@ module.exports = class extends Generator {
             appName: _this.applicationName,
             project: _this.applicationName,
             kubeEndpoint: _this.kubeEndpoint,
-            serviceEndpoint: _this.serviceEndpoint
+            serviceEndpoint: _this.serviceEndpoint,
+            azureRegistryName: _this.azureRegistryName
          };
 
          if (util.isDocker(_this.target)) {
