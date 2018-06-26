@@ -5,6 +5,7 @@ const request = require(`request`);
 const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
+const utility = require(`util`);
 
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);

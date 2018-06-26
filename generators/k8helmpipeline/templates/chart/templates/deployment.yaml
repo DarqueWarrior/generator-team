@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.repository }}/{{ .Values.image.imageName }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -49,3 +49,5 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
+      imagePullSecrets:
+      - name: {{ .Values.imagePullSecrets }}

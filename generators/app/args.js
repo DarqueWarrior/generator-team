@@ -194,6 +194,20 @@ function azureRegistryName(obj) {
    });
 }
 
+function azureRegistryResourceGroup(obj) {
+   obj.argument(`azureRegistryResourceGroup`, {
+      required: false,
+      desc: `Azure Container Registry Resource Group`
+   });
+}
+
+function imagePullSecrets(obj) {
+   obj.argument(`imagePullSecrets`, {
+      required: false,
+      desc: `Kubernetes Secret name to pull from`
+   });
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -220,9 +234,8 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    kubeEndpoint: kubeEndpoint,
-<<<<<<< HEAD
-   serviceEndpoint: serviceEndpoint
-=======
-   azureRegistryName: azureRegistryName
->>>>>>> 820bb2b... Skeleton for supporting acr input
+   serviceEndpoint: serviceEndpoint,
+   azureRegistryName: azureRegistryName,
+   azureRegistryResourceGroup: azureRegistryResourceGroup,
+   imagePullSecrets: imagePullSecrets
 };

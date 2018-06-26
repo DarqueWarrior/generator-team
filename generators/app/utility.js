@@ -310,11 +310,20 @@ function validateServicePrincipalKey(input) {
 }
 
 function validateKubeEndpoint(input) {
-   return validateRequired(input, `You must provide a Kubernetes Service Endpoint!`);
+   return validateRequired(input, `You must provide a Kubernetes Service Endpoint`);
 }
 
 function validateAcr(input) {
    return validateRequired(input, `You must provide an Azure Container Registry login`);
+}
+
+function validateResourceGroup(input) {
+   return validateRequired(input, `You must provide an Azure Resource Group`);
+}
+
+function validateImagePullSecrets(input) {
+   return validateRequired(input, `You must provide an Image Pull Secret name`);
+
 }
 
 function tokenize(input, nvp) {
@@ -718,7 +727,7 @@ function tryFindBuild(account, teamProject, token, target, callback) {
 function findBuild(account, teamProject, token, target, callback) {
    'use strict';
    
-   let name = getBuildDefName(target,teamProject.name);
+   let name = getBuildDefName(target, teamProject.name);
               
    var options = addUserAgent({
       "method": `GET`,
@@ -1358,5 +1367,7 @@ module.exports = {
    getBuildDefName: getBuildDefName,
    getReleaseDefName: getReleaseDefName,
    validateAcr: validateAcr,
-   getAcrPrompt: getAcrPrompt
+   getAcrPrompt: getAcrPrompt,
+   validateResourceGroup: validateResourceGroup,
+   isKubernetes: isKubernetes
 };

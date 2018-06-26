@@ -28,7 +28,7 @@ function addBuild(obj) {
       arguments: [obj.type, obj.applicationName, obj.tfs,
       obj.queue, obj.target,
       obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId,
-      obj.pat, obj.customFolder, obj.kubeEndpoint, obj.serviceEndpointId, obj.azureRegistryName
+      obj.pat, obj.customFolder, obj.kubeEndpoint, obj.serviceEndpointId, obj.azureRegistryName, obj.azureRegistryResourceGroup, obj.azureSubId
       ]
    });
 }

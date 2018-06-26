@@ -30,6 +30,8 @@ module.exports = class extends Generator {
       argUtils.pat(this);
       argUtils.customFolder(this);
       argUtils.azureRegistryName(this);
+      argUtils.azureRegistryResourceGroup(this);
+      argUtils.imagePullSecrets(this);
    }
 
    // 2. Where you prompt users for options (where you'd call this.prompt())
@@ -51,6 +53,8 @@ module.exports = class extends Generator {
          prompts.azureSubList(this),
          prompts.creationMode(this),
          prompts.azureRegistryName(this),
+         prompts.azureRegistryResourceGroup(this),
+         prompts.imagePullSecrets(this)
 
       ]).then(function (answers) {
          // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
@@ -65,22 +69,25 @@ module.exports = class extends Generator {
          this.tenantId = util.reconcileValue(cmdLnInput.options.tenantId, answers.tenantId, ``);
          this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
          this.azureRegistryName = util.reconcileValue(cmdLnInput.option.azureRegistryName, answers.azureRegistryName, ``);
+         this.azureRegistryResourceGroup = util.reconcileValue(cmdLnInput.options.azureRegistryResourceGroup, answers.azureRegistryResourceGroup, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
+         this.imagePullSecrets = util.reconcileValue(cmdLnInput.options.imagePullSecrets, answers.imagePullSecrets, ``);
       }.bind(this));
    }
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
-      console.log(this.azureRegistryName);
+      let azRegistry = this.azureRegistryName + ".azurecr.io";
       let appName = this.applicationName;
 
       var tokens = {
          name: appName,
          name_lowercase: this.applicationName.toLowerCase(),
-         containerRegistry: this.dockerRegistry,
+         containerRegistry: azRegistry,
+         imagePullSecrets: this.imagePullSecrets
       };
 
       // Root
