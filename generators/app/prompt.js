@@ -258,7 +258,7 @@ function azureRegistryName(obj) {
       validate: util.validateAzureAcr,
       when: answers => {
          let kube = util.isKubernetes(answers.target);
-         let defined = obj.options.acr === undefined;
+         let defined = obj.options.azureRegistryName === undefined;
 
          return kube && defined;
 
@@ -275,7 +275,7 @@ function azureRegistryResourceGroup(obj) {
       validate: util.validateAzureResourceGroup,
       when: answers => {
          let kube = util.isKubernetes(answers.target);
-         let defined = obj.options.acr === undefined;
+         let defined = obj.options.azureRegistryResourceGroup === undefined;
 
          return kube && defined;
 
