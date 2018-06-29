@@ -80,13 +80,13 @@ module.exports = class extends Generator {
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
-      let azRegistry = this.azureRegistryName + ".azurecr.io";
+      let acrServer = this.azureRegistryName + ".azurecr.io";
       let appName = this.applicationName;
 
       var tokens = {
          name: appName,
          name_lowercase: this.applicationName.toLowerCase(),
-         containerRegistry: azRegistry,
+         containerRegistry: acrServer,
          imagePullSecrets: this.imagePullSecrets
       };
 

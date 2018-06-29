@@ -209,7 +209,7 @@ function getInstancePrompt() {
 }
 
 function getAcrPrompt(){
-   return `Enter ACR name\n  What is the name of your ACR? ({name}.azurecr.io) `;
+   return `Enter the Azure Container Registry (ACR) name\n  What is the name of your ACR? ({name}.azurecr.io) `;
 
 }
 
