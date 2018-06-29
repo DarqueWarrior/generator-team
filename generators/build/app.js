@@ -63,7 +63,11 @@ function run(args, gen, done) {
                "buildJson": args.buildJson,
                "target": args.target,
                "kubeEndpoint": args.kubeEndpoint,
-               "serviceEndpoint": args.serviceEndpoint
+               "serviceEndpoint": args.serviceEndpoint,
+               "azureRegistryName": args.azureRegistryName,
+               "azureRegistryResourceGroup": args.azureRegistryResourceGroup,
+               "azureSubId": args.azureSubId
+               
             };
             
             findOrCreateBuild(objs, gen, mainSeries);
@@ -230,6 +234,12 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
             break;
          case "serviceEndpoint":
             tokens['{{ServiceEndpoint}}'] = val;
+            break;
+         case "azureRegistryName":
+            let loginServer = `${val}.azurecr.io`;
+            let id = `/subscriptions/${args.azureSubId}/resourceGroups/${args.azureRegistryResourceGroup}/providers/Microsoft.ContainerRegistry/registries/${val}`;
+            let result = `{\\"loginServer\\":\\"${loginServer}\\", \\"id\\" : \\"${id}\\"}`;
+            tokens['{{AzureRegistryName}}'] = result;
             break;
       };
    };

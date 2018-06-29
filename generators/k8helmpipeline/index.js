@@ -29,6 +29,9 @@ module.exports = class extends Generator {
       argUtils.servicePrincipalKey(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
+      argUtils.azureRegistryName(this);
+      argUtils.azureRegistryResourceGroup(this);
+      argUtils.imagePullSecrets(this);
    }
 
    // 2. Where you prompt users for options (where you'd call this.prompt())
@@ -48,7 +51,10 @@ module.exports = class extends Generator {
          prompts.target(this),
          prompts.kubeEndpointList(this),
          prompts.azureSubList(this),
-         prompts.creationMode(this)
+         prompts.creationMode(this),
+         prompts.azureRegistryName(this),
+         prompts.azureRegistryResourceGroup(this),
+         prompts.imagePullSecrets(this)
 
       ]).then(function (answers) {
          // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
@@ -60,22 +66,28 @@ module.exports = class extends Generator {
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
          this.kubeEndpoint = util.reconcileValue(cmdLnInput.option.kubeEndpoint, answers.kubeEndpoint, ``);
+         this.tenantId = util.reconcileValue(cmdLnInput.options.tenantId, answers.tenantId, ``);
+         this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
+         this.azureRegistryName = util.reconcileValue(cmdLnInput.option.azureRegistryName, answers.azureRegistryName, ``);
+         this.azureRegistryResourceGroup = util.reconcileValue(cmdLnInput.options.azureRegistryResourceGroup, answers.azureRegistryResourceGroup, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
+         this.imagePullSecrets = util.reconcileValue(cmdLnInput.options.imagePullSecrets, answers.imagePullSecrets, ``);
       }.bind(this));
    }
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
-
+      let acrServer = this.azureRegistryName + ".azurecr.io";
       let appName = this.applicationName;
 
       var tokens = {
          name: appName,
          name_lowercase: this.applicationName.toLowerCase(),
-         containerRegistry: this.dockerRegistry,
+         containerRegistry: acrServer,
+         imagePullSecrets: this.imagePullSecrets
       };
 
       // Root

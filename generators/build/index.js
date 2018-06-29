@@ -25,6 +25,9 @@ module.exports = class extends Generator {
       argUtils.customFolder(this);
       argUtils.kubeEndpoint(this);
       argUtils.serviceEndpoint(this);
+      argUtils.azureRegistryName(this);
+      argUtils.azureRegistryResourceGroup(this);
+      argUtils.azureSubId(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -62,12 +65,16 @@ module.exports = class extends Generator {
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.kubeEndpoint = util.reconcileValue(cmdLnInput.options.kubeEndpoint, answers.kubeEndpoint, ``);
-         this.serviceEndpoint = util.reconcileValue(cmdLnInput.options.serviceEndpoint, '', '');
+         this.serviceEndpoint = util.reconcileValue(cmdLnInput.options.serviceEndpoint, ``, ``);
+         this.azureRegistryName = util.reconcileValue(cmdLnInput.options.azureRegistryName, ``, ``);
+         this.azureRegistryResourceGroup = util.reconcileValue(cmdLnInput.options.azureRegistryResourceGroup, ``, ``);
+         this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, ``, ``);
       }.bind(this));
    }
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
+
       // This will not match in callback of
       // getBuild so store it here.
       var _this = this;
@@ -78,7 +85,7 @@ module.exports = class extends Generator {
          if (_this.type === `custom`) {
             build = path.join(_this.customFolder, result);
          }
-
+   
          var args = {
             pat: _this.pat,
             tfs: _this.tfs,
@@ -88,7 +95,10 @@ module.exports = class extends Generator {
             appName: _this.applicationName,
             project: _this.applicationName,
             kubeEndpoint: _this.kubeEndpoint,
-            serviceEndpoint: _this.serviceEndpoint
+            serviceEndpoint: _this.serviceEndpoint,
+            azureRegistryName: _this.azureRegistryName,
+            azureRegistryResourceGroup: _this.azureRegistryResourceGroup,
+            azureSubId: _this.azureSubId
          };
 
          if (util.isDocker(_this.target)) {

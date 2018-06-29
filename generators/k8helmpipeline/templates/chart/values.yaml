@@ -5,9 +5,15 @@
 replicaCount: 3
 
 image:
+  # Repository URL
   repository: <%= containerRegistry %>
-  tag: latest
-  pullPolicy: IfNotPresent
+
+  # Container image name
+  imageName: <%= name %>
+  tag: 0.0.1
+  pullPolicy: Always
+
+imagePullSecrets: <%= imagePullSecrets %>
 
 service:
   type: ClusterIP

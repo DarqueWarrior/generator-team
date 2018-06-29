@@ -249,6 +249,57 @@ function azureSubList(obj) {
    };
 }
 
+function azureRegistryName(obj) {
+   return {
+      name: `azureRegistryName`,
+      type: `input`,
+      store: true,
+      message: util.getAcrPrompt,
+      validate: util.validateAzureAcr,
+      when: answers => {
+         let kube = util.isKubernetes(answers.target);
+         let defined = obj.options.azureRegistryName === undefined;
+
+         return kube && defined;
+
+      }
+   }
+}
+
+function azureRegistryResourceGroup(obj) {
+   return {
+      name: `azureRegistryResourceGroup`,
+      type: `input`,
+      store: true,
+      message: `Please enter the Resource Group your container is in: `,
+      validate: util.validateAzureResourceGroup,
+      when: answers => {
+         let kube = util.isKubernetes(answers.target);
+         let defined = obj.options.azureRegistryResourceGroup === undefined;
+
+         return kube && defined;
+
+      }
+   }
+}
+
+function imagePullSecrets(obj) {
+   return {
+      name: `imagePullSecrets`,
+      type: `input`,
+      store: true,
+      message: `Please enter the name of your K8s image pull secret: `,
+      validate: util.validateImagePullSecrets,
+      when: answers => {
+         let kube = util.isKubernetes(answers.target);
+         let defined = obj.options.imagePullSecrets === undefined;
+
+         return kube && defined;
+
+      }
+   }
+}
+
 function kubeEndpointList(obj) {
    return {
       name: `kubeEndpoint`,
@@ -507,5 +558,8 @@ module.exports = {
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername,
-   kubeEndpointList: kubeEndpointList
+   kubeEndpointList: kubeEndpointList,
+   azureRegistryName: azureRegistryName,
+   azureRegistryResourceGroup: azureRegistryResourceGroup,
+   imagePullSecrets: imagePullSecrets
 };
