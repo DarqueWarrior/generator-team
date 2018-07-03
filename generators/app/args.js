@@ -208,6 +208,20 @@ function imagePullSecrets(obj) {
    });
 }
 
+function kubeName(obj) {
+   obj.argument(`kubeName`, {
+      required: false,
+      desc: 'Kubernetes Cluster Name'
+   });
+}
+
+function kubeResourceGroup(obj) {
+   obj.argument(`kubeResourceGroup`, {
+      required: false,
+      desc: `Kubernetes Cluster Resource Group Name`
+   });
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -237,5 +251,7 @@ module.exports = {
    serviceEndpoint: serviceEndpoint,
    azureRegistryName: azureRegistryName,
    azureRegistryResourceGroup: azureRegistryResourceGroup,
-   imagePullSecrets: imagePullSecrets
+   imagePullSecrets: imagePullSecrets,
+   kubeName: kubeName,
+   kubeResourceGroup: kubeResourceGroup
 };
