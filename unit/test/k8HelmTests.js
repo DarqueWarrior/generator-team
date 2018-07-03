@@ -9,6 +9,7 @@ const util = require(`../../generators/app/utility`);
 const build = require(`../../generators/build/app`);
 const kubernetes = require(`../../generators/k8helmpipeline/app`);
 const azure = require(`../../generators/azure/app`);
+const release = require(`../../generators/release/app`);
 //const kubernetes = require(`../../generators/k8helmpipeline/app`);
 
 const sinonTest = sinonTestFactory(sinon);
@@ -25,15 +26,15 @@ describe(`k8helmpipeline:index`, function(){
       let expectedToken = `OnRva2Vu`;
       let cleanUp = function() {
          util.getPools.restore();
-         util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.tryFindRelease.restore();
-         util.isTFSGreaterThan2017.restore();
          util.findBuild.restore();
          util.getKubeEndpoint.restore();
+         build.run.restore();
+         release.run.restore();
       };
-
+      
       let type = `kubernetes`;
       let pat = `token`;
       let target = `acs`;
@@ -51,9 +52,10 @@ describe(`k8helmpipeline:index`, function(){
       let dockerRegistryPassword = ``;
       let servicePrincipalId = `servicePrincipalId`;
       let servicePrincipalKey = `servicePrincipalKey`;
-      let tfs = `http://localhost:8080/tfs/defaultcollection`;
+      let tfs = `http://localhost:8080/tfs/DefaultCollection`;
       let kubeEndpointList = `Default`;
       let creationMode = `Automatic`;
+      let endpointId = "12345";
 
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
@@ -71,20 +73,42 @@ describe(`k8helmpipeline:index`, function(){
             });
 
             sinon.stub(kubernetes, `createArm`).callsFake(function(){
-               return;
+               let result = {
+                  "sub" : {
+                     "name": azureSub,
+                     "id": azureSubId,
+                     "tenantId": tenantId
+                  },
+                  "endpointId": endpointId
+               };
+               return new Promise(function(resolve, reject){
+                  resolve(result);
+               });
             });
             sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
                return ['Default'];
             });
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
-            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
-               value: "I`m a build."
+            
+            sinon.stub(build, 'run').callsFake(function(args, _this, done){
+               done();
             });
             sinon.stub(util, `findProject`).callsArgWith(4, null, {
                value: "TeamProject",
                id: 1
             });
+
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
+
+            sinon.stub(util, `findBuild`).callsArgWith(4, null, {
+               value: "I'm a build."
+            });
+
+            sinon.stub(release, 'run').callsFake(function(args, _this, done) {
+               done();
+            });
+
             sinon.stub(util, `tryFindRelease`).callsFake(function (args, callback) {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
@@ -93,21 +117,6 @@ describe(`k8helmpipeline:index`, function(){
 
                callback(null, {
                   value: "I`m a release."
-               });
-            });
-            sinon.stub(util, `findBuild`).callsFake(function (account, teamProject, token, target, callback) {
-               assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
-               assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
-               assert.equal(expectedToken, token, `findBuild - token is wrong`);
-               assert.equal(`acs`, target, `findBuild - target is wrong`);
-
-               callback(null, {
-                  value: "I`m a build.",
-                  authoredBy: {
-                     id: 1,
-                     uniqueName: `uniqueName`,
-                     displayName: `displayName`
-                  }
                });
             });
          })
