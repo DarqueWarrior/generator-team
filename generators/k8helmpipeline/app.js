@@ -2,9 +2,11 @@ const fs = require('fs');
 const os = require('os');
 const url = require('url');
 const request = require(`request`);
+const rp = require(`request-promise`);
 const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
+const utility = require(`util`);
 
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);
@@ -61,32 +63,121 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
    let token = util.encodePat(pat);
 
-   util.findAzureSub(tfs, azureSub, token, gen, function (err, sub) {
-      if (sub === undefined) {
-         err = { message: `${sub.displayName} Azure subscription not found. Configure Service Endpoint manually.` };
-         callback(err, sub, gen, endpointId);
-      } else {
-         gen.log(`+ Found ${sub.displayName} Azure subscription`);
-         let azureSub = {
-            "name": sub.displayName,
-            "id": sub.subscriptionId,
-            "tenantId": sub.subscriptionTenantId
-         };
+   return new Promise(function (resolve, reject) {
+      util.findAzureSub(tfs, azureSub, token, gen, function (err, sub) {
+         if (sub === undefined) {
+            err = { message: `${sub.displayName} Azure subscription not found. Configure Service Endpoint manually.` };
+            reject(err);
+         } 
+         else {
+            gen.log(`+ Found ${sub.displayName} Azure subscription`);
+            let azureSub = {
+               "name": sub.displayName,
+               "id": sub.subscriptionId,
+               "tenantId": sub.subscriptionTenantId
+            };
 
-         azApp.createAzureServiceEndpoint(tfs, applicationName, azureSub, token, gen, function(error, body){
-            let endpointId;
-            if (error){
-               let err = error + ". Configure Service Endpoint Manually.";
-               callback(err, sub, gen, endpointId);
-            }
-            if (body){
-               endpointId = body.id;
-            }
-            callback(error, azureSub, gen, endpointId);
-         });
+            azApp.createAzureServiceEndpoint(tfs, applicationName, azureSub, token, gen, function(error, body) {
+               let endpointId;
+               if (error){
+                  let err = error + ". Configure Service Endpoint Manually.";
+                  reject(err);
+               }
+               if (body){
+                  endpointId = body.id;
+               }
+
+               let result = {
+                  "sub": azureSub,
+                  "endpointId": endpointId
+               };
+               resolve(result);
+            });
+         }
+      });
+   });
+
+}
+
+
+function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
+   let token = util.encodePat(pat);
+
+   let body = {
+      dataSourceDetails: {
+        dataSourceUrl: "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+        parameters: {
+           azureSubscriptionEndpoint: kubeEndpoint
+        },
+        resultSelector: "jsonpath:$.value[*]"
+      },
+      resultTransformationDetails: {
+         resultTemplate: ""
+      }
+    };
+
+    let options = {
+      "method": `POST`,
+      "headers": {
+         "Authorization": `Basic ${token}`,
+         "Content-Type": "application/json"
+      },
+      "json": true,
+      "body": body,
+      "url": `https://${tfs}.visualstudio.com/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
+   };
+
+   let resourceGroup;
+   let kubeName;
+   let error;
+   let kubeInfo = {};
+
+   getKubeResourceGroup(options, function(err, group){
+      if (err) {
+         error = err;
+      }
+      else {
+         kubeInfo['resourceGroup'] = group;
       }
    });
 
+   getKubeName(options, function(err, name){
+      if (err) {
+         error = err;
+      }
+      else {
+         kubeInfo['name'] = name;
+      }
+
+      callback(error, gen, kubeInfo);
+
+   });
+}
+
+function getKubeResourceGroup(options, callback) {
+   options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id resourcegroups }}";
+
+   rp(options)
+   .then(function (bod) {
+      let result = bod['result'][0];
+      callback(undefined, result);
+   })
+   .catch(function (error) {
+      callback(error, undefined);
+   });
+}
+
+function getKubeName(options, callback) {
+   options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
+
+   rp(options)
+   .then(function (bod) {
+      let result = bod['result'][0];
+      callback(undefined, result);
+   })
+   .catch(function (error) {
+      callback(error, undefined);
+   });
 }
 
 module.exports = {
@@ -96,5 +187,6 @@ module.exports = {
    acsExtensionsCheck: acsExtensionsCheck,
    acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall,
    acsExtensionsInstall: acsExtensionsInstall,
-   createArm: createArm
+   createArm: createArm, 
+   getKubeInfo: getKubeInfo
 };
