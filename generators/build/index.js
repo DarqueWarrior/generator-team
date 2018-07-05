@@ -97,17 +97,21 @@ module.exports = class extends Generator {
             target: _this.target,
             appName: _this.applicationName,
             project: _this.applicationName,
-            kubeEndpoint: _this.kubeEndpoint,
-            serviceEndpoint: _this.serviceEndpoint,
-            azureRegistryName: _this.azureRegistryName,
-            azureRegistryResourceGroup: _this.azureRegistryResourceGroup,
-            azureSubId: _this.azureSubId
          };
 
          if (util.isDocker(_this.target)) {
             args.dockerHost = _this.dockerHost;
             args.dockerRegistry = _this.dockerRegistry;
             args.dockerRegistryId = _this.dockerRegistryId;
+         }
+         else if (util.isKubernetes(_this.target)) {
+            args.kubeEndpoint = _this.kubeEndpoint;
+            args.serviceEndpoint = _this.serviceEndpoint;
+            args.azureRegistryName = _this.azureRegistryName;
+            args.azureRegistryResourceGroup = _this.azureRegistryResourceGroup;
+            args.azureSubId = _this.azureSubId;
+            args.kubeName = _this.kubeName;
+            args.kubeResourceGroup = _this.kubeResourceGroup;
          }
 
          app.run(args, _this, done);

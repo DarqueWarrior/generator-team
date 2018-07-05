@@ -61,14 +61,18 @@ function run(args, gen, done) {
                "dockerRegistryEndpoint": dockerRegistryEndpoint,
                "dockerRegistryId": args.dockerRegistryId,
                "buildJson": args.buildJson,
-               "target": args.target,
-               "kubeEndpoint": args.kubeEndpoint,
-               "serviceEndpoint": args.serviceEndpoint,
-               "azureRegistryName": args.azureRegistryName,
-               "azureRegistryResourceGroup": args.azureRegistryResourceGroup,
-               "azureSubId": args.azureSubId
-               
+               "target": args.target
             };
+
+            if (util.isKubernetes(args.target)) {
+               objs.kubeEndpoint = args.kubeEndpoint;
+               objs.serviceEndpoint = args.serviceEndpoint;
+               objs.azureRegistryName = args.azureRegistryName;
+               objs.azureRegistryResourceGroup = args.azureRegistryResourceGroup;
+               objs.azureSubId = args.azureSubId;
+               objs.kubeName = args.kubeName;
+               objs.kubeResourceGroup = args.kubeResourceGroup;
+            }
             
             findOrCreateBuild(objs, gen, mainSeries);
          }
@@ -208,22 +212,18 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
          case "tfs":
             tokens['{{TFS}}'] = val;
             break;
-
          case "teamProject":
             tokens['{{Project}}'] = val.name;
             tokens['{{ProjectLowerCase}}'] = val.name.toLowerCase();
             break;
-
          case "queueId":
             tokens['{{QueueId}}'] = val;
             break;
-
          case "dockerEndpoint":
             if (val){
                tokens['{{dockerHostEndpoint}}'] = val.id;
             }
             break;
-
          case "dockerRegistryEndpoint":
             if (val){
                tokens['{{dockerRegistryEndpoint}}'] = val.id;         
@@ -240,6 +240,12 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
             let id = `/subscriptions/${args.azureSubId}/resourceGroups/${args.azureRegistryResourceGroup}/providers/Microsoft.ContainerRegistry/registries/${val}`;
             let result = `{\\"loginServer\\":\\"${loginServer}\\", \\"id\\" : \\"${id}\\"}`;
             tokens['{{AzureRegistryName}}'] = result;
+            break;
+         case "kubeName":
+            tokens['{{KubeName}}'] = val;
+            break;
+         case "kubeResourceGroup":
+            tokens['{{KubeResourceGroup}}'] = val;
             break;
       };
    };
