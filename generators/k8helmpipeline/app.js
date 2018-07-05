@@ -2,7 +2,6 @@ const fs = require('fs');
 const os = require('os');
 const url = require('url');
 const request = require(`request`);
-const rp = require(`request-promise`);
 const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
@@ -157,26 +156,26 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
 function getKubeResourceGroup(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id resourcegroups }}";
 
-   rp(options)
-   .then(function (bod) {
+   request(options, function(error, response, bod) {
+      if (error){
+         callback(error, undefined);
+      }
+
       let result = bod['result'][0];
       callback(undefined, result);
-   })
-   .catch(function (error) {
-      callback(error, undefined);
    });
 }
 
 function getKubeName(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
 
-   rp(options)
-   .then(function (bod) {
+   request(options, function(error, response, bod) {
+      if (error){
+         callback(error, undefined);
+      }
+
       let result = bod['result'][0];
       callback(undefined, result);
-   })
-   .catch(function (error) {
-      callback(error, undefined);
    });
 }
 

@@ -11,7 +11,6 @@ const kubernetes = require(`../../generators/k8helmpipeline/app`);
 const azure = require(`../../generators/azure/app`);
 const release = require(`../../generators/release/app`);
 const utility = require('util');
-const rp = require('request-promise');
 
 const sinonTest = sinonTestFactory(sinon);
 
@@ -250,8 +249,11 @@ describe(`k8helmpipeline:index`, function(){
 
 describe(`k8helmpipeline:app`, function(){
    context(`acsExtensionsCheckOrInstall`, function () {
+      function cleanUp() {
+         kubernetes.acsExtensionsInstall.restore()
+      }
+      sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
-         sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
                callback(null, {
@@ -286,17 +288,21 @@ describe(`k8helmpipeline:app`, function(){
          // Act
          proxyApp.acsExtensionsCheckOrInstall("default","token",(e, data) => {
             assert.equal(e, true);
-            kubernetes.acsExtensionsInstall.restore();
             done();
          }, function (e) {
             assert.fail();
-            kubernetes.acsExtensionsInstall.restore();
             done();
          });
       }));
+
+      cleanUp();
    });
 
    context(`acsExtensionsCheck`, function () {
+      function cleanUp() {
+         kubernetes.acsExtensionsInstall.restore()
+      }
+      sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
@@ -319,7 +325,6 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should fail`, sinonTest(function () {
-         //sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
@@ -339,6 +344,7 @@ describe(`k8helmpipeline:app`, function(){
             done();
          });
       }));
+      cleanUp();
    });
 
    context(`acsExtensionsInstall`, function () {
@@ -364,7 +370,6 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should fail`, sinonTest(function () {
-         //sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
@@ -386,17 +391,17 @@ describe(`k8helmpipeline:app`, function(){
       }));
    });
 
-   context(`createArm`, function(){
+   context(`createArm`, function() {
+      function cleanUp() {
+         util.findAzureSub.restore();
+         azure.createAzureServiceEndpoint.restore();
+      }
+
       let tfs = "tfs";
       let azureSub = "azureSub";
       let pat = "pat";
       let gen = "gen";
       let applicationName = "applicationName";
-
-      function clean(){
-         azure.createAzureServiceEndpoint.restore();
-         util.findAzureSub.restore();
-      }
 
       it(`should not fail`, sinonTest(function(){
          sinon.stub(util, 'findAzureSub').callsFake(function(){
@@ -420,7 +425,7 @@ describe(`k8helmpipeline:app`, function(){
             assert.equal(endpointId, "stubEndpoint", "EndpointId not set");
          });
 
-         clean();
+         cleanUp();
       }));
 
       it(`should fail`, sinonTest(function(){
@@ -441,10 +446,16 @@ describe(`k8helmpipeline:app`, function(){
       let kubeEndpoint = "12345";
       let gen = "generator";
 
-      it(`should return the correct k8s information`, sinonTest(function(){
-         let rpStub = sinon.stub(rp, 'Request');
-         rpStub.resolves({
-            "result": ["kubeInfo"]
+      it(`should return the correct k8s information`, sinonTest(function() {
+
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(undefined, {
+                  statusCode: 200
+               }, {
+                  "result": ["kubeInfo"]
+               });
+            }
          });
             
          let expected = "kubeInfo";
@@ -453,30 +464,31 @@ describe(`k8helmpipeline:app`, function(){
             "name": expected
          };
 
-         kubernetes.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
+         proxyApp.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
             assert.equal(e, undefined);
             assert.equal(generator, gen);
             assert.equal(kubernetesInfo['resourceGroup'], expected, "Kubernetes Resource Group is not correct");
             assert.equal(kubernetesInfo['name'], expected, "Kubernetes Name is not correct");
          });
-
-         rpStub.restore();
       }));
 
-      it(`should return the correct k8s information`, sinonTest(function(){
-         let rpStub = sinon.stub(rp, 'Request');
-         rpStub.rejects("Error");
+      it(`should return the correct k8s information`, sinonTest(function() {
+         const proxy = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback("Error", {
+                  statusCode: 400
+               }, {
+                  "result": ["kubeInfo"]
+               });
+            }
+         });
             
          let expected = "Error";
 
-         kubernetes.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
+         proxy.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
             assert.equal(e, expected);
             assert.equal(generator, gen);
-            assert.equal(kubernetesInfo['resourceGroup'], undefined, "Kubernetes Resource Group is not correct");
-            assert.equal(kubernetesInfo['name'], undefined, "Kubernetes Name is not correct");
          });
-
-         rpStub.restore();
       }));
    });
 });
