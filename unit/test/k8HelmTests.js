@@ -10,7 +10,8 @@ const build = require(`../../generators/build/app`);
 const kubernetes = require(`../../generators/k8helmpipeline/app`);
 const azure = require(`../../generators/azure/app`);
 const release = require(`../../generators/release/app`);
-//const kubernetes = require(`../../generators/k8helmpipeline/app`);
+const utility = require('util');
+const rp = require('request-promise');
 
 const sinonTest = sinonTestFactory(sinon);
 
@@ -21,20 +22,6 @@ describe(`k8helmpipeline:index`, function(){
       path.join(__dirname, `../../generators/release`)
    ];
 
-   it(`test prompts k8helmpipeline should not return error for acs`, function () {
-      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
-      let expectedToken = `OnRva2Vu`;
-      let cleanUp = function() {
-         util.getPools.restore();
-         util.findProject.restore();
-         util.tryFindBuild.restore();
-         util.tryFindRelease.restore();
-         util.findBuild.restore();
-         util.getKubeEndpoint.restore();
-         build.run.restore();
-         release.run.restore();
-      };
-      
       let type = `kubernetes`;
       let pat = `token`;
       let target = `acs`;
@@ -56,6 +43,23 @@ describe(`k8helmpipeline:index`, function(){
       let kubeEndpointList = `Default`;
       let creationMode = `Automatic`;
       let endpointId = "12345";
+      let kubeEndpoint = "12345";
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+      let expectedToken = `OnRva2Vu`;
+
+   it(`test prompts k8helmpipeline should not return error for acs`, function () {
+      let cleanUp = function() {
+         util.getPools.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.tryFindRelease.restore();
+         util.findBuild.restore();
+         util.getKubeEndpoint.restore();
+         build.run.restore();
+         release.run.restore();
+         util.getAzureSubs.restore();
+         kubernetes.createArm.restore();
+      };
 
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
@@ -119,6 +123,110 @@ describe(`k8helmpipeline:index`, function(){
                   value: "I`m a release."
                });
             });
+         })
+         .on(`end`, function () {
+            // Using the yeoman helpers and sinonTest did not play nice
+            // so clean up your stubs        
+            cleanUp();
+         })
+         .then(function(){
+            let dir = process.cwd();
+            assert.file(`Dockerfile`);
+            assert.file(`index.html`);
+            assert.file(`chart/${applicationName}/Chart.yaml`);
+            assert.file(`chart/${applicationName}/values.yaml`);
+            assert.file(`chart/${applicationName}/templates/NOTES.txt`);
+            assert.file(`chart/${applicationName}/templates/_helpers.tpl`);
+            assert.file(`chart/${applicationName}/templates/configmap.yaml`);
+            assert.file(`chart/${applicationName}/templates/deployment.yaml`);
+            assert.file(`chart/${applicationName}/templates/service.yaml`);
+         });
+   });
+
+   it(`test prompts k8helmpipeline should not return error for aks`, function () {
+      let cleanUp = function() {
+         util.getPools.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.tryFindRelease.restore();
+         util.findBuild.restore();
+         util.getKubeEndpoint.restore();
+         build.run.restore();
+         release.run.restore();
+         kubernetes.getKubeInfo.restore();
+      };
+
+      target = 'aks';
+
+      return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
+         .withGenerators(deps)
+         .withArguments([type, applicationName, tfs, queue, target, azureSub, azureSubId, kubeEndpointList,
+            tenantId, servicePrincipalId
+         ])
+         .on(`error`, function (e) {
+            assert.fail(e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called
+            sinon.stub(util, `getPools`);
+            sinon.stub(util,`getAzureSubs`).callsFake(function(){
+               return ['Default'];
+            });
+
+            sinon.stub(kubernetes, `createArm`).callsFake(function(){
+               let result = {
+                  "sub" : {
+                     "name": azureSub,
+                     "id": azureSubId,
+                     "tenantId": tenantId
+                  },
+                  "endpointId": endpointId
+               };
+               return new Promise(function(resolve, reject){
+                  resolve(result);
+               });
+            });
+            sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
+               return ['Default'];
+            });
+            
+            sinon.stub(build, 'run').callsFake(function(args, _this, done){
+               done();
+            });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
+
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
+
+            sinon.stub(util, `findBuild`).callsArgWith(4, null, {
+               value: "I'm a build."
+            });
+
+            sinon.stub(release, 'run').callsFake(function(args, _this, done) {
+               done();
+            });
+
+            sinon.stub(util, `tryFindRelease`).callsFake(function (args, callback) {
+               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
+               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
+               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
+               assert.equal(`acs`, args.target, `tryFindRelease - target is wrong`);
+
+               callback(null, {
+                  value: "I`m a release."
+               });
+            });
+
+            let kubeInfo = {
+               "resourceGroup": "kubeResourceGroup",
+               "name": "kubeName"
+            };
+
+            sinon.stub(kubernetes, `getKubeInfo`).callsArgWith(6, null, "Generator", kubeInfo);
          })
          .on(`end`, function () {
             // Using the yeoman helpers and sinonTest did not play nice
@@ -323,6 +431,53 @@ describe(`k8helmpipeline:app`, function(){
             assert.equal(endpointId, undefined, "EndpointId should be undefined");
          })
       }))
+   });
+
+   context(`getKubeInfo`, function(){
+      let pat = `token`;
+      let applicationName = 'kubeDemo';
+      let tfs = `http://localhost:8080/tfs/DefaultCollection`;
+      let endpointId = "12345";
+      let kubeEndpoint = "12345";
+      let gen = "generator";
+
+      it(`should return the correct k8s information`, sinonTest(function(){
+         let rpStub = sinon.stub(rp, 'Request');
+         rpStub.resolves({
+            "result": ["kubeInfo"]
+         });
+            
+         let expected = "kubeInfo";
+         let kubernetesInfo = {
+            "resourceGroup": expected, 
+            "name": expected
+         };
+
+         kubernetes.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
+            assert.equal(e, undefined);
+            assert.equal(generator, gen);
+            assert.equal(kubernetesInfo['resourceGroup'], expected, "Kubernetes Resource Group is not correct");
+            assert.equal(kubernetesInfo['name'], expected, "Kubernetes Name is not correct");
+         });
+
+         rpStub.restore();
+      }));
+
+      it(`should return the correct k8s information`, sinonTest(function(){
+         let rpStub = sinon.stub(rp, 'Request');
+         rpStub.rejects("Error");
+            
+         let expected = "Error";
+
+         kubernetes.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
+            assert.equal(e, expected);
+            assert.equal(generator, gen);
+            assert.equal(kubernetesInfo['resourceGroup'], undefined, "Kubernetes Resource Group is not correct");
+            assert.equal(kubernetesInfo['name'], undefined, "Kubernetes Name is not correct");
+         });
+
+         rpStub.restore();
+      }));
    });
 });
 
