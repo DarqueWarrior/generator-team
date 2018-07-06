@@ -126,56 +126,50 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       "url": `https://${tfs}.visualstudio.com/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
    };
 
-   let resourceGroup;
-   let kubeName;
-   let error;
-   let kubeInfo = {};
+   // Call the callback when both requests have been resolved
+   Promise.all([getKubeResourceGroup(options), getKubeName(options)])
+    .then(
+       function(data) {
+         // Data available in order it was called
+         let kubeInfo = {
+            "resourceGroup": data[0],
+            "name": data[1]
+         };
 
-   getKubeResourceGroup(options, function(err, group){
-      if (err) {
-         error = err;
-      }
-      else {
-         kubeInfo['resourceGroup'] = group;
-      }
-   });
-
-   getKubeName(options, function(err, name){
-      if (err) {
-         error = err;
-      }
-      else {
-         kubeInfo['name'] = name;
-      }
-
-      callback(error, gen, kubeInfo);
-
-   });
+         callback(undefined, gen, kubeInfo);
+      },
+      function(err){
+         callback(err, gen, undefined);
+      });
 }
 
 function getKubeResourceGroup(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id resourcegroups }}";
 
-   request(options, function(error, response, bod) {
-      if (error){
-         callback(error, undefined);
-      }
+   return new Promise(function(resolve, reject) { 
+      request(options, function(error, response, bod) {
+         if (error){
+            reject(error);
+         }
 
-      let result = bod['result'][0];
-      callback(undefined, result);
+         let result = bod['result'][0];
+         resolve(result);
+      });
    });
 }
 
 function getKubeName(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
 
-   request(options, function(error, response, bod) {
-      if (error){
-         callback(error, undefined);
-      }
+   return new Promise(function(resolve, reject) { 
+      request(options, function(error, response, bod) {
+         if (error){
+            reject(error);
+         }
 
-      let result = bod['result'][0];
-      callback(undefined, result);
+         let result = bod['result'][0];
+         resolve(result);
+      });
    });
 }
 
