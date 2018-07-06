@@ -78,7 +78,6 @@ module.exports = class extends Generator {
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
-      
       // This will not match in callback of
       // getBuild so store it here.
       var _this = this;
