@@ -271,7 +271,7 @@ function azureRegistryResourceGroup(obj) {
       name: `azureRegistryResourceGroup`,
       type: `input`,
       store: true,
-      message: `Please enter the Resource Group your container is in: `,
+      message: `Please enter the Resource Group your registry is in: `,
       validate: util.validateAzureResourceGroup,
       when: answers => {
          let kube = util.isKubernetes(answers.target);

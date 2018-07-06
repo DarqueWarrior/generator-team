@@ -28,6 +28,8 @@ module.exports = class extends Generator {
       argUtils.azureRegistryName(this);
       argUtils.azureRegistryResourceGroup(this);
       argUtils.azureSubId(this);
+      argUtils.kubeName(this),
+      argUtils.kubeResourceGroup(this)
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -69,12 +71,13 @@ module.exports = class extends Generator {
          this.azureRegistryName = util.reconcileValue(cmdLnInput.options.azureRegistryName, ``, ``);
          this.azureRegistryResourceGroup = util.reconcileValue(cmdLnInput.options.azureRegistryResourceGroup, ``, ``);
          this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, ``, ``);
+         this.kubeName = util.reconcileValue(cmdLnInput.options.kubeName, ``, ``);
+         this.kubeResourceGroup = util.reconcileValue(cmdLnInput.options.kubeResourceGroup, ``, ``);
       }.bind(this));
    }
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
-
       // This will not match in callback of
       // getBuild so store it here.
       var _this = this;

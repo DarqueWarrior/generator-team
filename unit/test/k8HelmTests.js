@@ -9,7 +9,8 @@ const util = require(`../../generators/app/utility`);
 const build = require(`../../generators/build/app`);
 const kubernetes = require(`../../generators/k8helmpipeline/app`);
 const azure = require(`../../generators/azure/app`);
-//const kubernetes = require(`../../generators/k8helmpipeline/app`);
+const release = require(`../../generators/release/app`);
+const utility = require('util');
 
 const sinonTest = sinonTestFactory(sinon);
 
@@ -19,20 +20,6 @@ describe(`k8helmpipeline:index`, function(){
       path.join(__dirname, `../../generators/build`),
       path.join(__dirname, `../../generators/release`)
    ];
-
-   it(`test prompts k8helmpipeline should not return error for acs`, function () {
-      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
-      let expectedToken = `OnRva2Vu`;
-      let cleanUp = function() {
-         util.getPools.restore();
-         util.findQueue.restore();
-         util.findProject.restore();
-         util.tryFindBuild.restore();
-         util.tryFindRelease.restore();
-         util.isTFSGreaterThan2017.restore();
-         util.findBuild.restore();
-         util.getKubeEndpoint.restore();
-      };
 
       let type = `kubernetes`;
       let pat = `token`;
@@ -51,9 +38,27 @@ describe(`k8helmpipeline:index`, function(){
       let dockerRegistryPassword = ``;
       let servicePrincipalId = `servicePrincipalId`;
       let servicePrincipalKey = `servicePrincipalKey`;
-      let tfs = `http://localhost:8080/tfs/defaultcollection`;
+      let tfs = `http://localhost:8080/tfs/DefaultCollection`;
       let kubeEndpointList = `Default`;
       let creationMode = `Automatic`;
+      let endpointId = "12345";
+      let kubeEndpoint = "12345";
+      let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
+      let expectedToken = `OnRva2Vu`;
+
+   it(`test prompts k8helmpipeline should not return error for acs`, function () {
+      let cleanUp = function() {
+         util.getPools.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.tryFindRelease.restore();
+         util.findBuild.restore();
+         util.getKubeEndpoint.restore();
+         build.run.restore();
+         release.run.restore();
+         util.getAzureSubs.restore();
+         kubernetes.createArm.restore();
+      };
 
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
@@ -71,20 +76,42 @@ describe(`k8helmpipeline:index`, function(){
             });
 
             sinon.stub(kubernetes, `createArm`).callsFake(function(){
-               return;
+               let result = {
+                  "sub" : {
+                     "name": azureSub,
+                     "id": azureSubId,
+                     "tenantId": tenantId
+                  },
+                  "endpointId": endpointId
+               };
+               return new Promise(function(resolve, reject){
+                  resolve(result);
+               });
             });
             sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
                return ['Default'];
             });
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
-            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
-               value: "I`m a build."
+            
+            sinon.stub(build, 'run').callsFake(function(args, _this, done){
+               done();
             });
             sinon.stub(util, `findProject`).callsArgWith(4, null, {
                value: "TeamProject",
                id: 1
             });
+
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
+
+            sinon.stub(util, `findBuild`).callsArgWith(4, null, {
+               value: "I'm a build."
+            });
+
+            sinon.stub(release, 'run').callsFake(function(args, _this, done) {
+               done();
+            });
+
             sinon.stub(util, `tryFindRelease`).callsFake(function (args, callback) {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
@@ -95,21 +122,110 @@ describe(`k8helmpipeline:index`, function(){
                   value: "I`m a release."
                });
             });
-            sinon.stub(util, `findBuild`).callsFake(function (account, teamProject, token, target, callback) {
-               assert.equal(expectedAccount, account, `findBuild - Account is wrong`);
-               assert.equal(1, teamProject.id, `findBuild - team project is wrong`);
-               assert.equal(expectedToken, token, `findBuild - token is wrong`);
-               assert.equal(`acs`, target, `findBuild - target is wrong`);
+         })
+         .on(`end`, function () {
+            // Using the yeoman helpers and sinonTest did not play nice
+            // so clean up your stubs        
+            cleanUp();
+         })
+         .then(function(){
+            let dir = process.cwd();
+            assert.file(`Dockerfile`);
+            assert.file(`index.html`);
+            assert.file(`chart/${applicationName}/Chart.yaml`);
+            assert.file(`chart/${applicationName}/values.yaml`);
+            assert.file(`chart/${applicationName}/templates/NOTES.txt`);
+            assert.file(`chart/${applicationName}/templates/_helpers.tpl`);
+            assert.file(`chart/${applicationName}/templates/configmap.yaml`);
+            assert.file(`chart/${applicationName}/templates/deployment.yaml`);
+            assert.file(`chart/${applicationName}/templates/service.yaml`);
+         });
+   });
 
-               callback(null, {
-                  value: "I`m a build.",
-                  authoredBy: {
-                     id: 1,
-                     uniqueName: `uniqueName`,
-                     displayName: `displayName`
-                  }
+   it(`test prompts k8helmpipeline should not return error for aks`, function () {
+      let cleanUp = function() {
+         util.getPools.restore();
+         util.findProject.restore();
+         util.tryFindBuild.restore();
+         util.tryFindRelease.restore();
+         util.findBuild.restore();
+         util.getKubeEndpoint.restore();
+         build.run.restore();
+         release.run.restore();
+         kubernetes.getKubeInfo.restore();
+      };
+
+      target = 'aks';
+
+      return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
+         .withGenerators(deps)
+         .withArguments([type, applicationName, tfs, queue, target, azureSub, azureSubId, kubeEndpointList,
+            tenantId, servicePrincipalId
+         ])
+         .on(`error`, function (e) {
+            assert.fail(e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called
+            sinon.stub(util, `getPools`);
+            sinon.stub(util,`getAzureSubs`).callsFake(function(){
+               return ['Default'];
+            });
+
+            sinon.stub(kubernetes, `createArm`).callsFake(function(){
+               let result = {
+                  "sub" : {
+                     "name": azureSub,
+                     "id": azureSubId,
+                     "tenantId": tenantId
+                  },
+                  "endpointId": endpointId
+               };
+               return new Promise(function(resolve, reject){
+                  resolve(result);
                });
             });
+            sinon.stub(util,`getKubeEndpoint`).callsFake(function(){
+               return ['Default'];
+            });
+            
+            sinon.stub(build, 'run').callsFake(function(args, _this, done){
+               done();
+            });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, {
+               value: "TeamProject",
+               id: 1
+            });
+
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
+               value: "I`m a build."
+            });
+
+            sinon.stub(util, `findBuild`).callsArgWith(4, null, {
+               value: "I'm a build."
+            });
+
+            sinon.stub(release, 'run').callsFake(function(args, _this, done) {
+               done();
+            });
+
+            sinon.stub(util, `tryFindRelease`).callsFake(function (args, callback) {
+               assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
+               assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
+               assert.equal(expectedToken, args.token, `tryFindRelease - token is wrong`);
+               assert.equal(`acs`, args.target, `tryFindRelease - target is wrong`);
+
+               callback(null, {
+                  value: "I`m a release."
+               });
+            });
+
+            let kubeInfo = {
+               "resourceGroup": "kubeResourceGroup",
+               "name": "kubeName"
+            };
+
+            sinon.stub(kubernetes, `getKubeInfo`).callsArgWith(6, null, "Generator", kubeInfo);
          })
          .on(`end`, function () {
             // Using the yeoman helpers and sinonTest did not play nice
@@ -133,8 +249,11 @@ describe(`k8helmpipeline:index`, function(){
 
 describe(`k8helmpipeline:app`, function(){
    context(`acsExtensionsCheckOrInstall`, function () {
+      function cleanUp() {
+         kubernetes.acsExtensionsInstall.restore()
+      }
+      sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
-         sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
                callback(null, {
@@ -169,17 +288,21 @@ describe(`k8helmpipeline:app`, function(){
          // Act
          proxyApp.acsExtensionsCheckOrInstall("default","token",(e, data) => {
             assert.equal(e, true);
-            kubernetes.acsExtensionsInstall.restore();
             done();
          }, function (e) {
             assert.fail();
-            kubernetes.acsExtensionsInstall.restore();
             done();
          });
       }));
+
+      cleanUp();
    });
 
    context(`acsExtensionsCheck`, function () {
+      function cleanUp() {
+         kubernetes.acsExtensionsInstall.restore()
+      }
+      sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
@@ -202,7 +325,6 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should fail`, sinonTest(function () {
-         //sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
@@ -222,6 +344,7 @@ describe(`k8helmpipeline:app`, function(){
             done();
          });
       }));
+      cleanUp();
    });
 
    context(`acsExtensionsInstall`, function () {
@@ -247,7 +370,6 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should fail`, sinonTest(function () {
-         //sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
          const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
@@ -269,17 +391,17 @@ describe(`k8helmpipeline:app`, function(){
       }));
    });
 
-   context(`createArm`, function(){
+   context(`createArm`, function() {
+      function cleanUp() {
+         util.findAzureSub.restore();
+         azure.createAzureServiceEndpoint.restore();
+      }
+
       let tfs = "tfs";
       let azureSub = "azureSub";
       let pat = "pat";
       let gen = "gen";
       let applicationName = "applicationName";
-
-      function clean(){
-         azure.createAzureServiceEndpoint.restore();
-         util.findAzureSub.restore();
-      }
 
       it(`should not fail`, sinonTest(function(){
          sinon.stub(util, 'findAzureSub').callsFake(function(){
@@ -303,7 +425,7 @@ describe(`k8helmpipeline:app`, function(){
             assert.equal(endpointId, "stubEndpoint", "EndpointId not set");
          });
 
-         clean();
+         cleanUp();
       }));
 
       it(`should fail`, sinonTest(function(){
@@ -314,6 +436,60 @@ describe(`k8helmpipeline:app`, function(){
             assert.equal(endpointId, undefined, "EndpointId should be undefined");
          })
       }))
+   });
+
+   context(`getKubeInfo`, function(){
+      let pat = `token`;
+      let applicationName = 'kubeDemo';
+      let tfs = `http://localhost:8080/tfs/DefaultCollection`;
+      let endpointId = "12345";
+      let kubeEndpoint = "12345";
+      let gen = "generator";
+
+      it(`should return the correct k8s information`, sinonTest(function() {
+
+         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback(undefined, {
+                  statusCode: 200
+               }, {
+                  "result": ["kubeInfo"]
+               });
+            }
+         });
+            
+         let expected = "kubeInfo";
+         let kubernetesInfo = {
+            "resourceGroup": expected, 
+            "name": expected
+         };
+
+         proxyApp.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
+            assert.equal(e, undefined);
+            assert.equal(generator, gen);
+            assert.equal(kubernetesInfo['resourceGroup'], expected, "Kubernetes Resource Group is not correct");
+            assert.equal(kubernetesInfo['name'], expected, "Kubernetes Name is not correct");
+         });
+      }));
+
+      it(`should return the correct k8s information`, sinonTest(function() {
+         const proxy = proxyquire(`../../generators/k8helmpipeline/app`, {
+            "request": (options, callback) => {
+               callback("Error", {
+                  statusCode: 400
+               }, {
+                  "result": ["kubeInfo"]
+               });
+            }
+         });
+            
+         let expected = "Error";
+
+         proxy.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, generator, kubernetesInfo) {
+            assert.equal(e, expected);
+            assert.equal(generator, gen);
+         });
+      }));
    });
 });
 

@@ -140,20 +140,48 @@ module.exports = class extends Generator {
 
    // 7. Where installation are run (npm, bower)
    install() {
-      app.acsExtensionsCheckOrInstall(this.tfs, this.pat);
-      app.createArm(this.tfs, this.azureSub, this.pat, this, this.applicationName, function (error, sub, gen, endpointId) {
-         if (error){
-            console.log(error);
-         }
-         else{
-         gen.azureSub = sub.name;
-         gen.azureSubId = sub.id;
-         gen.tenantId = sub.tenantId;
-         gen.serviceEndpointId = endpointId;
-         }
-         // Based on the users answers compose all the required generators.
-         compose.addBuild(gen);
-         compose.addRelease(gen);
-      });
+
+      let appName = this.applicationName;
+      let _this = this;
+
+      app.createArm(this.tfs, this.azureSub, this.pat, this, appName)
+      .then(
+         function(result) {
+            let sub = result.sub;
+            let endpointId = result.endpointId;
+
+            _this.azureSub = sub.name;
+            _this.azureSubId = sub.id;
+            _this.tenantId = sub.tenantId;
+            _this.serviceEndpointId = endpointId;
+
+            if (_this.target === 'acs') {
+               app.acsExtensionsCheckOrInstall(_this.tfs, _this.pat);
+   
+               // Based on the users answers compose all the required generators.
+               compose.addBuild(_this);
+               compose.addRelease(_this);
+            }
+            else {
+               app.getKubeInfo(appName, _this.tfs, _this.pat, _this.serviceEndpointId, _this.kubeEndpoint, _this, function(error, gen, kubeInfo){
+                  if (error) {
+                     console.log(error);
+                  }
+                  else {
+                     _this.kubeResourceGroup = kubeInfo.resourceGroup;
+                     _this.kubeName = kubeInfo.name;
+                  }
+      
+                  // Based on the users answers compose all the required generators.
+                  compose.addBuild(_this);
+                  compose.addRelease(_this);
+               });
+            }
+      },
+   function(error){
+      console.log(error);
+      console.log("You will have to configure the build and release tasks on your own.");
+   });
+
    }
 };

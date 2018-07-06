@@ -1201,7 +1201,7 @@ describe(`utility`, function () {
       });
 
       it(`validateKubeEndpoint should return error`, function () {
-         assert.equal(`You must provide a Kubernetes Service Endpoint!`, util.validateKubeEndpoint(null));
+         assert.equal(`You must provide a Kubernetes Service Endpoint`, util.validateKubeEndpoint(null));
       });
    });
 
