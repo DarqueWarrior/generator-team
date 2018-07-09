@@ -372,7 +372,8 @@ function checkStatus(uri, token, gen, callback) {
                "state": "InProgress"
             }
          };
-         callback("", obj)
+         callback("", obj);
+         return;
       }
 
       try {
