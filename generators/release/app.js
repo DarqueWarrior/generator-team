@@ -99,7 +99,10 @@ function run(args, gen, done) {
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
             endpoint: azureEndpoint ? azureEndpoint.id : null,
-            dockerRegistryPassword: args.dockerRegistryPassword
+            dockerRegistryPassword: args.dockerRegistryPassword,
+            serviceEndpoint: args.serviceEndpoint,
+            kubeName: args.kubeName,
+            kubeResourceGroup: args.kubeResourceGroup
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {
@@ -233,7 +236,10 @@ function createRelease(args, gen, callback) {
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
-      '{{ReleaseDefName}}': releaseDefName
+      '{{ReleaseDefName}}': releaseDefName,
+      '{{ServiceEndpoint}}': args.serviceEndpoint,
+      '{{KubeName}}': args.kubeName,
+      '{{KubeResourceGroup}}': args.kubeResourceGroup
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');

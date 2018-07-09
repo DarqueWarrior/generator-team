@@ -170,6 +170,7 @@ module.exports = class extends Generator {
                   else {
                      _this.kubeResourceGroup = kubeInfo.resourceGroup;
                      _this.kubeName = kubeInfo.name;
+                     console.log(_this.kubeName);
                   }
       
                   // Based on the users answers compose all the required generators.

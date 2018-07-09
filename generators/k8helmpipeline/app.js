@@ -101,6 +101,8 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
 function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
    let token = util.encodePat(pat);
+   console.log("EndpointId: " + endpointId);
+   console.log("kubeEndpoint: " + kubeEndpoint);
 
    let body = {
       dataSourceDetails: {
@@ -148,7 +150,9 @@ function getKubeResourceGroup(options, callback) {
 
    return new Promise(function(resolve, reject) { 
       request(options, function(error, response, bod) {
-         if (error){
+         let status = bod['statusCode'];
+
+         if (error || status !== "ok"){
             reject(error);
          }
 
@@ -163,7 +167,9 @@ function getKubeName(options, callback) {
 
    return new Promise(function(resolve, reject) { 
       request(options, function(error, response, bod) {
-         if (error){
+         let status = bod['statusCode'];
+
+         if (error || status !== "ok") {
             reject(error);
          }
 

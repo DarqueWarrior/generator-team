@@ -26,6 +26,9 @@ module.exports = class extends Generator {
       argUtils.dockerRegistryPassword(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
+      argUtils.serviceEndpoint(this);
+      argUtils.kubeName(this);
+      argUtils.kubeResourceGroup(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -66,6 +69,9 @@ module.exports = class extends Generator {
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
+         this.serviceEndpoint = util.reconcileValue(cmdLnInput.options.serviceEndpoint, ``, ``);
+         this.kubeName = util.reconcileValue(cmdLnInput.options.kubeName, ``, ``);
+         this.kubeResourceGroup = util.reconcileValue(cmdLnInput.options.kubeResourceGroup, ``, ``);
       }.bind(this));
    }
 
@@ -104,6 +110,11 @@ module.exports = class extends Generator {
                args.dockerRegistry = _this.dockerRegistry;
                args.dockerRegistryId = _this.dockerRegistryId;
                args.dockerRegistryPassword = _this.dockerRegistryPassword;
+            }
+            else if (util.isKubernetes(_this.target)){
+               args.serviceEndpoint = _this.serviceEndpoint;
+               args.kubeName = _this.kubeName;
+               args.kubeResourceGroup = _this.kubeResourceGroup;
             }
 
             app.run(args, _this, done);
