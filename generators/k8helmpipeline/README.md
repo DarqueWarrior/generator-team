@@ -31,7 +31,7 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
    - If an Azure account is not configured with the CLI, run the following and follow the prompts:
    
       ```
-      az account login
+      az login
       ```
 
    - The service principal can now be created by running the following:
