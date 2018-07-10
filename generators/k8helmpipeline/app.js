@@ -101,8 +101,6 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
 function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
    let token = util.encodePat(pat);
-   console.log("EndpointId: " + endpointId);
-   console.log("kubeEndpoint: " + kubeEndpoint);
 
    let body = {
       dataSourceDetails: {
