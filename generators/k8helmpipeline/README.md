@@ -2,11 +2,17 @@
 
 The K8shelmpipeline sub-generator creates a CI/CD pipeline in Visual Studio Teams Services (VSTS) and generates the template files needed to provision a basic Kubernetes web application using helm.
 
-## Installing
+#### Table of Contents
+1. [Installing](#installing)
+2. [Prerequisites](#prerequisites)
+3. [Getting Started](#gettingStarted)
+4. [Usage](#usage)
+
+## Installing <a name="installing"></a>
 
 Please refer to the [home](https://github.com/DarqueWarrior/generator-team) repository to install the Yeoman generator 
 
-## Prerequisites
+## Prerequisites <a name="prerequisites"></a>
 
 Along with an Azure Subscription and a VSTS Project, a few things have to be provisioned before running the generator: 
 
@@ -72,14 +78,14 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
 6. A VSTS [personal access token](https://docs.microsoft.com/en-us/vsts/organizations/accounts/use-personal-access-tokens-to-authenticate?view=vsts) (PAT) 
 
 
-## Getting Started
+## Getting Started <a name="gettingStarted"></a>
 To start the sub-generator, run
 
    ```
    yo team:k8helmpipeline
    ```
 
-## Usage
+## Usage <a name="usage"></a>
 The Generator will prompt you to:
 
 1. Enter the name of the **VSTS profile**. 
@@ -106,13 +112,15 @@ The Generator will prompt you to:
 
 8. Enter the name of the **azure container registry** that the images will be pulled from, and the **resource group** the container is located in
 
-   - Both can be found by running: 
+   - Both can be found by running:
+
       ```
       az acr list 
       ```
 9. Enter the name of the **image pull secret**
    
    - The name can be found by running:
+
       ```
       kubectl get secrets
       ```
