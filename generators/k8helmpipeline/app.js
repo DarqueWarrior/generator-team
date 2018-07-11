@@ -6,6 +6,7 @@ const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
 const utility = require(`util`);
+const async = require(`async`);
 
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);
@@ -103,19 +104,19 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
    let token = util.encodePat(pat);
 
    let body = {
-      dataSourceDetails: {
-        dataSourceUrl: "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-        parameters: {
-           azureSubscriptionEndpoint: kubeEndpoint
+      "dataSourceDetails": {
+        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+        "parameters": {
+           "azureSubscriptionEndpoint": kubeEndpoint
         },
-        resultSelector: "jsonpath:$.value[*]"
+        "resultSelector": "jsonpath:$.value[*]"
       },
-      resultTransformationDetails: {
-         resultTemplate: ""
+      "resultTransformationDetails": {
+         "resultTemplate": ""
       }
     };
 
-    let options = {
+    let options = util.addUserAgent({
       "method": `POST`,
       "headers": {
          "Authorization": `Basic ${token}`,
@@ -124,23 +125,24 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       "json": true,
       "body": body,
       "url": `https://${tfs}.visualstudio.com/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
-   };
+   });
 
-   // Call the callback when both requests have been resolved
-   Promise.all([getKubeResourceGroup(options), getKubeName(options)])
-    .then(
-       function(data) {
-         // Data available in order it was called
-         let kubeInfo = {
-            "resourceGroup": data[0],
-            "name": data[1]
-         };
+      // Call the callback when both requests have been resolved
+      Promise.all([getKubeResourceGroup(options), getKubeName(options)])
+      .then(
+         function(data) {
 
-         callback(undefined, gen, kubeInfo);
-      },
-      function(err){
-         callback(err, gen, undefined);
-      });
+            // Data available in order it was called
+            let kubeInfo = {
+               "resourceGroup": data[0],
+               "name": data[1]
+            };
+
+            callback(undefined, gen, kubeInfo);
+         },
+         function(err){
+            callback(err, gen, undefined);
+         });
 }
 
 function getKubeResourceGroup(options, callback) {
@@ -161,7 +163,7 @@ function getKubeResourceGroup(options, callback) {
 }
 
 function getKubeName(options, callback) {
-   options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
+   options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id managedClusters}}";
 
    return new Promise(function(resolve, reject) { 
       request(options, function(error, response, bod) {
