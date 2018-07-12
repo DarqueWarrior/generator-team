@@ -99,7 +99,7 @@
                   "version": "",
                   "releaseName": "{{ProjectName}}",
                   "overrideValues": "",
-                  "valueFile": "{{ReleaseDefName}}/chart/{{ProjectName}}/values.yaml",
+                  "valueFile": "{{BuildName}}/chart/{{ProjectName}}/values.yaml",
                   "destination": "$(Build.ArtifactStagingDirectory)",
                   "canaryimage": "false",
                   "upgradetiller": "true",

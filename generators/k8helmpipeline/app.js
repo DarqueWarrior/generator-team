@@ -102,7 +102,6 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
 function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
    let token = util.encodePat(pat);
-
    let body = {
       "dataSourceDetails": {
         "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
@@ -138,45 +137,74 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
                "name": data[1]
             };
 
-            callback(undefined, gen, kubeInfo);
+            callback(undefined, kubeInfo);
          },
-         function(err){
-            callback(err, gen, undefined);
+         function(err) {
+            gen.log("Could not retrieve Kubernetes information.");
+            callback(err, undefined);
          });
 }
 
 function getKubeResourceGroup(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id resourcegroups }}";
 
-   return new Promise(function(resolve, reject) { 
-      request(options, function(error, response, bod) {
-         let status = bod['statusCode'];
-
-         if (error || status !== "ok"){
-            reject(error);
+   return new Promise(function(resolve, reject) {
+      kubeInfoRequest(options, function(err, result) {
+         if (err){
+            reject(err);
          }
-
-         let result = bod['result'][0];
          resolve(result);
       });
    });
 }
 
 function getKubeName(options, callback) {
-   options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id managedClusters}}";
+   options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
 
-   return new Promise(function(resolve, reject) { 
-      request(options, function(error, response, bod) {
-         let status = bod['statusCode'];
-
-         if (error || status !== "ok") {
-            reject(error);
+   return new Promise(function(resolve, reject) {
+      kubeInfoRequest(options, function(err, result) {
+         if (err){
+            reject(err);
          }
-
-         let result = bod['result'][0];
          resolve(result);
       });
    });
+}
+
+function kubeInfoRequest(options, callback) {
+   let statusCode;
+   let errorCode = false;
+
+   // Work around of "BadRequest" error, will work if called again
+   async.whilst(
+      function () { return statusCode !== 'ok' && !errorCode; },
+      function (finished) {
+         request(options, function(error, response, bod) {
+
+            if (error) {
+               errorCode = true;
+               callback(error, undefined);
+               return;
+            }
+            else if ('errorCode' in bod){
+               errorCode = true;
+               callback(bod.message, undefined);
+               return;
+            }
+
+            statusCode = bod.statusCode;
+            finished(error, bod);
+         }
+      )},
+      function (err, body) {
+         if (err) {
+            callback(err, undefined);
+         }
+
+         let result = body.result[0];
+         callback(err, result);
+      }
+   );
 }
 
 module.exports = {
