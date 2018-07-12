@@ -142,6 +142,10 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
          function(err) {
             gen.log("Could not retrieve Kubernetes information.");
             callback(err, undefined);
+         })
+         .catch(
+            function(err){
+               console.log(err);
          });
 }
 
@@ -183,16 +187,15 @@ function kubeInfoRequest(options, callback) {
 
             if (error) {
                errorCode = true;
-               callback(error, undefined);
-               return;
             }
             else if ('errorCode' in bod){
                errorCode = true;
-               callback(bod.message, undefined);
-               return;
+               error = bod.message;
+            }
+            else {
+               statusCode = bod.statusCode;
             }
 
-            statusCode = bod.statusCode;
             finished(error, bod);
          }
       )},
