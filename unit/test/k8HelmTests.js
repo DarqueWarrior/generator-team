@@ -11,7 +11,6 @@ const kubernetes = require(`../../generators/k8helmpipeline/app`);
 const azure = require(`../../generators/azure/app`);
 const release = require(`../../generators/release/app`);
 const utility = require('util');
-const yeoman = require('yeoman-generator');
 const sinonTest = sinonTestFactory(sinon);
 
 describe(`k8helmpipeline:index`, function() {
@@ -42,7 +41,7 @@ describe(`k8helmpipeline:index`, function() {
       let imagePullSecrets = "Secret";
       let expectedAccount = `http://localhost:8080/tfs/DefaultCollection`;
       let expectedToken = `OnRva2Vu`;
-      let gen = yeoman;
+      let gen;
 
    it(`test prompts k8helmpipeline should not return error for acs`, function () {
       let cleanUp = function() {
@@ -461,7 +460,7 @@ describe(`k8helmpipeline:app`, function(){
       let tfs = `http://localhost:8080/tfs/DefaultCollection`;
       let endpointId = "12345";
       let kubeEndpoint = "12345";
-      let gen = yeoman;
+      let gen = {};
       gen.log = function(args) {
             console.log(args)
       }
