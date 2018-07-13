@@ -13,14 +13,14 @@ function acsExtensionsCheckOrInstall(accountName, pat) {
    let author = 'tsuyoshiushio';
    let extension = 'k8s-endpoint'
 
-   let options = {
+   let options = util.addUserAgent({
    "method": `GET`,
    "headers": {
       "Cache-control": `no-cache`,
       "Authorization": `Basic ${token}`
    },
    "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
-   };
+   });
 
    acsExtensionsCheck(options,acsExtensionsInstall);
 }

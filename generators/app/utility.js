@@ -361,9 +361,20 @@ function checkStatus(uri, token, gen, callback) {
       "url": `${uri}`
    });
 
+   // Retry connecting to VSTS. try/catch will catch the parsing error, not the request error
    request(options, function (err, res, body) {
-
       let obj = {};
+      
+      if (err && err.code === 'ECONNREFUSED') {
+         console.log("Connection Refused. Trying again...");
+         obj = {
+            "operationStatus": {
+               "state": "InProgress"
+            }
+         };
+         callback("", obj);
+         return;
+      }
 
       try {
          obj = JSON.parse(body);
