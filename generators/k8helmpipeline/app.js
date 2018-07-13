@@ -12,14 +12,14 @@ function acsExtensionsCheckOrInstall(accountName, pat) {
    let author = 'tsuyoshiushio';
    let extension = 'k8s-endpoint'
 
-   let options = {
+   let options = util.addUserAgent({
    "method": `GET`,
    "headers": {
       "Cache-control": `no-cache`,
       "Authorization": `Basic ${token}`
    },
    "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
-   };
+   });
 
    acsExtensionsCheck(options,acsExtensionsInstall);
 }
@@ -115,7 +115,7 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       }
     };
 
-    let options = {
+    let options = util.addUserAgent({
       "method": `POST`,
       "headers": {
          "Authorization": `Basic ${token}`,
@@ -124,7 +124,7 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       "json": true,
       "body": body,
       "url": `https://${tfs}.visualstudio.com/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
-   };
+   });
 
    let resourceGroup;
    let kubeName;
