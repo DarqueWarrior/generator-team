@@ -6,6 +6,7 @@ const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
 const utility = require(`util`);
+const async = require(`async`);
 
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);
@@ -101,17 +102,16 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
 function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
    let token = util.encodePat(pat);
-
    let body = {
-      dataSourceDetails: {
-        dataSourceUrl: "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-        parameters: {
-           azureSubscriptionEndpoint: kubeEndpoint
+      "dataSourceDetails": {
+        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+        "parameters": {
+           "azureSubscriptionEndpoint": kubeEndpoint
         },
-        resultSelector: "jsonpath:$.value[*]"
+        "resultSelector": "jsonpath:$.value[*]"
       },
-      resultTransformationDetails: {
-         resultTemplate: ""
+      "resultTransformationDetails": {
+         "resultTemplate": ""
       }
     };
 
@@ -126,57 +126,88 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       "url": `https://${tfs}.visualstudio.com/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
    });
 
-   let resourceGroup;
-   let kubeName;
-   let error;
-   let kubeInfo = {};
+      // Call the callback when both requests have been resolved
+      Promise.all([getKubeResourceGroup(options), getKubeName(options)])
+      .then(
+         function(data) {
 
-   getKubeResourceGroup(options, function(err, group){
-      if (err) {
-         error = err;
-      }
-      else {
-         kubeInfo['resourceGroup'] = group;
-      }
-   });
+            // Data available in order it was called
+            let kubeInfo = {
+               "resourceGroup": data[0],
+               "name": data[1]
+            };
 
-   getKubeName(options, function(err, name){
-      if (err) {
-         error = err;
-      }
-      else {
-         kubeInfo['name'] = name;
-      }
-
-      callback(error, gen, kubeInfo);
-
-   });
+            callback(undefined, kubeInfo);
+         },
+         function(err) {
+            gen.log("Could not retrieve Kubernetes information.");
+            callback(err, undefined);
+         })
+         .catch(
+            function(err){
+               console.log(err);
+         });
 }
 
 function getKubeResourceGroup(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id resourcegroups }}";
 
-   request(options, function(error, response, bod) {
-      if (error){
-         callback(error, undefined);
-      }
-
-      let result = bod['result'][0];
-      callback(undefined, result);
+   return new Promise(function(resolve, reject) {
+      kubeInfoRequest(options, function(err, result) {
+         if (err){
+            reject(err);
+         }
+         resolve(result);
+      });
    });
 }
 
 function getKubeName(options, callback) {
    options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
 
-   request(options, function(error, response, bod) {
-      if (error){
-         callback(error, undefined);
-      }
-
-      let result = bod['result'][0];
-      callback(undefined, result);
+   return new Promise(function(resolve, reject) {
+      kubeInfoRequest(options, function(err, result) {
+         if (err){
+            reject(err);
+         }
+         resolve(result);
+      });
    });
+}
+
+function kubeInfoRequest(options, callback) {
+   let statusCode;
+   let errorCode = false;
+
+   // Work around of "BadRequest" error, will work if called again
+   async.whilst(
+      function () { return statusCode !== 'ok' && !errorCode; },
+      function (finished) {
+         request(options, function(error, response, bod) {
+
+            if (error) {
+               errorCode = true;
+            }
+            else if ('errorCode' in bod){
+               errorCode = true;
+               error = bod.message;
+            }
+            else {
+               statusCode = bod.statusCode;
+            }
+
+            finished(error, bod);
+         }
+      )},
+      function (err, body) {
+         if (err) {
+            callback(err, undefined);
+         }
+
+         let result = body.result[0];
+         callback(err, result);
+      }
+   );
 }
 
 module.exports = {
