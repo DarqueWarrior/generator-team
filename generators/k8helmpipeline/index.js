@@ -40,15 +40,15 @@ module.exports = class extends Generator {
       // This gives me access to the generator in the
       // when callbacks of prompt
       let cmdLnInput = this;
+      cmdLnInput.options.type = 'kubernetes';
 
       return this.prompt([
          prompts.tfs(this),
          prompts.pat(this),
          prompts.queue(this),
-         prompts.applicationType(this),
          prompts.applicationName(this),
          prompts.customFolder(this),
-         prompts.target(this),
+         prompts.kubeTarget(this),
          prompts.kubeEndpointList(this),
          prompts.azureSubList(this),
          prompts.creationMode(this),
@@ -61,7 +61,7 @@ module.exports = class extends Generator {
          // of the generator
          this.pat = util.reconcileValue(cmdLnInput.options.pat, answers.pat);
          this.tfs = util.reconcileValue(cmdLnInput.options.tfs, answers.tfs);
-         this.type = util.reconcileValue(cmdLnInput.options.type, answers.type);
+         this.type = util.reconcileValue(cmdLnInput.options.type, ``,``);
          this.queue = util.reconcileValue(cmdLnInput.options.queue, answers.queue);
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);

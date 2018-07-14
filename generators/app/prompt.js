@@ -213,6 +213,19 @@ function target(obj) {
    };
 }
 
+function kubeTarget(obj) {
+   return {
+      name: `target`,
+      type: `list`,
+      store: true,
+      message: `Where would you like to deploy?`,
+      choices: util.getKubeTargets,
+      when: answers => {
+         return obj.options.target === undefined;
+      }
+   };
+}
+
 // Azure
 function azureSubInput(obj) {
    return {
@@ -544,6 +557,7 @@ module.exports = {
    profileCmd: profileCmd,
    dockerHost: dockerHost,
    tfsVersion: tfsVersion,
+   kubeTarget: kubeTarget,
    profileName: profileName,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
