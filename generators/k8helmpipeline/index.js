@@ -49,7 +49,6 @@ module.exports = class extends Generator {
          prompts.kubeTarget(this),
          prompts.kubeEndpointList(this),
          prompts.azureSubList(this),
-         prompts.creationMode(this),
          prompts.azureRegistryName(this),
          prompts.azureRegistryResourceGroup(this),
          prompts.imagePullSecrets(this)
@@ -69,8 +68,6 @@ module.exports = class extends Generator {
          this.azureRegistryName = util.reconcileValue(cmdLnInput.option.azureRegistryName, answers.azureRegistryName, ``);
          this.azureRegistryResourceGroup = util.reconcileValue(cmdLnInput.options.azureRegistryResourceGroup, answers.azureRegistryResourceGroup, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
-         this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
-         this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
          this.imagePullSecrets = util.reconcileValue(cmdLnInput.options.imagePullSecrets, answers.imagePullSecrets, ``);
       }.bind(this));
    }
