@@ -22,9 +22,7 @@ module.exports = class extends Generator {
       argUtils.queue(this);
       argUtils.target(this);
       argUtils.azureSub(this);
-      argUtils.azureSubId(this);
       argUtils.kubeEndpoint(this);
-      argUtils.tenantId(this);
       argUtils.pat(this);
       argUtils.azureRegistryName(this);
       argUtils.azureRegistryResourceGroup(this);
@@ -61,8 +59,6 @@ module.exports = class extends Generator {
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
          this.kubeEndpoint = util.reconcileValue(cmdLnInput.option.kubeEndpoint, answers.kubeEndpoint, ``);
-         this.tenantId = util.reconcileValue(cmdLnInput.options.tenantId, ``, ``);
-         this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
          this.azureRegistryName = util.reconcileValue(cmdLnInput.option.azureRegistryName, answers.azureRegistryName, ``);
          this.azureRegistryResourceGroup = util.reconcileValue(cmdLnInput.options.azureRegistryResourceGroup, answers.azureRegistryResourceGroup, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
