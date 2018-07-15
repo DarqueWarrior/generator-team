@@ -12,9 +12,7 @@ assert.linuxTargets = function (a) {
    assert.equal(a[0].name, `Azure Container Instances (Linux)`);
    assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[2].name, `Docker Host`);
-   assert.equal(a[3].name, `Kubernetes: Azure Kubernetes Service`);
-   assert.equal(a[4].name, `Kubernetes: Azure Container Services`);
-   assert.equal(a.length, 5, `Wrong number of entries`);
+   assert.equal(a.length, 3, `Wrong number of entries`);
 };
 
 assert.allTargets = function (a) {
@@ -23,9 +21,7 @@ assert.allTargets = function (a) {
    assert.equal(a[2].name, `Azure Container Instances (Linux)`);
    assert.equal(a[3].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[4].name, `Docker Host`);
-   assert.equal(a[5].name, `Kubernetes: Azure Kubernetes Service`);
-   assert.equal(a[6].name, `Kubernetes: Azure Container Services`);
-   assert.equal(a.length, 7, `Wrong number of entries`);
+   assert.equal(a.length, 5, `Wrong number of entries`);
 };
 
 assert.customTargets = function (a) {
@@ -660,7 +656,7 @@ describe(`utility`, function () {
          });
       });
 
-      it(`getTargets Default queue, default app type`, function (done) {
+      it(`getKubeTargets Default queue, default app type`, function (done) {
          // Arrange
          let answers = {
             queue: `Default`,
@@ -670,7 +666,7 @@ describe(`utility`, function () {
          };
 
          // Act
-         util.getTargets(answers).then(function (actual) {
+         util.getKubeTargets(answers).then(function (actual) {
             // Assert
             assert.kubernetesTargets(actual);
             done();
@@ -823,7 +819,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(3, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes macOS`, function () {
@@ -837,7 +833,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(3, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes default`, function () {
@@ -851,7 +847,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(5, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {
