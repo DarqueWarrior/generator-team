@@ -45,7 +45,7 @@ module.exports = class extends Generator {
       return this.prompt([
          prompts.tfs(this),
          prompts.pat(this),
-         prompts.queue(this),
+         prompts.kubeQueue(this),
          prompts.applicationName(this),
          prompts.customFolder(this),
          prompts.kubeTarget(this),
