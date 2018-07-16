@@ -22,7 +22,7 @@ function acsExtensionsCheckOrInstall(accountName, pat) {
    "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
    });
 
-   acsExtensionsCheck(options,acsExtensionsInstall);
+   acsExtensionsCheck(options, acsExtensionsInstall);
 }
 
 function acsExtensionsCheck(options,callback) {
@@ -35,7 +35,7 @@ function acsExtensionsCheck(options,callback) {
 
          let obj = JSON.parse(body);
 
-         if (obj['extensionId'] !== 'k8s-endpoint'){
+         if (obj['extensionId'] !== 'k8s-endpoint') {
             callback(options);
             }
 
@@ -189,7 +189,7 @@ function kubeInfoRequest(options, callback) {
             if (error) {
                errorCode = true;
             }
-            else if ('errorCode' in bod){
+            else if ('errorCode' in bod) {
                errorCode = true;
                error = bod.message;
             }
