@@ -526,6 +526,7 @@ function creationMode(obj) {
       when: answers => {
          let result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
          let kube = answers.target === 'kubernetes';
+         console.log(result + ". " + kube);
          return result || kube;
       }
    };

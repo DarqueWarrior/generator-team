@@ -214,9 +214,9 @@ module.exports = {
 
    // Exports the portions of the file we want to share with files that require 
    // it.
-   acsExtensionsCheck: acsExtensionsCheck,
-   acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall,
-   acsExtensionsInstall: acsExtensionsInstall,
    createArm: createArm, 
-   getKubeInfo: getKubeInfo
+   getKubeInfo: getKubeInfo,
+   acsExtensionsCheck: acsExtensionsCheck,
+   acsExtensionsInstall: acsExtensionsInstall,
+   acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall
 };
