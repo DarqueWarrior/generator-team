@@ -19,7 +19,7 @@ function acsExtensionsCheckOrInstall(accountName, pat) {
       "Cache-control": `no-cache`,
       "Authorization": `Basic ${token}`
    },
-   "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
+   "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=${util.KUBE_API_VERSION}`,
    });
 
    acsExtensionsCheck(options, acsExtensionsInstall);
@@ -59,7 +59,7 @@ function acsExtensionsInstall(options) {
       });
 }
 
-function createArm(tfs, azureSub, pat, gen, applicationName, callback){
+function createArm(tfs, azureSub, pat, gen, applicationName, callback) {
 
    let token = util.encodePat(pat);
 
@@ -124,7 +124,7 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       },
       "json": true,
       "body": body,
-      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
+      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
    });
 
       // Call the callback when both requests have been resolved

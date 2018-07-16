@@ -151,7 +151,7 @@ module.exports = class extends Generator {
                compose.addRelease(_this);
             }
             else {
-               app.getKubeInfo(appName, _this.tfs, _this.pat, _this.serviceEndpointId, _this.kubeEndpoint, _this, function(error, kubeInfo){
+               app.getKubeInfo(appName, _this.tfs, _this.pat, _this.serviceEndpointId, _this.kubeEndpoint, _this, function(error, kubeInfo) {
                   if (error) {
                      console.log(error);
                   }
