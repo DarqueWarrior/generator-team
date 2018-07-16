@@ -73,7 +73,7 @@ module.exports = class extends Generator {
 
       var tokens = {
          name: appName,
-         name_lowercase: this.applicationName.toLowerCase(),
+         name_lowercase: appName.toLowerCase(),
          containerRegistry: acrServer,
          imagePullSecrets: this.imagePullSecrets
       };
