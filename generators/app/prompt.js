@@ -304,7 +304,7 @@ function azureRegistryName(obj) {
          return kube && defined;
 
       }
-   }
+   };
 }
 
 function azureRegistryResourceGroup(obj) {
@@ -321,7 +321,7 @@ function azureRegistryResourceGroup(obj) {
          return kube && defined;
 
       }
-   }
+   };
 }
 
 function imagePullSecrets(obj) {
@@ -338,7 +338,7 @@ function imagePullSecrets(obj) {
          return kube && defined;
 
       }
-   }
+   };
 }
 
 function kubeEndpointList(obj) {

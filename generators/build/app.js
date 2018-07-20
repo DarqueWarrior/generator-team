@@ -247,12 +247,12 @@ function getBuildTokens(args, buildDefName, dockerNamespace) {
          case "kubeResourceGroup":
             tokens['{{KubeResourceGroup}}'] = val;
             break;
-      };
-   };
+      }
+   }
 
       return tokens;
 
-};
+}
 
 module.exports = {
 

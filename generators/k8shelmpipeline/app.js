@@ -11,7 +11,7 @@ const async = require(`async`);
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);
    let author = 'tsuyoshiushio';
-   let extension = 'k8s-endpoint'
+   let extension = 'k8s-endpoint';
 
    let options = util.addUserAgent({
    "method": `GET`,
@@ -35,7 +35,7 @@ function acsExtensionsCheck(options,callback) {
 
          let obj = JSON.parse(body);
 
-         if (obj['extensionId'] !== 'k8s-endpoint') {
+         if (obj.extensionId !== 'k8s-endpoint') {
             callback(options);
             }
 
@@ -44,7 +44,7 @@ function acsExtensionsCheck(options,callback) {
 }
 
 function acsExtensionsInstall(options) {
-   options["method"] = `POST`;
+   options.method = 'POST';
 
    request(options, function (error, response, body) {
       // Need downloader, helm task
@@ -151,7 +151,7 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
 }
 
 function getKubeResourceGroup(options, callback) {
-   options['body']['resultTransformationDetails']['resultTemplate'] = "{{ #extractResource id resourcegroups }}";
+   options.body.resultTransformationDetails.resultTemplate = "{{ #extractResource id resourcegroups }}";
 
    return new Promise(function(resolve, reject) {
       kubeInfoRequest(options, function(err, result) {
@@ -164,7 +164,7 @@ function getKubeResourceGroup(options, callback) {
 }
 
 function getKubeName(options, callback) {
-   options['body']['resultTransformationDetails']['resultTemplate'] = "{{{name}}}";
+   options.body.resultTransformationDetails.resultTemplate = "{{{name}}}";
 
    return new Promise(function(resolve, reject) {
       kubeInfoRequest(options, function(err, result) {

@@ -776,7 +776,7 @@ function getBuildDefName(target, projectName){
    let kubeDeploy = kubeDeployment(target);
    let dockerDeploy = dockerDeployment(target);
 
-   let buildDefName = undefined;
+   let buildDefName;
    switch(target){
       case kubeDeploy:
          buildDefName = `${projectName}-${kubeDeploy}-CI`;
@@ -843,7 +843,7 @@ function getReleaseDefName(target, projectName){
    let kubeDeploy = kubeDeployment(target);
    let dockerDeploy = dockerDeployment(target);
 
-   let releaseDefName = undefined;
+   let releaseDefName;
    switch(target) {
       case kubeDeploy:
          releaseDefName = `${projectName}-${kubeDeploy}-CD`;
@@ -861,7 +861,7 @@ function getReleaseDefName(target, projectName){
 }
 
 function kubeDeployment(target){
-   let kube = undefined;
+   let kube;
 
    if (target === 'acs' || target === 'aks'){
       kube = target;
@@ -871,7 +871,7 @@ function kubeDeployment(target){
 }
 
 function dockerDeployment(target) {
-   let docker = undefined;
+   let docker;
 
    if (target === `docker` || target === `dockerpaas` || target === `acilinux`){
       docker = target;
