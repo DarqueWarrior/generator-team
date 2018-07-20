@@ -16,6 +16,8 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
+const KUBE_API_VERSION = `5.0-preview.1`;
+
 
 // This location is the same as the VSTeam PowerShell module. Therefore,
 // the profiles can be shared between Yo Team and the VSTeam PowerShell
@@ -1303,6 +1305,7 @@ module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    PROFILE_PATH: PROFILE_PATH,
+   KUBE_API_VERSION: KUBE_API_VERSION,
    BUILD_API_VERSION: BUILD_API_VERSION,
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,

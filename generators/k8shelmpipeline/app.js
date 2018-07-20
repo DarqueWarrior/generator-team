@@ -19,10 +19,10 @@ function acsExtensionsCheckOrInstall(accountName, pat) {
       "Cache-control": `no-cache`,
       "Authorization": `Basic ${token}`
    },
-   "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=4.1-preview.1`,
+   "url": `https://${accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/${author}/${extension}?api-version=${util.KUBE_API_VERSION}`,
    });
 
-   acsExtensionsCheck(options,acsExtensionsInstall);
+   acsExtensionsCheck(options, acsExtensionsInstall);
 }
 
 function acsExtensionsCheck(options,callback) {
@@ -35,7 +35,7 @@ function acsExtensionsCheck(options,callback) {
 
          let obj = JSON.parse(body);
 
-         if (obj['extensionId'] !== 'k8s-endpoint'){
+         if (obj['extensionId'] !== 'k8s-endpoint') {
             callback(options);
             }
 
@@ -59,15 +59,15 @@ function acsExtensionsInstall(options) {
       });
 }
 
-function createArm(tfs, azureSub, pat, gen, applicationName, callback){
+function createArm(tfs, azureSub, pat, gen, applicationName, callback) {
 
    let token = util.encodePat(pat);
 
    return new Promise(function (resolve, reject) {
       util.findAzureSub(tfs, azureSub, token, gen, function (err, sub) {
-         if (sub === undefined) {
-            err = { message: `${sub.displayName} Azure subscription not found. Configure Service Endpoint manually.` };
-            reject(err);
+         if (sub === undefined || err) {
+            let error = err + ". Azure subscription not found. Configure Service Endpoint manually.";
+            reject(error);
          } 
          else {
             gen.log(`+ Found ${sub.displayName} Azure subscription`);
@@ -77,13 +77,13 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
                "tenantId": sub.subscriptionTenantId
             };
 
-            azApp.createAzureServiceEndpoint(tfs, applicationName, azureSub, token, gen, function(error, body) {
+            azApp.createAzureServiceEndpoint(tfs, applicationName, azureSub, token, gen, function(err, body) {
                let endpointId;
-               if (error){
-                  let err = error + ". Configure Service Endpoint Manually.";
-                  reject(err);
+               if (err){
+                  let error = err + ". Azure Service Endpoint could not be created. Configure Service Endpoint Manually.";
+                  reject(error);
                }
-               if (body){
+               if (body) {
                   endpointId = body.id;
                }
 
@@ -101,6 +101,7 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback){
 
 
 function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
+   // Uses endpoint proxy to get information on Kubernetes Cluster
    let token = util.encodePat(pat);
    let body = {
       "dataSourceDetails": {
@@ -123,7 +124,7 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
       },
       "json": true,
       "body": body,
-      "url": `https://${tfs}.visualstudio.com/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=5.0-preview.1`,
+      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
    });
 
       // Call the callback when both requests have been resolved
@@ -144,7 +145,7 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
             callback(err, undefined);
          })
          .catch(
-            function(err){
+            function(err) {
                console.log(err);
          });
 }
@@ -154,7 +155,7 @@ function getKubeResourceGroup(options, callback) {
 
    return new Promise(function(resolve, reject) {
       kubeInfoRequest(options, function(err, result) {
-         if (err){
+         if (err) {
             reject(err);
          }
          resolve(result);
@@ -188,7 +189,7 @@ function kubeInfoRequest(options, callback) {
             if (error) {
                errorCode = true;
             }
-            else if ('errorCode' in bod){
+            else if ('errorCode' in bod) {
                errorCode = true;
                error = bod.message;
             }

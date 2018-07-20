@@ -82,7 +82,7 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
 To start the sub-generator, run
 
    ```
-   yo team:k8helmpipeline
+   yo team:k8shelmpipeline
    ```
 
 ## Usage <a name="usage"></a>

@@ -7,20 +7,19 @@ const proxyquire = require(`proxyquire`);
 const sinonTestFactory = require(`sinon-test`);
 const util = require(`../../generators/app/utility`);
 const build = require(`../../generators/build/app`);
-const kubernetes = require(`../../generators/k8helmpipeline/app`);
+const kubernetes = require(`../../generators/k8shelmpipeline/app`);
 const azure = require(`../../generators/azure/app`);
 const release = require(`../../generators/release/app`);
 const utility = require('util');
 const sinonTest = sinonTestFactory(sinon);
 
-describe(`k8helmpipeline:index`, function() {
-      this.timeout(2500);
+describe(`k8shelmpipeline:index`, function() {
+      this.timeout(3500);
       var deps = [
             path.join(__dirname, `../../generators/build`),
             path.join(__dirname, `../../generators/release`)
    ]  ;
 
-      let type = `kubernetes`;
       let pat = `token`;
       let target = `acs`;
       let queue = `Hosted Linux Queue`;
@@ -41,7 +40,7 @@ describe(`k8helmpipeline:index`, function() {
       let expectedToken = `OnRva2Vu`;
       let gen;
 
-   it(`test prompts k8helmpipeline should not return error for acs`, function () {
+   it(`test prompts k8shelmpipeline should not return error for acs`, function () {
       let cleanUp = function() {
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -56,14 +55,14 @@ describe(`k8helmpipeline:index`, function() {
          kubernetes.acsExtensionsCheckOrInstall.restore();
       };
 
-      return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
+      return helpers.run(path.join(__dirname, `../../generators/k8shelmpipeline`))
          .withGenerators(deps)
-         .withArguments([type, applicationName, tfs, queue, target, azureSub, kubeEndpointList,
+         .withArguments([applicationName, tfs, queue, target, azureSub, kubeEndpointList,
             pat, azureRegistryName, azureRegistryResourceGroup, imagePullSecrets
          ])
          .on(`error`, function (e) {
             assert.equal(sinon.stub(kubernetes, 'getKubeInfo').called, false);
-            cleanUp();
+            kubernetes.getKubeInfo.restore();
             assert.fail(e);
          })
          .on(`ready`, function (generator) {
@@ -146,7 +145,7 @@ describe(`k8helmpipeline:index`, function() {
          });
    });
 
-   it(`test prompts k8helmpipeline should not return error for aks`, function () {
+   it(`test prompts k8shelmpipeline should not return error for aks`, function () {
       let cleanUp = function() {
          util.getPools.restore();
          util.findProject.restore();
@@ -157,13 +156,14 @@ describe(`k8helmpipeline:index`, function() {
          build.run.restore();
          release.run.restore();
          kubernetes.getKubeInfo.restore();
+         util.getAzureSubs.restore();
       };
 
       target = 'aks';
 
-      return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
+      return helpers.run(path.join(__dirname, `../../generators/k8shelmpipeline`))
          .withGenerators(deps)
-         .withArguments([type, applicationName, tfs, queue, target, azureSub, kubeEndpointList,
+         .withArguments([applicationName, tfs, queue, target, azureSub, kubeEndpointList,
             pat, azureRegistryName, azureRegistryResourceGroup, imagePullSecrets
          ])
          .on(`error`, function (e) {
@@ -261,14 +261,14 @@ describe(`k8helmpipeline:index`, function() {
    });
 });
 
-describe(`k8helmpipeline:app`, function(){
+describe(`k8shelmpipeline:app`, function(){
    context(`acsExtensionsCheckOrInstall`, function () {
       function cleanUp() {
          kubernetes.acsExtensionsInstall.restore()
       }
       sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(null, {
                   statusCode: 200
@@ -289,7 +289,7 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should return error`, sinonTest(function () {
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
                   statusCode: 400
@@ -318,7 +318,7 @@ describe(`k8helmpipeline:app`, function(){
       }
       sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(null, {
                   statusCode: 200
@@ -339,7 +339,7 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should fail`, sinonTest(function () {
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
                   statusCode: 400
@@ -363,7 +363,7 @@ describe(`k8helmpipeline:app`, function(){
 
    context(`acsExtensionsInstall`, function () {
       it(`should not fail`, sinonTest(function () {
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(null, {
                   statusCode: 200
@@ -384,7 +384,7 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should fail`, sinonTest(function () {
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(true, {
                   statusCode: 400
@@ -466,7 +466,7 @@ describe(`k8helmpipeline:app`, function(){
 
       it(`should return the correct k8s information`, sinonTest(function() {
 
-         const proxyApp = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxyApp = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback(undefined, {
                }, {
@@ -490,7 +490,7 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should handle error`, sinonTest(function() {
-         const proxy = proxyquire(`../../generators/k8helmpipeline/app`, {
+         const proxy = proxyquire(`../../generators/k8shelmpipeline/app`, {
             "request": (options, callback) => {
                callback("Error", {
                   statusCode: 400
@@ -507,7 +507,7 @@ describe(`k8helmpipeline:app`, function(){
       }));
 
       it(`should handle errorCode in body`, sinonTest(function() {
-            const proxy = proxyquire(`../../generators/k8helmpipeline/app`, {
+            const proxy = proxyquire(`../../generators/k8shelmpipeline/app`, {
                   "request": (options, callback) => {
                   callback("Error", {
                   }, {
