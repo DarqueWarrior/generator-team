@@ -23,7 +23,6 @@ describe(`k8helmpipeline:index`, function() {
       let type = `kubernetes`;
       let pat = `token`;
       let target = `acs`;
-      let customFolder = ` `;
       let queue = `Hosted Linux Queue`;
       let azureSub = `AzureSub`;
       let tenantId = `TenantId`;
@@ -33,7 +32,6 @@ describe(`k8helmpipeline:index`, function() {
       let servicePrincipalKey = `servicePrincipalKey`;
       let tfs = `http://localhost:8080/tfs/DefaultCollection`;
       let kubeEndpointList = `Default`;
-      let creationMode = `Automatic`;
       let endpointId = "12345";
       let kubeEndpoint = "12345";
       let azureRegistryName = "RegistryName";
@@ -60,10 +58,11 @@ describe(`k8helmpipeline:index`, function() {
 
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
-         .withArguments([type, applicationName, tfs, queue, target, azureSub, azureSubId, kubeEndpointList,
-            tenantId, servicePrincipalId, servicePrincipalKey, pat, customFolder, azureRegistryName, azureRegistryResourceGroup, imagePullSecrets
+         .withArguments([type, applicationName, tfs, queue, target, azureSub, kubeEndpointList,
+            pat, azureRegistryName, azureRegistryResourceGroup, imagePullSecrets
          ])
          .on(`error`, function (e) {
+            assert.equal(sinon.stub(kubernetes, 'getKubeInfo').called, false);
             cleanUp();
             assert.fail(e);
          })
@@ -96,7 +95,7 @@ describe(`k8helmpipeline:index`, function() {
                });
             });
            
-            sinon.stub(build, 'run').callsFake(function(args, _this, done){
+            sinon.stub(build, 'run').callsFake(function(args, _this, done) {
                done();
             });
             sinon.stub(util, `findProject`).callsArgWith(4, null, {
@@ -164,8 +163,8 @@ describe(`k8helmpipeline:index`, function() {
 
       return helpers.run(path.join(__dirname, `../../generators/k8helmpipeline`))
          .withGenerators(deps)
-         .withArguments([type, applicationName, tfs, queue, target, azureSub, azureSubId, kubeEndpointList,
-            tenantId, servicePrincipalId
+         .withArguments([type, applicationName, tfs, queue, target, azureSub, kubeEndpointList,
+            pat, azureRegistryName, azureRegistryResourceGroup, imagePullSecrets
          ])
          .on(`error`, function (e) {
             assert.fail(e);

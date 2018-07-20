@@ -151,6 +151,34 @@ function queue(obj) {
    };
 }
 
+function kubeQueue(obj) {
+   return {
+      store: true,
+      type: `list`,
+      name: `queue`,
+      default: `Default`,
+      choices: [{
+         name: `Default`,
+         value: `Default`
+      },
+      {
+         name: `Hosted Linux Preview`,
+         value: `Hosted Linux Preview`
+      }
+   ],
+      message: `What agent queue would you like to use?`,
+      when: answers => {
+         var result = obj.options.queue === undefined;
+
+         if (result) {
+            obj.log(`  Getting Agent Queues...`);
+         }
+
+         return result;
+      }
+   };
+}
+
 function applicationType(obj) {
    return {
       name: `type`,
@@ -207,6 +235,19 @@ function target(obj) {
       store: true,
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
+      when: answers => {
+         return obj.options.target === undefined;
+      }
+   };
+}
+
+function kubeTarget(obj) {
+   return {
+      name: `target`,
+      type: `list`,
+      store: true,
+      message: `Where would you like to deploy?`,
+      choices: util.getKubeTargets,
       when: answers => {
          return obj.options.target === undefined;
       }
@@ -484,8 +525,8 @@ function creationMode(obj) {
       ],
       when: answers => {
          let result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
-         let kube = answers.target === 'kubernetes';
-         return result || kube;
+
+         return result;
       }
    };
 }
@@ -539,11 +580,13 @@ module.exports = {
    groupId: groupId,
    tenantId: tenantId,
    gitAction: gitAction,
+   kubeQueue: kubeQueue,
    installDep: installDep,
    azureSubId: azureSubId,
    profileCmd: profileCmd,
    dockerHost: dockerHost,
    tfsVersion: tfsVersion,
+   kubeTarget: kubeTarget,
    profileName: profileName,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
@@ -554,12 +597,12 @@ module.exports = {
    dockerCertPath: dockerCertPath,
    applicationType: applicationType,
    applicationName: applicationName,
+   kubeEndpointList: kubeEndpointList,
+   imagePullSecrets: imagePullSecrets,
+   azureRegistryName: azureRegistryName,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername,
-   kubeEndpointList: kubeEndpointList,
-   azureRegistryName: azureRegistryName,
-   azureRegistryResourceGroup: azureRegistryResourceGroup,
-   imagePullSecrets: imagePullSecrets
+   azureRegistryResourceGroup: azureRegistryResourceGroup
 };
