@@ -16,7 +16,6 @@ module.exports = class extends Generator {
       // Order is important
       // These are position based arguments for this generator. If they are not provided
       // via the command line they will be queried during the prompting priority
-      argUtils.applicationType(this);
       argUtils.applicationName(this);
       argUtils.tfs(this);
       argUtils.queue(this);
@@ -27,6 +26,9 @@ module.exports = class extends Generator {
       argUtils.azureRegistryName(this);
       argUtils.azureRegistryResourceGroup(this);
       argUtils.imagePullSecrets(this);
+
+      // If user is running this sub-generator, they are deploying to Kubernetes
+      this.type = 'kubernetes';
    }
 
    // 2. Where you prompt users for options (where you'd call this.prompt())
@@ -35,7 +37,6 @@ module.exports = class extends Generator {
       // This gives me access to the generator in the
       // when callbacks of prompt
       let cmdLnInput = this;
-      cmdLnInput.options.type = 'kubernetes';
 
       return this.prompt([
          prompts.tfs(this),
@@ -54,7 +55,6 @@ module.exports = class extends Generator {
          // of the generator
          this.pat = util.reconcileValue(cmdLnInput.options.pat, answers.pat);
          this.tfs = util.reconcileValue(cmdLnInput.options.tfs, answers.tfs);
-         this.type = util.reconcileValue(cmdLnInput.options.type, ``,``);
          this.queue = util.reconcileValue(cmdLnInput.options.queue, answers.queue);
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
