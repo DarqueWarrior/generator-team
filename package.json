@@ -23,7 +23,7 @@
       "generators/project",
       "generators/registry",
       "generators/release",
-      "generators/k8helmpipeline"
+      "generators/k8shelmpipeline"
    ],
    "keywords": [
       "yeoman-generator",
