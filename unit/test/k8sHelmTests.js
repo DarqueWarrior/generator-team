@@ -264,7 +264,7 @@ describe(`k8shelmpipeline:index`, function() {
 describe(`k8shelmpipeline:app`, function(){
    context(`acsExtensionsCheckOrInstall`, function () {
       function cleanUp() {
-         kubernetes.acsExtensionsInstall.restore()
+         kubernetes.acsExtensionsInstall.restore();
       }
       sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
@@ -314,7 +314,7 @@ describe(`k8shelmpipeline:app`, function(){
 
    context(`acsExtensionsCheck`, function () {
       function cleanUp() {
-         kubernetes.acsExtensionsInstall.restore()
+         kubernetes.acsExtensionsInstall.restore();
       }
       sinon.stub(kubernetes, 'acsExtensionsInstall').returns(true);
       it(`should not fail`, sinonTest(function () {
@@ -448,8 +448,8 @@ describe(`k8shelmpipeline:app`, function(){
             assert.equal(sub, undefined, "Subscription should be undefined");
             assert.equal(gen, undefined, "Generator should be undefined");
             assert.equal(endpointId, undefined, "EndpointId should be undefined");
-         })
-      }))
+         });
+      }));
    });
 
    context(`getKubeInfo`, function() {
@@ -461,8 +461,8 @@ describe(`k8shelmpipeline:app`, function(){
       let kubeEndpoint = "12345";
       let gen = {};
       gen.log = function(args) {
-            console.log(args)
-      }
+            console.log(args);
+      };
 
       it(`should return the correct k8s information`, sinonTest(function() {
 
@@ -484,8 +484,8 @@ describe(`k8shelmpipeline:app`, function(){
 
          proxyApp.getKubeInfo(applicationName, tfs, pat, endpointId, kubeEndpoint, gen, function(e, kubernetesInfo) {
             assert.equal(e, undefined);
-            assert.equal(kubernetesInfo['resourceGroup'], expected, "Kubernetes Resource Group is not correct");
-            assert.equal(kubernetesInfo['name'], expected, "Kubernetes Name is not correct");
+            assert.equal(kubernetesInfo.resourceGroup, expected, "Kubernetes Resource Group is not correct");
+            assert.equal(kubernetesInfo.name, expected, "Kubernetes Name is not correct");
          });
       }));
 

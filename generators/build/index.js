@@ -28,8 +28,9 @@ module.exports = class extends Generator {
       argUtils.azureRegistryName(this);
       argUtils.azureRegistryResourceGroup(this);
       argUtils.azureSubId(this);
-      argUtils.kubeName(this),
-      argUtils.kubeResourceGroup(this)
+      argUtils.kubeName(this);
+      argUtils.kubeResourceGroup(this);
+      
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
