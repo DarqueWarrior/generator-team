@@ -72,7 +72,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -92,7 +92,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -135,7 +135,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
