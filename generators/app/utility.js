@@ -22,6 +22,9 @@ const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
 // module.
 const PROFILE_PATH = os.homedir() + '/vsteam_profiles.json';
 
+const EXTENSIONS_SUB_DOMAIN = `extmgmt`;
+const RELEASE_MANAGEMENT_SUB_DOMAIN = `vsrm`;
+
 var profile = null;
 
 var logMessage = function (msg) {
@@ -157,7 +160,7 @@ function getAppTypes(answers) {
    // If this is not a Linux or Mac based agent also show
    // .NET Full
    if (answers.queue.indexOf(`Linux`) === -1 &&
-       answers.queue.indexOf(`macOS`) === -1 ) {
+      answers.queue.indexOf(`macOS`) === -1) {
       types.splice(1, 0, {
          name: `.NET Framework`,
          value: `aspFull`
@@ -739,7 +742,7 @@ function findRelease(args, callback) {
          "cache-control": `no-cache`,
          "authorization": `Basic ${args.token}`
       },
-      "url": `${getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
+      "url": `${getFullURL(args.account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${args.teamProject.name}/_apis/release/definitions`,
       "qs": {
          "api-version": RELEASE_API_VERSION
       }
@@ -895,18 +898,18 @@ function searchProfiles(input) {
 
    if (results.profiles !== null) {
       var found = results.profiles.filter(function (i) {
-         return (i.Name.toLowerCase().includes(input.toLowerCase()) || 
-                 i.URL.toLowerCase().includes(input.toLowerCase())) &&
-                 i.Type === `Pat`;
+         return (i.Name.toLowerCase().includes(input.toLowerCase()) ||
+            i.URL.toLowerCase().includes(input.toLowerCase())) &&
+            i.Type === `Pat`;
       });
 
       if (found.length > 1) {
          // Try to find the correct entry 
          found = results.profiles.filter(function (i) {
-            return (i.Name.toLowerCase() === input.toLowerCase() || 
-                    i.URL.toLowerCase() === input.toLowerCase());
+            return (i.Name.toLowerCase() === input.toLowerCase() ||
+               i.URL.toLowerCase() === input.toLowerCase());
          });
-      } 
+      }
 
       if (found.length === 1) {
          return found[0];
@@ -927,7 +930,7 @@ function readPatFromProfile(answers, obj) {
       // Skip the leading :
       obj.options.pat = b.toString().substring(1);
    }
-   
+
    // If the value was passed on the command line it will
    // not be set in answers which other prompts expect.
    // So, place it in answers now.
@@ -1078,6 +1081,30 @@ function supportsLoadTests(account, token, callback) {
 }
 
 //
+// Returns true if the extension is installed.
+// Despite the resource name of installedextensionsbyname you actually have to pass in the ID.
+// https://{accountName}.extmgmt.visualstudio.com/_apis/extensionmanagement/installedextensionsbyname/{publisherId}/{extensionId}
+//
+function isExtensionInstalled(account, token, publisherId, extensionId, callback) {
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/_apis/extensionmanagement/installedextensionsbyname/${publisherId}/${extensionId}`
+   });
+
+   request(options, function (error, response, body) {
+      if (error) {
+         callback(undefined, false);
+      } else {
+         callback(undefined, true);
+      }
+   });
+}
+
+//
 // token must be encoded before calling this function. 
 //
 function isTFSGreaterThan2017(account, token, callback) {
@@ -1114,7 +1141,7 @@ function isTFSGreaterThan2017(account, token, callback) {
    }
 }
 
-function getFullURL(instance, includeCollection, forRM) {
+function getFullURL(instance, includeCollection, subDomain) {
    // The user MUST only enter the VSTS account name and not the full url.
    // This is how the system determines which system is being targeted.  Some
    // URL for VSTS are not the same as they are for TFS for example Release
@@ -1130,8 +1157,8 @@ function getFullURL(instance, includeCollection, forRM) {
 
    var vstsURL = `https://${instance}.visualstudio.com`;
 
-   if (forRM) {
-      vstsURL = `https://${instance}.vsrm.visualstudio.com`;
+   if (subDomain) {
+      vstsURL = `https://${instance}.${subDomain}.visualstudio.com`;
    }
 
    if (includeCollection) {
@@ -1149,8 +1176,11 @@ module.exports = {
    BUILD_API_VERSION: BUILD_API_VERSION,
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,
+   EXTENSIONS_SUB_DOMAIN: EXTENSIONS_SUB_DOMAIN,
    DISTRIBUTED_TASK_API_VERSION: DISTRIBUTED_TASK_API_VERSION,
    SERVICE_ENDPOINTS_API_VERSION: SERVICE_ENDPOINTS_API_VERSION,
+   RELEASE_MANAGEMENT_SUB_DOMAIN: RELEASE_MANAGEMENT_SUB_DOMAIN,
+
 
    isVSTS: isVSTS,
    isPaaS: isPaaS,
@@ -1196,6 +1226,7 @@ module.exports = {
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
+   isExtensionInstalled: isExtensionInstalled,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
    validateCustomFolder: validateCustomFolder,
    getDefaultPortMapping: getDefaultPortMapping,

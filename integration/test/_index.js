@@ -1,3 +1,7 @@
+// This is the start of what might me a NPM VSTS lib. 
+// This why you see duplicates here from the util in the
+// main project.
+
 const async = require('async');
 const util = require(`./_util`);
 const request = require('request');
@@ -8,6 +12,9 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+
+const EXTENSIONS_SUB_DOMAIN = `extmgmt`;
+const RELEASE_MANAGEMENT_SUB_DOMAIN = `vsrm`;
 
 function encodePat(pat) {
    'use strict';
@@ -30,7 +37,7 @@ function getUserAgent(userAgent) {
    return `${userAgent}/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 }
 
-function getFullURL(instance, includeCollection, forRM) {
+function getFullURL(instance, includeCollection, subDomain) {
    // The user MUST only enter the VSTS account name and not the full url.
    // This is how the system determines which system is being targeted.  Some
    // URL for VSTS are not the same as they are for TFS for example Release
@@ -46,8 +53,8 @@ function getFullURL(instance, includeCollection, forRM) {
 
    let vstsURL = `https://${instance}.visualstudio.com`;
 
-   if (forRM) {
-      vstsURL = `https://${instance}.vsrm.visualstudio.com`;
+   if (subDomain) {
+      vstsURL = `https://${instance}.${subDomain}.visualstudio.com`;
    }
 
    if (includeCollection) {
@@ -374,7 +381,7 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
          "cache-control": `no-cache`,
          "authorization": `Basic ${token}`
       },
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/definitions`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/definitions`,
       "qs": {
          "api-version": RELEASE_API_VERSION
       }
@@ -406,7 +413,7 @@ function getReleases(account, projectId, pat, userAgent, stage, callback) {
          "cache-control": `no-cache`,
          "authorization": `Basic ${token}`
       },
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/releases?$expand=environments`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/releases?$expand=environments`,
       "qs": {
          "api-version": RELEASE_API_VERSION
       }
@@ -450,7 +457,7 @@ function setApproval(account, projectId, pat, id, userAgent, callback) {
          "authorization": `Basic ${token}`
       },
       "body": body,
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/approvals/${id}`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/approvals/${id}`,
       "qs": {
          "api-version": DISTRIBUTED_TASK_API_VERSION
       }
@@ -478,7 +485,7 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
          "cache-control": `no-cache`,
          "authorization": `Basic ${token}`
       },
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/approvals`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/approvals`,
       "qs": {
          "api-version": DISTRIBUTED_TASK_API_VERSION
       }

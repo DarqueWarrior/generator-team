@@ -244,7 +244,7 @@ function createRelease(args, gen, callback) {
          'authorization': `Basic ${args.token}`
       },
       json: true,
-      url: `${util.getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
+      url: `${util.getFullURL(args.account, true, util.RELEASE_MANAGEMENT_SUB_DOMAIN)}/${args.teamProject.name}/_apis/release/definitions`,
       qs: {
          'api-version': util.RELEASE_API_VERSION
       },
