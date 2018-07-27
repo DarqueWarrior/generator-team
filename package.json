@@ -5,8 +5,8 @@
    "main": "./generators/app/index.js",
    "scripts": {
       "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
-      "unittest": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
-      "inttest": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml integration/test"
+      "unittest": "mocha unit/test",
+      "inttest": "mocha integration/test"
    },
    "files": [
       "generators/app",
