@@ -16,7 +16,7 @@ SERVICE_PRINCIPAL_ID=
 SERVICE_PRINCIPAL_KEY=
 
 # Change this value if not running from the integration folder.
-LEVELS_UP="/../"
+LEVELS_UP="/./"
 
 AZURE_SECRET=
 AZURE_CLIENT_ID=
@@ -40,6 +40,13 @@ This is an example calling from the integration folder.
 
 ```PowerShell
 node ..\node_modules\mocha\bin\mocha --opts .\test\mocha.opts .\test\dockerACILinuxAgentAspTests.js
+```
+
+When running the dockerXXXLinux test you need to comment out the following lines because the Linux agents have docker tools on them and you do not need to provide a host.
+
+```env
+#DOCKER_HOST=
+#DOCKER_CERT_PATH=
 ```
 
 The test require this to know which account to use and how to auth.
