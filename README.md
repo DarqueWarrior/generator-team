@@ -60,6 +60,14 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 
 ## Revision history
 
+## July 2018
+
+### 0.4.6
+
+Updated VSTS .net Core task to 2.*.
+
+Set skipindexing to true in .net builds.
+
 ## April 2018
 
 ### 0.4.5
