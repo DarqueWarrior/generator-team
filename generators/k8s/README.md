@@ -1,6 +1,6 @@
-# K8shelmpipeline
+# Kubernetes sub-generator
 
-The K8shelmpipeline sub-generator creates a CI/CD pipeline in Visual Studio Teams Services (VSTS) and generates the template files needed to provision a basic Kubernetes web application using helm.
+The k8s sub-generator creates a CI/CD pipeline in Visual Studio Teams Services (VSTS) and generates the template files needed to provision a basic Kubernetes web application using helm.
 
 #### Table of Contents
 1. [Installing](#installing)
@@ -82,7 +82,7 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
 To start the sub-generator, run
 
    ```
-   yo team:k8shelmpipeline
+   yo team:k8s
    ```
 
 ## Usage <a name="usage"></a>
