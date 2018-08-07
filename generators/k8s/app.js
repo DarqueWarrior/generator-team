@@ -103,32 +103,9 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback) {
 function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
    // Uses endpoint proxy to get information on Kubernetes Cluster
    let token = util.encodePat(pat);
-   let body = {
-      "dataSourceDetails": {
-        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-        "parameters": {
-           "azureSubscriptionEndpoint": kubeEndpoint
-        },
-        "resultSelector": "jsonpath:$.value[*]"
-      },
-      "resultTransformationDetails": {
-         "resultTemplate": ""
-      }
-    };
-
-    let options = util.addUserAgent({
-      "method": `POST`,
-      "headers": {
-         "Authorization": `Basic ${token}`,
-         "Content-Type": "application/json"
-      },
-      "json": true,
-      "body": body,
-      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
-   });
-
+   
       // Call the callback when both requests have been resolved
-      Promise.all([getKubeResourceGroup(options), getKubeName(options)])
+      Promise.all([getKubeResourceGroup(kubeEndpoint, token, tfs, appName, endpointId), getKubeName(kubeEndpoint, token, tfs, appName, endpointId)])
       .then(
          function(data) {
 
@@ -150,10 +127,33 @@ function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback)
          });
 }
 
-function getKubeResourceGroup(options, callback) {
-   options.body.resultTransformationDetails.resultTemplate = "{{ #extractResource id resourcegroups }}";
+function getKubeResourceGroup(kubeEndpoint, token, tfs, appName, endpointId) {
 
    return new Promise(function(resolve, reject) {
+      let body = {
+        "dataSourceDetails": {
+        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+        "parameters": {
+           "azureSubscriptionEndpoint": kubeEndpoint
+        },
+        "resultSelector": "jsonpath:$.value[*]"
+      },
+      "resultTransformationDetails": {
+         "resultTemplate": "{{ #extractResource id resourcegroups }}"
+      }
+    };
+
+      let options = util.addUserAgent({
+      "method": `POST`,
+      "headers": {
+         "Authorization": `Basic ${token}`,
+         "Content-Type": "application/json"
+      },
+      "json": true,
+      "body": body,
+      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
+   });
+
       kubeInfoRequest(options, function(err, result) {
          if (err) {
             reject(err);
@@ -163,10 +163,32 @@ function getKubeResourceGroup(options, callback) {
    });
 }
 
-function getKubeName(options, callback) {
-   options.body.resultTransformationDetails.resultTemplate = "{{{name}}}";
+function getKubeName(kubeEndpoint, token, tfs, appName, endpointId) {
 
    return new Promise(function(resolve, reject) {
+      let body = {
+        "dataSourceDetails": {
+        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
+        "parameters": {
+           "azureSubscriptionEndpoint": kubeEndpoint
+        },
+        "resultSelector": "jsonpath:$.value[*]"
+      },
+      "resultTransformationDetails": {
+         "resultTemplate": "{{{name}}}"
+      }
+    };
+
+      let options = util.addUserAgent({
+      "method": `POST`,
+      "headers": {
+         "Authorization": `Basic ${token}`,
+         "Content-Type": "application/json"
+      },
+      "json": true,
+      "body": body,
+      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
+   });
       kubeInfoRequest(options, function(err, result) {
          if (err){
             reject(err);
