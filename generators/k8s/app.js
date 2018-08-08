@@ -14,9 +14,9 @@ function run(args, gen, callback) {
    let token = util.encodePat(args.pat);
 
    if (args.target === 'acs') {
-         acsExtensionsCheckOrInstall(args.tfs, args.pat);
+         acsExtensionsCheckOrInstall(args.tfs, token);
       }
-   let promises = [createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen), createArm(args.tfs, args.azureSub, args.pat, gen, args.appName)];
+   let promises = [createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen), createArm(args.tfs, args.azureSub, token, gen, args.appName)];
    // Call the callback when both service endpoints have been created successfully 
       Promise.all(promises)
       .then(
@@ -43,8 +43,7 @@ function run(args, gen, callback) {
          });
 }
 
-function acsExtensionsCheckOrInstall(accountName, pat) {
-   let token = util.encodePat(pat);
+function acsExtensionsCheckOrInstall(accountName, token) {
    let author = 'tsuyoshiushio';
    let extension = 'k8s-endpoint';
 
@@ -60,7 +59,7 @@ function acsExtensionsCheckOrInstall(accountName, pat) {
    acsExtensionsCheck(options, acsExtensionsInstall);
 }
 
-function acsExtensionsCheck(options,callback) {
+function acsExtensionsCheck(options, callback) {
 
    request(options, function (error, response, body) {
       // Need downloader, helm task
@@ -94,9 +93,7 @@ function acsExtensionsInstall(options) {
       });
 }
 
-function createArm(tfs, azureSub, pat, gen, applicationName, callback) {
-
-   let token = util.encodePat(pat);
+function createArm(tfs, azureSub, token, gen, applicationName, callback) {
 
    return new Promise(function (resolve, reject) {
       util.findAzureSub(tfs, azureSub, token, gen, function (err, sub) {
@@ -135,9 +132,8 @@ function createArm(tfs, azureSub, pat, gen, applicationName, callback) {
 }
 
 
-function getKubeInfo(appName, tfs, pat, endpointId, kubeEndpoint, gen, callback) {
+function getKubeInfo(appName, tfs, token, endpointId, kubeEndpoint, gen, callback) {
    // Uses endpoint proxy to get information on Kubernetes Cluster
-   let token = util.encodePat(pat);
    
       // Call the callback when both requests have been resolved
       Promise.all([getKubeResourceGroup(kubeEndpoint, token, tfs, appName, endpointId), getKubeName(kubeEndpoint, token, tfs, appName, endpointId)])

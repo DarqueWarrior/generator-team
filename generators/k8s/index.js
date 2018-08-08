@@ -40,10 +40,6 @@ module.exports = class extends Generator {
       // This gives me access to the generator in the
       // when callbacks of prompt
       let cmdLnInput = this;
-      cmdLnInput.options.tfs = 'winstonfrick';
-      cmdLnInput.options.pat = 'sk3objsg3xjguzxwtgbvlalarkgydf2saeyghtoxhj4ip6br5lqa';
-      cmdLnInput.options.queue = 'Hosted Linux Preview';
-      cmdLnInput.options.applicationName = 'kubernetes-practice';
 
       return this.prompt([
          prompts.tfs(this),
@@ -78,10 +74,10 @@ module.exports = class extends Generator {
    }
 
    // Check if project exists & clone before running generator
-  // before() {
-   //   compose.addProject(this);
-   //   compose.addGit(this);
-  // }
+  before() {
+     compose.addProject(this);
+     compose.addGit(this);
+  }
 
    // 5. Where you write the generator specific files (routes, controllers, etc)
    writing() {
