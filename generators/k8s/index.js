@@ -149,32 +149,25 @@ module.exports = class extends Generator {
       let appName = this.applicationName;
       let _this = this;
 
-      if (_this.target === 'acs') {
-         app.acsExtensionsCheckOrInstall(_this.tfs, _this.pat);
-      }
+      let args = {
+         tfs: this.tfs,
+         pat: this.pat,
+         target: this.target,
+         appName: this.applicationName,
+         azureSub: this.azureSub,
+         kubeName: this.kubeName,
+         kubeConfig: this.kubeConfig,
+         kubeResourceGroup: this.kubeResourceGroup,
+      };
 
-      app.createKubeEndpoint(this.pat, this.tfs, appName, this.kubeName, this.kubeConfig, function(kubeEndpoint) {
-         _this.kubeEndpoint = kubeEndpoint;
+      app.run(args, this, function(error, generator) {
+         if (error) {
+            console.log(error);
+         }
+         else {
+            compose.addBuild(generator);
+            compose.addRelease(generator);
+         }
       });
-
-      app.createArm(this.tfs, this.azureSub, this.pat, this, appName)
-      .then(
-         function(result) {
-            let sub = result.sub;
-            let endpointId = result.endpointId;
-
-            _this.azureSub = sub.name;
-            _this.azureSubId = sub.id;
-            _this.tenantId = sub.tenantId;
-            _this.serviceEndpointId = endpointId;
-
-            // Based on the users answers compose all the required generators.
-            compose.addBuild(_this);
-            compose.addRelease(_this);
-      },
-   function(error){
-      console.log(error);
-   });
-
    }
 };

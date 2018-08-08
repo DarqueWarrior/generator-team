@@ -340,7 +340,10 @@ function validateKubeResourceGroup(input) {
 }
 
 function validateKubeConfig(input) {
-   return validateRequired(input, `You must providate a valid config file location`);
+   if (!fs.existsSync(input)){
+      return "Kube Config file not found. Please enter a valid path to your config file";
+   }
+   return true;
 }
 
 function tokenize(input, nvp) {

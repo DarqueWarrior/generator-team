@@ -609,7 +609,7 @@ function kubeConfig(obj) {
       type: `input`,
       store: true,
       message: `Where is your Kubernetes Config file located?`,
-      validate: util.validateKubeConfig, //CHANGE THIS. POSSIBLE CHECK LOCATION
+      validate: util.validateKubeConfig, 
       when: answers => {
          let defined = obj.options.kubeConfig === undefined;
          let kube = util.isKubernetes(answers.target);

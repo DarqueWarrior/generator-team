@@ -6,7 +6,42 @@ const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
 const async = require(`async`);
-let YAML = require('yamljs');
+const YAML = require('yamljs');
+const utility = require(`util`);
+
+
+function run(args, gen, callback) {
+   let token = util.encodePat(args.pat);
+
+   if (args.target === 'acs') {
+         acsExtensionsCheckOrInstall(args.tfs, args.pat);
+      }
+   let promises = [createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen), createArm(args.tfs, args.azureSub, args.pat, gen, args.appName)];
+   // Call the callback when both service endpoints have been created successfully 
+      Promise.all(promises)
+      .then(
+         function(data) {
+            gen.kubeEndpoint = data[0];
+            let armResult = data[1];
+
+            let sub = armResult.sub;
+            let endpointId = armResult.endpointId;
+
+            gen.azureSub = sub.name;
+            gen.azureSubId = sub.id;
+            gen.tenantId = sub.tenantId;
+            gen.serviceEndpointId = endpointId;
+
+            callback(undefined, gen);
+         },
+         function(err) {
+            callback(err, undefined);
+         })
+         .catch(
+            function(error) {
+               callback(error, undefined);
+         });
+}
 
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);
@@ -233,10 +268,11 @@ function kubeInfoRequest(options, callback) {
    );
 }
 
-function parseKubeConfig(kubeName, fileLocation, callback) {
+function parseKubeConfig(kubeName, fileLocation, gen, callback) {
    // Load yaml file using YAML.load
    try {
          let data = YAML.load(`${fileLocation}/config`);
+         gen.log("+ Successfully loaded Kube config file");
          
          let server;
          for (let i = 0; i < data.clusters.length; i++) {
@@ -261,52 +297,60 @@ function parseKubeConfig(kubeName, fileLocation, callback) {
             }
          }
          
-         callback(data, server, clientCertificateData, clientKeyData);
+         callback(undefined, data, server, clientCertificateData, clientKeyData);
    }
    catch (e) {
-      console.log(e);
+      gen.log("x Could not parse Kube config file");
+      callback(e);
    }
 }
 
-function createKubeEndpoint(pat, account, projectId, kubeName, fileLocation, callback) {
-   let token = util.encodePat(pat);
+function createKubeEndpoint(token, account, projectId, kubeName, fileLocation, gen) {
    
-   parseKubeConfig(kubeName, fileLocation, function(content, server, clientCertificateData, clientKeyData) {
-      var options = util.addUserAgent({
-            method: 'POST',
-            headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
-            json: true,
-            url: `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
-            qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
-            body: {
-               authorization:
-                  {
-                     parameters: {
-                        "kubeconfig": `${content}`, //Don't think I need content
-                        "generatePfx": "true",
-                        "ClientCertificateData": clientCertificateData,
-                        "ClientKeyData": clientKeyData
+   return new Promise(function(resolve, reject) {
+      parseKubeConfig(kubeName, fileLocation, gen, function(e, content, server, clientCertificateData, clientKeyData) {
+         if (e) {
+            reject(e);
+         }
+         gen.log("+ Creating Kubernetes Service Endpoint");
+         
+         var options = util.addUserAgent({
+               method: 'POST',
+               headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
+               json: true,
+               url: `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+               qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
+               body: {
+                  authorization:
+                     {
+                        parameters: {
+                           "kubeconfig": `${content}`, //Don't think I need content
+                           "generatePfx": "true",
+                           "ClientCertificateData": clientCertificateData,
+                           "ClientKeyData": clientKeyData
+                        },
+                        scheme: 'None'
                      },
-                     scheme: 'None'
+                  data: {
+                     authorizationType: "Kubeconfig",
+                     acceptUntrustedCerts: "true"
                   },
-               data: {
-                  authorizationType: "Kubeconfig",
-                  acceptUntrustedCerts: "true"
-               },
-               name: 'Kubernetes',
-               type: 'kubernetes',
-               url: server
+                  name: 'Kubernetes',
+                  type: 'kubernetes',
+                  url: server
+               }
+         });
+
+         let kubeEndpoint;
+         request(options, function (error, response, body) {
+            if (error) {
+               gen.log("x Could not create Kubernetes Service Endpoint");
+               reject(error);
             }
-      });
 
-      let kubeEndpoint;
-      request(options, function (error, response, body) {
-         if (error) {
-            callback(error, undefined);
-          }
-
-         kubeEndpoint = body.id;
-         callback(kubeEndpoint);
+            kubeEndpoint = body.id;
+            resolve(kubeEndpoint);
+         });
       });
    });
 }
@@ -315,6 +359,7 @@ module.exports = {
 
    // Exports the portions of the file we want to share with files that require 
    // it.
+   run: run,
    createArm: createArm, 
    getKubeInfo: getKubeInfo,
    createKubeEndpoint: createKubeEndpoint,
