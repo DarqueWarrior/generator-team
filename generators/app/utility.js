@@ -336,8 +336,9 @@ function validateKubeResourceGroup(input) {
 }
 
 function validateKubeConfig(input) {
-   if (!fs.existsSync(input)){
-      return "Kube Config file not found. Please enter a valid path to your config file";
+   let path = input + "/config";
+   if (!fs.existsSync(path)) {
+      return `The file ${path} was not found. Please enter a valid path to your config file`;
    }
    return true;
 }

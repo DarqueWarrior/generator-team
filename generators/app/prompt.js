@@ -588,7 +588,7 @@ function kubeConfig(obj) {
       name: `kubeConfig`,
       type: `input`,
       store: true,
-      message: `Where is your Kubernetes Config file located?`,
+      message: `Where is your Kubernetes Config file located? \n Enter the path ({path}/config): `,
       validate: util.validateKubeConfig, 
       when: answers => {
          let defined = obj.options.kubeConfig === undefined;
