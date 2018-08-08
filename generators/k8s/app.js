@@ -5,8 +5,8 @@ const request = require(`request`);
 const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
-const utility = require(`util`);
 const async = require(`async`);
+let YAML = require('yamljs');
 
 function acsExtensionsCheckOrInstall(accountName, pat) {
    let token = util.encodePat(pat);
@@ -233,12 +233,91 @@ function kubeInfoRequest(options, callback) {
    );
 }
 
+function parseKubeConfig(kubeName, fileLocation, callback) {
+   // Load yaml file using YAML.load
+   try {
+         let data = YAML.load(`${fileLocation}/config`);
+         
+         let server;
+         for (let i = 0; i < data.clusters.length; i++) {
+            if (data.clusters[i].name === kubeName) { 
+               server = data.clusters[3].cluster.server;
+            }
+         }
+         
+         let user;
+         for (let i = 0; i < data.contexts.length; i++) {
+            if (data.contexts[i].name === kubeName) { 
+               user = data.contexts[i].context.user;
+            }
+         }
+         
+         let clientCertificateData;
+         let clientKeyData;
+         for (let i = 0; i < data.users.length; i++) {
+            if (data.users[i].name === user) { 
+               clientCertificateData = data.users[i].user["client-certificate-data"];
+               clientKeyData = data.users[i].user["client-key-data"];
+            }
+         }
+         
+         callback(data, server, clientCertificateData, clientKeyData);
+   }
+   catch (e) {
+      console.log(e);
+   }
+}
+
+function createKubeEndpoint(pat, account, projectId, kubeName, fileLocation, callback) {
+   let token = util.encodePat(pat);
+   
+   parseKubeConfig(kubeName, fileLocation, function(content, server, clientCertificateData, clientKeyData) {
+      var options = util.addUserAgent({
+            method: 'POST',
+            headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
+            json: true,
+            url: `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+            qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
+            body: {
+               authorization:
+                  {
+                     parameters: {
+                        "kubeconfig": `${content}`, //Don't think I need content
+                        "generatePfx": "true",
+                        "ClientCertificateData": clientCertificateData,
+                        "ClientKeyData": clientKeyData
+                     },
+                     scheme: 'None'
+                  },
+               data: {
+                  authorizationType: "Kubeconfig",
+                  acceptUntrustedCerts: "true"
+               },
+               name: 'Kubernetes',
+               type: 'kubernetes',
+               url: server
+            }
+      });
+
+      let kubeEndpoint;
+      request(options, function (error, response, body) {
+         if (error) {
+            callback(error, undefined);
+          }
+
+         kubeEndpoint = body.id;
+         callback(kubeEndpoint);
+      });
+   });
+}
+
 module.exports = {
 
    // Exports the portions of the file we want to share with files that require 
    // it.
    createArm: createArm, 
    getKubeInfo: getKubeInfo,
+   createKubeEndpoint: createKubeEndpoint,
    acsExtensionsCheck: acsExtensionsCheck,
    acsExtensionsInstall: acsExtensionsInstall,
    acsExtensionsCheckOrInstall: acsExtensionsCheckOrInstall

@@ -572,6 +572,54 @@ function gitAction(obj) {
    };
 }
 
+function kubeName(obj) {
+   return {
+      name: `kubeName`,
+      type: `input`,
+      store: true,
+      message: `What is the name of your Kubernetes Cluster? `,
+      validate: util.validateKubeName,
+      when: answers => {
+         let defined = obj.options.kubeName === undefined;
+         let kube = util.isKubernetes(answers.target);
+
+         return defined && kube;
+      }
+   };
+}
+
+function kubeResourceGroup(obj) {
+   return {
+      name: `kubeResourceGroup`,
+      type: `input`,
+      store: true,
+      message: `What is the name of your Kubernetes Cluster Resource Group? `,
+      validate: util.validateKubeResourceGroup, 
+      when: answers => {
+         let defined = obj.options.kubeResourceGroup === undefined;
+         let kube = util.isKubernetes(answers.target);
+
+         return defined && kube;
+      }
+   };
+}
+function kubeConfig(obj) {
+   return {
+      name: `kubeConfig`,
+      type: `input`,
+      store: true,
+      message: `Where is your Kubernetes Config file located?`,
+      validate: util.validateKubeConfig, //CHANGE THIS. POSSIBLE CHECK LOCATION
+      when: answers => {
+         let defined = obj.options.kubeConfig === undefined;
+         let kube = util.isKubernetes(answers.target);
+
+         return defined && kube;
+      }
+   };
+
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -579,6 +627,7 @@ module.exports = {
    target: target,
    groupId: groupId,
    tenantId: tenantId,
+   kubeName: kubeName,
    gitAction: gitAction,
    kubeQueue: kubeQueue,
    installDep: installDep,
@@ -587,6 +636,7 @@ module.exports = {
    dockerHost: dockerHost,
    tfsVersion: tfsVersion,
    kubeTarget: kubeTarget,
+   kubeConfig: kubeConfig,
    profileName: profileName,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
@@ -600,6 +650,7 @@ module.exports = {
    kubeEndpointList: kubeEndpointList,
    imagePullSecrets: imagePullSecrets,
    azureRegistryName: azureRegistryName,
+   kubeResourceGroup: kubeResourceGroup,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,

@@ -331,6 +331,18 @@ function validateImagePullSecrets(input) {
 
 }
 
+function validateKubeName(input) {
+   return validateRequired(input, `You must providate a Kubernetes Cluster name`);
+}
+
+function validateKubeResourceGroup(input) {
+   return validateRequired(input, `You must providate a Kubernetes Cluster Resource Group`);
+}
+
+function validateKubeConfig(input) {
+   return validateRequired(input, `You must providate a valid config file location`);
+}
+
 function tokenize(input, nvp) {
    for (var key in nvp) {
       input = input.replaceAll(key, nvp[key]);
@@ -1376,6 +1388,7 @@ module.exports = {
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
    needsDockerHost: needsDockerHost,
+   validateKubeName: validateKubeName,
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
@@ -1384,6 +1397,7 @@ module.exports = {
    readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
+   validateKubeConfig: validateKubeConfig,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
@@ -1398,6 +1412,7 @@ module.exports = {
    getDockerRegistryServer: getDockerRegistryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
+   validateKubeResourceGroup: validateKubeResourceGroup,
    validateServicePrincipalID: validateServicePrincipalID,
    validateServicePrincipalKey: validateServicePrincipalKey,
    tryFindAzureServiceEndpoint: tryFindAzureServiceEndpoint,

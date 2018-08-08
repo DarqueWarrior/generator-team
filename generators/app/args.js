@@ -211,14 +211,20 @@ function imagePullSecrets(obj) {
 function kubeName(obj) {
    obj.argument(`kubeName`, {
       required: false,
-      desc: 'Kubernetes Cluster Name'
+      desc: `Kubernetes Cluster Name`
    });
 }
 
 function kubeResourceGroup(obj) {
    obj.argument(`kubeResourceGroup`, {
+      required: false, 
+      desc: `Kubernetes Cluster Resource Group`
+   });
+}
+function kubeConfig(obj) {
+   obj.argument(`kubeConfig`, {
       required: false,
-      desc: `Kubernetes Cluster Resource Group Name`
+      desc: `Kubernetes Config file location`
    });
 }
 
@@ -228,30 +234,31 @@ module.exports = {
    queue: queue,
    target: target,
    groupId: groupId,
+   kubeName: kubeName,
    azureSub: azureSub,
    tenantId: tenantId,
    gitAction: gitAction,
-   profileCmd: profileCmd,
-   profileName: profileName,
+   kubeConfig: kubeConfig,
    tfsVersion: tfsVersion,
    azureSubId: azureSubId,
    installDep: installDep,
    dockerHost: dockerHost,
+   profileCmd: profileCmd,
+   profileName: profileName,
    dockerPorts: dockerPorts,
    customFolder: customFolder,
+   kubeEndpoint: kubeEndpoint,
    dockerCertPath: dockerCertPath,
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,
    applicationName: applicationName,
+   serviceEndpoint: serviceEndpoint,
+   imagePullSecrets: imagePullSecrets,
    dockerRegistryId: dockerRegistryId,
+   azureRegistryName: azureRegistryName,
+   kubeResourceGroup: kubeResourceGroup,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
    dockerRegistryPassword: dockerRegistryPassword,
-   kubeEndpoint: kubeEndpoint,
-   serviceEndpoint: serviceEndpoint,
-   azureRegistryName: azureRegistryName,
    azureRegistryResourceGroup: azureRegistryResourceGroup,
-   imagePullSecrets: imagePullSecrets,
-   kubeName: kubeName,
-   kubeResourceGroup: kubeResourceGroup
-};
+   };
