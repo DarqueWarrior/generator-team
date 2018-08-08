@@ -131,139 +131,6 @@ function createArm(tfs, azureSub, token, gen, applicationName, callback) {
 
 }
 
-
-function getKubeInfo(appName, tfs, token, endpointId, kubeEndpoint, gen, callback) {
-   // Uses endpoint proxy to get information on Kubernetes Cluster
-   
-      // Call the callback when both requests have been resolved
-      Promise.all([getKubeResourceGroup(kubeEndpoint, token, tfs, appName, endpointId), getKubeName(kubeEndpoint, token, tfs, appName, endpointId)])
-      .then(
-         function(data) {
-
-            // Data available in order it was called
-            let kubeInfo = {
-               "resourceGroup": data[0],
-               "name": data[1]
-            };
-
-            callback(undefined, kubeInfo);
-         },
-         function(err) {
-            gen.log("Could not retrieve Kubernetes information.");
-            callback(err, undefined);
-         })
-         .catch(
-            function(err) {
-               console.log(err);
-         });
-}
-
-function getKubeResourceGroup(kubeEndpoint, token, tfs, appName, endpointId) {
-
-   return new Promise(function(resolve, reject) {
-      let body = {
-        "dataSourceDetails": {
-        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-        "parameters": {
-           "azureSubscriptionEndpoint": kubeEndpoint
-        },
-        "resultSelector": "jsonpath:$.value[*]"
-      },
-      "resultTransformationDetails": {
-         "resultTemplate": "{{ #extractResource id resourcegroups }}"
-      }
-    };
-
-      let options = util.addUserAgent({
-      "method": `POST`,
-      "headers": {
-         "Authorization": `Basic ${token}`,
-         "Content-Type": "application/json"
-      },
-      "json": true,
-      "body": body,
-      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
-   });
-
-      kubeInfoRequest(options, function(err, result) {
-         if (err) {
-            reject(err);
-         }
-         resolve(result);
-      });
-   });
-}
-
-function getKubeName(kubeEndpoint, token, tfs, appName, endpointId) {
-
-   return new Promise(function(resolve, reject) {
-      let body = {
-        "dataSourceDetails": {
-        "dataSourceUrl": "{{endpoint.url}}/subscriptions/{{endpoint.subscriptionId}}/providers/Microsoft.ContainerService/managedClusters?api-version=2017-08-31",
-        "parameters": {
-           "azureSubscriptionEndpoint": kubeEndpoint
-        },
-        "resultSelector": "jsonpath:$.value[*]"
-      },
-      "resultTransformationDetails": {
-         "resultTemplate": "{{{name}}}"
-      }
-    };
-
-      let options = util.addUserAgent({
-      "method": `POST`,
-      "headers": {
-         "Authorization": `Basic ${token}`,
-         "Content-Type": "application/json"
-      },
-      "json": true,
-      "body": body,
-      "url": `${util.getFullURL(tfs)}/${appName}/_apis/serviceendpoint/endpointproxy?endpointId=${endpointId}&api-version=${util.KUBE_API_VERSION}`,
-   });
-      kubeInfoRequest(options, function(err, result) {
-         if (err){
-            reject(err);
-         }
-         resolve(result);
-      });
-   });
-}
-
-function kubeInfoRequest(options, callback) {
-   let statusCode;
-   let errorCode = false;
-
-   // Work around of "BadRequest" error, will work if called again
-   async.whilst(
-      function () { return statusCode !== 'ok' && !errorCode; },
-      function (finished) {
-         request(options, function(error, response, bod) {
-
-            if (error) {
-               errorCode = true;
-            }
-            else if ('errorCode' in bod) {
-               errorCode = true;
-               error = bod.message;
-            }
-            else {
-               statusCode = bod.statusCode;
-            }
-
-            finished(error, bod);
-         }
-      )},
-      function (err, body) {
-         if (err) {
-            callback(err, undefined);
-         }
-
-         let result = body.result[0];
-         callback(err, result);
-      }
-   );
-}
-
 function parseKubeConfig(kubeName, fileLocation, gen, callback) {
    // Load yaml file using YAML.load
    try {
@@ -356,8 +223,7 @@ module.exports = {
    // Exports the portions of the file we want to share with files that require 
    // it.
    run: run,
-   createArm: createArm, 
-   getKubeInfo: getKubeInfo,
+   createArm: createArm,
    createKubeEndpoint: createKubeEndpoint,
    acsExtensionsCheck: acsExtensionsCheck,
    acsExtensionsInstall: acsExtensionsInstall,

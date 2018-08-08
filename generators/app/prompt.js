@@ -341,26 +341,6 @@ function imagePullSecrets(obj) {
    };
 }
 
-function kubeEndpointList(obj) {
-   return {
-      name: `kubeEndpoint`,
-      type: `list`,
-      store: true,
-      message: `Which Kubernetes Endpoint would you like to use?`,
-      choices: util.getKubeEndpoint,
-      validate: util.validateKubeEndpoint,
-      when: answers => {
-         let result = obj.options.kubeEndpoint === undefined;
-
-         if (result) {
-            obj.log(`  Getting Kubernetes Endpoints... `);
-         }
-
-         return result;
-      }
-   };
-}
-
 function azureSubId(obj) {
    return {
       name: `azureSubId`,
@@ -647,7 +627,6 @@ module.exports = {
    dockerCertPath: dockerCertPath,
    applicationType: applicationType,
    applicationName: applicationName,
-   kubeEndpointList: kubeEndpointList,
    imagePullSecrets: imagePullSecrets,
    azureRegistryName: azureRegistryName,
    kubeResourceGroup: kubeResourceGroup,
