@@ -6,7 +6,7 @@ const package = require('../../package.json');
 const util = require(`../app/utility`);
 const azApp = require(`../azure/app`);
 const async = require(`async`);
-const YAML = require('yamljs');
+const yaml = require('yamljs');
 const utility = require(`util`);
 
 
@@ -15,8 +15,12 @@ function run(args, gen, callback) {
 
    if (args.target === 'acs') {
          acsExtensionsCheckOrInstall(args.tfs, token);
-      }
-   let promises = [createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen), createArm(args.tfs, args.azureSub, token, gen, args.appName)];
+   }
+   let promises = [
+      createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen), 
+      createArm(args.tfs, args.azureSub, token, gen, args.appName)
+   ];
+   
    // Call the callback when both service endpoints have been created successfully 
       Promise.all(promises)
       .then(
@@ -132,9 +136,9 @@ function createArm(tfs, azureSub, token, gen, applicationName, callback) {
 }
 
 function parseKubeConfig(kubeName, fileLocation, gen, callback) {
-   // Load yaml file using YAML.load
+   // Load yaml file using yaml.load
    try {
-         let data = YAML.load(`${fileLocation}/config`);
+         let data = yaml.load(`${fileLocation}/config`);
          gen.log("+ Successfully loaded Kube config file");
          
          let server;

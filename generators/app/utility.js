@@ -328,7 +328,7 @@ function validateImagePullSecrets(input) {
 }
 
 function validateKubeName(input) {
-   return validateRequired(input, `You must providate a Kubernetes Cluster name`);
+   return validateRequired(input, `You must provide a Kubernetes Cluster name`);
 }
 
 function validateKubeResourceGroup(input) {
