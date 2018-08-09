@@ -21,12 +21,7 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
 2. An [Azure Container Registry](https://azure.microsoft.com/en-us/services/container-registry/) (ACR)
 
 
-3. A [Kubernetes Service Endpoint](https://docs.microsoft.com/en-us/vsts/pipelines/library/service-endpoints?view=vsts) in VSTS
-
-   - This can be created by going to `https://{account}.visualstudio.com/{applicationName}/_admin/_services` 
-   - Select **New Service Endpoint** -> **Kubernetes** and configure the endpoint to talk to the Kubernetes Cluster via Kubeconfig or a Service Account
-
-4. A [Service Principal](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks?toc=%2fazure%2faks%2ftoc.json) in Azure allowing your Kubernetes Cluster and your ACR to communicate
+3. A [Service Principal](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks?toc=%2fazure%2faks%2ftoc.json) in Azure allowing your Kubernetes Cluster and your ACR to communicate
 
    - If an Azure account is not configured with the CLI, run the following and follow the prompts:
    
@@ -57,7 +52,7 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
       echo "Service principal password: $SP_PASSWD"
       ```
 
-5. The K8s Image Pull Secret
+4. The K8s Image Pull Secret
    
    - To configure Kubectl to talk to the cluster:
 
@@ -75,7 +70,7 @@ Along with an Azure Subscription and a VSTS Project, a few things have to be pro
       kubectl create secret docker-registry $MY_PULL_SECRET --docker-server $ACR_LOGIN_SERVER --docker-username $CLIENT_ID --docker-password $SP_PASSWD --docker-email <email-address>
       ```
 
-6. A VSTS [personal access token](https://docs.microsoft.com/en-us/vsts/organizations/accounts/use-personal-access-tokens-to-authenticate?view=vsts) (PAT) 
+5. A VSTS [personal access token](https://docs.microsoft.com/en-us/vsts/organizations/accounts/use-personal-access-tokens-to-authenticate?view=vsts) (PAT) 
 
 
 ## Getting Started <a name="gettingStarted"></a>
@@ -106,21 +101,35 @@ The Generator will prompt you to:
 
 5. Select to deploy to either **AKS** or **ACS**
 
-6. Select a **Kubernetes Service Endpoint**
+6. Select an **Azure subscription**
 
-7. Select an **Azure subscription**
-
-8. Enter the name of the **azure container registry** that the images will be pulled from, and the **resource group** the container is located in
+7. Enter the name of the **azure container registry** that the images will be pulled from, and the **resource group** the container is located in
 
    - Both can be found by running:
 
       ```
       az acr list 
       ```
-9. Enter the name of the **image pull secret**
+8. Enter the name of the **image pull secret**
    
    - The name can be found by running:
 
       ```
       kubectl get secrets
       ```
+
+9. Enter the **name** and **resource group** of your Kubernetes Cluster
+
+   - Both can be found by running:
+
+      ```
+      az aks list
+      ```
+
+10. Enter the path of your Kubernetes Config file
+    
+      - Enter the path to the config file. For example, if the config file is located in the `.kube` directory, enter:
+   
+         ```
+         /home/user/.kube
+         ```

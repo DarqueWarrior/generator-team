@@ -314,10 +314,6 @@ function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
 }
 
-function validateKubeEndpoint(input) {
-   return validateRequired(input, `You must provide a Kubernetes Service Endpoint`);
-}
-
 function validateAcr(input) {
    return validateRequired(input, `You must provide an Azure Container Registry login`);
 }
@@ -329,6 +325,22 @@ function validateResourceGroup(input) {
 function validateImagePullSecrets(input) {
    return validateRequired(input, `You must provide an Image Pull Secret name`);
 
+}
+
+function validateKubeName(input) {
+   return validateRequired(input, `You must provide a Kubernetes Cluster name`);
+}
+
+function validateKubeResourceGroup(input) {
+   return validateRequired(input, `You must providate a Kubernetes Cluster Resource Group`);
+}
+
+function validateKubeConfig(input) {
+   let path = input + "/config";
+   if (!fs.existsSync(path)) {
+      return `The file ${path} was not found. Please enter a valid path to your config file`;
+   }
+   return true;
 }
 
 function tokenize(input, nvp) {
@@ -920,47 +932,6 @@ function getAzureSubs(answers) {
    });
 }
 
-function getKubeEndpoint(answers) {
-   "use strict";
-
-   let token = encodePat(answers.pat);
-   let accountName = answers.tfs;
-   let projectName = answers.applicationName;
-
-   let options = {
-      "method": `GET`,
-      "headers": {
-         "Cache-control": `no-cache`,
-         "Authorization": `Basic ${token}`
-      },
-      "url": `https://${accountName}.visualstudio.com/${projectName}/_apis/serviceendpoint/endpoints?type=kubernetes&api-version=4.1-preview.1`,
-   
-   };
-
-   return new Promise(function (resolve, reject) {
-      request(options, function (e, response, body) {
-         if (e) {
-            reject(e);
-            return;
-         }
-
-         let obj = JSON.parse(body);
-
-         let result = [];
-
-         // Passing in Endpoint name as display name, but saving the endpoint ID to be used later
-         obj.value.forEach((endpoint) => {
-            result.push({
-               name: endpoint.name,
-               value: endpoint.id
-            });
-         });
-
-         resolve(result);
-      });
-   });
-}
-
 function getProfileCommands(answers) {
    "use strict";
 
@@ -1358,7 +1329,10 @@ module.exports = {
    findProject: findProject,
    findRelease: findRelease,
    validateTFS: validateTFS,
+   validateAcr: validateAcr,
    isDockerHub: isDockerHub,
+   isKubernetes: isKubernetes,
+   getAcrPrompt: getAcrPrompt,
    getAzureSubs: getAzureSubs,
    findAzureSub: findAzureSub,
    loadProfiles: loadProfiles,
@@ -1368,28 +1342,35 @@ module.exports = {
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
    getTFSVersion: getTFSVersion,
+   kubeDeployment: kubeDeployment,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
    getKubeTargets: getKubeTargets,
    validateGroupID: validateGroupID,
+   getBuildDefName: getBuildDefName,
    extractInstance: extractInstance,
    needsDockerHost: needsDockerHost,
+   dockerDeployment: dockerDeployment,
+   validateKubeName: validateKubeName,
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
    getImageNamespace: getImageNamespace,
    supportsLoadTests: supportsLoadTests,
+   getReleaseDefName: getReleaseDefName,
    getProfileCommands: getProfileCommands,
    readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
+   validateKubeConfig: validateKubeConfig,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
    isExtensionInstalled: isExtensionInstalled,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
    validateCustomFolder: validateCustomFolder,
+   validateResourceGroup: validateResourceGroup,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
@@ -1398,6 +1379,7 @@ module.exports = {
    getDockerRegistryServer: getDockerRegistryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
+   validateKubeResourceGroup: validateKubeResourceGroup,
    validateServicePrincipalID: validateServicePrincipalID,
    validateServicePrincipalKey: validateServicePrincipalKey,
    tryFindAzureServiceEndpoint: tryFindAzureServiceEndpoint,
@@ -1405,15 +1387,5 @@ module.exports = {
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
-   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint,
-   getKubeEndpoint: getKubeEndpoint,
-   validateKubeEndpoint: validateKubeEndpoint,
-   kubeDeployment: kubeDeployment,
-   dockerDeployment: dockerDeployment,
-   getBuildDefName: getBuildDefName,
-   getReleaseDefName: getReleaseDefName,
-   validateAcr: validateAcr,
-   getAcrPrompt: getAcrPrompt,
-   validateResourceGroup: validateResourceGroup,
-   isKubernetes: isKubernetes
+   tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint
 };

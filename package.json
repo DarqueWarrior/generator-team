@@ -50,6 +50,7 @@
       "pad": "^2.0.3",
       "request": "^2.85.0",
       "uuid": "^3.2.1",
+      "yamljs": "^0.3.0",
       "yeoman-generator": "^2.0.3",
       "yosay": "^2.0.1"
    },
