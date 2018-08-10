@@ -18,7 +18,7 @@ function addRelease(obj) {
          queue, obj.target,
       obj.azureSub,
       obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
-      obj.dockerRegistryPassword, obj.pat, obj.customFolder, obj.serviceEndpointId, obj.kubeName, obj.kubeResourceGroup
+      obj.dockerRegistryPassword, obj.pat, obj.customFolder, obj.serviceEndpointId, obj.kubeName, obj.kubeResourceGroup, obj.kubeEndpoint
       ]
    });
 }

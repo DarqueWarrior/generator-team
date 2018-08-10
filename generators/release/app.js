@@ -102,7 +102,8 @@ function run(args, gen, done) {
             dockerRegistryPassword: args.dockerRegistryPassword,
             serviceEndpoint: args.serviceEndpoint,
             kubeName: args.kubeName,
-            kubeResourceGroup: args.kubeResourceGroup
+            kubeResourceGroup: args.kubeResourceGroup,
+            kubeEndpoint: args.kubeEndpoint
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {
