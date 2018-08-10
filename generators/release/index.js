@@ -29,6 +29,7 @@ module.exports = class extends Generator {
       argUtils.serviceEndpoint(this);
       argUtils.kubeName(this);
       argUtils.kubeResourceGroup(this);
+      argUtils.kubeEndpoint(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -72,6 +73,7 @@ module.exports = class extends Generator {
          this.serviceEndpoint = util.reconcileValue(cmdLnInput.options.serviceEndpoint, ``, ``);
          this.kubeName = util.reconcileValue(cmdLnInput.options.kubeName, ``, ``);
          this.kubeResourceGroup = util.reconcileValue(cmdLnInput.options.kubeResourceGroup, ``, ``);
+         this.kubeEndpoint = util.reconcileValue(cmdLnInput.options.kubeEndpoint, ``, ``);
       }.bind(this));
    }
 
@@ -115,6 +117,7 @@ module.exports = class extends Generator {
                args.serviceEndpoint = _this.serviceEndpoint;
                args.kubeName = _this.kubeName;
                args.kubeResourceGroup = _this.kubeResourceGroup;
+               args.kubeEndpoint = _this.kubeEndpoint;
             }
 
             app.run(args, _this, done);

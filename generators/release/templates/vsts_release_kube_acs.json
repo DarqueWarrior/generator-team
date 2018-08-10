@@ -67,7 +67,7 @@
                "overrideInputs": {},
                "condition": "succeeded()",
                "inputs": {
-                  "k8sService": "bb79ef71-f463-4e55-8193-5de5ed532e62",
+                  "k8sService": "{{KubeEndpoint}}",
                   "kubectlBinary": "",
                   "downloadVersion": "",
                   "hasIstio": "false",

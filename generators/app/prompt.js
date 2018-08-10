@@ -588,13 +588,13 @@ function kubeConfig(obj) {
       name: `kubeConfig`,
       type: `input`,
       store: true,
-      message: `Where is your Kubernetes Config file located? \n Enter the path ({path}/config): `,
+      message: `Where is your Kubernetes Config file located? \n  Enter the absolute path ({path}/config): `,
       validate: util.validateKubeConfig, 
       when: answers => {
          let defined = obj.options.kubeConfig === undefined;
-         let kube = util.isKubernetes(answers.target);
+         let acs = util.isACS(answers.target);
 
-         return defined && kube;
+         return defined && acs;
       }
    };
 

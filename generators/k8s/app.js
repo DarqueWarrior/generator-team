@@ -12,22 +12,20 @@ const utility = require(`util`);
 
 function run(args, gen, callback) {
    let token = util.encodePat(args.pat);
-
-   if (args.target === 'acs') {
-         acsExtensionsCheckOrInstall(args.tfs, token);
-   }
    let promises = [
-      createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen), 
       createArm(args.tfs, args.azureSub, token, gen, args.appName)
    ];
+
+   if (util.isACS(args.target)) {
+         acsExtensionsCheckOrInstall(args.tfs, token);
+         promises.push(createKubeEndpoint(token, args.tfs, args.appName, args.kubeName, args.kubeConfig, gen)); 
+   }
    
    // Call the callback when both service endpoints have been created successfully 
       Promise.all(promises)
       .then(
          function(data) {
-            gen.kubeEndpoint = data[0];
-            let armResult = data[1];
-
+            let armResult = data[0];
             let sub = armResult.sub;
             let endpointId = armResult.endpointId;
 
@@ -35,6 +33,11 @@ function run(args, gen, callback) {
             gen.azureSubId = sub.id;
             gen.tenantId = sub.tenantId;
             gen.serviceEndpointId = endpointId;
+
+            // Kubernetes Service Endpoint only created when deploying to ACS
+            if (util.isACS(args.target)) {
+               gen.kubeEndpoint = data[1];
+            }
 
             callback(undefined, gen);
          },
@@ -67,7 +70,7 @@ function acsExtensionsCheck(options, callback) {
 
    request(options, function (error, response, body) {
       // Need downloader, helm task
-         if(error) {
+         if (error) {
             return console.log(error);
          }
 
@@ -86,7 +89,7 @@ function acsExtensionsInstall(options) {
 
    request(options, function (error, response, body) {
       // Need downloader, helm task
-         if(error) {
+         if (error) {
             return console.log(error);
          }
 
@@ -191,7 +194,7 @@ function createKubeEndpoint(token, account, projectId, kubeName, fileLocation, g
                   authorization:
                      {
                         parameters: {
-                           "kubeconfig": `${content}`, //Don't think I need content
+                           "kubeconfig": `${content}`, 
                            "generatePfx": "true",
                            "ClientCertificateData": clientCertificateData,
                            "ClientKeyData": clientKeyData

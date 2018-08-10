@@ -48,6 +48,10 @@ function isKubernetes(target) {
    return target === 'acs' || target === 'aks';
 }
 
+function isACS(target) {
+   return target === 'acs';
+}
+
 function getDockerRegistryServer(server) {
    let parts = url.parse(server);
 
@@ -1312,7 +1316,7 @@ module.exports = {
    SERVICE_ENDPOINTS_API_VERSION: SERVICE_ENDPOINTS_API_VERSION,
    RELEASE_MANAGEMENT_SUB_DOMAIN: RELEASE_MANAGEMENT_SUB_DOMAIN,
 
-
+   isACS: isACS,
    isVSTS: isVSTS,
    isPaaS: isPaaS,
    getPools: getPools,

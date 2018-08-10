@@ -116,7 +116,7 @@
             "azureSubscriptionEndpoint": "{{ServiceEndpoint}}",
             "azureResourceGroup": "{{KubeResourceGroup}}",
             "kubernetesCluster": "{{KubeName}}",
-            "kubernetesServiceEndpoint": "{{KubeEndpoint}}",
+            "kubernetesServiceEndpoint": "",
             "namespace": "",
             "command": "lint",
             "chartType": "Name",

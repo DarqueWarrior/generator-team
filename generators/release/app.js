@@ -102,7 +102,8 @@ function run(args, gen, done) {
             dockerRegistryPassword: args.dockerRegistryPassword,
             serviceEndpoint: args.serviceEndpoint,
             kubeName: args.kubeName,
-            kubeResourceGroup: args.kubeResourceGroup
+            kubeResourceGroup: args.kubeResourceGroup,
+            kubeEndpoint: args.kubeEndpoint
          };
 
          findOrCreateRelease(relArgs, gen, function (err, rel) {
@@ -239,7 +240,8 @@ function createRelease(args, gen, callback) {
       '{{ReleaseDefName}}': releaseDefName,
       '{{ServiceEndpoint}}': args.serviceEndpoint,
       '{{KubeName}}': args.kubeName,
-      '{{KubeResourceGroup}}': args.kubeResourceGroup
+      '{{KubeResourceGroup}}': args.kubeResourceGroup,
+      '{{KubeEndpoint}}': args.kubeEndpoint
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');
