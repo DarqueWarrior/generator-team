@@ -142,9 +142,6 @@ module.exports = class extends Generator {
    // 7. Where installation are run (npm, bower)
    install() {
 
-      let appName = this.applicationName;
-      let _this = this;
-
       let args = {
          tfs: this.tfs,
          pat: this.pat,

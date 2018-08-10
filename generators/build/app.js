@@ -188,7 +188,7 @@ function getBuild(args, callback) {
    } else {
       util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
          if(result){
-            let argument = kubeDeployment ? kubeDeployment : args.type;
+            let argument = kubeDeployment ? 'k8s' : args.type;
             build = `vsts_${argument}_build.json`;
          }
           else {
