@@ -1,0 +1,209 @@
+{
+   "name": "{{BuildDefName}}",
+   "type": "build",
+   "quality": "definition",
+   "buildNumberFormat": "$(MajorVersion).$(MinorVersion)$(Rev:.r)",
+
+   "queue": {
+      "id": "{{QueueId}}"
+   },
+   "build": [
+      {
+         "environment": {},
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Build an image",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "containerregistrytype": "Azure Container Registry",
+            "dockerRegistryEndpoint": "",
+            "azureSubscriptionEndpoint": "{{ServiceEndpoint}}",
+            "azureContainerRegistry": "{{AzureRegistryName}}",
+            "action": "Build an image",
+            "dockerFile": "Dockerfile",
+            "buildArguments": "",
+            "defaultContext": "true",
+            "context": "",
+            "imageName": "$(Build.Repository.Name):$(Build.BuildNumber)",
+            "imageNamesPath": "",
+            "qualifyImageName": "true",
+            "additionalImageTags": "",
+            "includeSourceTags": "false",
+            "includeLatestTag": "false",
+            "imageDigestFile": "",
+            "containerName": "",
+            "ports": "",
+            "volumes": "",
+            "envVars": "",
+            "workDir": "",
+            "entrypoint": "",
+            "containerCommand": "",
+            "detached": "true",
+            "restartPolicy": "no",
+            "restartMaxRetries": "",
+            "customCommand": "",
+            "dockerHostEndpoint": "",
+            "enforceDockerNamingConvention": "true",
+            "cwd": "$(System.DefaultWorkingDirectory)",
+            "memory": ""
+         }
+      }, {
+         "environment": {},
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Push an image",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "e28912f1-0114-4464-802a-a3a35437fd16",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "containerregistrytype": "Azure Container Registry",
+            "dockerRegistryEndpoint": "",
+            "azureSubscriptionEndpoint": "{{ServiceEndpoint}}",
+            "azureContainerRegistry": "{{AzureRegistryName}}",
+            "action": "Push an image",
+            "dockerFile": "Dockerfile",
+            "buildArguments": "",
+            "defaultContext": "true",
+            "context": "",
+            "imageName": "$(Build.Repository.Name):$(Build.BuildNumber)",
+            "imageNamesPath": "",
+            "qualifyImageName": "true",
+            "additionalImageTags": "",
+            "includeSourceTags": "false",
+            "includeLatestTag": "false",
+            "imageDigestFile": "",
+            "containerName": "",
+            "ports": "",
+            "volumes": "",
+            "envVars": "",
+            "workDir": "",
+            "entrypoint": "",
+            "containerCommand": "",
+            "detached": "true",
+            "restartPolicy": "no",
+            "restartMaxRetries": "",
+            "customCommand": "",
+            "dockerHostEndpoint": "",
+            "enforceDockerNamingConvention": "true",
+            "cwd": "$(System.DefaultWorkingDirectory)",
+            "memory": ""
+         }
+      }, {
+         "environment": {},
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "helm lint",
+         "timeoutInMinutes": 0,
+         "condition": "succeeded()",
+         "task": {
+            "id": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+            "versionSpec": "0.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "connectionType": "Azure Resource Manager",
+            "azureSubscriptionEndpoint": "{{ServiceEndpoint}}",
+            "azureResourceGroup": "{{KubeResourceGroup}}",
+            "kubernetesCluster": "{{KubeName}}",
+            "kubernetesServiceEndpoint": "",
+            "namespace": "",
+            "command": "lint",
+            "chartType": "Name",
+            "chartName": "",
+            "chartPath": "",
+            "version": "",
+            "releaseName": "",
+            "overrideValues": "",
+            "valueFile": "",
+            "destination": "$(Build.ArtifactStagingDirectory)",
+            "canaryimage": "false",
+            "upgradetiller": "true",
+            "updatedependency": "false",
+            "save": "true",
+            "install": "true",
+            "recreate": "false",
+            "resetValues": "false",
+            "force": "false",
+            "waitForExecution": "true",
+            "arguments": "./chart/{{Project}}",
+            "enableTls": "false",
+            "caCert": "",
+            "certificate": "",
+            "privatekey": "",
+            "tillernamespace": ""
+         }
+      }, {
+         "environment": {},
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Publish Artifact: chart",
+         "timeoutInMinutes": 0,
+         "refName": "publish_artifacts",
+         "task": {
+            "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+            "versionSpec": "1.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "PathtoPublish": "chart",
+            "ArtifactName": "chart",
+            "ArtifactType": "Container",
+            "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
+            "Parallel": "false",
+            "ParallelCount": "8"
+         }
+      }],
+   "triggers": [{
+      "branchFilters": [
+         "+refs/heads/master"
+      ],
+      "pathFilters": [],
+      "batchChanges": false,
+      "maxConcurrentBuildsPerBranch": 1,
+      "triggerType": "continuousIntegration"
+   }],
+   "variables": {
+      "system.debug": {
+         "value": "false",
+         "allowOverride": true
+      },
+      "BuildConfiguration": {
+         "value": "release",
+         "allowOverride": true
+      },
+      "BuildPlatform": {
+         "value": "any cpu",
+         "allowOverride": true
+      },
+      "MajorVersion": {
+         "value": "0"
+      },
+      "MinorVersion": {
+         "value": "0"
+      }
+   },
+   "repository": {
+      "properties": {
+         "labelSources": "0",
+         "reportBuildStatus": "true"
+      },
+      "type": "TfsGit",
+      "name": "{{Project}}",
+      "url": "{{TFS}}/_git/{{Project}}",
+      "defaultBranch": "refs/heads/master",
+      "clean": "false",
+      "checkoutSubmodules": false
+   }
+}
