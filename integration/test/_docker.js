@@ -38,7 +38,7 @@ var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
 var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
 
 // The number of levels up from the folder the test are executed in to the 
-// folder where the repo was cloned.  This is not the same when run locally
+// folder where the repository was cloned.  This is not the same when run locally
 // vs. run on a build machine. 
 var levelsUp = process.env.LEVELS_UP || `/../`;
 
