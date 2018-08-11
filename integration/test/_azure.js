@@ -5,7 +5,8 @@ const ResourceManagementClient = require('azure-arm-resource').ResourceManagemen
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
-env(__dirname + '/.env', {
+var fileName = process.env.SERVER_TO_TEST || ``
+env(__dirname +  `/${fileName}.env`, {
    raise: false,
    overwrite: true
 });
