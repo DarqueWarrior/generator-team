@@ -4,9 +4,9 @@
    "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
    "main": "./generators/app/index.js",
    "scripts": {
-      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
-      "unittest": "mocha unit/test",
-      "inttest": "mocha integration/test"
+      "test": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
+      "unittest": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
+      "inttest": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml integration/test"
    },
    "files": [
       "generators/app",
@@ -47,7 +47,7 @@
       "pad": "^2.0.3",
       "request": "^2.85.0",
       "uuid": "^3.2.1",
-      "yeoman-generator": "^2.0.3",
+      "yeoman-generator": "^3.1.1",
       "yosay": "^2.0.1"
    },
    "devDependencies": {
@@ -55,7 +55,7 @@
       "cheerio": "^1.0.0-rc.2",
       "fs-extra": "^5.0.0",
       "istanbul": "*",
-      "jshint": "^2.9.4",
+      "jshint": "^2.9.6",
       "mocha": "^5.0.5",
       "ms-rest-azure": "^2.5.7",
       "proxyquire": "^2.0.1",

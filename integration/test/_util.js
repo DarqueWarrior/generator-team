@@ -3,26 +3,51 @@ const env = require('node-env-file');
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
-env(__dirname + '/.env', {
+var fileName = process.env.SERVER_TO_TEST || ``
+env(__dirname + `/${fileName}.env`, {
    raise: false,
    overwrite: true
 });
 
 var logging = process.env.LOG || `off`;
 
+String.prototype.replaceAll = function (search, replacement) {
+   var target = this;
+   return target.split(search).join(replacement);
+};
+
 function isVSTS(instance) {
    return instance.toLowerCase().match(/http/) === null;
 }
 
+function protectMsg(msg) {
+   let secrets = [process.env.PAT,
+   process.env.DOCKER_REGISTRY_PASSWORD,
+   process.env.SERVICE_PRINCIPAL_KEY,
+   process.env.SERVICE_PRINCIPAL_ID,
+   process.env.AZURE_SUB,
+   process.env.DOCKER_CERT_PATH,
+   process.env.AZURE_SUB_ID,
+   process.env.AZURE_SECRET,
+   process.env.DOCKER_HOST,
+   process.env.AZURE_TENANT_ID];
+
+   secrets.forEach(function (secret) {
+      msg = msg.replaceAll(secret, '*****');
+   });
+
+   return msg;
+}
+
 var logMessage = function (msg) {
    if (logging === `on`) {
-      console.log(msg);
+      console.log(protectMsg(msg));
    }
 };
 
 var logJSON = function (msg) {
    if (logging === `on`) {
-      console.log(JSON.stringify(JSON.parse(msg), null, 2));
+      logMessage(JSON.stringify(JSON.parse(msg), null, 2));
    }
 };
 
@@ -30,11 +55,11 @@ var logReleaseResponse = function (msg) {
    if (logging === `on`) {
       let rel = JSON.parse(msg);
 
-      console.log(`status: ${rel.value[0].status}`);
+      logMessage(`status: ${rel.value[0].status}`);
 
       for (let i = 0, len = rel.value[0].environments.length; i < len; i++) {
          let e = rel.value[0].environments[i];
-         console.log(`${e.name}: ${e.status}`);
+         logMessage(`${e.name}: ${e.status}`);
       }
    }
 };
@@ -43,11 +68,11 @@ var logBuildResponse = function (msg) {
    if (logging === `on`) {
       let rel = JSON.parse(msg);
 
-      console.log(`status: ${rel.value[0].status}`);
-      console.log(`result: ${rel.value[0].result}`);
-      console.log(`queueTime: ${rel.value[0].queueTime}`);
-      console.log(`startTime: ${rel.value[0].startTime}`);
-      console.log(`finishTime: ${rel.value[0].finishTime}`);
+      logMessage(`status: ${rel.value[0].status}`);
+      logMessage(`result: ${rel.value[0].result}`);
+      logMessage(`queueTime: ${rel.value[0].queueTime}`);
+      logMessage(`startTime: ${rel.value[0].startTime}`);
+      logMessage(`finishTime: ${rel.value[0].finishTime}`);
    }
 };
 

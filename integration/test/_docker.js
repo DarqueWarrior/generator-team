@@ -16,7 +16,8 @@ var __basedir = process.cwd();
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
-env(__dirname + '/.env', {
+var fileName = process.env.SERVER_TO_TEST || ``
+env(__dirname +  `/${fileName}.env`, {
    raise: false,
    overwrite: true
 });
@@ -37,7 +38,7 @@ var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
 var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
 
 // The number of levels up from the folder the test are executed in to the 
-// folder where the repo was cloned.  This is not the same when run locally
+// folder where the repository was cloned.  This is not the same when run locally
 // vs. run on a build machine. 
 var levelsUp = process.env.LEVELS_UP || `/../`;
 
