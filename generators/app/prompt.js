@@ -200,6 +200,19 @@ function applicationName(obj) {
    };
 }
 
+function functionName(obj) {
+   return {
+      name: `functionName`,
+      type: `input`,
+      store: true,
+      message: `What is the name of your function?`,
+      validate: util.validateFunctionName,
+      when: () => {
+         return obj.options.functionName === undefined;
+      }
+   };
+}
+
 function target(obj) {
    return {
       name: `target`,
@@ -473,6 +486,7 @@ module.exports = {
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
    customFolder: customFolder,
+   functionName: functionName,
    creationMode: creationMode,
    azureSubInput: azureSubInput,
    dockerRegistry: dockerRegistry,

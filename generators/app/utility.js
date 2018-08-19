@@ -234,6 +234,10 @@ function validateApplicationName(input) {
    return validateRequired(input, `You must provide a name for your application`);
 }
 
+function validateFunctionName(input) {
+   return validateRequired(input, `You must provide a name for your function`);
+}
+
 function validatePersonalAccessToken(input) {
    return validateRequired(input, `You must provide a Personal Access Token`);
 }
@@ -1227,6 +1231,7 @@ module.exports = {
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
    isExtensionInstalled: isExtensionInstalled,
+   validateFunctionName: validateFunctionName,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
    validateCustomFolder: validateCustomFolder,
    getDefaultPortMapping: getDefaultPortMapping,

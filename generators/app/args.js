@@ -40,6 +40,13 @@ function applicationName(obj) {
    });
 }
 
+function functionName(obj) {
+   obj.argument(`functionName`, {
+      required: false,
+      desc: `Name of the function`
+   });
+}
+
 function customFolder(obj) {
    obj.argument(`customFolder`, {
       required: false,
@@ -190,6 +197,7 @@ module.exports = {
    dockerHost: dockerHost,
    dockerPorts: dockerPorts,
    customFolder: customFolder,
+   functionName: functionName,
    dockerCertPath: dockerCertPath,
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,
