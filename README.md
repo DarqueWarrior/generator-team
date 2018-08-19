@@ -1,5 +1,8 @@
 # generator-team (Yo Team)
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/DarqueWarrior/generator-team/blob/master/LICENSE)
+[![npm - generator-team](https://img.shields.io/badge/npm-generator--team-blue.svg)](https://www.npmjs.com/package/generator-team)
+
 ## Build status
 
 [![Build badge](https://loecda.visualstudio.com/_apis/public/build/definitions/4ead775f-7f7b-4f57-9c97-80f30a6d7fbf/10/badge)](https://loecda.visualstudio.com/Yo%20Team/_build/index?context=mine&path=%5C&definitionId=10&_a=completed) 
@@ -60,11 +63,13 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 
 ## Revision history
 
-## July 2018
+## August 2018
 
 ### 0.4.6
 
-Updated VSTS .net Core task to 2.*.
+Merge [Pull Request](https://github.com/DarqueWarrior/generator-team/pull/23) from [Joseph Van Wagner](https://github.com/joe45sp) which included the following:
+
+- Updated VSTS .net Core task to 2.*.
 
 Set skipindexing to true in .net builds.
 

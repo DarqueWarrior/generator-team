@@ -40,7 +40,7 @@
       "type": "git",
       "url": "https://github.com/DarqueWarrior/generator-team"
    },
-   "license": "ISC",
+   "license": "MIT",
    "dependencies": {
       "async": "^2.6.0",
       "node-env-file": "^0.1.8",
