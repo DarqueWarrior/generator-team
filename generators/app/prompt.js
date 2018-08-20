@@ -312,6 +312,19 @@ function servicePrincipalKey(obj) {
    };
 }
 
+function apiKey(obj) {
+   return {
+      type: `password`,
+      name: `apiKey`,
+      store: false,
+      message: `What is your NuGet apiKey?`,
+      validate: util.validateapiKey,
+      when: answers => {
+         return util.needsapiKey(answers, obj);
+      }
+   }
+}
+
 // Docker
 function dockerHost(obj) {
    return {
@@ -473,6 +486,7 @@ module.exports = {
    tfs: tfs,
    pat: pat,
    queue: queue,
+   apiKey: apiKey,
    target: target,
    groupId: groupId,
    tenantId: tenantId,

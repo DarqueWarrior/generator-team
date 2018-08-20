@@ -290,6 +290,10 @@ function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
 }
 
+function validateapiKey(input) {
+   return validateRequired(input, `You must provide a apiKey`);
+}
+
 function tokenize(input, nvp) {
    for (var key in nvp) {
       input = input.replaceAll(key, nvp[key]);
@@ -414,6 +418,62 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
 
    request(options, function (error, response, body) {
       callback(error, JSON.parse(body));
+   });
+}
+
+function tryFindNuGetServiceEndpoint(account, projectId, token, gen, callback) {
+   'use strict';
+
+   // Will NOT throw an error if the endpoint is not found.  This is used
+   // by code that will create the endpoint if it is not found.
+
+   findNuGetServiceEndpoint(account, projectId, token, gen, function (e, ep) {
+      if (e && e.code === `NotFound`) {
+         callback(null, undefined);
+      } else {
+         callback(e, ep);
+      }
+   });
+}
+
+function findNuGetServiceEndpoint(account, projectId, token, gen, callback) {
+   'use strict';
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      // Check the response statusCode first. If it is not a 200
+      // the body will be html and not JSON
+      if (response.statusCode >= 400) {
+         callback(`Error trying to find NuGet Service Endpoint: ${response.statusMessage}`);
+         return;
+      }
+
+      var obj = JSON.parse(body);
+
+      // The i.url is returned with a trailing / so just use starts with just in case
+      var endpoint = obj.value.find(function (i) {
+         return i.url.toLowerCase().startsWith('https://www.powershellgallery.com/api/v2/package');
+      });
+
+      if (endpoint === undefined) {
+         callback({
+            "message": `x Could not find NuGet Service Endpoint`,
+            "code": `NotFound`
+         }, undefined);
+      } else {
+         callback(error, endpoint);
+      }
    });
 }
 
@@ -1013,6 +1073,15 @@ function needsDockerHost(answers, options) {
    return (isDocker || paasRequiresHost);
 }
 
+function needsapiKey(answers, cmdLnInput) {
+   if (cmdLnInput !== undefined) {
+      return (answers.target === `powershell` ||
+         cmdLnInput.options.target === `powershell`);
+   } else {
+      return (answers.target === `powershell`);
+   }
+}
+
 function isPaaS(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
       return (answers.target === `paas` ||
@@ -1198,6 +1267,7 @@ module.exports = {
    logMessage: logMessage,
    getTargets: getTargets,
    getAppTypes: getAppTypes,
+   needsapiKey: needsapiKey,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,
@@ -1216,6 +1286,7 @@ module.exports = {
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
+   validateapiKey: validateapiKey,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
    needsDockerHost: needsDockerHost,
@@ -1246,6 +1317,7 @@ module.exports = {
    validateServicePrincipalKey: validateServicePrincipalKey,
    tryFindAzureServiceEndpoint: tryFindAzureServiceEndpoint,
    validatePersonalAccessToken: validatePersonalAccessToken,
+   tryFindNuGetServiceEndpoint: tryFindNuGetServiceEndpoint,
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,

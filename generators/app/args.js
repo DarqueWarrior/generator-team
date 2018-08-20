@@ -117,6 +117,13 @@ function groupId(obj) {
    });
 }
 
+function apiKey(obj) {
+   obj.argument(`apiKey`, {
+      required: false,
+      desc: `apiKey for your NuGet feed`
+   })
+}
+
 function dockerHost(obj) {
    obj.argument(`dockerHost`, {
       required: false,
@@ -184,6 +191,7 @@ module.exports = {
    tfs: tfs,
    pat: pat,
    queue: queue,
+   apiKey: apiKey,
    target: target,
    groupId: groupId,
    azureSub: azureSub,
