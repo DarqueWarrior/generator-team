@@ -221,7 +221,7 @@ function target(obj) {
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
       when: answers => {
-         return obj.options.target === undefined;
+         return obj.options.target === undefined && util.needsapiKey(answers, obj) === false;
       }
    };
 }
@@ -458,7 +458,7 @@ function installDep(obj) {
          }
       ],
       when: answers => {
-         return answers.type !== `aspFull` && obj.options.installDep === undefined;
+         return answers.type !== `aspFull` && answers.type !== `powershell` && obj.options.installDep === undefined;
       }
    };
 }

@@ -40,15 +40,15 @@ function run(args, gen, done) {
 function findOrCreatePackageFeed(account, projectId, token, gen, callback) {
    'use strict';
 
-   util.tryFindPackageFeed(account, projectId, token, gen, function (e, ep) {
+   util.tryFindPackageFeed(account, projectId, token, gen, function (e, feed) {
       if (e) {
          callback(e, null);
       } else {
-         if (!ep) {
+         if (!feed) {
             createPackageFeed(account, projectId, token, gen, callback);
          } else {
             gen.log('+ Found Package Feed');
-            callback(e, ep);
+            callback(e, feed);
          }
       }
    });

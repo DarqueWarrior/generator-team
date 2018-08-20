@@ -101,19 +101,46 @@ function addLanguage(obj) {
 function addGit(obj) {
    obj.composeWith(`team:git`, {
       arguments: [obj.applicationName, obj.tfs,
-         `all`,
+      `all`,
       obj.pat
+      ]
+   });
+}
+
+function addFeed(obj) {
+   obj.composeWith(`team:feed`, {
+      arguments: [obj.applicationName, obj.tfs,
+      obj.pat
+      ]
+   });
+}
+
+function addNuGet(obj) {
+   obj.composeWith(`team:nuget`, {
+      arguments: [obj.applicationName, obj.tfs,
+      obj.apiKey,
+      obj.pat
+      ]
+   });
+}
+
+function addPowerShell(obj) {
+   obj.composeWith(`team:powershell`, {
+      arguments: [obj.applicationName, obj.functionName
       ]
    });
 }
 
 module.exports = {
    addGit: addGit,
+   addFeed: addFeed,
+   addNuGet: addNuGet,
    addAzure: addAzure,
    addBuild: addBuild,
    addProject: addProject,
    addRelease: addRelease,
    addRegistry: addRegistry,
    addLanguage: addLanguage,
-   addDockerHost: addDockerHost
+   addDockerHost: addDockerHost,
+   addPowerShell: addPowerShell
 };

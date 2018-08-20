@@ -791,7 +791,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(3, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes macOS`, function () {
@@ -805,7 +805,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(3, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes default`, function () {
@@ -819,7 +819,7 @@ describe(`utility`, function () {
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(4, actual.length, `Wrong number of items returned`);
+      assert.equal(5, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {

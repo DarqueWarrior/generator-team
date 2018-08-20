@@ -151,6 +151,9 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
+   }, {
+      name: `PowerShell module`,
+      value: `powershell`
    }
       // , {
       //    name: `Custom`,
@@ -425,9 +428,8 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
 function tryFindPackageFeed(account, projectId, token, gen, callback) {
    'use strict';
 
-   // Will NOT throw an error if the endpoint is not found.  This is used
-   // by code that will create the endpoint if it is not found.
-
+   // Will NOT throw an error if the feed is not found.  This is used
+   // by code that will create the feed if it is not found.
    findFindPackageFeed(account, projectId, token, gen, function (e, ep) {
       if (e && e.code === `NotFound`) {
          callback(null, undefined);
@@ -463,7 +465,7 @@ function findFindPackageFeed(account, projectId, token, gen, callback) {
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
-         return i.name.toLowerCase().startsWith('ModuleFeed');
+         return i.name.toLowerCase().startsWith('modulefeed');
       });
 
       if (endpoint === undefined) {
@@ -1131,10 +1133,10 @@ function needsDockerHost(answers, options) {
 
 function needsapiKey(answers, cmdLnInput) {
    if (cmdLnInput !== undefined) {
-      return (answers.target === `powershell` ||
-         cmdLnInput.options.target === `powershell`);
+      return (answers.type === `powershell` ||
+         cmdLnInput.options.type === `powershell`);
    } else {
-      return (answers.target === `powershell`);
+      return (answers.type === `powershell`);
    }
 }
 
