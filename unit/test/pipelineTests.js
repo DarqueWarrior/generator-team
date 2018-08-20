@@ -22,6 +22,7 @@ describe(`team:pipeline`, function () {
          util.findQueue.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
+         util.findAllQueues.restore();
          util.tryFindRelease.restore();
          util.isTFSGreaterThan2017.restore();
          util.findAzureServiceEndpoint.restore();
@@ -117,6 +118,14 @@ describe(`team:pipeline`, function () {
                assert.equal(expectedToken, token, `findQueue - token is wrong`);
 
                callback(null, 1);
+            });
+
+            sinon.stub(util, `findAllQueues`).callsFake(function (account, teamProject, token, callback) {
+               assert.equal(expectedAccount, account, `findAllQueues - Account is wrong`);
+               assert.equal(1, teamProject.id, `findAllQueues - team project is wrong`);
+               assert.equal(expectedToken, token, `findAllQueues - token is wrong`);
+
+               callback(null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             });
 
             sinon.stub(util, `findBuild`).callsFake(function (account, teamProject, token, target, callback) {

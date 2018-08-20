@@ -14,7 +14,7 @@ describe(`build:index`, function () {
    it(`test prompts tfs 2017 custom:paas should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -41,17 +41,12 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
-            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
-               value: "I`m a build."
-            });
+            sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, { value: "I`m a build." });
             sinon.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
-            sinon.stub(util, `findProject`).callsArgWith(4, null, {
-               value: "TeamProject",
-               id: 1
-            });
+            sinon.stub(util, `findProject`).callsArgWith(4, null, { value: "TeamProject", id: 1 });
          })
          .on(`end`, function () {
             // Using the yeoman helpers and sinonTest did not play nice
@@ -63,7 +58,7 @@ describe(`build:index`, function () {
    it(`test prompts tfs 2017 asp:paas should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -89,7 +84,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -111,7 +106,7 @@ describe(`build:index`, function () {
    it(`test prompts tfs 2017 aspFull:paas should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -137,7 +132,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -159,7 +154,7 @@ describe(`build:index`, function () {
    it(`test prompts java:paas should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -185,7 +180,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -207,7 +202,7 @@ describe(`build:index`, function () {
    it(`test prompts node:paas should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -233,7 +228,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -255,7 +250,7 @@ describe(`build:index`, function () {
    it(`test prompts node:docker should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -281,7 +276,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -303,7 +298,7 @@ describe(`build:index`, function () {
    it(`test prompts asp:docker should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -329,7 +324,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -351,7 +346,7 @@ describe(`build:index`, function () {
    it(`test prompts java:docker should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -379,7 +374,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -400,7 +395,7 @@ describe(`build:index`, function () {
 
    it(`test cmd line node:docker should not return error`, function () {
       let cleanUp = function () {
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -420,7 +415,7 @@ describe(`build:index`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -441,7 +436,7 @@ describe(`build:index`, function () {
 
    it(`test cmd line java:docker should not return error`, function () {
       let cleanUp = function () {
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
          util.isTFSGreaterThan2017.restore();
@@ -461,7 +456,7 @@ describe(`build:index`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -483,7 +478,7 @@ describe(`build:index`, function () {
    it(`test cmd line asp:docker should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -506,7 +501,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -528,7 +523,7 @@ describe(`build:index`, function () {
    it(`test cmd line asp:docker should not return error`, function () {
       let cleanUp = function () {
          util.getPools.restore();
-         util.findQueue.restore();
+         util.findAllQueues.restore();
          util.getTargets.restore();
          util.findProject.restore();
          util.tryFindBuild.restore();
@@ -551,7 +546,7 @@ describe(`build:index`, function () {
             // This is called right before `generator.run()` is called
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `findQueue`).callsArgWith(4, null, 1);
+            sinon.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
             sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             sinon.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
             sinon.stub(util, `tryFindBuild`).callsArgWith(4, null, {
@@ -961,7 +956,7 @@ describe(`build:app`, function () {
       // Arrange
       // callsArgWith uses the first argument as the index of the callback function
       // to call and calls it with the rest of the arguments provided.
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
+      this.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, {
          value: "I`m a build."
@@ -993,7 +988,7 @@ describe(`build:app`, function () {
 
    it(`run with error should return error`, sinonTest(function (done) {
       // Arrange
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
+      this.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
       this.stub(util, `tryFindBuild`).callsArgWith(4, new Error("boom"), null);
       this.stub(util, `findDockerRegistryServiceEndpoint`).callsArgWith(4, null, null);
@@ -1038,7 +1033,7 @@ describe(`build:app`, function () {
          "request": requestStub
       });
 
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
+      this.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{BuildDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -1081,7 +1076,7 @@ describe(`build:app`, function () {
          "request": requestStub
       });
 
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
+      this.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{BuildDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);
@@ -1133,7 +1128,7 @@ describe(`build:app`, function () {
          "request": requestStub
       });
 
-      this.stub(util, `findQueue`).callsArgWith(4, null, 1);
+      this.stub(util, `findAllQueues`).callsArgWith(3, null, [{ name: 'Default', id: 1 }, { name: 'Hosted', id: 2 }]);
       this.stub(util, `tryFindBuild`).callsArgWith(4, null, undefined);
       this.stub(fs, `readFileSync`).returns(`{"name": "{{BuildDefName}}"}`);
       this.stub(util, `findDockerServiceEndpoint`).callsArgWith(5, null, null);

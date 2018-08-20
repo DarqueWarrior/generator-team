@@ -1,3 +1,6 @@
+[CmdletBinding()]
+param()
+
 Write-Output 'Clearing old files'
 
 if ((Test-Path ..\docs) -eq $false) {
@@ -21,11 +24,20 @@ foreach ($file in $files) {
 Set-Content -Path files.md -Value $sb.ToString()
 
 Write-Output 'Merging Markdown files'
-Install-Module Trackyon.Markdown -Scope CurrentUser -Force
+if(-not (Get-Module Trackyon.Markdown -ListAvailable)) {
+   Write-Verbose 'Installing Trackyon.Markdown'
+   Install-Module Trackyon.Markdown -Scope CurrentUser -Force
+}
+
 merge-markdown $PSScriptRoot $PSScriptRoot\..\docs
 
 Write-Output 'Creating new file'
-Install-Module platyPS -Scope CurrentUser -Force
+
+if(-not (Get-Module platyPS -ListAvailable)) {
+   Write-Verbose 'Installing platyPS'
+   Install-Module platyPS -Scope CurrentUser -Force
+}
+
 New-ExternalHelp ..\docs -OutputPath ..\en-US -Force
 
 # Run again and strip header

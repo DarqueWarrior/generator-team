@@ -13,6 +13,7 @@ const package = require('../../package.json');
 // supported in TFS 2017 U3, 2018 U1 and VSTS.
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
+const VSTS_BUILD_API_VERSION = `4.0`;
 const RELEASE_API_VERSION = `3.0-preview`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
@@ -795,6 +796,41 @@ function findQueue(name, account, teamProject, token, callback) {
    });
 }
 
+function findAllQueues(account, teamProject, token, callback) {
+   'use strict';
+
+   logMessage(`findQueue params: ${teamProject.id}`);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${teamProject.id}/_apis/distributedtask/queues`,
+      "qs": {
+         "api-version": DISTRIBUTED_TASK_API_VERSION
+      }
+   });
+
+   request(options, function (err, res, body) {
+      var obj = JSON.parse(body);
+
+      if (res.statusCode >= 400) {
+         callback(new Error(res.statusMessage), null);
+      } else if (res.statusCode >= 300) {
+         // When it is a 300 the obj is a error
+         // object from the server
+         callback(obj);
+      } else {
+         // Setting to null is the all clear signal to the async
+         // series to continue
+         logMessage(`findQueue: ${res.statusCode}, ${obj}`);
+         callback(null, obj.value);
+      }
+   });
+}
+
 function tryFindBuild(account, teamProject, token, target, callback) {
    'use strict';
 
@@ -1308,6 +1344,7 @@ module.exports = {
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,
    EXTENSIONS_SUB_DOMAIN: EXTENSIONS_SUB_DOMAIN,
+   VSTS_BUILD_API_VERSION: VSTS_BUILD_API_VERSION,
    PACKAGE_FEEDS_API_VERSION: PACKAGE_FEEDS_API_VERSION,
    DISTRIBUTED_TASK_API_VERSION: DISTRIBUTED_TASK_API_VERSION,
    SERVICE_ENDPOINTS_API_VERSION: SERVICE_ENDPOINTS_API_VERSION,
@@ -1340,6 +1377,7 @@ module.exports = {
    addUserAgent: addUserAgent,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
+   findAllQueues: findAllQueues,
    getTFSVersion: getTFSVersion,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
