@@ -7,7 +7,7 @@ function run(args, gen, done) {
    'use strict';
 
    var teamProject = {};
-   var nuGetEndpoint = {};
+   var packageFeed = {};
    var token = util.encodePat(args.pat);
 
    async.series([
@@ -18,9 +18,9 @@ function run(args, gen, done) {
          });
       },
       function (mainSeries) {
-         findOrCreateNuGetServiceEndpoint(args.tfs, teamProject.id, args.apiKey, token, gen, function (err, ep) {
-            nuGetEndpoint = ep;
-            mainSeries(err, nuGetEndpoint);
+         findOrCreatePackageFeed(args.tfs, teamProject.id, token, gen, function (err, feed) {
+            packageFeed = feed;
+            mainSeries(err, packageFeed);
          });
       }],
       function (err, results) {
@@ -37,46 +37,38 @@ function run(args, gen, done) {
       });
 }
 
-function findOrCreateNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback) {
+function findOrCreatePackageFeed(account, projectId, token, gen, callback) {
    'use strict';
 
-   util.tryFindNuGetServiceEndpoint(account, projectId, token, gen, function (e, ep) {
+   util.tryFindPackageFeed(account, projectId, token, gen, function (e, ep) {
       if (e) {
          callback(e, null);
       } else {
          if (!ep) {
-            createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback);
+            createPackageFeed(account, projectId, token, gen, callback);
          } else {
-            gen.log('+ Found NuGet Service Endpoint');
+            gen.log('+ Found Package Feed');
             callback(e, ep);
          }
       }
    });
 }
 
-function createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback) {
+function createPackageFeed(account, projectId, token, gen, callback) {
    'use strict';
 
-   gen.log('+ Creating NuGet Service Endpoint');
+   gen.log('+ Creating Package Feed');
 
    var options = util.addUserAgent({
       method: 'POST',
       headers: { 'cache-control': 'no-cache', 'content-type': 'application/json', 'authorization': `Basic ${token}` },
       json: true,
-      url: `${util.getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
-      qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
+      url: `${util.getFullURL(account, false, 'feeds')}/_apis/packaging/feeds`,
+      qs: { 'api-version': util.PACKAGE_FEEDS_API_VERSION },
       body: {
-         authorization:
-         {
-            parameters: {
-               nugetkey: apiKey
-            },
-            scheme: 'None'
-         },
-         data: {},
-         name: 'PowerShell Gallery',
-         type: 'externalnugetfeed',
-         url: 'https://www.powershellgallery.com/api/v2/package'
+         name: 'ModuleFeed',
+         description: 'Feed created by Yo Team for module testing',
+         hideDeletedPackageVersions: true
       }
    });
 
@@ -98,5 +90,5 @@ module.exports = {
    // it.
 
    run: run,
-   findOrCreateNuGetServiceEndpoint: findOrCreateNuGetServiceEndpoint
+   findOrCreatePackageFeed: findOrCreatePackageFeed
 };

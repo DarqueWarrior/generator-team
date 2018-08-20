@@ -16,6 +16,7 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
+const PACKAGE_FEEDS_API_VERSION = `4.0-preview`;
 
 // This location is the same as the VSTeam PowerShell module. Therefore,
 // the profiles can be shared between Yo Team and the VSTeam PowerShell
@@ -418,6 +419,61 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
 
    request(options, function (error, response, body) {
       callback(error, JSON.parse(body));
+   });
+}
+
+function tryFindPackageFeed(account, projectId, token, gen, callback) {
+   'use strict';
+
+   // Will NOT throw an error if the endpoint is not found.  This is used
+   // by code that will create the endpoint if it is not found.
+
+   findFindPackageFeed(account, projectId, token, gen, function (e, ep) {
+      if (e && e.code === `NotFound`) {
+         callback(null, undefined);
+      } else {
+         callback(e, ep);
+      }
+   });
+}
+
+function findFindPackageFeed(account, projectId, token, gen, callback) {
+   'use strict';
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds`,
+      "qs": {
+         "api-version": PACKAGE_FEEDS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      // Check the response statusCode first. If it is not a 200
+      // the body will be html and not JSON
+      if (response.statusCode >= 400) {
+         callback(`Error trying to find package feed: ${response.statusMessage}`);
+         return;
+      }
+
+      var obj = JSON.parse(body);
+
+      var endpoint = obj.value.find(function (i) {
+         return i.name.toLowerCase().startsWith('ModuleFeed');
+      });
+
+      if (endpoint === undefined) {
+         callback({
+            "message": `x Could not find package feed`,
+            "code": `NotFound`
+         }, undefined);
+      } else {
+         callback(error, endpoint);
+      }
    });
 }
 
@@ -1250,6 +1306,7 @@ module.exports = {
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,
    EXTENSIONS_SUB_DOMAIN: EXTENSIONS_SUB_DOMAIN,
+   PACKAGE_FEEDS_API_VERSION: PACKAGE_FEEDS_API_VERSION,
    DISTRIBUTED_TASK_API_VERSION: DISTRIBUTED_TASK_API_VERSION,
    SERVICE_ENDPOINTS_API_VERSION: SERVICE_ENDPOINTS_API_VERSION,
    RELEASE_MANAGEMENT_SUB_DOMAIN: RELEASE_MANAGEMENT_SUB_DOMAIN,
@@ -1298,6 +1355,7 @@ module.exports = {
    readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
+   tryFindPackageFeed: tryFindPackageFeed,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,

@@ -24,7 +24,8 @@
       "generators/registry",
       "generators/release",
       "generators/powershell",
-      "generators/nuget"
+      "generators/nuget",
+      "generators/feed"
    ],
    "keywords": [
       "yeoman-generator",
