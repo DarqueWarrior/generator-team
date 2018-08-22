@@ -13,6 +13,8 @@ const package = require('../../package.json');
 // supported in TFS 2017 U3, 2018 U1 and VSTS.
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
+
+// To support PowerShell multi-phased builds we had to use the newer API.
 const VSTS_BUILD_API_VERSION = `4.0`;
 const RELEASE_API_VERSION = `3.0-preview`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
@@ -763,8 +765,6 @@ function findProject(account, project, token, gen, callback) {
 function findQueue(name, account, teamProject, token, callback) {
    'use strict';
 
-   logMessage(`findQueue params: ${name}, ${teamProject.id}`);
-
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -790,7 +790,6 @@ function findQueue(name, account, teamProject, token, callback) {
       } else {
          // Setting to null is the all clear signal to the async
          // series to continue
-         logMessage(`findQueue: ${res.statusCode}, ${obj}`);
          callback(null, obj.value[0].id);
       }
    });
@@ -798,8 +797,6 @@ function findQueue(name, account, teamProject, token, callback) {
 
 function findAllQueues(account, teamProject, token, callback) {
    'use strict';
-
-   logMessage(`findQueue params: ${teamProject.id}`);
 
    var options = addUserAgent({
       "method": `GET`,
@@ -825,7 +822,6 @@ function findAllQueues(account, teamProject, token, callback) {
       } else {
          // Setting to null is the all clear signal to the async
          // series to continue
-         logMessage(`findQueue: ${res.statusCode}, ${obj}`);
          callback(null, obj.value);
       }
    });
@@ -1167,10 +1163,10 @@ function needsDockerHost(answers, options) {
    return (isDocker || paasRequiresHost);
 }
 
-function needsapiKey(answers, cmdLnInput) {
-   if (cmdLnInput !== undefined) {
+function needsapiKey(answers, options) {
+   if (options !== undefined) {
       return (answers.type === `powershell` ||
-         cmdLnInput.options.type === `powershell`);
+         options.type === `powershell`);
    } else {
       return (answers.type === `powershell`);
    }
@@ -1396,6 +1392,7 @@ module.exports = {
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    tryFindPackageFeed: tryFindPackageFeed,
+   findFindPackageFeed: findFindPackageFeed,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
@@ -1407,6 +1404,7 @@ module.exports = {
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
    validateApplicationName: validateApplicationName,
+   findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
    getDockerRegistryServer: getDockerRegistryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,

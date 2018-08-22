@@ -221,7 +221,7 @@ function target(obj) {
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
       when: answers => {
-         return obj.options.target === undefined && util.needsapiKey(answers, obj) === false;
+         return obj.options.target === undefined && util.needsapiKey(answers, obj.options) === false;
       }
    };
 }
@@ -320,7 +320,7 @@ function apiKey(obj) {
       message: `What is your NuGet apiKey?`,
       validate: util.validateapiKey,
       when: answers => {
-         return util.needsapiKey(answers, obj);
+         return util.needsapiKey(answers, obj.options);
       }
    }
 }

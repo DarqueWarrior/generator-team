@@ -1,0 +1,615 @@
+{
+   "name": "{{ReleaseDefName}}",
+   "source": 2,
+   "variables": {
+      "EMAIL": {
+         "value": "dlbm3@hotmail.com"
+      },
+      "NuGetApiKey": {
+         "value": null,
+         "isSecret": true
+      },
+      "PKG_PAT": {
+         "value": null,
+         "isSecret": true
+      },
+      "REPO_URL": {
+         "value": "https://loecda.pkgs.visualstudio.com/_packaging/markdownmerge/nuget/v2"
+      }
+   },
+   "environments": [
+      {
+         "name": "Package Management",
+         "rank": 1,
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [
+            {
+               "deploymentInput": {
+                  "parallelExecution": {
+                     "parallelExecutionType": "none"
+                  },
+                  "skipArtifactsDownload": false,
+                  "artifactsDownloadInput": {
+                     "downloadInputs": []
+                  },
+                  "queueId": "{{QueueId}}",
+                  "demands": [],
+                  "enableAccessToken": false,
+                  "timeoutInMinutes": 0,
+                  "jobCancelTimeoutInMinutes": 1,
+                  "condition": "succeeded()",
+                  "overrideInputs": {}
+               },
+               "rank": 1,
+               "phaseType": 1,
+               "name": "Agent phase",
+               "workflowTasks": [
+                  {
+                     "environment": {},
+                     "taskId": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+                     "version": "0.*",
+                     "name": "Use NuGet 4.7.0",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "versionSpec": "4.7.0",
+                        "checkLatest": "false"
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "version": "2.*",
+                     "name": "Install Dependencies",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "targetType": "inline",
+                        "filePath": "",
+                        "arguments": "",
+                        "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                        "errorActionPreference": "stop",
+                        "failOnStderr": "false",
+                        "ignoreLASTEXITCODE": "false",
+                        "workingDirectory": ""
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "version": "2.*",
+                     "name": "Create NuSpec from PSD1",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "targetType": "inline",
+                        "filePath": "",
+                        "arguments": "",
+                        "script": "Install-Module -Name Trackyon.Nuget -Scope CurrentUser -Force -Verbose\nConvertTo-NuSpec -Path ./{{WebAppName}}.psd1",
+                        "errorActionPreference": "stop",
+                        "failOnStderr": "false",
+                        "ignoreLASTEXITCODE": "false",
+                        "workingDirectory": "$(System.DefaultWorkingDirectory)/{{BuildName}}/Module"
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+                     "version": "2.*",
+                     "name": "Pack Module",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "command": "pack",
+                        "solution": "**/*.sln",
+                        "selectOrConfig": "select",
+                        "feedRestore": "",
+                        "includeNuGetOrg": "true",
+                        "nugetConfigPath": "",
+                        "externalEndpoints": "",
+                        "noCache": "false",
+                        "disableParallelProcessing": "false",
+                        "packagesDirectory": "",
+                        "verbosityRestore": "Detailed",
+                        "searchPatternPush": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
+                        "nuGetFeedType": "internal",
+                        "feedPublish": "",
+                        "allowPackageConflicts": "false",
+                        "externalEndpoint": "",
+                        "verbosityPush": "Detailed",
+                        "searchPatternPack": "$(System.DefaultWorkingDirectory)/**/*.nuspec",
+                        "configurationToPack": "$(BuildConfiguration)",
+                        "outputDir": "$(System.DefaultWorkingDirectory)/{{BuildName}}/Module",
+                        "versioningScheme": "byEnvVar",
+                        "includeReferencedProjects": "false",
+                        "versionEnvVar": "BUILD_BUILDNUMBER",
+                        "requestedMajorVersion": "1",
+                        "requestedMinorVersion": "0",
+                        "requestedPatchVersion": "0",
+                        "packTimezone": "utc",
+                        "includeSymbols": "false",
+                        "toolPackage": "false",
+                        "buildProperties": "",
+                        "basePath": "",
+                        "verbosityPack": "Detailed",
+                        "arguments": ""
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+                     "version": "2.*",
+                     "name": "NuGet push",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "command": "push",
+                        "solution": "**/*.sln",
+                        "selectOrConfig": "select",
+                        "feedRestore": "",
+                        "includeNuGetOrg": "true",
+                        "nugetConfigPath": "",
+                        "externalEndpoints": "",
+                        "noCache": "false",
+                        "disableParallelProcessing": "false",
+                        "packagesDirectory": "",
+                        "verbosityRestore": "Detailed",
+                        "searchPatternPush": "$(System.DefaultWorkingDirectory)/**/*.nupkg",
+                        "nuGetFeedType": "internal",
+                        "feedPublish": "{{PackageManagementFeedID}}",
+                        "allowPackageConflicts": "true",
+                        "externalEndpoint": "",
+                        "verbosityPush": "Detailed",
+                        "searchPatternPack": "**/*.csproj",
+                        "configurationToPack": "$(BuildConfiguration)",
+                        "outputDir": "$(Build.ArtifactStagingDirectory)",
+                        "versioningScheme": "off",
+                        "includeReferencedProjects": "false",
+                        "versionEnvVar": "",
+                        "requestedMajorVersion": "1",
+                        "requestedMinorVersion": "0",
+                        "requestedPatchVersion": "0",
+                        "packTimezone": "utc",
+                        "includeSymbols": "false",
+                        "toolPackage": "false",
+                        "buildProperties": "",
+                        "basePath": "",
+                        "verbosityPack": "Detailed",
+                        "arguments": ""
+                     }
+                  }
+               ]
+            }
+         ],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": true,
+            "badgeEnabled": true,
+            "autoLinkWorkItems": false,
+            "pullRequestDeploymentEnabled": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "ReleaseStarted",
+               "conditionType": 1,
+               "value": ""
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 1,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "currentRelease": {
+            "id": 14,
+            "url": "https://loecda.vsrm.visualstudio.com/35d956a5-10d6-4273-85a1-d672ce2bf980/_apis/Release/releases/14",
+            "_links": {}
+         },
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         },
+         "processParameters": {},
+         "properties": {},
+         "preDeploymentGates": {
+            "id": 0,
+            "gatesOptions": null,
+            "gates": []
+         },
+         "postDeploymentGates": {
+            "id": 0,
+            "gatesOptions": null,
+            "gates": []
+         },
+         "environmentTriggers": [],
+         "badgeUrl": "https://loecda.vsrm.visualstudio.com/_apis/public/Release/badge/35d956a5-10d6-4273-85a1-d672ce2bf980/1/2"
+      },
+      {
+         "name": "PowerShell Gallery",
+         "rank": 2,
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": false,
+                  "isNotificationOn": false,
+                  "approver": {
+                     "displayName": "Donovan Brown",
+                     "url": "https://app.vssps.visualstudio.com/Ae6998e28-6f20-4eb4-b906-279b750d56a3/_apis/Identities/1f31d0c9-e53a-47d2-a225-c77a06875c39",
+                     "_links": {
+                        "avatar": {
+                           "href": "https://loecda.visualstudio.com/_apis/GraphProfile/MemberAvatars/aad.OWQwYjFiNDAtZjlhNS03N2U3LWI4MzktYzM4MWEwZjJlZWUx"
+                        }
+                     },
+                     "id": "1f31d0c9-e53a-47d2-a225-c77a06875c39",
+                     "uniqueName": "dbrown@microsoft.com",
+                     "imageUrl": "https://loecda.visualstudio.com/_api/_common/identityImage?id=1f31d0c9-e53a-47d2-a225-c77a06875c39",
+                     "descriptor": "aad.OWQwYjFiNDAtZjlhNS03N2U3LWI4MzktYzM4MWEwZjJlZWUx"
+                  },
+                  "id": 7
+               }
+            ],
+            "approvalOptions": {
+               "requiredApproverCount": null,
+               "releaseCreatorCanBeApprover": true,
+               "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+               "enforceIdentityRevalidation": false,
+               "timeoutInMinutes": 0,
+               "executionOrder": 1
+            }
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false,
+                  "id": 3
+               }
+            ],
+            "approvalOptions": {
+               "requiredApproverCount": null,
+               "releaseCreatorCanBeApprover": true,
+               "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": false,
+               "enforceIdentityRevalidation": false,
+               "timeoutInMinutes": 0,
+               "executionOrder": 2
+            }
+         },
+         "deployPhases": [
+            {
+               "deploymentInput": {
+                  "parallelExecution": {
+                     "parallelExecutionType": "none"
+                  },
+                  "skipArtifactsDownload": false,
+                  "artifactsDownloadInput": {
+                     "downloadInputs": []
+                  },
+                  "queueId": "{{QueueId}}",
+                  "demands": [],
+                  "enableAccessToken": false,
+                  "timeoutInMinutes": 0,
+                  "jobCancelTimeoutInMinutes": 1,
+                  "condition": "succeeded()",
+                  "overrideInputs": {}
+               },
+               "rank": 1,
+               "phaseType": 1,
+               "name": "Agent phase",
+               "workflowTasks": [
+                  {
+                     "environment": {},
+                     "taskId": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
+                     "version": "0.*",
+                     "name": "Use NuGet 4.7.0",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "versionSpec": "4.7.0",
+                        "checkLatest": "false"
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "version": "2.*",
+                     "name": "Install Dependencies",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "targetType": "inline",
+                        "filePath": "",
+                        "arguments": "",
+                        "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                        "errorActionPreference": "stop",
+                        "failOnStderr": "true",
+                        "ignoreLASTEXITCODE": "false",
+                        "workingDirectory": ""
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "version": "2.*",
+                     "name": "Create NuSpec from PSD1",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "targetType": "inline",
+                        "filePath": "",
+                        "arguments": "",
+                        "script": "Install-Module -Name Trackyon.Nuget -Scope CurrentUser -Force -Verbose\nConvertTo-NuSpec -Path ./{{WebAppName}}.psd1",
+                        "errorActionPreference": "stop",
+                        "failOnStderr": "true",
+                        "ignoreLASTEXITCODE": "false",
+                        "workingDirectory": "$(System.DefaultWorkingDirectory)/{{BuildName}}/Module/"
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+                     "version": "2.*",
+                     "name": "NuGet pack",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "command": "pack",
+                        "solution": "**/*.sln",
+                        "selectOrConfig": "select",
+                        "feedRestore": "",
+                        "includeNuGetOrg": "true",
+                        "nugetConfigPath": "",
+                        "externalEndpoints": "",
+                        "noCache": "false",
+                        "disableParallelProcessing": "false",
+                        "packagesDirectory": "",
+                        "verbosityRestore": "Detailed",
+                        "searchPatternPush": "$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg",
+                        "nuGetFeedType": "internal",
+                        "feedPublish": "",
+                        "allowPackageConflicts": "false",
+                        "externalEndpoint": "",
+                        "verbosityPush": "Detailed",
+                        "searchPatternPack": "$(System.DefaultWorkingDirectory)/**/*.nuspec",
+                        "configurationToPack": "$(BuildConfiguration)",
+                        "outputDir": "$(System.DefaultWorkingDirectory)/{{BuildName}}/Module/",
+                        "versioningScheme": "off",
+                        "includeReferencedProjects": "false",
+                        "versionEnvVar": "",
+                        "requestedMajorVersion": "1",
+                        "requestedMinorVersion": "0",
+                        "requestedPatchVersion": "0",
+                        "packTimezone": "utc",
+                        "includeSymbols": "false",
+                        "toolPackage": "false",
+                        "buildProperties": "",
+                        "basePath": "",
+                        "verbosityPack": "Detailed",
+                        "arguments": ""
+                     }
+                  },
+                  {
+                     "environment": {},
+                     "taskId": "333b11bd-d341-40d9-afcf-b32d5ce6f23b",
+                     "version": "2.*",
+                     "name": "NuGet push",
+                     "refName": "",
+                     "enabled": true,
+                     "alwaysRun": false,
+                     "continueOnError": false,
+                     "timeoutInMinutes": 0,
+                     "definitionType": "task",
+                     "overrideInputs": {},
+                     "condition": "succeeded()",
+                     "inputs": {
+                        "command": "push",
+                        "solution": "**/*.sln",
+                        "selectOrConfig": "select",
+                        "feedRestore": "",
+                        "includeNuGetOrg": "true",
+                        "nugetConfigPath": "",
+                        "externalEndpoints": "",
+                        "noCache": "false",
+                        "disableParallelProcessing": "false",
+                        "packagesDirectory": "",
+                        "verbosityRestore": "Detailed",
+                        "searchPatternPush": "$(System.DefaultWorkingDirectory)/**/*.nupkg",
+                        "nuGetFeedType": "external",
+                        "feedPublish": "",
+                        "allowPackageConflicts": "false",
+                        "externalEndpoint": "{{PowerShellGallery}}",
+                        "verbosityPush": "Detailed",
+                        "searchPatternPack": "**/*.csproj",
+                        "configurationToPack": "$(BuildConfiguration)",
+                        "outputDir": "$(Build.ArtifactStagingDirectory)",
+                        "versioningScheme": "off",
+                        "includeReferencedProjects": "false",
+                        "versionEnvVar": "",
+                        "requestedMajorVersion": "1",
+                        "requestedMinorVersion": "0",
+                        "requestedPatchVersion": "0",
+                        "packTimezone": "utc",
+                        "includeSymbols": "false",
+                        "toolPackage": "false",
+                        "buildProperties": "",
+                        "basePath": "",
+                        "verbosityPack": "Detailed",
+                        "arguments": ""
+                     }
+                  }
+               ]
+            }
+         ],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": true,
+            "badgeEnabled": true,
+            "autoLinkWorkItems": false,
+            "pullRequestDeploymentEnabled": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "Package Management",
+               "conditionType": 2,
+               "value": "4"
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 1,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "currentRelease": {
+            "id": 14,
+            "url": "https://loecda.vsrm.visualstudio.com/35d956a5-10d6-4273-85a1-d672ce2bf980/_apis/Release/releases/14",
+            "_links": {}
+         },
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         },
+         "processParameters": {},
+         "properties": {},
+         "preDeploymentGates": {
+            "id": 0,
+            "gatesOptions": null,
+            "gates": []
+         },
+         "postDeploymentGates": {
+            "id": 0,
+            "gatesOptions": null,
+            "gates": []
+         },
+         "environmentTriggers": [],
+         "badgeUrl": "https://loecda.vsrm.visualstudio.com/_apis/public/Release/badge/35d956a5-10d6-4273-85a1-d672ce2bf980/1/1"
+      }
+   ],
+   "artifacts": [
+      {
+         "sourceId": "{{ProjectId}}:{{BuildId}}",
+         "type": "Build",
+         "alias": "{{BuildName}}",
+         "definitionReference": {
+            "defaultVersionBranch": {
+               "id": "",
+               "name": ""
+            },
+            "defaultVersionSpecific": {
+               "id": "",
+               "name": ""
+            },
+            "defaultVersionTags": {
+               "id": "",
+               "name": ""
+            },
+            "defaultVersionType": {
+               "id": "latestType",
+               "name": "Latest"
+            },
+            "definition": {
+               "id": "{{BuildId}}",
+               "name": "{{BuildName}}"
+            },
+            "project": {
+               "id": "{{ProjectId}}",
+               "name": "{{ProjectName}}"
+            }
+         },
+         "isPrimary": true,
+         "isRetained": false
+      }
+   ],
+   "triggers": [
+      {
+         "artifactAlias": "{{BuildName}}",
+         "triggerConditions": [],
+         "triggerType": 1
+      }
+   ]
+}

@@ -1062,6 +1062,22 @@ describe(`release:app`, function () {
       });
    });
 
+   it(`getRelease powershell vsts`, function (done) {
+      // Arrange 
+      let expected = `vsts_release_powershell.json`;
+
+      // Act
+      release.getRelease({
+         type: `powershell`,
+         target: ``,
+         tfs: `vsts`
+      }, function (e, actual) {
+         // Assert
+         assert.equal(expected, actual);
+         done(e);
+      });
+   });
+
    it(`getRelease node tfs 2017 acilinux`, sinonTest(function (done) {
       // Arrange 
       let expected = `tfs_release_acilinux.json`;
