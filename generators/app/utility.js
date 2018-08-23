@@ -428,12 +428,12 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
    });
 }
 
-function tryFindPackageFeed(account, projectId, token, gen, callback) {
+function tryFindPackageFeed(account, projectName, token, gen, callback) {
    'use strict';
 
    // Will NOT throw an error if the feed is not found.  This is used
    // by code that will create the feed if it is not found.
-   findFindPackageFeed(account, projectId, token, gen, function (e, ep) {
+   findFindPackageFeed(account, projectName, token, gen, function (e, ep) {
       if (e && e.code === `NotFound`) {
          callback(null, undefined);
       } else {
@@ -442,7 +442,7 @@ function tryFindPackageFeed(account, projectId, token, gen, callback) {
    });
 }
 
-function findFindPackageFeed(account, projectId, token, gen, callback) {
+function findFindPackageFeed(account, projectName, token, gen, callback) {
    'use strict';
 
    var options = addUserAgent({
@@ -468,7 +468,7 @@ function findFindPackageFeed(account, projectId, token, gen, callback) {
       var obj = JSON.parse(body);
 
       var endpoint = obj.value.find(function (i) {
-         return i.name.toLowerCase().startsWith('modulefeed');
+         return i.name === projectName;
       });
 
       if (endpoint === undefined) {
@@ -1005,6 +1005,14 @@ function getPools(answers) {
       request(options, function (e, response, body) {
          if (e) {
             reject(e);
+            return;
+         }
+
+         if (response.statusCode === 401) {
+            reject({
+               "message": `x Check your personal access token: ${response.statusMessage}`,
+               "code": `Unauthorized`
+            });
             return;
          }
 

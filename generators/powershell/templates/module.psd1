@@ -31,7 +31,7 @@ CompanyName = 'Unknown'
 Copyright = '(c) 2018. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description = 'This module is a collection of functions to make using PowerShell more pleasant.'
 
 # Minimum version of the Windows PowerShell engine required by this module
 # PowerShellVersion = ''

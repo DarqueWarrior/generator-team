@@ -90,6 +90,12 @@ function addLanguage(obj) {
          });
          break;
 
+      case `powershell`:
+         obj.composeWith(generator, {
+            arguments: [obj.applicationName, obj.functionName]
+         });
+         break;
+
       default:
          obj.composeWith(generator, {
             arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
@@ -101,7 +107,7 @@ function addLanguage(obj) {
 function addGit(obj) {
    obj.composeWith(`team:git`, {
       arguments: [obj.applicationName, obj.tfs,
-      `all`,
+         `all`,
       obj.pat
       ]
    });
@@ -124,13 +130,6 @@ function addNuGet(obj) {
    });
 }
 
-function addPowerShell(obj) {
-   obj.composeWith(`team:powershell`, {
-      arguments: [obj.applicationName, obj.functionName
-      ]
-   });
-}
-
 module.exports = {
    addGit: addGit,
    addFeed: addFeed,
@@ -141,6 +140,5 @@ module.exports = {
    addRelease: addRelease,
    addRegistry: addRegistry,
    addLanguage: addLanguage,
-   addDockerHost: addDockerHost,
-   addPowerShell: addPowerShell
+   addDockerHost: addDockerHost
 };

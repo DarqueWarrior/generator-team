@@ -128,7 +128,6 @@ module.exports = class extends Generator {
       // Based on the users answers compose all the required generators.
       compose.addGit(this);
       compose.addNuGet(this);
-      compose.addPowerShell(this);
       compose.addFeed(this);
       compose.addLanguage(this);
       compose.addDockerHost(this);
