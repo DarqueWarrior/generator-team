@@ -54,7 +54,7 @@ function run(args, gen, done) {
             function (inParallel) {
                // Get the package management feed
                if (util.needsapiKey({}, args)) {
-                  util.findFindPackageFeed(args.tfs, teamProject.name, token, gen, function (err, feed) {
+                  util.findPackageFeed(args.tfs, teamProject.name, token, gen, function (err, feed) {
                      moduleFeed = feed;
                      inParallel(err, moduleFeed);
                   });

@@ -433,7 +433,7 @@ function tryFindPackageFeed(account, projectName, token, gen, callback) {
 
    // Will NOT throw an error if the feed is not found.  This is used
    // by code that will create the feed if it is not found.
-   findFindPackageFeed(account, projectName, token, gen, function (e, ep) {
+   findPackageFeed(account, projectName, token, gen, function (e, ep) {
       if (e && e.code === `NotFound`) {
          callback(null, undefined);
       } else {
@@ -442,7 +442,7 @@ function tryFindPackageFeed(account, projectName, token, gen, callback) {
    });
 }
 
-function findFindPackageFeed(account, projectName, token, gen, callback) {
+function findPackageFeed(account, projectName, token, gen, callback) {
    'use strict';
 
    var options = addUserAgent({
@@ -1400,7 +1400,7 @@ module.exports = {
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    tryFindPackageFeed: tryFindPackageFeed,
-   findFindPackageFeed: findFindPackageFeed,
+   findPackageFeed: findPackageFeed,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
