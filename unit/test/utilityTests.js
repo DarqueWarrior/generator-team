@@ -1081,7 +1081,9 @@ describe(`utility`, function () {
             assert.equal(`http://localhost:8080/tfs/DefaultCollection/_apis/distributedtask/pools`, options.url, `wrong url`);
 
             // Respond
-            callback(null, null, JSON.stringify({
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
                value: "UnitTest"
             }));
          }
@@ -1703,7 +1705,7 @@ describe(`utility`, function () {
       // but the obj should be null
       proxyApp.tryFindPackageFeed(`http://localhost:8080/tfs/DefaultCollection`,
          `e2eDemo`, `token`, logger, (err, obj) => {
-            assert.notEqual(obj, null);
+            assert.equal(obj, undefined);
             assert.equal(err, null);
 
             done();

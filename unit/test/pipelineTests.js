@@ -10,6 +10,8 @@ describe(`team:pipeline`, function () {
       var deps = [
          // No docker gens are listed
          path.join(__dirname, `../../generators/azure`),
+         path.join(__dirname, `../../generators/nuget`),
+         path.join(__dirname, `../../generators/feed`),
          path.join(__dirname, `../../generators/build`),
          path.join(__dirname, `../../generators/release`)
       ];
@@ -24,13 +26,15 @@ describe(`team:pipeline`, function () {
          util.tryFindBuild.restore();
          util.findAllQueues.restore();
          util.tryFindRelease.restore();
+         util.tryFindPackageFeed.restore();
          util.isTFSGreaterThan2017.restore();
          util.findAzureServiceEndpoint.restore();
+         util.tryFindNuGetServiceEndpoint.restore();
          util.tryFindAzureServiceEndpoint.restore();
       };
 
       // Defining the arguments this way and calling the function under test
-      // with them makes refactorying easier.
+      // with them makes refactoring easier.
       let type = `asp`;
       let pat = `token`;
       let target = `paas`;
@@ -72,12 +76,12 @@ describe(`team:pipeline`, function () {
                assert.equal(expectedToken, token, `findProject - Token is wrong`);
 
                callback(null, {
-                  value: "TeamProject",
+                  name: `aspDemo`,
                   id: 1
                });
             });
 
-            sinon.stub(util, `isTFSGreaterThan2017`).callsFake(function(account, token, callback){
+            sinon.stub(util, `isTFSGreaterThan2017`).callsFake(function (account, token, callback) {
                assert.equal(expectedAccount, account, `findAzureServiceEndpoint - TFS is wrong`);
                assert.equal(expectedToken, token, `findAzureServiceEndpoint - Token is wrong`);
 
@@ -160,6 +164,26 @@ describe(`team:pipeline`, function () {
                });
             });
 
+            sinon.stub(util, `tryFindNuGetServiceEndpoint`).callsFake(function (account, projectId, token, gen, callback) {
+               assert.equal(expectedAccount, account, `tryFindNuGetServiceEndpoint - Account is wrong`);
+               assert.equal(1, projectId, `tryFindNuGetServiceEndpoint - team project is wrong`);
+               assert.equal(expectedToken, token, `tryFindNuGetServiceEndpoint - token is wrong`);
+
+               callback(null, {
+                  value: "I`m a endpoint."
+               });
+            });
+
+            sinon.stub(util, `tryFindPackageFeed`).callsFake(function (account, projectName, token, gen, callback) {
+               assert.equal(expectedAccount, account, `tryFindPackageFeed - Account is wrong`);
+               assert.equal(`aspDemo`, projectName, `tryFindPackageFeed - team project is wrong aspDemo != ${projectName}`);
+               assert.equal(expectedToken, token, `tryFindPackageFeed - token is wrong`);
+
+               callback(null, {
+                  value: "I`m a feed."
+               });
+            });
+
             sinon.stub(util, `tryFindRelease`).callsFake(function (args, callback) {
                assert.equal(expectedAccount, args.account, `tryFindRelease - Account is wrong`);
                assert.equal(1, args.teamProject.id, `tryFindRelease - team project is wrong`);
@@ -180,6 +204,8 @@ describe(`team:pipeline`, function () {
       let deps = [
          // No docker gens are listed
          [helpers.createDummyGenerator(), `team:azure`],
+         [helpers.createDummyGenerator(), `team:nuget`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:release`]
       ];
@@ -219,6 +245,8 @@ describe(`team:pipeline`, function () {
       var deps = [
          // No docker gens are listed
          [helpers.createDummyGenerator(), `team:azure`],
+         [helpers.createDummyGenerator(), `team:nuget`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:release`]
       ];
@@ -239,6 +267,8 @@ describe(`team:pipeline`, function () {
       var deps = [
          // No azure gens are listed
          [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:nuget`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:docker`],
          [helpers.createDummyGenerator(), `team:release`],
          [helpers.createDummyGenerator(), `team:registry`]

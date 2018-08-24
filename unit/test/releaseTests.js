@@ -309,7 +309,7 @@ describe(`release:index`, function () {
             // This is called right before `generator.run()` is called.
             sinon.stub(util, `getPools`);
             sinon.stub(util, `getTargets`);
-            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);            
+            sinon.stub(util, `isTFSGreaterThan2017`).callsArgWith(2, null, false);
             stubs.findProject(expectedAccount, `nodeDemo`, expectedToken);
             stubs.findQueue(expectedAccount, `Default`, expectedToken);
             stubs.findBuild(expectedAccount, `docker`, expectedToken);
@@ -1191,7 +1191,7 @@ describe(`release:app`, function () {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -1234,7 +1234,7 @@ describe(`release:app`, function () {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -1298,14 +1298,14 @@ describe(`release:app`, function () {
       });
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create release
       requestStub.onCall(0).yields(null, {
          statusCode: 200
       }, {
-         name: `release`
-      });
+            name: `release`
+         });
 
       var args = {
          build: {
@@ -1326,7 +1326,9 @@ describe(`release:app`, function () {
          },
          approverUniqueName: `approverUniqueName`,
          approverDisplayName: `approverDisplayName`,
-         target: `paas`
+         target: `paas`,
+         moduleFeed: { id: 1 },
+         powerShellGallery: { id: 1 }
       };
 
       // Act
@@ -1358,7 +1360,7 @@ describe(`release:app`, function () {
       stubs.findQueue(expectedAccount, `Default`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       var args = {
          build: {
@@ -1390,18 +1392,23 @@ describe(`release:app`, function () {
                   registry: ``
                }
             }
-         }
+         },
+         moduleFeed: { id: 1 },
+         powerShellGallery: { id: 1 }
       };
 
       // Create release
       requestStub.onCall(0).yields(null, {
-         statusCode: 403
+         statusCode: 301,
+         body: {
+            message: 'Unit Test error'
+         }
       }, undefined);
       requestStub.onCall(1).yields(null, {
          statusCode: 200
       }, {
-         name: `release`
-      });
+            name: `release`
+         });
 
       // Act
       proxyApp.findOrCreateRelease(args, logger, (e, rel) => {
@@ -1433,7 +1440,7 @@ describe(`release:app`, function () {
       stubs.findAzureServiceEndpoint(expectedAccount, `AzureSub`, expectedToken, this);
 
       var logger = sinon.stub();
-      logger.log = function () {};
+      logger.log = function () { };
 
       // Create release
       requestStub.onCall(0).yields(null, {
