@@ -100,7 +100,7 @@ function findOrCreateBuild(account, teamProject, token, queue,
             dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
             filename, target, gen, callback);
       } else {
-         gen.log(`+ Found build definition`);
+         gen.log.ok(`Found build definition`);
          callback(e, bld);
       }
    });
@@ -113,7 +113,7 @@ function createBuild(account, teamProject, token, queues,
 
    let buildDefName = util.isDocker(target) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
 
-   gen.log(`+ Creating ${buildDefName} build definition`);
+   gen.log.ok(`Creating ${buildDefName} build definition`);
 
    let windows;
    let linux;

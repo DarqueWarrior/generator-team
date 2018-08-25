@@ -969,6 +969,7 @@ describe(`build:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -999,6 +1000,7 @@ describe(`build:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -1045,6 +1047,7 @@ describe(`build:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       // Create build
       requestStub.onCall(0).yields(null, {
@@ -1088,6 +1091,7 @@ describe(`build:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       // Create build
       requestStub.onCall(0).yields(null, {
@@ -1140,6 +1144,7 @@ describe(`build:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       // Create build
       requestStub.onCall(0).yields(null, {

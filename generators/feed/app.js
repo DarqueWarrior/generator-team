@@ -48,7 +48,7 @@ function findOrCreatePackageFeed(account, project, token, gen, callback) {
          if (!feed) {
             createPackageFeed(account, project, token, gen, callback);
          } else {
-            gen.log('+ Found Package Feed');
+            gen.log.ok('Found Package Feed');
             callback(e, feed);
          }
       }
@@ -58,7 +58,7 @@ function findOrCreatePackageFeed(account, project, token, gen, callback) {
 function createPackageFeed(account, project, token, gen, callback) {
    'use strict';
 
-   gen.log(`+ Creating ${project.name} package feed`);
+   gen.log.ok(`Creating ${project.name} package feed`);
 
    let err = null;
    let contributorsGroup;

@@ -143,7 +143,7 @@ function queue(obj) {
          var result = obj.options.queue === undefined;
 
          if (result) {
-            obj.log(`  Getting Agent Queues...`);
+            obj.log.ok(`Getting Agent Queues...`);
          }
 
          return result;
@@ -252,7 +252,7 @@ function azureSubList(obj) {
          var result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
 
          if (result) {
-            obj.log(`  Getting Azure subscriptions...`);
+            obj.log.ok(`Getting Azure subscriptions...`);
          }
 
          return result;

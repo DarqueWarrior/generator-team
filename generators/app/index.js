@@ -48,7 +48,7 @@ module.exports = class extends Generator {
       // sub generators. I also use this to determine which data I still need to
       // prompt for.
 
-      this.log(yosay(`Welcome to DevOps powered by Microsoft version ${pkg.version}`));
+      this.log.write(yosay(`Welcome to DevOps powered by Microsoft version ${pkg.version}`));
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())

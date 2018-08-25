@@ -103,6 +103,7 @@ describe(`registry:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -131,6 +132,7 @@ describe(`registry:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -170,6 +172,7 @@ describe(`registry:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       // Create Project
       requestStub.onCall(0).yields(null, {
@@ -209,6 +212,7 @@ describe(`registry:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       // Create Project
       requestStub.onCall(0).yields(null, {
@@ -232,6 +236,7 @@ describe(`registry:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () {};
+      logger.log.ok = function () {};
 
       // Act
       registry.findOrCreateDockerRegistryServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`, `ProjectId`,

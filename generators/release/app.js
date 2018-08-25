@@ -219,7 +219,7 @@ function findOrCreateRelease(args, gen, callback) {
       if (!rel) {
          createRelease(args, gen, callback);
       } else {
-         gen.log(`+ Found release definition`);
+         gen.log.ok(`Found release definition`);
          callback(e, rel);
       }
    });
@@ -230,7 +230,7 @@ function createRelease(args, gen, callback) {
 
    let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
 
-   gen.log(`+ Creating ${releaseDefName} release definition`);
+   gen.log.ok(`Creating ${releaseDefName} release definition`);
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 

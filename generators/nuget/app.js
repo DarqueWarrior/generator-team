@@ -32,9 +32,10 @@ function run(args, gen, done) {
          if (err) {
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
-            gen.env.error(err.message);
+            gen.log.error(err.message);
          }
-      });
+      }
+   );
 }
 
 function findOrCreateNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback) {
@@ -47,7 +48,7 @@ function findOrCreateNuGetServiceEndpoint(account, projectId, apiKey, token, gen
          if (!ep) {
             createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback);
          } else {
-            gen.log('+ Found NuGet Service Endpoint');
+            gen.log.ok('Found NuGet Service Endpoint');
             callback(e, ep);
          }
       }
@@ -57,7 +58,7 @@ function findOrCreateNuGetServiceEndpoint(account, projectId, apiKey, token, gen
 function createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback) {
    'use strict';
 
-   gen.log('+ Creating NuGet Service Endpoint');
+   gen.log.ok('Creating NuGet Service Endpoint');
 
    var options = util.addUserAgent({
       method: 'POST',
@@ -85,7 +86,9 @@ function createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, call
       if (response.statusCode >= 400) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.env.error("x " + response.body.message.replace('\n', ' '));
+
+         gen.log.error(response.body.message.replace(/\r\n/g, " "));
+         gen.log.error('Make sure you have Package Management enabled.');
       }
 
       callback(error, body);

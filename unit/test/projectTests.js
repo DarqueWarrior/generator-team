@@ -58,7 +58,8 @@ describe(`project:index`, function () {
             // This is called right before generator.run() is called
             sinon.stub(fs, `existsSync`).returns(true);
             sinon.stub(fs, `readFileSync`).returns(profiles);
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             utilTryFindProject = sinon.stub(util, `tryFindProject`).callsArgWith(4, null, JSON.stringify({
                name: `unitTest`,
                id: 1
@@ -73,7 +74,7 @@ describe(`project:index`, function () {
             assert.ok(call, `generator.log was not called`);
 
             var actual = call.args[0];
-            assert.equal(`+ Found Team project`, actual, `generator.log was called with wrong value`);
+            assert.equal(`Found Team project`, actual, `generator.log was called with wrong value`);
 
             assert.equal(1, utilTryFindProject.callCount, `util.tryFindProject was not called`);
          });
@@ -92,7 +93,8 @@ describe(`project:index`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             utilTryFindProject = sinon.stub(util, `tryFindProject`).callsArgWith(4, null, JSON.stringify({
                name: `unitTest`,
                id: 1
@@ -103,7 +105,7 @@ describe(`project:index`, function () {
             assert.ok(call, `generator.log was not called`);
 
             var actual = call.args[0];
-            assert.equal(`+ Found Team project`, actual, `generator.log was called with wrong value`);
+            assert.equal(`Found Team project`, actual, `generator.log was called with wrong value`);
 
             assert.equal(1, utilTryFindProject.callCount, `util.tryFindProject was not called`);
 
@@ -184,6 +186,9 @@ describe(`project:app`, function () {
          id: `myProjectID`
       }));
 
+      let logger = function() {};
+      logger.ok = function() {};
+
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`,
@@ -193,7 +198,7 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () {}
+         log: logger
       };
 
       // Act
@@ -242,6 +247,9 @@ describe(`project:app`, function () {
          message: `Error sending request`
       }, null, undefined);
 
+      let logger = function() {};
+      logger.ok = function() {};
+
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`,
@@ -251,7 +259,7 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () {}
+         log: logger
       };
 
       // Act
@@ -298,6 +306,10 @@ describe(`project:app`, function () {
          statusCode: 404
       }, null);
 
+      let logger = function() {};
+      logger.ok = function() {};
+      logger.error = function() {};
+
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
          pat: `token`,
@@ -307,10 +319,8 @@ describe(`project:app`, function () {
          azureSub: `AzureSub`,
          target: `paas`,
          releaseJson: `releaseJson`,
-         log: function () {}
+         log: logger
       };
-
-      args.log.error = function () {};
 
       // Act
       proxyApp.findOrCreateProject(
