@@ -798,7 +798,8 @@ describe(`utility`, function () {
 
       // Arrange
       let answers = {
-         queue: 'Hosted Linux Preview'
+         queue: 'Hosted Linux Preview',
+         tfs: `vsts`
       };
 
       // Act
@@ -812,7 +813,8 @@ describe(`utility`, function () {
 
       // Arrange
       let answers = {
-         queue: 'Hosted macOS Preview'
+         queue: 'Hosted macOS Preview',
+         tfs: `vsts`
       };
 
       // Act
@@ -826,7 +828,8 @@ describe(`utility`, function () {
 
       // Arrange
       let answers = {
-         queue: 'Default'
+         queue: 'Default',
+         tfs: `vsts`
       };
 
       // Act
@@ -834,6 +837,51 @@ describe(`utility`, function () {
 
       // Assert
       assert.equal(5, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes linux tfs`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Hosted Linux Preview',
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(3, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes macOS tfs`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Hosted macOS Preview',
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(3, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes default tfs`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Default',
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`addUserAgent`, function () {

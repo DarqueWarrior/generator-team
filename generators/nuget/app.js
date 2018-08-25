@@ -48,7 +48,7 @@ function findOrCreateNuGetServiceEndpoint(account, projectId, apiKey, token, gen
          if (!ep) {
             createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback);
          } else {
-            gen.log.ok('Found NuGet Service Endpoint');
+            gen.log.ok('Found PowerShell Gallery Service Endpoint');
             callback(e, ep);
          }
       }
@@ -58,7 +58,7 @@ function findOrCreateNuGetServiceEndpoint(account, projectId, apiKey, token, gen
 function createNuGetServiceEndpoint(account, projectId, apiKey, token, gen, callback) {
    'use strict';
 
-   gen.log.ok('Creating NuGet Service Endpoint');
+   gen.log.ok('Creating PowerShell Gallery Service Endpoint');
 
    var options = util.addUserAgent({
       method: 'POST',

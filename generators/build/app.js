@@ -66,7 +66,7 @@ function run(args, gen, done) {
                return i.name.toLowerCase() === args.queue.toLowerCase();
             });
 
-            findOrCreateBuild(args.tfs, teamProject, token, queue, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+            findOrCreateBuild(args.tfs, teamProject, token, queue.id, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
          }
       }
    ],

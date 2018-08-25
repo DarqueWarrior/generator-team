@@ -17,12 +17,14 @@ var __basedir = process.cwd();
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
 var fileName = process.env.SERVER_TO_TEST || ``
-env(__dirname +  `/${fileName}.env`, {
+env(__dirname + `/${fileName}.env`, {
    raise: false,
    overwrite: true
 });
 
 var tfs = process.env.ACCT;
+var apiKey = process.env.API_KEY || ` `;
+var functionName = process.env.FUNCTION_NAME || ` `;
 var pat = process.env.PAT || ` `;
 var azureSub = process.env.AZURE_SUB || ` `;
 var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
@@ -71,10 +73,10 @@ function runTests(iteration) {
       context(`Execute command line`, function () {
          it(`Should complete without error`, function (done) {
             // Run the command. The parts will be verified below.
-            let cmd = `yo team ${iteration.appType} ${iteration.applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-               `"${tenantId}" "${servicePrincipalId}" "${iteration.queue}" ${iteration.target} ${installDep} ` +
-               `"${iteration.groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${customFolder}"`;
+            let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
+            `"${tenantId}" "${servicePrincipalId}" "${queue}" "${target}" ${installDep} ` +
+            `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
 
             util.log(`run command: ${cmd}`);
 

@@ -154,15 +154,24 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
-   }, {
-      name: `PowerShell module`,
-      value: `powershell`
    }
       // , {
       //    name: `Custom`,
       //    value: `custom`
       // }
    ];
+
+   // Only return PowerShell for VSTS. PowerShell relies
+   // on the hosted macOS, Linux and Windows build pools.
+   // Yes people could register macOS, Linux and Windows
+   // agents to TFS but at this time I don't have time
+   // to verify and test.
+   if (isVSTS(answers.tfs)) {
+      types.push({
+         name: `PowerShell module`,
+         value: `powershell`
+      });
+   }
 
    // If this is not a Linux or Mac based agent also show
    // .NET Full

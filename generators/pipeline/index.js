@@ -96,8 +96,12 @@ module.exports = class extends Generator {
    configuring() {
       // Based on the users answers compose all the required generators.
       compose.addDockerHost(this);
-      compose.addNuGet(this);
-      compose.addFeed(this);
+
+      if (this.type === `powershell`) {
+         compose.addNuGet(this);
+         compose.addFeed(this);
+      }
+      
       compose.addRegistry(this);
       compose.addAzure(this);
       compose.addBuild(this);

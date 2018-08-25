@@ -12,6 +12,7 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+const PACKAGING_API_VERSION = '4.0-preview';
 
 const EXTENSIONS_SUB_DOMAIN = `extmgmt`;
 const RELEASE_MANAGEMENT_SUB_DOMAIN = `vsrm`;
@@ -102,6 +103,28 @@ function deleteBuildDefinition(account, projectId, buildDefinitionId, pat, userA
       "url": `${getFullURL(account, true)}/${projectId}/_apis/build/definitions/${buildDefinitionId}`,
       "qs": {
          "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (err, res, body) {
+      callback(err, null);
+   });
+}
+
+function deleteFeed(account, feedId, pat, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   let options = addUserAgent({
+      "method": `Delete`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds/${feedId}`,
+      "qs": {
+         "api-version": PACKAGING_API_VERSION
       }
    }, userAgent);
 
@@ -561,6 +584,7 @@ module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    getBuilds: getBuilds,
+   deleteFeed: deleteFeed,
    getBuildLog: getBuildLog,
    findProject: findProject,
    getReleases: getReleases,

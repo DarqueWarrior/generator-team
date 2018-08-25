@@ -34,15 +34,7 @@ function run(args, gen, done) {
       });
 }
 
-function findOrCreateDockerRegistryServiceEndpoint(
-   account,
-   projectId,
-   dockerRegistry,
-   dockerRegistryId,
-   dockerRegistryPassword,
-   token,
-   gen,
-   callback) {
+function findOrCreateDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, token, gen, callback) {
    'use strict';
 
    // There is nothing to do

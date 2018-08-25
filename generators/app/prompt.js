@@ -207,8 +207,8 @@ function functionName(obj) {
       store: true,
       message: `What is the name of your function?`,
       validate: util.validateFunctionName,
-      when: () => {
-         return obj.options.functionName === undefined;
+      when: answers => {
+         return obj.options.functionName === undefined && util.needsapiKey(answers, obj.options) === true;
       }
    };
 }
@@ -320,7 +320,7 @@ function apiKey(obj) {
       message: `What is your NuGet apiKey?`,
       validate: util.validateapiKey,
       when: answers => {
-         return util.needsapiKey(answers, obj.options);
+         return util.needsapiKey(answers, obj.options) && obj.options.apiKey === undefined;
       }
    }
 }
