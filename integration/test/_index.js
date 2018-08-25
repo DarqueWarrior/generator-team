@@ -525,6 +525,38 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
    });
 }
 
+function findNuGetServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      util.log(`findNuGetServiceEndpoint response:\r\n`);
+      util.logJSON(body);
+      util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
+
+      var obj = JSON.parse(body);
+
+      var endpoint = obj.value.find(function (i) {
+         return i.name.toLowerCase() === name.toLowerCase();
+      });
+
+      callback(error, endpoint);
+   });
+}
+
 function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
    'use strict';
 
@@ -580,6 +612,38 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
    });
 }
 
+function findPackageFeed(account, name, pat, userAgent, callback) {
+   "use strict";
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds/`,
+      "qs": {
+         "api-version": PACKAGING_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      util.log(`findPackageFeed response:\r\n`);
+      util.logJSON(body);
+      util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
+
+      var obj = JSON.parse(body);
+
+      var rel = obj.value.find(function (i) {
+         return i.name.toLowerCase() === name.toLowerCase();
+      });
+
+      callback(e, rel);
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
@@ -592,8 +656,10 @@ module.exports = {
    getApprovals: getApprovals,
    deleteProject: deleteProject,
    createProject: createProject,
+   findPackageFeed: findPackageFeed,
    findBuildDefinition: findBuildDefinition,
    deleteBuildDefinition: deleteBuildDefinition,
    findReleaseDefinition: findReleaseDefinition,
+   findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint
 };

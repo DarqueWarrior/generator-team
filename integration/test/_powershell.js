@@ -2,10 +2,8 @@ const fs = require('fs');
 const async = require('async');
 const vsts = require(`./_index`);
 const uuidV4 = require('uuid/v4');
-const request = require('request');
 const testUtils = require(`./_util`);
 const env = require('node-env-file');
-const util = require('../../generators/app/utility');
 const assert = require(`yeoman-assert`);
 const exec = require('child_process').exec;
 
@@ -60,8 +58,6 @@ function runTests(iteration) {
    var servicePrincipalKey = process.env.SERVICE_PRINCIPAL_KEY || ` `;
    var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
    var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
-
-   var token = util.encodePat(pat);
 
    // The number of levels up from the folder the test are executed in to the 
    // folder where the repository was cloned.  This is not the same when run locally
@@ -152,7 +148,7 @@ function runTests(iteration) {
 
             testUtils.log(`Find PowerShell Gallery service endpoint ${expectedName}`);
 
-            util.findNuGetServiceEndpoint(tfs, projectId, token, null, (e, ep) => {
+            vsts.findNuGetServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
                // Assert
                assert.ifError(e);
                assert.ok(ep, `service endpoint not found`);
@@ -168,7 +164,7 @@ function runTests(iteration) {
 
             testUtils.log(`Find package feed ${expectedName}`);
 
-            util.findPackageFeed(tfs, expectedName, token, null, (e, feed) => {
+            vsts.findPackageFeed(tfs, expectedName, pat, userAgent, (e, feed) => {
                // Assert
                assert.ifError(e);
                assert.ok(feed, `package feed not found`);
