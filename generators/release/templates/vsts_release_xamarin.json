@@ -156,6 +156,35 @@
             "fastlaneToolsVersion": "LatestVersion",
             "fastlaneToolsSpecificVersion": ""
           }
+        },
+        {
+          "environment": {},
+          "taskId": "b832bec5-8c27-4fef-9fb8-6bec8524ad8a",
+          "version": "1.*",
+          "name": "Deploy Mobile.iOS.ipa to Visual Studio App Center",
+          "refName": "",
+          "enabled": true,
+          "alwaysRun": false,
+          "continueOnError": false,
+          "timeoutInMinutes": 0,
+          "definitionType": "task",
+          "overrideInputs": {},
+          "condition": "succeeded()",
+          "inputs": {
+            "serverEndpoint": "",
+            "appSlug": "yoman/Mobile-iOS",
+            "app": "Mobile.iOS.ipa",
+            "symbolsType": "Apple",
+            "symbolsPath": "",
+            "pdbPath": "**/*.pdb",
+            "dsymPath": "",
+            "mappingTxtPath": "",
+            "packParentFolder": "false",
+            "releaseNotesSelection": "input",
+            "releaseNotesInput": "Integration",
+            "releaseNotesFile": "",
+            "destinationId": "$(appcenter.DestinationId)"
+          }
         }
       ]
     }],
