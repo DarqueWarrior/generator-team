@@ -99,12 +99,14 @@ function runTests(iteration) {
             // Arrange
             let expectedName = `${applicationName}`;
 
-            testUtils.log(`Find project ${expectedName}`);
+            testUtils.log(`Searching for project ${expectedName}`);
 
             vsts.findProject(tfs, expectedName, pat, userAgent, (e, p) => {
                // Assert
                assert.ifError(e);
                assert.ok(p, `project not found`);
+
+               testUtils.log(`Found project ${expectedName}`);
 
                projectId = p.id;
 
@@ -116,12 +118,14 @@ function runTests(iteration) {
             // Arrange
             let expectedName = `${applicationName}${iteration.suffix}-CI`;
 
-            testUtils.log(`Find build ${expectedName}`);
+            testUtils.log(`Searching for build definition ${expectedName}`);
 
             vsts.findBuildDefinition(tfs, projectId, pat, expectedName, userAgent, (e, b) => {
                // Assert
                assert.ifError(e);
                assert.ok(b, `build definition not found`);
+
+               testUtils.log(`Found build definition ${expectedName}`);
 
                done(e);
             });
@@ -131,12 +135,14 @@ function runTests(iteration) {
             // Arrange
             let expectedName = `${applicationName}${iteration.suffix}-CD`;
 
-            testUtils.log(`Find release ${expectedName}`);
+            testUtils.log(`Searching for release definition ${expectedName}`);
 
             vsts.findReleaseDefinition(tfs, projectId, pat, expectedName, userAgent, (e, r) => {
                // Assert
                assert.ifError(e);
                assert.ok(r, `release definition not found`);
+
+               testUtils.log(`Found release definition ${expectedName}`);
 
                done(e);
             });
@@ -146,13 +152,14 @@ function runTests(iteration) {
             // Arrange
             let expectedName = `PowerShell Gallery`;
 
-            testUtils.log(`Find PowerShell Gallery service endpoint ${expectedName}`);
+            testUtils.log(`Searching for PowerShell Gallery service endpoint ${expectedName}`);
 
             vsts.findNuGetServiceEndpoint(tfs, projectId, pat, expectedName, userAgent, (e, ep) => {
                // Assert
                assert.ifError(e);
                assert.ok(ep, `service endpoint not found`);
-               testUtils.log(`+ Found service endpoint ${expectedName}`);
+
+               testUtils.log(`Found service endpoint ${expectedName}`);
 
                done(e);
             });
@@ -162,13 +169,14 @@ function runTests(iteration) {
             // Arrange
             let expectedName = applicationName;
 
-            testUtils.log(`Find package feed ${expectedName}`);
+            testUtils.log(`Searching for package feed ${expectedName}`);
 
             vsts.findPackageFeed(tfs, expectedName, pat, userAgent, (e, feed) => {
                // Assert
                assert.ifError(e);
                assert.ok(feed, `package feed not found`);
-               testUtils.log(`+ Found package feed ${expectedName}`);
+               
+               testUtils.log(`Found package feed ${expectedName}`);
 
                feedId = feed.id;
 
