@@ -102,6 +102,27 @@
             "provProfileSourceRepository": "",
             "removeProfile": "true"
           }
+        },
+        {
+          "environment": {},
+          "taskId": "77f3c5c9-713f-4eb6-bd73-42324109ea2e",
+          "version": "0.*",
+          "name": "Change identifier in iOS/Payload/Fnc.Hunter.iOS.app/Info.plist",
+          "refName": "",
+          "enabled": true,
+          "alwaysRun": false,
+          "continueOnError": false,
+          "timeoutInMinutes": 0,
+          "definitionType": "task",
+          "overrideInputs": {},
+          "condition": "succeeded()",
+          "inputs": {
+            "sourcePath": "iOS/Payload/Fnc.Hunter.iOS.app/Info.plist",
+            "bundleIdentifier": "$(bundle.Id)",
+            "bundleName": "$(bundle.Name)",
+            "bundleDisplayName": "$(bundle.Name)",
+            "printFile": "true"
+          }
         }
       ]
     }],
