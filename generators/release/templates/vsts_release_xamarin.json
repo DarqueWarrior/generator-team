@@ -123,6 +123,39 @@
             "bundleDisplayName": "$(bundle.Name)",
             "printFile": "true"
           }
+        },
+        {
+          "environment": {},
+          "taskId": "cbbf7f14-c386-4c1f-80a3-fe500e2bd977",
+          "version": "1.*",
+          "name": "Resign ipa file",
+          "refName": "",
+          "enabled": true,
+          "alwaysRun": false,
+          "continueOnError": false,
+          "timeoutInMinutes": 0,
+          "definitionType": "task",
+          "overrideInputs": {},
+          "condition": "succeeded()",
+          "inputs": {
+            "ipaPath": "Mobile.ipa",
+            "entitlementsPath": "",
+            "signMethod": "id",
+            "signFileP12Path": "",
+            "signFileP12Password": "",
+            "signIdIdentity": "",
+            "signIdUnlockKeychain": "false",
+            "signIdKeychainPassword": "",
+            "provisionMethod": "id",
+            "provFileProfilePath": "",
+            "provFileRemoveProfile": "false",
+            "provIdProfileUuid": "",
+            "sighResignArgs": "",
+            "cwdPath": "",
+            "installFastlane": "true",
+            "fastlaneToolsVersion": "LatestVersion",
+            "fastlaneToolsSpecificVersion": ""
+          }
         }
       ]
     }],
