@@ -82,6 +82,26 @@
             "deleteCustomKeychain": "false",
             "signingIdentity": ""
           }
+        },
+        {
+          "environment": {},
+          "taskId": "0f9f66ca-250e-40fd-9678-309bcd439d5e",
+          "version": "1.*",
+          "name": "Install an Apple provisioning profile",
+          "refName": "",
+          "enabled": true,
+          "alwaysRun": false,
+          "continueOnError": false,
+          "timeoutInMinutes": 0,
+          "definitionType": "task",
+          "overrideInputs": {},
+          "condition": "succeeded()",
+          "inputs": {
+            "provisioningProfileLocation": "secureFiles",
+            "provProfileSecureFile": "88f9f5b5-298b-4ec5-8682-d2d97b2037e4",
+            "provProfileSourceRepository": "",
+            "removeProfile": "true"
+          }
         }
       ]
     }],
