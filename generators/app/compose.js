@@ -100,13 +100,13 @@ function addLanguage(obj) {
                    arguments: [obj.applicationName, obj.packageName]
                });
            }
-         break;
+           break;
 
        default:
            obj.composeWith(generator, {
                arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
            });
-         break;
+           break;
    }
 }
 

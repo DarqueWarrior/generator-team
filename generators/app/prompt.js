@@ -201,28 +201,28 @@ function customFolder(obj) {
 }
 
 function applicationName(obj) {
-    return {
-        name: `applicationName`,
-        type: `input`,
-        store: true,
-        message: `What is the name of your application?`,
-        validate: util.validateApplicationName,
-        when: () => {
-            return obj.options.applicationName === undefined;
-        }
-    };
+   return {
+      name: `applicationName`,
+      type: `input`,
+      store: true,
+      message: `What is the name of your application?`,
+      validate: util.validateApplicationName,
+      when: () => {
+         return obj.options.applicationName === undefined;
+      }
+   };
 }
 
 function packageName(obj) {
-   return {
-      name: `packageName`,
-      type: `input`,
-      store: true,
-      message: `What is the name of your package? (com.company)`,
-       when: answers => {
-           return obj.options.packageName === undefined && answers.type === `xamarin`;
-       }
-   };
+    return {
+        name: `packageName`,
+        type: `input`,
+        store: true,
+        message: `What is the name of your package? (com.company)`,
+        when: answers => {
+            return obj.options.packageName === undefined && answers.type === `xamarin`;
+        }
+    };
 }
 
 function target(obj) {
@@ -457,8 +457,8 @@ function installDep(obj) {
          }
       ],
       when: answers => {
-           return answers.type !== `xamarin` &&  answers.type !== `aspFull` && obj.options.installDep === undefined;
-       }
+         return answers.type !== `xamarin` &&  answers.type !== `aspFull` && obj.options.installDep === undefined;
+      }
    };
 }
 

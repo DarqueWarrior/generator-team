@@ -110,7 +110,7 @@
          "SymbolsArtifactName": "Symbols_$(BuildConfiguration)",
          "SymbolsPath": "",
          "SymbolsFolder": "",
-         "SkipIndexing": "false",
+         "SkipIndexing": "true",
          "TreatNotIndexedAsWarning": "false",
          "SymbolsMaximumWaitTime": "",
          "SymbolsProduct": "",

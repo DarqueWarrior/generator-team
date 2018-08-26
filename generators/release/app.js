@@ -91,7 +91,6 @@ function run(args, gen, done) {
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
-            releaseName: args.releaseName,
             dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             dockerRegistry: args.dockerRegistry,
@@ -132,16 +131,16 @@ function getRelease(args, callback) {
 
             // see if they support load tests or not
             if (args.removeloadTest && args.target === `dockerpaas`) {
-               release = [`vsts_release_${args.target}_noloadtest.json`];
+               release = `vsts_release_${args.target}_noloadtest.json`;
             } else {
-               release = [`vsts_release_${args.target}.json`];
+               release = `vsts_release_${args.target}.json`;
             }
 
             if (!util.isVSTS(args.tfs) && args.target === `dockerpaas`) {
-               release = [`tfs_2018_release_${args.target}.json`];
+               release = `tfs_2018_release_${args.target}.json`;
             }
          } else {
-            release = [`tfs_release_${args.target}.json`];
+            release = `tfs_release_${args.target}.json`;
          }
 
          callback(e, release);
@@ -152,28 +151,26 @@ function getRelease(args, callback) {
             if (util.isVSTS(args.tfs)) {
 
                if (args.target === `paasslots`) {
-                  release = [`vsts_release_slots.json`];
-               } else if(args.target === `appcenter`){
-                  release = [
-                      [`iOS`,`vsts_release_ios.json`],
-                      [`Android`,`vsts_release_android.json`]
-                  ];
+                  release = `vsts_release_slots.json`;
+               }
+               else if (args.target === `appcenter`){
+                  release = `vsts_release_xamarin.json`;
                } else {
                   // see if they support load tests or not
                   if (args.removeloadTest) {
-                     release = [`vsts_release_noloadtest.json`];
+                     release = `vsts_release_noloadtest.json`;
                   } else {
-                     release = [`vsts_release.json`];
+                     release = `vsts_release.json`;
                   }
                }
             } else {
-               release = [`tfs_2018_release.json`];
+               release = `tfs_2018_release.json`;
             }
          } else {
             if (args.target === `paasslots`) {
-               release = [`vsts_release_slots.json`];
+               release = `vsts_release_slots.json`;
             } else {
-               release = [`tfs_release.json`];
+               release = `tfs_release.json`;
             }
          }
 
@@ -203,10 +200,6 @@ function createRelease(args, gen, callback) {
    'use strict';
 
    let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
-
-    if(args.releaseName === 'iOS' || args.releaseName === 'Android'){
-        releaseDefName += "-" + args.releaseName;
-    }
 
    gen.log(`+ Creating ${releaseDefName} release definition`);
 
@@ -254,7 +247,7 @@ function createRelease(args, gen, callback) {
          'authorization': `Basic ${args.token}`
       },
       json: true,
-      url: `${util.getFullURL(args.account, true, true)}/${args.teamProject.name}/_apis/release/definitions`,
+      url: `${util.getFullURL(args.account, true, util.RELEASE_MANAGEMENT_SUB_DOMAIN)}/${args.teamProject.name}/_apis/release/definitions`,
       qs: {
          'api-version': util.RELEASE_API_VERSION
       },
@@ -274,14 +267,15 @@ function createRelease(args, gen, callback) {
       function (finished) {
          request(options, function (err, resp, body) {
 
-            if (resp.statusCode == 400) {
+            if (resp.statusCode === 400) {
                status = "failed";
-                let message = resp.body.message;
-                if(body.message.includes("Resign IPA file"))
-                {
-                    message = "! Make sure the Apple App Store extension is installed (by Microsoft)";
-                }
-               finished(new Error("x " + message), null);
+               finished(new Error("x " + resp.body.message), null);
+               let message = resp.body.message;
+               if(body.message.includes("Resign IPA file"))
+               {
+                  message = "! Make sure the Apple App Store extension is installed (by Microsoft)";
+               }
+                finished(new Error("x " + resp.body.message), null);
             } else if (resp.statusCode >= 300) {
                status = "in progress";
                finished(err, null);
