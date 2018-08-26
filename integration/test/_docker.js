@@ -73,10 +73,10 @@ function runTests(iteration) {
       context(`Execute command line`, function () {
          it(`Should complete without error`, function (done) {
             // Run the command. The parts will be verified below.
-            let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-            `"${tenantId}" "${servicePrincipalId}" "${queue}" "${target}" ${installDep} ` +
-            `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
+            let cmd = `yo team ${iteration.appType} ${iteration.applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
+               `"${tenantId}" "${servicePrincipalId}" "${iteration.queue}" ${iteration.target} ${installDep} ` +
+               `"${iteration.groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
+               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
 
             util.log(`run command: ${cmd}`);
 
