@@ -300,10 +300,8 @@ function encodePat(pat) {
    // The personal access token must be 64 bit encoded to be used
    // with the REST API
 
-   var b = new Buffer(`:` + pat);
-   var s = b.toString(`base64`);
-
-   return s;
+    let b = Buffer.from(`:` + pat);
+    return b.toString(`base64`);
 }
 
 function checkStatus(uri, token, gen, callback) {
@@ -926,7 +924,7 @@ function searchProfiles(input) {
 function readPatFromProfile(answers, obj) {
    if (profile) {
       // Profiles are stored 64 bit encoded
-      let b = new Buffer(profile.Pat, 'base64');
+      let b = Buffer.from(profile.Pat, 'base64');
       // Skip the leading :
       obj.options.pat = b.toString().substring(1);
    }
