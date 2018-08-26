@@ -13,6 +13,10 @@ integration/temp.js
 integration/fullRegression.ps1
 unit.xml
 .DS_Store
+**/2017.env
+**/2018.env
+**/vsts.env
+**/vstsLinux.env
 
 
 ## Ignore Visual Studio temporary files, build results, and
