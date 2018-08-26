@@ -13,9 +13,13 @@ const package = require('../../package.json');
 // supported in TFS 2017 U3, 2018 U1 and VSTS.
 const BUILD_API_VERSION = `2.0`;
 const PROJECT_API_VERSION = `1.0`;
+
+// To support PowerShell multi-phased builds we had to use the newer API.
+const VSTS_BUILD_API_VERSION = `4.0`;
 const RELEASE_API_VERSION = `3.0-preview`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview`;
+const PACKAGE_FEEDS_API_VERSION = `4.0-preview`;
 
 // This location is the same as the VSTeam PowerShell module. Therefore,
 // the profiles can be shared between Yo Team and the VSTeam PowerShell
@@ -157,6 +161,18 @@ function getAppTypes(answers) {
       // }
    ];
 
+   // Only return PowerShell for VSTS. PowerShell relies
+   // on the hosted macOS, Linux and Windows build pools.
+   // Yes people could register macOS, Linux and Windows
+   // agents to TFS but at this time I don't have time
+   // to verify and test.
+   if (isVSTS(answers.tfs)) {
+      types.push({
+         name: `PowerShell module`,
+         value: `powershell`
+      });
+   }
+
    // If this is not a Linux or Mac based agent also show
    // .NET Full
    if (answers.queue.indexOf(`Linux`) === -1 &&
@@ -234,6 +250,10 @@ function validateApplicationName(input) {
    return validateRequired(input, `You must provide a name for your application`);
 }
 
+function validateFunctionName(input) {
+   return validateRequired(input, `You must provide a name for your function`);
+}
+
 function validatePersonalAccessToken(input) {
    return validateRequired(input, `You must provide a Personal Access Token`);
 }
@@ -284,6 +304,10 @@ function validateServicePrincipalID(input) {
 
 function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
+}
+
+function validateapiKey(input) {
+   return validateRequired(input, `You must provide a apiKey`);
 }
 
 function tokenize(input, nvp) {
@@ -410,6 +434,116 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
 
    request(options, function (error, response, body) {
       callback(error, JSON.parse(body));
+   });
+}
+
+function tryFindPackageFeed(account, projectName, token, gen, callback) {
+   'use strict';
+
+   // Will NOT throw an error if the feed is not found.  This is used
+   // by code that will create the feed if it is not found.
+   findPackageFeed(account, projectName, token, gen, function (e, ep) {
+      if (e && e.code === `NotFound`) {
+         callback(null, undefined);
+      } else {
+         callback(e, ep);
+      }
+   });
+}
+
+function findPackageFeed(account, projectName, token, gen, callback) {
+   'use strict';
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds`,
+      "qs": {
+         "api-version": PACKAGE_FEEDS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      // Check the response statusCode first. If it is not a 200
+      // the body will be html and not JSON
+      if (response.statusCode >= 400) {
+         callback(`Error trying to find package feed: ${response.statusMessage}`);
+         return;
+      }
+
+      var obj = JSON.parse(body);
+
+      var endpoint = obj.value.find(function (i) {
+         return i.name === projectName;
+      });
+
+      if (endpoint === undefined) {
+         callback({
+            "message": `x Could not find package feed`,
+            "code": `NotFound`
+         }, undefined);
+      } else {
+         callback(error, endpoint);
+      }
+   });
+}
+
+function tryFindNuGetServiceEndpoint(account, projectId, token, gen, callback) {
+   'use strict';
+
+   // Will NOT throw an error if the endpoint is not found.  This is used
+   // by code that will create the endpoint if it is not found.
+
+   findNuGetServiceEndpoint(account, projectId, token, gen, function (e, ep) {
+      if (e && e.code === `NotFound`) {
+         callback(null, undefined);
+      } else {
+         callback(e, ep);
+      }
+   });
+}
+
+function findNuGetServiceEndpoint(account, projectId, token, gen, callback) {
+   'use strict';
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      // Check the response statusCode first. If it is not a 200
+      // the body will be html and not JSON
+      if (response.statusCode >= 400) {
+         callback(`Error trying to find NuGet Service Endpoint: ${response.statusMessage}`);
+         return;
+      }
+
+      var obj = JSON.parse(body);
+
+      // The i.url is returned with a trailing / so just use starts with just in case
+      var endpoint = obj.value.find(function (i) {
+         return i.url.toLowerCase().startsWith('https://www.powershellgallery.com/api/v2/package');
+      });
+
+      if (endpoint === undefined) {
+         callback({
+            "message": `x Could not find NuGet Service Endpoint`,
+            "code": `NotFound`
+         }, undefined);
+      } else {
+         callback(error, endpoint);
+      }
    });
 }
 
@@ -640,8 +774,6 @@ function findProject(account, project, token, gen, callback) {
 function findQueue(name, account, teamProject, token, callback) {
    'use strict';
 
-   logMessage(`findQueue params: ${name}, ${teamProject.id}`);
-
    var options = addUserAgent({
       "method": `GET`,
       "headers": {
@@ -667,8 +799,39 @@ function findQueue(name, account, teamProject, token, callback) {
       } else {
          // Setting to null is the all clear signal to the async
          // series to continue
-         logMessage(`findQueue: ${res.statusCode}, ${obj}`);
          callback(null, obj.value[0].id);
+      }
+   });
+}
+
+function findAllQueues(account, teamProject, token, callback) {
+   'use strict';
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${teamProject.id}/_apis/distributedtask/queues`,
+      "qs": {
+         "api-version": DISTRIBUTED_TASK_API_VERSION
+      }
+   });
+
+   request(options, function (err, res, body) {
+      var obj = JSON.parse(body);
+
+      if (res.statusCode >= 400) {
+         callback(new Error(res.statusMessage), null);
+      } else if (res.statusCode >= 300) {
+         // When it is a 300 the obj is a error
+         // object from the server
+         callback(obj);
+      } else {
+         // Setting to null is the all clear signal to the async
+         // series to continue
+         callback(null, obj.value);
       }
    });
 }
@@ -854,6 +1017,14 @@ function getPools(answers) {
             return;
          }
 
+         if (response.statusCode === 401) {
+            reject({
+               "message": `x Check your personal access token: ${response.statusMessage}`,
+               "code": `Unauthorized`
+            });
+            return;
+         }
+
          var obj = JSON.parse(body);
          resolve(obj.value);
       });
@@ -1007,6 +1178,15 @@ function needsDockerHost(answers, options) {
 
    logMessage(`needsDockerHost returning = ${isDocker || paasRequiresHost}`);
    return (isDocker || paasRequiresHost);
+}
+
+function needsapiKey(answers, options) {
+   if (options !== undefined) {
+      return (answers.type === `powershell` ||
+         options.type === `powershell`);
+   } else {
+      return (answers.type === `powershell`);
+   }
 }
 
 function isPaaS(answers, cmdLnInput) {
@@ -1177,6 +1357,8 @@ module.exports = {
    PROJECT_API_VERSION: PROJECT_API_VERSION,
    RELEASE_API_VERSION: RELEASE_API_VERSION,
    EXTENSIONS_SUB_DOMAIN: EXTENSIONS_SUB_DOMAIN,
+   VSTS_BUILD_API_VERSION: VSTS_BUILD_API_VERSION,
+   PACKAGE_FEEDS_API_VERSION: PACKAGE_FEEDS_API_VERSION,
    DISTRIBUTED_TASK_API_VERSION: DISTRIBUTED_TASK_API_VERSION,
    SERVICE_ENDPOINTS_API_VERSION: SERVICE_ENDPOINTS_API_VERSION,
    RELEASE_MANAGEMENT_SUB_DOMAIN: RELEASE_MANAGEMENT_SUB_DOMAIN,
@@ -1194,6 +1376,7 @@ module.exports = {
    logMessage: logMessage,
    getTargets: getTargets,
    getAppTypes: getAppTypes,
+   needsapiKey: needsapiKey,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,
@@ -1207,11 +1390,13 @@ module.exports = {
    addUserAgent: addUserAgent,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
+   findAllQueues: findAllQueues,
    getTFSVersion: getTFSVersion,
    tryFindRelease: tryFindRelease,
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
+   validateapiKey: validateapiKey,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
    needsDockerHost: needsDockerHost,
@@ -1223,16 +1408,20 @@ module.exports = {
    readPatFromProfile: readPatFromProfile,
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
+   tryFindPackageFeed: tryFindPackageFeed,
+   findPackageFeed: findPackageFeed,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
    validateDockerHubID: validateDockerHubID,
    isExtensionInstalled: isExtensionInstalled,
+   validateFunctionName: validateFunctionName,
    isTFSGreaterThan2017: isTFSGreaterThan2017,
    validateCustomFolder: validateCustomFolder,
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
    validateApplicationName: validateApplicationName,
+   findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
    getDockerRegistryServer: getDockerRegistryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
@@ -1241,6 +1430,7 @@ module.exports = {
    validateServicePrincipalKey: validateServicePrincipalKey,
    tryFindAzureServiceEndpoint: tryFindAzureServiceEndpoint,
    validatePersonalAccessToken: validatePersonalAccessToken,
+   tryFindNuGetServiceEndpoint: tryFindNuGetServiceEndpoint,
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,

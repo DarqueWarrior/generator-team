@@ -1,5 +1,3 @@
-const url = require(`url`);
-const path = require(`path`);
 const app = require(`./app.js`);
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);

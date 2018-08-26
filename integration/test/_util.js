@@ -30,7 +30,8 @@ function protectMsg(msg) {
    process.env.AZURE_SUB_ID,
    process.env.AZURE_SECRET,
    process.env.DOCKER_HOST,
-   process.env.AZURE_TENANT_ID];
+   process.env.AZURE_TENANT_ID,
+   process.env.API_KEY];
 
    secrets.forEach(function (secret) {
       msg = msg.replaceAll(secret, '*****');

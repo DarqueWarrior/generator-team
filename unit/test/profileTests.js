@@ -51,6 +51,7 @@ describe(`profile:index prompt`, function () {
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
             generator.log = spy = sinon.spy();
+            generator.log.ok = function() {}
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(true);
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns(profiles);
          })
@@ -58,7 +59,7 @@ describe(`profile:index prompt`, function () {
             fs.existsSync.restore();
             fs.readFileSync.restore();
 
-            assert.equal(6, spy.callCount, `generator.log was not called the correct number of times.`);
+            assert.equal(spy.callCount, 6, `generator.log.ok was not called the correct number of times.`);
 
             assert.equal(`\r\nName                                          URL                                           Version Type`, spy.getCall(0).args[0]);
             assert.equal(`----                                          ---                                           ------- ----`, spy.getCall(1).args[0]);
@@ -183,7 +184,8 @@ describe(`profile:index cmdLine`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(false);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
                let actual = JSON.parse(data);
@@ -200,9 +202,9 @@ describe(`profile:index cmdLine`, function () {
             fs.existsSync.restore();
             fs.writeFileSync.restore();
 
-            assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
+            assert.equal(spy.callCount, 1, `generator.log.ok was not called the correct number of times.`);
 
-            assert.equal(`+ Profile Added.`, spy.getCall(0).args[0]);
+            assert.equal(`Profile Added.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsWriteFileSyncStub.callCount, `fs.writeFileSync was not called`);
@@ -224,7 +226,8 @@ describe(`profile:index cmdLine`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(false);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
                let actual = JSON.parse(data);
@@ -243,7 +246,7 @@ describe(`profile:index cmdLine`, function () {
 
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
-            assert.equal(`+ Profile Added.`, spy.getCall(0).args[0]);
+            assert.equal(`Profile Added.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsWriteFileSyncStub.callCount, `fs.writeFileSync was not called`);
@@ -269,7 +272,8 @@ describe(`profile:index cmdLine`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(true);
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns(profiles);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
@@ -292,7 +296,7 @@ describe(`profile:index cmdLine`, function () {
 
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
-            assert.equal(`+ Profile Added.`, spy.getCall(0).args[0]);
+            assert.equal(`Profile Added.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);
@@ -318,7 +322,8 @@ describe(`profile:index cmdLine`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(true);
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns(profiles);
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
@@ -346,7 +351,7 @@ describe(`profile:index cmdLine`, function () {
 
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
-            assert.equal(`+ Profile Delete.`, spy.getCall(0).args[0]);
+            assert.equal(`Profile Deleted.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);
@@ -373,7 +378,8 @@ describe(`profile:index cmdLine`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(true);
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns("[]");
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
@@ -389,7 +395,7 @@ describe(`profile:index cmdLine`, function () {
 
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
-            assert.equal(`+ Profile Delete.`, spy.getCall(0).args[0]);
+            assert.equal(`Profile Deleted.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(1, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);
@@ -416,7 +422,8 @@ describe(`profile:index cmdLine`, function () {
          })
          .on(`ready`, function (generator) {
             // This is called right before generator.run() is called
-            generator.log = spy = sinon.spy();
+            generator.log = function() {}
+            generator.log.ok = spy = sinon.spy();
             fsExistsSyncStub = sinon.stub(fs, `existsSync`).returns(false);
             fsReadFileSyncStub = sinon.stub(fs, `readFileSync`).returns("[]");
             fsWriteFileSyncStub = sinon.stub(fs, `writeFileSync`).callsFake((file, data, options) => {
@@ -432,7 +439,7 @@ describe(`profile:index cmdLine`, function () {
 
             assert.equal(1, spy.callCount, `generator.log was not called the correct number of times.`);
 
-            assert.equal(`+ Profile Delete.`, spy.getCall(0).args[0]);
+            assert.equal(`Profile Deleted.`, spy.getCall(0).args[0]);
 
             assert.equal(1, fsExistsSyncStub.callCount, `fs.existsSync was not called`);
             assert.equal(0, fsReadFileSyncStub.callCount, `fs.readFileSync was not called`);

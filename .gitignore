@@ -17,3 +17,4 @@ unit.xml
 **/2018.env
 **/vsts.env
 **/vstsLinux.env
+.yo-rc.json

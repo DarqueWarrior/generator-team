@@ -7,53 +7,69 @@ const util = require('../app/utility');
 function run(args, gen, done) {
    'use strict';
 
-   var queueId = 0;
    var teamProject;
+   var queues = null;
    var dockerEndpoint;
    var dockerRegistryEndpoint;
    var token = util.encodePat(args.pat);
 
    async.series([
-         function (mainSeries) {
-            util.findProject(args.tfs, args.project, token, gen, function (err, tp) {
-               teamProject = tp;
-               mainSeries(err, tp);
-            });
-         },
-         function (mainSeries) {
-            async.parallel([
-               function (inParallel) {
-                  util.findQueue(args.queue, args.tfs, teamProject, token, function (err, id) {
-                     queueId = id;
-                     inParallel(err, id);
+      function (mainSeries) {
+         util.findProject(args.tfs, args.project, token, gen, function (err, tp) {
+            teamProject = tp;
+            mainSeries(err, tp);
+         });
+      },
+      function (mainSeries) {
+         async.parallel([
+            function (inParallel) {
+               util.findAllQueues(args.tfs, teamProject, token, function (err, allQueues) {
+                  queues = allQueues;
+                  inParallel(err, queues);
+               });
+            },
+            function (inParallel) {
+               if (util.needsDockerHost({}, args)) {
+                  util.findDockerServiceEndpoint(args.tfs, teamProject.id, args.dockerHost, token, gen, function (err, ep) {
+                     dockerEndpoint = ep;
+                     inParallel(err, dockerEndpoint);
                   });
-               },
-               function (inParallel) {
-                  if (util.needsDockerHost({}, args)) {
-                     util.findDockerServiceEndpoint(args.tfs, teamProject.id, args.dockerHost, token, gen, function (err, ep) {
-                        dockerEndpoint = ep;
-                        inParallel(err, dockerEndpoint);
-                     });
-                  } else {
-                     inParallel(null, undefined);
-                  }
-               },
-               function (inParallel) {
-                  if (util.needsRegistry({}, args)) {
-                     util.findDockerRegistryServiceEndpoint(args.tfs, teamProject.id, args.dockerRegistry, token, function (err, ep) {
-                        dockerRegistryEndpoint = ep;
-                        inParallel(err, dockerRegistryEndpoint);
-                     });
-                  } else {
-                     inParallel(null, undefined);
-                  }
+               } else {
+                  inParallel(null, undefined);
                }
-            ], mainSeries);
-         },
-         function (mainSeries) {
-            findOrCreateBuild(args.tfs, teamProject, token, queueId, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+            },
+            function (inParallel) {
+               if (util.needsRegistry({}, args)) {
+                  util.findDockerRegistryServiceEndpoint(args.tfs, teamProject.id, args.dockerRegistry, token, function (err, ep) {
+                     dockerRegistryEndpoint = ep;
+                     inParallel(err, dockerRegistryEndpoint);
+                  });
+               } else {
+                  inParallel(null, undefined);
+               }
+            }
+         ], mainSeries);
+      },
+      function (mainSeries) {
+
+         // PowerShell requires the latest version of build because it uses
+         // stages. We are setting target to powershell here so it can be
+         // tested in findOrCreateBuild below
+         if (args.type === 'powershell') {            
+            args.target = args.type;
+
+            // Pass in all the queues because we need one macOS, Linux and Windows for PowerShell
+            findOrCreateBuild(args.tfs, teamProject, token, queues, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+         } else {
+            // find just the queue they selected
+            var queue = queues.find(function (i) {
+               return i.name.toLowerCase() === args.queue.toLowerCase();
+            });
+
+            findOrCreateBuild(args.tfs, teamProject, token, queue.id, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
          }
-      ],
+      }
+   ],
       function (err, results) {
          // This is just for test and will be undefined during normal use
          if (done) {
@@ -65,10 +81,11 @@ function run(args, gen, done) {
             // running the generator.
             gen.env.error(err.message);
          }
-      });
+      }
+   );
 }
 
-function findOrCreateBuild(account, teamProject, token, queueId,
+function findOrCreateBuild(account, teamProject, token, queue,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
@@ -79,24 +96,48 @@ function findOrCreateBuild(account, teamProject, token, queueId,
       }
 
       if (!bld) {
-         createBuild(account, teamProject, token, queueId,
+         createBuild(account, teamProject, token, queue,
             dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
             filename, target, gen, callback);
       } else {
-         gen.log(`+ Found build definition`);
+         gen.log.ok(`Found build definition`);
          callback(e, bld);
       }
    });
 }
 
-function createBuild(account, teamProject, token, queueId,
+function createBuild(account, teamProject, token, queues,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
 
    let buildDefName = util.isDocker(target) ? `${teamProject.name}-Docker-CI` : `${teamProject.name}-CI`;
 
-   gen.log(`+ Creating ${buildDefName} build definition`);
+   gen.log.ok(`Creating ${buildDefName} build definition`);
+
+   let windows;
+   let linux;
+   let mac;
+   let selected;
+
+   if (Array.isArray(queues)) {
+      // We only need the id
+      let temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted vs2017') !== -1; });
+      windows = temp.id;
+
+      temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted linux') !== -1; });
+      linux = temp.id;
+
+      temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted macos') !== -1; });
+      mac = temp.id;
+
+      selected = windows;
+   } else {
+      windows = queues;
+      linux = queues;
+      mac = queues;
+      selected = queues;
+   }
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
@@ -108,7 +149,10 @@ function createBuild(account, teamProject, token, queueId,
       '{{BuildDefName}}': buildDefName,
       '{{TFS}}': account,
       '{{Project}}': teamProject.name,
-      '{{QueueId}}': queueId,
+      '{{QueueId}}': selected,
+      '{{WindowsQueueId}}': windows,
+      '{{macOSQueueId}}': mac,
+      '{{LinuxQueueId}}': linux,
       '{{dockerHostEndpoint}}': dockerHostEndpoint ? dockerHostEndpoint.id : ``,
       '{{dockerRegistryEndpoint}}': dockerRegistryEndpoint ? dockerRegistryEndpoint.id : ``,
       '{{dockerRegistryId}}': dockerNamespace,
@@ -120,6 +164,13 @@ function createBuild(account, teamProject, token, queueId,
    // Validates my contents is valid JSON and stripes all the new lines
    var payload = JSON.parse(contents);
 
+   // PowerShell build has to be uploaded with latest API version
+   let apiVersion = util.BUILD_API_VERSION
+
+   if (target === 'powershell') {
+      apiVersion = util.VSTS_BUILD_API_VERSION
+   }
+
    var options = util.addUserAgent({
       method: 'POST',
       headers: {
@@ -130,7 +181,7 @@ function createBuild(account, teamProject, token, queueId,
       json: true,
       url: `${util.getFullURL(account)}/${teamProject.id}/_apis/build/definitions`,
       qs: {
-         'api-version': util.BUILD_API_VERSION
+         'api-version': apiVersion
       },
       body: payload
    });

@@ -44,7 +44,7 @@ module.exports = class extends Generator {
       if (this.action === `clone` || this.action === `all`) {
          // Clone the repository of the team project so the user only has to add 
          // and commit.
-         this.log(`+ Cloning repository ${util.getFullURL(this.tfs)}/_git/${this.applicationName}`);
+         this.log.ok(`Cloning repository ${util.getFullURL(this.tfs)}/_git/${this.applicationName}`);
 
          // By adding the PAT right after https:// I can clone a repo without 
          // asking user for creds
@@ -62,13 +62,13 @@ module.exports = class extends Generator {
       if (this.action === `commit` || this.action === `all`) {
          process.chdir(path.join(this.destinationRoot(), this.applicationName));
 
-         this.log(`+ Adding initial files`);
+         this.log.ok(`Adding initial files`);
          // I don`t want to see the output of this command
          this.spawnCommandSync(`git`, [`add`, `--a`], {
             stdio: ['pipe', 'pipe', process.stderr]
          });
 
-         this.log(`+ Configuring email and name as yo team`);
+         this.log.ok(`Configuring email and name as yo team`);
          this.spawnCommandSync(`git`, [`config`, `user.email`, `yo team`], {
             stdio: ['pipe', 'pipe', process.stderr]
          });
@@ -77,12 +77,12 @@ module.exports = class extends Generator {
             stdio: ['pipe', 'pipe', process.stderr]
          });
 
-         this.log(`+ Committing initial files`);
+         this.log.ok(`Committing initial files`);
          this.spawnCommandSync(`git`, [`commit`, `-q`, `-m`, `Init`], {
             stdio: ['pipe', 'pipe', process.stderr]
          });
 
-         this.log(`= Now all you have to do is push when ready`);
+         this.log.write(`Now all you have to do is push when ready.`);
       }
    }
 };
