@@ -65,6 +65,12 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 
 ## August 2018
 
+### 0.4.8
+
+Merge [Pull Request](https://github.com/DarqueWarrior/generator-team/pull/27) from [Maxime Eglem](https://github.com/MaximeEglem) which included the following:
+
+- Removes usage of deprecated Buffer
+
 ### 0.4.7
 
 Support for PowerShell Modules using Package Management and PowerShell Gallery. This is only supported on VSTS at this time. The build will run on hosted macOS, Linux and Windows agents. The release will run on selected agent during prompts.

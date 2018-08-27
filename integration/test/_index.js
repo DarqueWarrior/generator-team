@@ -23,10 +23,8 @@ function encodePat(pat) {
    // The personal access token must be 64 bit encoded to be used
    // with the REST API
 
-   let b = new Buffer(`:` + pat);
-   let s = b.toString(`base64`);
-
-   return s;
+   let b = Buffer.from(`:` + pat);
+   return b.toString(`base64`);
 }
 
 function addUserAgent(options, userAgent) {
