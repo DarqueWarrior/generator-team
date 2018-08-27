@@ -34,7 +34,7 @@ function run(args, gen, done) {
                   azureSub.id = sub.subscriptionId;
                   azureSub.tenantId = sub.subscriptionTenantId;
 
-                  gen.log(`+ Found ${args.azureSub} Azure subscription`);
+                  gen.log.ok(`Found ${args.azureSub} Azure subscription`);
                }
                mainSeries(err, sub);
             });
@@ -72,7 +72,7 @@ function findOrCreateAzureServiceEndpoint(account, projectId, sub, token, gen, c
             // The endpoint was not found so create it
             createAzureServiceEndpoint(account, projectId, sub, token, gen, callback);
          } else {
-            gen.log(`+ Found Azure Service Endpoint '${sub.name}'`);
+            gen.log.ok(`Found Azure Service Endpoint '${sub.name}'`);
             callback(e, ep);
          }
       }
@@ -82,7 +82,7 @@ function findOrCreateAzureServiceEndpoint(account, projectId, sub, token, gen, c
 function createAzureServiceEndpoint(account, projectId, sub, token, gen, callback) {
    "use strict";
 
-   gen.log(`+ Creating ${sub.name} Azure Service Endpoint`);
+   gen.log.ok(`Creating ${sub.name} Azure Service Endpoint`);
 
    // If the user provides the servicePrincipalId set the creationMode to 
    // manual. If you try and use creation mode of automatic and pass in
