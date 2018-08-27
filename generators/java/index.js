@@ -105,7 +105,7 @@ module.exports = class extends Generator {
       if (this.installDep === 'true') {
          process.chdir(this.applicationName);
 
-         this.log(`+ Running bower install`);
+         this.log.ok(`Running bower install`);
          // I don't want to see the output of this command
          this.spawnCommandSync('bower', ['install'], {
             stdio: ['pipe', 'pipe', process.stderr]

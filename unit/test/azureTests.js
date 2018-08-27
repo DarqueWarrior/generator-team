@@ -52,6 +52,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -81,6 +82,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
 
       var args = {
          tfs: `vsts`,
@@ -110,8 +112,8 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
       logger.log.error = function () { };
-      logger.env = { error: function () { } };
 
       var args = {
          tfs: `vsts`,
@@ -140,6 +142,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
 
       var args = {
          tfs: `http://localhost:8080/tfs/DefaultCollection`,
@@ -180,6 +183,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
 
       // Create Project
       requestStub.onCall(0).yields(null, null, { name: `endpoint` });
@@ -211,6 +215,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
 
       // Create endpoint
       requestStub.onCall(0).yields(null, null, { name: `endpoint` });
@@ -242,6 +247,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
       logger.log.error = function () { };
 
       // Create endpoint
@@ -268,6 +274,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
       logger.log.error = function () { };
 
       // Create endpoint
@@ -294,6 +301,7 @@ describe(`azure:app`, function () {
 
       var logger = sinon.stub();
       logger.log = function () { };
+      logger.log.ok = function () { };
 
       // Create endpoint
       requestStub.onCall(0).yields(`boom`, null, undefined);

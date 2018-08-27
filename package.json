@@ -1,12 +1,12 @@
 {
    "name": "generator-team",
-   "version": "0.4.5",
+   "version": "0.4.7",
    "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
    "main": "./generators/app/index.js",
    "scripts": {
-      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
-      "unittest": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
-      "inttest": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml integration/test"
+      "test": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
+      "unittest": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml unit/test",
+      "inttest": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml integration/test"
    },
    "files": [
       "generators/app",
@@ -22,12 +22,21 @@
       "generators/profile",
       "generators/project",
       "generators/registry",
-      "generators/release"
+      "generators/release",
+      "generators/powershell",
+      "generators/nuget",
+      "generators/feed"
    ],
    "keywords": [
       "yeoman-generator",
       "tfs",
       "vsts",
+      "java",
+      ".net Core",
+      "PowerShell",
+      "Azure",
+      "Node",
+      "Node.js",
       "Team Foundation Server",
       "Team Services",
       "Visual Studio",
@@ -40,14 +49,14 @@
       "type": "git",
       "url": "https://github.com/DarqueWarrior/generator-team"
    },
-   "license": "ISC",
+   "license": "MIT",
    "dependencies": {
       "async": "^2.6.0",
       "node-env-file": "^0.1.8",
       "pad": "^2.0.3",
       "request": "^2.85.0",
       "uuid": "^3.2.1",
-      "yeoman-generator": "^2.0.3",
+      "yeoman-generator": "^3.1.1",
       "yosay": "^2.0.1"
    },
    "devDependencies": {
@@ -55,14 +64,14 @@
       "cheerio": "^1.0.0-rc.2",
       "fs-extra": "^5.0.0",
       "istanbul": "*",
-      "jshint": "^2.9.4",
+      "jshint": "^2.9.6",
       "mocha": "^5.0.5",
-      "ms-rest-azure": "^2.5.5",
+      "ms-rest-azure": "^2.5.7",
       "proxyquire": "^2.0.1",
       "sinon": "^4.4.8",
       "sinon-test": "^2.1.3",
       "yeoman-assert": "^3.1.0",
-      "yeoman-test": "^1.7.0",
-      "yo": "^2.0.1"
+      "yeoman-test": "^1.8.0",
+      "yo": "^2.0.5"
    }
 }

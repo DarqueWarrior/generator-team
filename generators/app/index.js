@@ -37,6 +37,8 @@ module.exports = class extends Generator {
       argUtils.dockerRegistryPassword(this);
       argUtils.servicePrincipalKey(this);
       argUtils.pat(this);
+      argUtils.functionName(this);
+      argUtils.apiKey(this);
       argUtils.customFolder(this);
    }
 
@@ -46,7 +48,7 @@ module.exports = class extends Generator {
       // sub generators. I also use this to determine which data I still need to
       // prompt for.
 
-      this.log(yosay(`Welcome to DevOps powered by Microsoft version ${pkg.version}`));
+      this.log.write(yosay(`Welcome to DevOps powered by Microsoft version ${pkg.version}`));
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -71,6 +73,8 @@ module.exports = class extends Generator {
          prompts.creationMode(this),
          prompts.servicePrincipalId(this),
          prompts.servicePrincipalKey(this),
+         prompts.functionName(this),
+         prompts.apiKey(this),
          prompts.dockerHost(this),
          prompts.dockerCertPath(this),
          prompts.dockerRegistry(this),
@@ -98,6 +102,7 @@ module.exports = class extends Generator {
          this.tfs = util.reconcileValue(cmdLnInput.options.tfs, answers.tfs);
          this.type = util.reconcileValue(cmdLnInput.options.type, answers.type);
          this.queue = util.reconcileValue(cmdLnInput.options.queue, answers.queue);
+         this.apiKey = util.reconcileValue(cmdLnInput.options.apiKey, answers.apiKey);
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.groupId = util.reconcileValue(cmdLnInput.options.groupId, answers.groupId, ``);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
@@ -105,6 +110,7 @@ module.exports = class extends Generator {
          this.installDep = util.reconcileValue(cmdLnInput.options.installDep, answers.installDep);
          this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
          this.dockerHost = util.reconcileValue(cmdLnInput.options.dockerHost, answers.dockerHost, ``);
+         this.functionName = util.reconcileValue(cmdLnInput.options.functionName, answers.functionName);
          this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
@@ -121,6 +127,12 @@ module.exports = class extends Generator {
    configuring() {
       // Based on the users answers compose all the required generators.
       compose.addGit(this);
+
+      if (this.type === `powershell`) {
+         compose.addNuGet(this);
+         compose.addFeed(this);
+      }
+      
       compose.addLanguage(this);
       compose.addDockerHost(this);
       compose.addRegistry(this);

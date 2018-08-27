@@ -1,14 +1,13 @@
-const path = require(`path`);
-const request = require(`request`);
 const vsts = require(`./_index`);
 const env = require(`node-env-file`);
-const helpers = require(`yeoman-test`);
+const testUtils = require(`./_util`);
 const assert = require(`yeoman-assert`);
 const exec = require(`child_process`).exec;
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
-env(__dirname  +  `/.env`, {
+var fileName = process.env.SERVER_TO_TEST || ``
+env(__dirname +  `/${fileName}.env`, {
    raise: false,
    overwrite: true
 });
@@ -33,6 +32,8 @@ describe(`project:index cmdLine`, function () {
    it(`project should be created`, function (done) {
       // Act
       let cmd = `yo team:project ${expectedProjectName} ${tfs} ${pat}`;
+
+      testUtils.log(`run command: ${cmd}`);
       
       exec(cmd, (error, stdout, stderr) => {
          if (error) {

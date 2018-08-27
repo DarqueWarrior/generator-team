@@ -72,7 +72,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
@@ -84,23 +84,51 @@
          }
       },
       {
+         "environment": {},
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
          "displayName": "Test",
-         "refName": "run_tests",
          "timeoutInMinutes": 0,
+         "refName": "run_tests",
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
             "command": "test",
             "publishWebProjects": "true",
             "projects": "**/*.Tests.csproj",
+            "custom": "",
             "arguments": "-l trx",
-            "zipAfterPublish": "true"
+            "publishTestResults": "false",
+            "zipAfterPublish": "true",
+            "modifyOutputPath": "true",
+            "selectOrConfig": "select",
+            "feedRestore": "",
+            "includeNuGetOrg": "true",
+            "nugetConfigPath": "",
+            "externalEndpoints": "",
+            "noCache": "false",
+            "packagesDirectory": "",
+            "verbosityRestore": "Detailed",
+            "searchPatternPush": "$(Build.ArtifactStagingDirectory)/*.nupkg",
+            "nuGetFeedType": "internal",
+            "feedPublish": "",
+            "externalEndpoint": "",
+            "searchPatternPack": "**/*.csproj",
+            "configurationToPack": "$(BuildConfiguration)",
+            "outputDir": "$(Build.ArtifactStagingDirectory)",
+            "nobuild": "false",
+            "versioningScheme": "off",
+            "versionEnvVar": "",
+            "requestedMajorVersion": "1",
+            "requestedMinorVersion": "0",
+            "requestedPatchVersion": "0",
+            "buildProperties": "",
+            "verbosityPack": "Detailed",
+            "workingDirectory": ""
          }
       },
       {
@@ -135,7 +163,7 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "5541a522-603c-47ad-91fc-a4b1d163081b",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {

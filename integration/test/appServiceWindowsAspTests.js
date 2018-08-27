@@ -1,6 +1,6 @@
 const appService = require('./_appService');
 
-describe(`Azure App Service (Windows) using Default queue`, function () {
+describe.only(`Azure App Service (Windows) using Default queue`, function () {
    "use strict";
 
    appService.runTests({

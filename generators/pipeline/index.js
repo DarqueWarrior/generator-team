@@ -60,6 +60,7 @@ module.exports = class extends Generator {
          prompts.creationMode(this),
          prompts.servicePrincipalId(this),
          prompts.servicePrincipalKey(this),
+         prompts.apiKey(this),
          prompts.dockerHost(this),
          prompts.dockerCertPath(this),
          prompts.dockerRegistry(this),
@@ -73,6 +74,7 @@ module.exports = class extends Generator {
          this.tfs = util.reconcileValue(cmdLnInput.options.tfs, answers.tfs);
          this.type = util.reconcileValue(cmdLnInput.options.type, answers.type);
          this.queue = util.reconcileValue(cmdLnInput.options.queue, answers.queue);
+         this.apiKey = util.reconcileValue(cmdLnInput.options.apiKey, answers.apiKey);
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
          this.tenantId = util.reconcileValue(cmdLnInput.options.tenantId, answers.tenantId, ``);
@@ -94,6 +96,12 @@ module.exports = class extends Generator {
    configuring() {
       // Based on the users answers compose all the required generators.
       compose.addDockerHost(this);
+
+      if (this.type === `powershell`) {
+         compose.addNuGet(this);
+         compose.addFeed(this);
+      }
+      
       compose.addRegistry(this);
       compose.addAzure(this);
       compose.addBuild(this);

@@ -16,7 +16,8 @@ var __basedir = process.cwd();
 
 // Try to read values from .env. If that fails
 // simply use the environment vars on the machine.
-env(__dirname + '/.env', {
+var fileName = process.env.SERVER_TO_TEST || ``
+env(__dirname + `/${fileName}.env`, {
    raise: false,
    overwrite: true
 });
@@ -78,6 +79,8 @@ function runTests(iteration) {
    var applicationType = iteration.appType;
    var applicationName = iteration.appName + uuid.substring(0, 8);
    var tfs = process.env.ACCT;
+   var apiKey = process.env.API_KEY || ` `;
+   var functionName = process.env.FUNCTION_NAME || ` `;
    var azureSub = process.env.AZURE_SUB || ` `;
    var azureSubId = process.env.AZURE_SUB_ID || ` `;
    var tenantId = process.env.AZURE_TENANT_ID || ` `;
@@ -109,9 +112,9 @@ function runTests(iteration) {
          // runs before all tests in this block
          // Run the command. The parts will be verified below.
          let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-            `"${tenantId}" "${servicePrincipalId}" "${queue}" ${target} ${installDep} ` +
+            `"${tenantId}" "${servicePrincipalId}" "${queue}" "${target}" ${installDep} ` +
             `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${customFolder}"`;
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
 
          util.log(`run command: ${cmd}`);
 
@@ -236,6 +239,24 @@ function runTests(iteration) {
                done(error);
             });
          });
+
+         // runs after all tests in this block
+         after(function (done) {
+            if (doNotCleanUp === `true`) {
+               done();
+               return;
+            }
+
+            // Delete files, project, and resource group.
+            async.parallel([
+               function (inParallel) {
+                  util.log(`delete folder: ${applicationName}`);
+                  util.rmdir(applicationName);
+
+                  inParallel();
+               }
+            ], done);
+         });
       });
 
       context(`Build is running ${iteration.appType}`, function () {
@@ -329,6 +350,18 @@ function runTests(iteration) {
                done(e);
             });
          });
+
+         // runs after all tests in this block
+         after(function (done) {
+            if (doNotCleanUp === `true`) {
+               done();
+               return;
+            }
+
+            // Delete files, project, and resource group.
+            util.log(`delete resource group: ${applicationName}Dev`);
+            azure.deleteResourceGroup(`${applicationName}Dev`, done);
+         });
       });
 
       context(`Release to QA is running ${iteration.appType}`, function () {
@@ -391,6 +424,18 @@ function runTests(iteration) {
                done(e);
             });
          });
+
+         // runs after all tests in this block
+         after(function (done) {
+            if (doNotCleanUp === `true`) {
+               done();
+               return;
+            }
+
+            // Delete files, project, and resource group.
+            util.log(`delete resource group: ${applicationName}QA`);
+            azure.deleteResourceGroup(`${applicationName}QA`, done);
+         });
       });
 
       context(`Release to Prod is running ${iteration.appType}`, function () {
@@ -438,6 +483,18 @@ function runTests(iteration) {
 
             requestSite(applicationName, "Prod", iteration.title, done);
          });
+
+         // runs after all tests in this block
+         after(function (done) {
+            if (doNotCleanUp === `true`) {
+               done();
+               return;
+            }
+
+            // Delete files, project, and resource group.
+            util.log(`delete resource group: ${applicationName}Prod`);
+            azure.deleteResourceGroup(`${applicationName}Prod`, done);
+         });
       });
 
       // runs after all tests in this block
@@ -448,34 +505,12 @@ function runTests(iteration) {
          }
 
          // Delete files, project, and resource group.
-         async.parallel([
-            function (inParallel) {
-               vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
-                  if (!e) {
-                     util.log(`delete project: ${p.id}`);
-                     vsts.deleteProject(tfs, p.id, pat, userAgent, inParallel);
-                  }
-               });
-            },
-            function (inParallel) {
-               util.log(`delete folder: ${applicationName}`);
-               util.rmdir(applicationName);
-
-               inParallel();
-            },
-            function (inParallel) {
-               util.log(`delete resource group: ${applicationName}Dev`);
-               azure.deleteResourceGroup(`${applicationName}Dev`, inParallel);
-            },
-            function (inParallel) {
-               util.log(`delete resource group: ${applicationName}QA`);
-               azure.deleteResourceGroup(`${applicationName}QA`, inParallel);
-            },
-            function (inParallel) {
-               util.log(`delete resource group: ${applicationName}Prod`);
-               azure.deleteResourceGroup(`${applicationName}Prod`, inParallel);
+         vsts.findProject(tfs, applicationName, pat, userAgent, (e, p) => {
+            if (!e) {
+               util.log(`delete project: ${p.id}`);
+               vsts.deleteProject(tfs, p.id, pat, userAgent, done);
             }
-         ], done);
+         });
       });
    });
 }

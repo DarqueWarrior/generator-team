@@ -34,15 +34,7 @@ function run(args, gen, done) {
       });
 }
 
-function findOrCreateDockerRegistryServiceEndpoint(
-   account,
-   projectId,
-   dockerRegistry,
-   dockerRegistryId,
-   dockerRegistryPassword,
-   token,
-   gen,
-   callback) {
+function findOrCreateDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, token, gen, callback) {
    'use strict';
 
    // There is nothing to do
@@ -58,7 +50,7 @@ function findOrCreateDockerRegistryServiceEndpoint(
          if (!ep) {
             createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, token, gen, callback);
          } else {
-            gen.log('+ Found Docker Registry Service Endpoint');
+            gen.log.ok('Found Docker Registry Service Endpoint');
             callback(e, ep);
          }
       }
@@ -68,7 +60,7 @@ function findOrCreateDockerRegistryServiceEndpoint(
 function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, dockerRegistryId, dockerRegistryPassword, token, gen, callback) {
    'use strict';
 
-   gen.log('+ Creating Docker Registry Service Endpoint');
+   gen.log.ok('Creating Docker Registry Service Endpoint');
 
    var options = util.addUserAgent({
       method: 'POST',
@@ -100,7 +92,7 @@ function createDockerRegistryServiceEndpoint(account, projectId, dockerRegistry,
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
          gen.log("! Make sure the Docker Integration extension is installed");
-         gen.env.error("x " + response.body.message.replace('\n', ' '));
+         gen.log.error(response.body.message.replace('\n', ' '));
       }
 
       callback(error, body);

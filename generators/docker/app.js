@@ -57,7 +57,7 @@ function findOrCreateDockerServiceEndpoint(account, projectId, dockerHost, docke
          if (!ep) {
             createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertPath, token, gen, callback);
          } else {
-            gen.log('+ Found Docker Service Endpoint');
+            gen.log.ok('Found Docker Service Endpoint');
             callback(e, ep);
          }
       }
@@ -67,7 +67,7 @@ function findOrCreateDockerServiceEndpoint(account, projectId, dockerHost, docke
 function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertPath, token, gen, callback) {
    'use strict';
 
-   gen.log('+ Creating Docker Service Endpoint');
+   gen.log.ok('Creating Docker Service Endpoint');
 
    // Find the contents of the files.
    var ca = path.join(dockerCertPath, 'ca.pem');
@@ -116,7 +116,7 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
             gen.log("! Make sure the Docker Integration extension is installed");
-            gen.env.error("x " + response.body.message.replace('\n', ' '));
+            gen.log.error(response.body.message.replace('\n', ' '));
          }
 
          callback(error, body);

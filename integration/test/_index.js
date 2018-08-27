@@ -1,3 +1,7 @@
+// This is the start of what might me a NPM VSTS lib. 
+// This why you see duplicates here from the util in the
+// main project.
+
 const async = require('async');
 const util = require(`./_util`);
 const request = require('request');
@@ -8,6 +12,10 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+const PACKAGING_API_VERSION = '4.0-preview';
+
+const EXTENSIONS_SUB_DOMAIN = `extmgmt`;
+const RELEASE_MANAGEMENT_SUB_DOMAIN = `vsrm`;
 
 function encodePat(pat) {
    'use strict';
@@ -30,7 +38,7 @@ function getUserAgent(userAgent) {
    return `${userAgent}/${package.version} (${process.platform}: ${process.arch}) Node.js/${process.version}`;
 }
 
-function getFullURL(instance, includeCollection, forRM) {
+function getFullURL(instance, includeCollection, subDomain) {
    // The user MUST only enter the VSTS account name and not the full url.
    // This is how the system determines which system is being targeted.  Some
    // URL for VSTS are not the same as they are for TFS for example Release
@@ -46,8 +54,8 @@ function getFullURL(instance, includeCollection, forRM) {
 
    let vstsURL = `https://${instance}.visualstudio.com`;
 
-   if (forRM) {
-      vstsURL = `https://${instance}.vsrm.visualstudio.com`;
+   if (subDomain) {
+      vstsURL = `https://${instance}.${subDomain}.visualstudio.com`;
    }
 
    if (includeCollection) {
@@ -95,6 +103,28 @@ function deleteBuildDefinition(account, projectId, buildDefinitionId, pat, userA
       "url": `${getFullURL(account, true)}/${projectId}/_apis/build/definitions/${buildDefinitionId}`,
       "qs": {
          "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (err, res, body) {
+      callback(err, null);
+   });
+}
+
+function deleteFeed(account, feedId, pat, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   let options = addUserAgent({
+      "method": `Delete`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds/${feedId}`,
+      "qs": {
+         "api-version": PACKAGING_API_VERSION
       }
    }, userAgent);
 
@@ -374,7 +404,7 @@ function findReleaseDefinition(account, projectId, pat, name, userAgent, callbac
          "cache-control": `no-cache`,
          "authorization": `Basic ${token}`
       },
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/definitions`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/definitions`,
       "qs": {
          "api-version": RELEASE_API_VERSION
       }
@@ -406,7 +436,7 @@ function getReleases(account, projectId, pat, userAgent, stage, callback) {
          "cache-control": `no-cache`,
          "authorization": `Basic ${token}`
       },
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/releases?$expand=environments`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/releases?$expand=environments`,
       "qs": {
          "api-version": RELEASE_API_VERSION
       }
@@ -450,7 +480,7 @@ function setApproval(account, projectId, pat, id, userAgent, callback) {
          "authorization": `Basic ${token}`
       },
       "body": body,
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/approvals/${id}`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/approvals/${id}`,
       "qs": {
          "api-version": DISTRIBUTED_TASK_API_VERSION
       }
@@ -478,7 +508,7 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
          "cache-control": `no-cache`,
          "authorization": `Basic ${token}`
       },
-      "url": `${getFullURL(account, true, true)}/${projectId}/_apis/release/approvals`,
+      "url": `${getFullURL(account, true, RELEASE_MANAGEMENT_SUB_DOMAIN)}/${projectId}/_apis/release/approvals`,
       "qs": {
          "api-version": DISTRIBUTED_TASK_API_VERSION
       }
@@ -492,6 +522,38 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
       var obj = JSON.parse(body);
 
       callback(e, obj);
+   });
+}
+
+function findNuGetServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      util.log(`findNuGetServiceEndpoint response:\r\n`);
+      util.logJSON(body);
+      util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
+
+      var obj = JSON.parse(body);
+
+      var endpoint = obj.value.find(function (i) {
+         return i.name.toLowerCase() === name.toLowerCase();
+      });
+
+      callback(error, endpoint);
    });
 }
 
@@ -550,10 +612,43 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
    });
 }
 
+function findPackageFeed(account, name, pat, userAgent, callback) {
+   "use strict";
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds/`,
+      "qs": {
+         "api-version": PACKAGING_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      util.log(`findPackageFeed response:\r\n`);
+      util.logJSON(body);
+      util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
+
+      var obj = JSON.parse(body);
+
+      var rel = obj.value.find(function (i) {
+         return i.name.toLowerCase() === name.toLowerCase();
+      });
+
+      callback(e, rel);
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    getBuilds: getBuilds,
+   deleteFeed: deleteFeed,
    getBuildLog: getBuildLog,
    findProject: findProject,
    getReleases: getReleases,
@@ -561,8 +656,10 @@ module.exports = {
    getApprovals: getApprovals,
    deleteProject: deleteProject,
    createProject: createProject,
+   findPackageFeed: findPackageFeed,
    findBuildDefinition: findBuildDefinition,
    deleteBuildDefinition: deleteBuildDefinition,
    findReleaseDefinition: findReleaseDefinition,
+   findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint
 };
