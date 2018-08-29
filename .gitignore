@@ -17,6 +17,8 @@ unit.xml
 **/2018.env
 **/vsts.env
 **/vstsLinux.env
+.yo-rc.json
+
 
 
 ## Ignore Visual Studio temporary files, build results, and

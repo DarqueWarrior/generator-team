@@ -79,6 +79,8 @@ function runTests(iteration) {
    var applicationType = iteration.appType;
    var applicationName = iteration.appName + uuid.substring(0, 8);
    var tfs = process.env.ACCT;
+   var apiKey = process.env.API_KEY || ` `;
+   var functionName = process.env.FUNCTION_NAME || ` `;
    var azureSub = process.env.AZURE_SUB || ` `;
    var azureSubId = process.env.AZURE_SUB_ID || ` `;
    var tenantId = process.env.AZURE_TENANT_ID || ` `;
@@ -110,9 +112,9 @@ function runTests(iteration) {
          // runs before all tests in this block
          // Run the command. The parts will be verified below.
          let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
-            `"${tenantId}" "${servicePrincipalId}" "${queue}" ${target} ${installDep} ` +
+            `"${tenantId}" "${servicePrincipalId}" "${queue}" "${target}" ${installDep} ` +
             `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${customFolder}"`;
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
 
          util.log(`run command: ${cmd}`);
 

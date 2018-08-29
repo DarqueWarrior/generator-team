@@ -22,6 +22,10 @@ function run(args, gen, done) {
    var dockerRegistryEndpoint = {};
    var token = util.encodePat(args.pat);
 
+   // PowerShell
+   var moduleFeed;
+   var powerShellGallery;
+
    async.series([
       function (mainSeries) {
          util.findProject(args.tfs, args.project, token, gen, function (err, tp) {
@@ -42,6 +46,28 @@ function run(args, gen, done) {
                   util.findDockerServiceEndpoint(args.tfs, teamProject.id, args.dockerHost, token, gen, function (err, ep) {
                      dockerEndpoint = ep;
                      inParallel(err, dockerEndpoint);
+                  });
+               } else {
+                  inParallel(null, undefined);
+               }
+            },
+            function (inParallel) {
+               // Get the package management feed
+               if (util.needsapiKey({}, args)) {
+                  util.findPackageFeed(args.tfs, teamProject.name, token, gen, function (err, feed) {
+                     moduleFeed = feed;
+                     inParallel(err, moduleFeed);
+                  });
+               } else {
+                  inParallel(null, undefined);
+               }
+            },
+            function (inParallel) {
+               // Get the PowerShell Gallery connection
+               if (util.needsapiKey({}, args)) {
+                  util.findNuGetServiceEndpoint(args.tfs, teamProject.id, token, gen, function (err, conn) {
+                     powerShellGallery = conn;
+                     inParallel(err, powerShellGallery);
                   });
                } else {
                   inParallel(null, undefined);
@@ -88,12 +114,14 @@ function run(args, gen, done) {
             account: args.tfs,
             target: args.target,
             appName: args.appName,
+            moduleFeed: moduleFeed,
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
             dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             dockerRegistry: args.dockerRegistry,
+            powerShellGallery: powerShellGallery,
             approverUniqueName: approverUniqueName,
             dockerRegistryId: args.dockerRegistryId,
             approverDisplayName: approverDisplayName,
@@ -123,59 +151,63 @@ function run(args, gen, done) {
 function getRelease(args, callback) {
    var release = ``;
 
-   let pat = util.encodePat(args.pat);
-
-   if (util.isDocker(args.target)) {
-      util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
-         if (result) {
-
-            // see if they support load tests or not
-            if (args.removeloadTest && args.target === `dockerpaas`) {
-               release = `vsts_release_${args.target}_noloadtest.json`;
-            } else {
-               release = `vsts_release_${args.target}.json`;
-            }
-
-            if (!util.isVSTS(args.tfs) && args.target === `dockerpaas`) {
-               release = `tfs_2018_release_${args.target}.json`;
-            }
-         } else {
-            release = `tfs_release_${args.target}.json`;
-         }
-
-         callback(e, release);
-      });
+   if (args.type === 'powershell') {
+      callback(null, `vsts_release_powershell.json`);
    } else {
-      util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
-         if (result) {
-            if (util.isVSTS(args.tfs)) {
+      let pat = util.encodePat(args.pat);
 
+      if (util.isDocker(args.target)) {
+         util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
+            if (result) {
+
+               // see if they support load tests or not
+               if (args.removeloadTest && args.target === `dockerpaas`) {
+                  release = `vsts_release_${args.target}_noloadtest.json`;
+               } else {
+                  release = `vsts_release_${args.target}.json`;
+               }
+
+               if (!util.isVSTS(args.tfs) && args.target === `dockerpaas`) {
+                  release = `tfs_2018_release_${args.target}.json`;
+               }
+            } else {
+               release = `tfs_release_${args.target}.json`;
+            }
+
+            callback(e, release);
+         });
+      } else {
+         util.isTFSGreaterThan2017(args.tfs, pat, (e, result) => {
+            if (result) {
+               if (util.isVSTS(args.tfs)) {
+
+                  if (args.target === `paasslots`) {
+                     release = `vsts_release_slots.json`;
+                  } else {
+                     // see if they support load tests or not
+                     if (args.removeloadTest) {
+                        release = `vsts_release_noloadtest.json`;
+                     } else {
+                        release = `vsts_release.json`;
+                     }
+                  }
+               } else {
+                  release = `tfs_2018_release.json`;
+               }
+            } else {
                if (args.target === `paasslots`) {
                   release = `vsts_release_slots.json`;
                }
                else if (args.target === `appcenter`){
                   release = `vsts_release_xamarin.json`;
                } else {
-                  // see if they support load tests or not
-                  if (args.removeloadTest) {
-                     release = `vsts_release_noloadtest.json`;
-                  } else {
-                     release = `vsts_release.json`;
-                  }
+                  release = `tfs_release.json`;
                }
-            } else {
-               release = `tfs_2018_release.json`;
             }
-         } else {
-            if (args.target === `paasslots`) {
-               release = `vsts_release_slots.json`;
-            } else {
-               release = `tfs_release.json`;
-            }
-         }
 
-         callback(e, release);
-      });
+            callback(e, release);
+         });
+      }
    }
 }
 
@@ -190,7 +222,7 @@ function findOrCreateRelease(args, gen, callback) {
       if (!rel) {
          createRelease(args, gen, callback);
       } else {
-         gen.log(`+ Found release definition`);
+         gen.log.ok(`Found release definition`);
          callback(e, rel);
       }
    });
@@ -201,7 +233,7 @@ function createRelease(args, gen, callback) {
 
    let releaseDefName = util.isDocker(args.target) ? `${args.teamProject.name}-Docker-CD` : `${args.teamProject.name}-CD`;
 
-   gen.log(`+ Creating ${releaseDefName} release definition`);
+   gen.log.ok(`Creating ${releaseDefName} release definition`);
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
@@ -222,6 +254,8 @@ function createRelease(args, gen, callback) {
       '{{ProjectId}}': args.teamProject.id,
       '{{ConnectedServiceID}}': args.endpoint,
       '{{ProjectName}}': args.teamProject.name,
+      '{{PackageManagementFeedID}}': args.moduleFeed ? args.moduleFeed.id : null,
+      '{{PowerShellGallery}}': args.powerShellGallery ? args.powerShellGallery.id : null,
       '{{ApproverDisplayName}}': args.approverDisplayName,
       '{{ProjectLowerCase}}': args.teamProject.name.toLowerCase(),
       '{{dockerPorts}}': args.dockerPorts ? args.dockerPorts : null,
@@ -267,7 +301,7 @@ function createRelease(args, gen, callback) {
       function (finished) {
          request(options, function (err, resp, body) {
 
-            if (resp.statusCode === 400) {
+            if (resp.statusCode >= 400) {
                status = "failed";
                finished(new Error("x " + resp.body.message), null);
                let message = resp.body.message;

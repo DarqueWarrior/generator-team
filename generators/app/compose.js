@@ -10,7 +10,7 @@ function addRelease(obj) {
       // Inform user that if they selected Hosted Linux agent Hosted VS2017
       // will be used for release. The release requires AZPowerShell which is
       // not on the Linux build machine
-      obj.log(`* Hosted Linux will be used for build and Hosted VS2017 for release. *`);
+      obj.log.info(`Hosted Linux will be used for build and Hosted VS2017 for release.`);
    }
 
    obj.composeWith(`team:release`, {
@@ -102,11 +102,17 @@ function addLanguage(obj) {
            }
            break;
 
-       default:
-           obj.composeWith(generator, {
-               arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
-           });
-           break;
+      case `powershell`:
+         obj.composeWith(generator, {
+            arguments: [obj.applicationName, obj.functionName]
+         });
+         break;
+
+      default:
+         obj.composeWith(generator, {
+            arguments: [obj.applicationName, obj.installDep, obj.dockerPorts]
+         });
+         break;
    }
 }
 
@@ -119,8 +125,27 @@ function addGit(obj) {
    });
 }
 
+function addFeed(obj) {
+   obj.composeWith(`team:feed`, {
+      arguments: [obj.applicationName, obj.tfs,
+      obj.pat
+      ]
+   });
+}
+
+function addNuGet(obj) {
+   obj.composeWith(`team:nuget`, {
+      arguments: [obj.applicationName, obj.tfs,
+      obj.apiKey,
+      obj.pat
+      ]
+   });
+}
+
 module.exports = {
    addGit: addGit,
+   addFeed: addFeed,
+   addNuGet: addNuGet,
    addAzure: addAzure,
    addBuild: addBuild,
    addProject: addProject,

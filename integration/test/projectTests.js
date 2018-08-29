@@ -1,8 +1,6 @@
-const path = require(`path`);
-const request = require(`request`);
 const vsts = require(`./_index`);
 const env = require(`node-env-file`);
-const helpers = require(`yeoman-test`);
+const testUtils = require(`./_util`);
 const assert = require(`yeoman-assert`);
 const exec = require(`child_process`).exec;
 
@@ -34,6 +32,8 @@ describe(`project:index cmdLine`, function () {
    it(`project should be created`, function (done) {
       // Act
       let cmd = `yo team:project ${expectedProjectName} ${tfs} ${pat}`;
+
+      testUtils.log(`run command: ${cmd}`);
       
       exec(cmd, (error, stdout, stderr) => {
          if (error) {

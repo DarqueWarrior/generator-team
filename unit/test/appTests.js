@@ -10,11 +10,14 @@ describe(`app:index`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:feed`],
+         [helpers.createDummyGenerator(), `team:nuget`],
          [helpers.createDummyGenerator(), `team:azure`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:project`],
          [helpers.createDummyGenerator(), `team:release`],
-         [helpers.createDummyGenerator(), `team:registry`]
+         [helpers.createDummyGenerator(), `team:registry`],
+         [helpers.createDummyGenerator(), `team:powershell`]
       ];
 
       let type = `asp`;
@@ -57,10 +60,13 @@ describe(`app:index`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:azure`],
+         [helpers.createDummyGenerator(), `team:nuget`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:project`],
-         [helpers.createDummyGenerator(), `team:release`]
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:powershell`]
       ];
 
       let type = `asp`;
@@ -103,10 +109,13 @@ describe(`app:index`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:aspFull`],
          [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:azure`],
+         [helpers.createDummyGenerator(), `team:nuget`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:project`],
-         [helpers.createDummyGenerator(), `team:release`]
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:powershell`]
       ];
 
       let type = `aspFull`;
@@ -148,10 +157,13 @@ describe(`app:index`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:azure`],
          [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:nuget`],
          [helpers.createDummyGenerator(), `team:project`],
-         [helpers.createDummyGenerator(), `team:release`]
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:powershell`]
       ];
 
       var cleanUp = function () {
@@ -190,11 +202,14 @@ describe(`app:index`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:node`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:nuget`],
          [helpers.createDummyGenerator(), `team:docker`],
          [helpers.createDummyGenerator(), `team:project`],
          [helpers.createDummyGenerator(), `team:release`],
-         [helpers.createDummyGenerator(), `team:registry`]
+         [helpers.createDummyGenerator(), `team:registry`],
+         [helpers.createDummyGenerator(), `team:powershell`]
       ];
 
       let type = `node`;
@@ -235,12 +250,15 @@ describe(`app:index`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:feed`],
          [helpers.createDummyGenerator(), `team:java`],
+         [helpers.createDummyGenerator(), `team:nuget`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:docker`],
          [helpers.createDummyGenerator(), `team:project`],
          [helpers.createDummyGenerator(), `team:release`],
-         [helpers.createDummyGenerator(), `team:registry`]
+         [helpers.createDummyGenerator(), `team:registry`],
+         [helpers.createDummyGenerator(), `team:powershell`]
       ];
 
       var cleanUp = function () {

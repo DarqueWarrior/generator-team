@@ -47,6 +47,13 @@ function applicationName(obj) {
    });
 }
 
+function functionName(obj) {
+   obj.argument(`functionName`, {
+      required: false,
+      desc: `Name of the function`
+   });
+}
+
 function packageName(obj) {
     obj.argument(`packageName`, {
         required: false,
@@ -124,6 +131,13 @@ function groupId(obj) {
    });
 }
 
+function apiKey(obj) {
+   obj.argument(`apiKey`, {
+      required: false,
+      desc: `apiKey for your NuGet feed`
+   })
+}
+
 function dockerHost(obj) {
    obj.argument(`dockerHost`, {
       required: false,
@@ -191,6 +205,7 @@ module.exports = {
    tfs: tfs,
    pat: pat,
    queue: queue,
+   apiKey: apiKey,
    target: target,
    groupId: groupId,
    azureSub: azureSub,
@@ -204,6 +219,7 @@ module.exports = {
    dockerHost: dockerHost,
    dockerPorts: dockerPorts,
    customFolder: customFolder,
+   functionName: functionName,
    dockerCertPath: dockerCertPath,
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,
