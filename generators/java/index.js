@@ -15,6 +15,9 @@ module.exports = class extends Generator {
       argUtils.groupId(this);
       argUtils.installDep(this);
       argUtils.dockerPorts(this);
+
+      // If user is running this sub-generator, they are using Java
+      this.type = 'java';
    }
 
    // 2. Where you prompt users for options (where you'd call this.prompt())
