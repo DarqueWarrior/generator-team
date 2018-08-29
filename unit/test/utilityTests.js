@@ -12,7 +12,8 @@ assert.linuxTargets = function (a) {
    assert.equal(a[0].name, `Azure Container Instances (Linux)`);
    assert.equal(a[1].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[2].name, `Docker Host`);
-   assert.equal(a.length, 3, `Wrong number of entries`);
+   assert.equal(a[3].name, `Kubernetes`);
+   assert.equal(a.length, 4, `Wrong number of entries`);
 };
 
 assert.allTargets = function (a) {
@@ -21,7 +22,8 @@ assert.allTargets = function (a) {
    assert.equal(a[2].name, `Azure Container Instances (Linux)`);
    assert.equal(a[3].name, `Azure App Service Docker (Linux)`);
    assert.equal(a[4].name, `Docker Host`);
-   assert.equal(a.length, 5, `Wrong number of entries`);
+   assert.equal(a[5].name, `Kubernetes`);
+   assert.equal(a.length, 6, `Wrong number of entries`);
 };
 
 assert.customTargets = function (a) {

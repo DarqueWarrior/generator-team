@@ -16,6 +16,7 @@
       "generators/build",
       "generators/docker",
       "generators/git",
+      "generators/k8s",
       "generators/java",
       "generators/node",
       "generators/pipeline",

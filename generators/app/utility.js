@@ -124,6 +124,9 @@ function getTargets(answers) {
          }, {
             name: `Docker Host`,
             value: `docker`
+         }, {
+            name: `Kubernetes`,
+            value: `k8s`
          }];
 
          // TODO: Investigate if we need to remove these
