@@ -38,11 +38,13 @@ function requestSite(applicationName, env, title, cb) {
          timeout: 60000
       }, function (err, res, body) {
          if (!err) {
+            util.log(`${url} loaded`);
             var dom = cheerio.load(body);
             assert.equal(dom(`title`).text(), `${title}`);
 
             cb(err, res, body);
          } else {
+            util.log(`1st attempt failed ${url}`);
             setTimeout(function () {
                // Try one more time. I bet this was Azure AppService Docker timing out.
                request({
@@ -52,6 +54,7 @@ function requestSite(applicationName, env, title, cb) {
                   timeout: 60000
                }, function (err, res, body) {
                   if (!err) {
+                     util.log(`${url} loaded`);
                      var dom = cheerio.load(body);
                      assert.equal(dom(`title`).text(), `${title}`);
                   }
