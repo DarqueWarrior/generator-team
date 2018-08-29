@@ -183,6 +183,8 @@ function getRelease(args, callback) {
 
                   if (args.target === `paasslots`) {
                      release = `vsts_release_slots.json`;
+                  } else if (args.target === `appcenter`) {
+                     release = `vsts_release_xamarin.json`;
                   } else {
                      // see if they support load tests or not
                      if (args.removeloadTest) {
@@ -198,9 +200,7 @@ function getRelease(args, callback) {
                if (args.target === `paasslots`) {
                   release = `vsts_release_slots.json`;
                }
-               else if (args.target === `appcenter`){
-                  release = `vsts_release_xamarin.json`;
-               } else {
+               else {
                   release = `tfs_release.json`;
                }
             }
