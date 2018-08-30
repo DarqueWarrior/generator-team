@@ -989,24 +989,32 @@ function needsDockerHost(answers, options) {
       // answers.target will be undefined so test options
       isDocker = (answers.target === `docker` || options.target === `docker`);
 
-      // This will be true if the user did not select the Hosted Linux queue
+      // This will be true if the user did not select a Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
          options.target === `dockerpaas` ||
          answers.target === `acilinux` ||
          options.target === `acilinux`) &&
-         ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
-            (options.queue === undefined || options.queue.indexOf(`Linux`) === -1));
+         ((hasDockerTools(answers.queue) === false) &&
+          (hasDockerTools(options.queue) === false));
    } else {
       // If you pass in the target on the command line 
       // answers.target will be undefined so test options
       isDocker = answers.target === `docker`;
 
       // This will be true the user did not select the Hosted Linux queue
-      paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux`) && answers.queue.indexOf(`Linux`) === -1;
+      paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux`) && hasDockerTools(answers.queue) === false;
    }
 
    logMessage(`needsDockerHost returning = ${isDocker || paasRequiresHost}`);
    return (isDocker || paasRequiresHost);
+}
+
+function hasDockerTools(agent) {
+   if(agent == undefined) {
+      return false;
+   }
+
+   return agent.indexOf(`Linux`) !== -1 || agent.indexOf(`Ubuntu`) !== -1;
 }
 
 function isPaaS(answers, cmdLnInput) {

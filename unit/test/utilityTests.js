@@ -742,7 +742,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`needsDockerHost linux queue acilinux`, function () {
+   it(`needsDockerHost Hosted Linux Preview queue acilinux`, function () {
 
       // Arrange
       let expected = false;
@@ -751,6 +751,25 @@ describe(`utility`, function () {
 
       let options = {
          queue: `Hosted Linux Preview`,
+         target: `acilinux`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, options);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsDockerHost Hosted Ubuntu 1604 queue acilinux`, function () {
+
+      // Arrange
+      let expected = false;
+
+      let answers = {};
+
+      let options = {
+         queue: `Hosted Ubuntu 1604`,
          target: `acilinux`
       };
 
