@@ -1,0 +1,548 @@
+{
+   "triggers": [
+      {
+         "branchFilters": [
+            "+refs/heads/master"
+         ],
+         "pathFilters": [],
+         "batchChanges": false,
+         "maxConcurrentBuildsPerBranch": 1,
+         "triggerType": "continuousIntegration"
+      }
+   ],
+   "variables": {
+      "system.debug": {
+         "value": "false",
+         "allowOverride": true
+      }
+   },
+   "process": {
+      "phases": [
+         {
+            "steps": [
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install Dependencies",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install Pester",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Install-Module -Name Pester -Repository PSGallery -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Run Unit Tests",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Import-Module .\\*.psd1\nInvoke-Pester -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml -passthru",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": "$(System.DefaultWorkingDirectory)"
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Publish Test Results",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "testRunner": "NUnit",
+                     "testResultsFiles": "**\\test-results.xml",
+                     "searchFolder": "$(System.DefaultWorkingDirectory)",
+                     "mergeTestResults": "false",
+                     "testRunTitle": "Linux Unit Tests",
+                     "platform": "",
+                     "configuration": "",
+                     "publishRunAttachments": "true"
+                  }
+               }
+            ],
+            "name": "Linux",
+            "refName": "Phase_1",
+            "condition": "succeeded()",
+            "target": {
+               "queue": {
+                  "id": "{{LinuxQueueId}}"
+               },
+               "executionOptions": {
+                  "type": 0
+               },
+               "allowScriptsAuthAccessOption": false,
+               "type": 1
+            },
+            "jobAuthorizationScope": "projectCollection",
+            "jobCancelTimeoutInMinutes": 1
+         },
+         {
+            "steps": [
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install Dependencies",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install Pester",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Install-Module -Name Pester -Repository PSGallery -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Run Unit Tests",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Import-Module .\\*.psd1\nInvoke-Pester -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml -passthru",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": "$(System.DefaultWorkingDirectory)"
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Publish Test Results",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "testRunner": "NUnit",
+                     "testResultsFiles": "**\\test-results.xml",
+                     "searchFolder": "$(System.DefaultWorkingDirectory)",
+                     "mergeTestResults": "false",
+                     "testRunTitle": "macOS Unit Tests",
+                     "platform": "",
+                     "configuration": "",
+                     "publishRunAttachments": "true"
+                  }
+               }
+            ],
+            "name": "macOS",
+            "refName": "Phase_2",
+            "condition": "succeeded()",
+            "target": {
+               "queue": {
+                  "id": "{{macOSQueueId}}"
+               },
+               "executionOptions": {
+                  "type": 0
+               },
+               "allowScriptsAuthAccessOption": false,
+               "type": 1
+            },
+            "jobAuthorizationScope": "projectCollection",
+            "jobCancelTimeoutInMinutes": 1
+         },
+         {
+            "steps": [
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Update Build Number",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "$b = $(Build.BuildId)\n$c = Get-Content .\\*.psd1\n$v = $c -match 'ModuleVersion'\n\"$v\" -match '\\d+\\.\\d+\\.\\d+' | Out-Null\n$v = \"$($matches[0]).$b\"\nWrite-Host \"##vso[build.updatebuildnumber]$v\"",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Build Help",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "filePath",
+                     "filePath": ".docs/gen-help.ps1",
+                     "arguments": "-verbose",
+                     "script": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"\n\n# Use the environment variables input below to pass secret variables to this script.",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ".docs"
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install Dependencies",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install PSScriptAnalyzer",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Install-Module -Name PSScriptAnalyzer -Repository PSGallery -Force -Scope CurrentUser -Verbose",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Run Static Code Analysis",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "# Has to happen in this task for it to take effect\n# Load the psd1 file so you can read the required modules and import them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}\n\n$r = Invoke-ScriptAnalyzer –Path . –Recurse | Where-Object severity -eq \"Warning\"\n$r | ForEach-Object {Write-Host \"##vso[task.logissue type=$($_.Severity);sourcepath=$($_.ScriptPath);linenumber=$($_.Line);columnnumber=$($_.Column);]$($_.Message)\"}",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Install Pester",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Install-Module -Name Pester -Repository PSGallery -Force -Scope CurrentUser -AllowClobber -SkipPublisherCheck -Verbose",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Run Unit Tests",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "inline",
+                     "filePath": "",
+                     "arguments": "",
+                     "script": "Import-Module .\\*.psd1\nInvoke-Pester -CodeCoverage *.ps*1 -CodeCoverageOutputFile coverage.xml -CodeCoverageOutputFileFormat JaCoCo -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Publish Test Results",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "testRunner": "NUnit",
+                     "testResultsFiles": "**\\test-results.xml",
+                     "searchFolder": "$(System.DefaultWorkingDirectory)",
+                     "mergeTestResults": "false",
+                     "testRunTitle": "Windows Unit Tests",
+                     "platform": "",
+                     "configuration": "",
+                     "publishRunAttachments": "true"
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Publish code coverage",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "2a7ebc54-c13e-490e-81a5-d7561ab7cd97",
+                     "versionSpec": "1.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "codeCoverageTool": "JaCoCo",
+                     "summaryFileLocation": "**\\coverage.xml",
+                     "reportDirectory": "",
+                     "additionalCodeCoverageFiles": "",
+                     "failIfCoverageEmpty": "true"
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Copy Module to Artifacts Folder",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "5bfb729a-a7c8-4a78-a7c3-8d717bb7c13c",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "SourceFolder": "",
+                     "Contents": "*.psd1\n*.psm1\nREADME.md\n.gitignore\nen-US\\**\nPublic\\**\nClasses\\**\nInternal\\**\nformats\\**\ntypes\\**",
+                     "TargetFolder": "$(build.artifactstagingdirectory)/module",
+                     "CleanTargetFolder": "false",
+                     "OverWrite": "false",
+                     "flattenFolders": "false"
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
+                  "displayName": "Publish Module",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "2ff763a7-ce83-4e1f-bc89-0ae63477cebe",
+                     "versionSpec": "1.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "PathtoPublish": "$(Build.ArtifactStagingDirectory)/module",
+                     "ArtifactName": "Module",
+                     "ArtifactType": "Container",
+                     "TargetPath": "",
+                     "Parallel": "false",
+                     "ParallelCount": "8"
+                  }
+               }
+            ],
+            "name": "Windows",
+            "refName": "Phase_3",
+            "condition": "succeeded()",
+            "target": {
+               "queue": {
+                  "id": "{{WindowsQueueId}}"
+               },
+               "executionOptions": {
+                  "type": 0
+               },
+               "allowScriptsAuthAccessOption": false,
+               "type": 1
+            },
+            "jobAuthorizationScope": "projectCollection",
+            "jobCancelTimeoutInMinutes": 1
+         }
+      ],
+      "type": 1
+   },
+   "repository": {
+      "properties": {
+         "labelSources": "0",
+         "reportBuildStatus": "true"
+      },
+      "type": "TfsGit",
+      "name": "{{Project}}",
+      "url": "{{TFS}}/_git/{{Project}}",
+      "defaultBranch": "refs/heads/master",
+      "clean": "false",
+      "checkoutSubmodules": false
+   },
+   "queue": {
+      "id": "{{QueueId}}"
+   },
+   "name": "{{BuildDefName}}",
+   "path": "\\",
+   "type": 2
+}

@@ -12,6 +12,7 @@ const PROJECT_API_VERSION = `1.0`;
 const RELEASE_API_VERSION = `3.0-preview.3`;
 const DISTRIBUTED_TASK_API_VERSION = `3.0-preview.1`;
 const SERVICE_ENDPOINTS_API_VERSION = `3.0-preview.1`;
+const PACKAGING_API_VERSION = '4.0-preview';
 
 const EXTENSIONS_SUB_DOMAIN = `extmgmt`;
 const RELEASE_MANAGEMENT_SUB_DOMAIN = `vsrm`;
@@ -22,10 +23,8 @@ function encodePat(pat) {
    // The personal access token must be 64 bit encoded to be used
    // with the REST API
 
-   let b = new Buffer(`:` + pat);
-   let s = b.toString(`base64`);
-
-   return s;
+   let b = Buffer.from(`:` + pat);
+   return b.toString(`base64`);
 }
 
 function addUserAgent(options, userAgent) {
@@ -102,6 +101,28 @@ function deleteBuildDefinition(account, projectId, buildDefinitionId, pat, userA
       "url": `${getFullURL(account, true)}/${projectId}/_apis/build/definitions/${buildDefinitionId}`,
       "qs": {
          "api-version": BUILD_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (err, res, body) {
+      callback(err, null);
+   });
+}
+
+function deleteFeed(account, feedId, pat, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   let options = addUserAgent({
+      "method": `Delete`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds/${feedId}`,
+      "qs": {
+         "api-version": PACKAGING_API_VERSION
       }
    }, userAgent);
 
@@ -502,6 +523,38 @@ function getApprovals(account, projectId, pat, userAgent, callback) {
    });
 }
 
+function findNuGetServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
+   'use strict';
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account)}/${projectId}/_apis/distributedtask/serviceendpoints`,
+      "qs": {
+         "api-version": SERVICE_ENDPOINTS_API_VERSION
+      }
+   });
+
+   request(options, function (error, response, body) {
+      util.log(`findNuGetServiceEndpoint response:\r\n`);
+      util.logJSON(body);
+      util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
+
+      var obj = JSON.parse(body);
+
+      var endpoint = obj.value.find(function (i) {
+         return i.name.toLowerCase() === name.toLowerCase();
+      });
+
+      callback(error, endpoint);
+   });
+}
+
 function findAzureServiceEndpoint(account, projectId, pat, name, userAgent, callback) {
    'use strict';
 
@@ -557,10 +610,43 @@ function getServiceEndpoint(account, projectId, id, token, callback) {
    });
 }
 
+function findPackageFeed(account, name, pat, userAgent, callback) {
+   "use strict";
+
+   let token = encodePat(pat);
+
+   var options = addUserAgent({
+      "method": `GET`,
+      "headers": {
+         "cache-control": `no-cache`,
+         "authorization": `Basic ${token}`
+      },
+      "url": `${getFullURL(account, false, 'feeds')}/_apis/packaging/feeds/`,
+      "qs": {
+         "api-version": PACKAGING_API_VERSION
+      }
+   }, userAgent);
+
+   request(options, function (e, response, body) {
+      util.log(`findPackageFeed response:\r\n`);
+      util.logJSON(body);
+      util.log(`\r\n===========++++++++++++++++++++++++===========\r\n`);
+
+      var obj = JSON.parse(body);
+
+      var rel = obj.value.find(function (i) {
+         return i.name.toLowerCase() === name.toLowerCase();
+      });
+
+      callback(e, rel);
+   });
+}
+
 module.exports = {
    // Exports the portions of the file we want to share with files that require
    // it.
    getBuilds: getBuilds,
+   deleteFeed: deleteFeed,
    getBuildLog: getBuildLog,
    findProject: findProject,
    getReleases: getReleases,
@@ -568,8 +654,10 @@ module.exports = {
    getApprovals: getApprovals,
    deleteProject: deleteProject,
    createProject: createProject,
+   findPackageFeed: findPackageFeed,
    findBuildDefinition: findBuildDefinition,
    deleteBuildDefinition: deleteBuildDefinition,
    findReleaseDefinition: findReleaseDefinition,
+   findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint
 };

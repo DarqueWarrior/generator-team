@@ -107,7 +107,7 @@ module.exports = class extends Generator {
 
             fs.writeFileSync(util.PROFILE_PATH, JSON.stringify(results.profiles, null, 4));
 
-            this.log(`+ Profile Delete.`);
+            this.log.ok(`Profile Deleted.`);
 
             break;
 
@@ -150,7 +150,7 @@ module.exports = class extends Generator {
 
             fs.writeFileSync(util.PROFILE_PATH, JSON.stringify(results.profiles, null, 4));
 
-            this.log(`+ Profile Added.`);
+            this.log.ok(`Profile Added.`);
 
             break;
       }

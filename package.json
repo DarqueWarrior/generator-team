@@ -1,6 +1,6 @@
 {
    "name": "generator-team",
-   "version": "0.4.6",
+   "version": "0.4.8",
    "description": "Generates an app with CI/CD in Team Foundation Server or Team Services",
    "main": "./generators/app/index.js",
    "scripts": {
@@ -22,12 +22,21 @@
       "generators/profile",
       "generators/project",
       "generators/registry",
-      "generators/release"
+      "generators/release",
+      "generators/powershell",
+      "generators/nuget",
+      "generators/feed"
    ],
    "keywords": [
       "yeoman-generator",
       "tfs",
       "vsts",
+      "java",
+      ".net Core",
+      "PowerShell",
+      "Azure",
+      "Node",
+      "Node.js",
       "Team Foundation Server",
       "Team Services",
       "Visual Studio",

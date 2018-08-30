@@ -41,6 +41,21 @@ assert.windowsTargets = function (a) {
 
 describe(`utility`, function () {
 
+   context(`needsApiKey`, function () {
+      // Arrange
+      let expected = true;
+
+      let answers = {
+         type: `powershell`
+      };
+
+      // Act
+      let actual = util.needsApiKey(answers, undefined);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
    context(`logMessage`, function () {
       it(`should not log`, sinonTest(function () {
          let stub = this.stub(console, `log`);
@@ -720,7 +735,6 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-
    it(`needsDockerHost default queue dockerpaas`, function () {
 
       // Arrange
@@ -803,21 +817,53 @@ describe(`utility`, function () {
 
       // Arrange
       let answers = {
-         queue: 'Hosted Linux Preview'
+         queue: 'Hosted Linux Preview',
+         tfs: `vsts`
       };
 
       // Act
       let actual = util.getAppTypes(answers);
 
       // Assert
-      assert.equal(3, actual.length, `Wrong number of items returned`);
+      assert.equal(4, actual.length, `Wrong number of items returned`);
    });
 
    it(`getAppTypes macOS`, function () {
 
       // Arrange
       let answers = {
-         queue: 'Hosted macOS Preview'
+         queue: 'Hosted macOS Preview',
+         tfs: `vsts`
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(4, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes default`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Default',
+         tfs: `vsts`
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(5, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes linux tfs`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Hosted Linux Preview',
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
       };
 
       // Act
@@ -827,11 +873,27 @@ describe(`utility`, function () {
       assert.equal(3, actual.length, `Wrong number of items returned`);
    });
 
-   it(`getAppTypes default`, function () {
+   it(`getAppTypes macOS tfs`, function () {
 
       // Arrange
       let answers = {
-         queue: 'Default'
+         queue: 'Hosted macOS Preview',
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
+      };
+
+      // Act
+      let actual = util.getAppTypes(answers);
+
+      // Assert
+      assert.equal(3, actual.length, `Wrong number of items returned`);
+   });
+
+   it(`getAppTypes default tfs`, function () {
+
+      // Arrange
+      let answers = {
+         queue: 'Default',
+         tfs: `http://localhost:8080/tfs/DefaultCollection`
       };
 
       // Act
@@ -1086,7 +1148,9 @@ describe(`utility`, function () {
             assert.equal(`http://localhost:8080/tfs/DefaultCollection/_apis/distributedtask/pools`, options.url, `wrong url`);
 
             // Respond
-            callback(null, null, JSON.stringify({
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
                value: "UnitTest"
             }));
          }
@@ -1125,6 +1189,14 @@ describe(`utility`, function () {
 
       it(`validateApplicationName should return error`, function () {
          assert.equal(`You must provide a name for your application`, util.validateApplicationName(null));
+      });
+
+      it(`validateFunctionName should return error`, function () {
+         assert.equal(`You must provide a name for your function`, util.validateFunctionName(null));
+      });
+
+      it(`validateapiKey should return error`, function () {
+         assert.equal(`You must provide a apiKey`, util.validateapiKey(null));
       });
 
       it(`validateGroupID should return error`, function () {
@@ -1347,6 +1419,96 @@ describe(`utility`, function () {
                done();
             });
       }));
+
+      it(`findAllQueues should find queue`, sinonTest(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               // Confirm the request was formatted correctly
+               assert.equal(`GET`, options.method, `wrong method`);
+               assert.equal(`Basic token`, options.headers.authorization, `wrong authorization`);
+               assert.equal(`http://localhost:8080/tfs/DefaultCollection/1/_apis/distributedtask/queues`, options.url, `wrong url`);
+
+               // Respond
+               callback(null, {
+                  statusCode: 200
+               }, JSON.stringify({
+                  value: [{
+                     id: 420
+                  }, {
+                     id: 311
+                  }]
+               }));
+            }
+         });
+
+         // Act
+         proxyApp.findAllQueues(
+            `http://localhost:8080/tfs/DefaultCollection`, {
+               id: 1
+            },
+            `token`,
+            (err, data) => {
+               // Assert
+               assert.equal(true, Array.isArray(data))
+
+               done();
+            });
+      }));
+
+      it(`findAllQueues should returns error obj from server`, sinonTest(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 302
+               }, JSON.stringify("{ error: `some error` }"));
+            }
+         });
+
+         // Act
+         proxyApp.findAllQueues(
+            `http://localhost:8080/tfs/DefaultCollection`, {
+               id: 1
+            },
+            `token`,
+            (err, data) => {
+               // Assert
+               assert.ok(err);
+
+               done();
+            });
+      }));
+
+      it(`findAllQueues should returns error`, sinonTest(function (done) {
+         // Arrange
+         // This allows me to take control of the request requirement
+         // without this there would be no way to stub the request calls
+         const proxyApp = proxyquire(`../../generators/app/utility`, {
+            "request": (options, callback) => {
+               callback(null, {
+                  statusCode: 400
+               }, null);
+            }
+         });
+
+         // Act
+         proxyApp.findAllQueues(
+            `http://localhost:8080/tfs/DefaultCollection`, {
+               id: 1
+            },
+            `token`,
+            (err, data) => {
+               // Assert
+               assert.ok(err instanceof Error);
+
+               done();
+            });
+      }));
    });
 
    context(`docker`, function () {
@@ -1558,6 +1720,174 @@ describe(`utility`, function () {
             });
       }));
    });
+
+   it(`tryFindPackageFeed should fail to find feed`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [] // Return empty array so item is not found
+            }));
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Because we are calling try no error should be returned
+      // but the obj should be null
+      proxyApp.tryFindPackageFeed(`http://localhost:8080/tfs/DefaultCollection`,
+         `e2eDemo`, `token`, logger, (err, obj) => {
+            assert.equal(err, null);
+            assert.equal(obj, undefined);
+
+            done();
+         });
+   }));
+
+   it(`tryFindPackageFeed should find feed`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  name: 'modulefeed'
+               }]
+            }));
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Because we are calling try no error should be returned
+      // but the obj should be null
+      proxyApp.tryFindPackageFeed(`http://localhost:8080/tfs/DefaultCollection`,
+         `e2eDemo`, `token`, logger, (err, obj) => {
+            assert.equal(obj, undefined);
+            assert.equal(err, null);
+
+            done();
+         });
+   }));
+
+   it(`findPackageFeed gets error returned`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 400
+            }, null);
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Because we are calling try no error should be returned
+      // but the obj should be null
+      proxyApp.tryFindPackageFeed(`http://localhost:8080/tfs/DefaultCollection`,
+         `e2eDemo`, `token`, logger, (err, obj) => {
+            assert.equal(obj, null);
+            assert.notEqual(err, null);
+
+            done();
+         });
+   }));
+
+   it(`tryFindNuGetServiceEndpoint should fail to find endpoint`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [] // Return empty array so item is not found
+            }));
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Because we are calling try no error should be returned
+      // but the obj should be null
+      proxyApp.tryFindNuGetServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+         `e2eDemo`, `token`, logger, (err, obj) => {
+            assert.equal(err, null);
+            assert.equal(obj, undefined);
+
+            done();
+         });
+   }));
+
+   it(`tryFindNuGetServiceEndpoint should find endpoint`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 200
+            }, JSON.stringify({
+               value: [{
+                  url: 'https://www.powershellgallery.com/api/v2/package/'
+               }]
+            }));
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Because we are calling try no error should be returned
+      // but the obj should be null
+      proxyApp.tryFindNuGetServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+         `e2eDemo`, `token`, logger, (err, obj) => {
+            assert.notEqual(obj, null);
+            assert.equal(err, null);
+
+            done();
+         });
+   }));
+
+   it(`findNuGetServiceEndpoint gets error returned`, sinonTest(function (done) {
+      // Arrange
+      // This allows me to take control of the request requirement
+      // without this there would be no way to stub the request calls
+      const proxyApp = proxyquire(`../../generators/app/utility`, {
+         "request": (options, callback) => {
+            callback(null, {
+               statusCode: 400
+            }, null);
+         }
+      });
+
+      var logger = this.stub();
+      logger.log = function () { };
+
+      // Because we are calling try no error should be returned
+      // but the obj should be null
+      proxyApp.tryFindNuGetServiceEndpoint(`http://localhost:8080/tfs/DefaultCollection`,
+         `e2eDemo`, `token`, logger, (err, obj) => {
+            assert.equal(obj, null);
+            assert.notEqual(err, null);
+
+            done();
+         });
+   }));
 
    it(`tryFindAzureServiceEndpoint should short circuit`, sinonTest(function (done) {
       // Arrange

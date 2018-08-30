@@ -28,12 +28,12 @@ function findOrCreateProject(gen, callback) {
       } else {
          // The project was found.
          if (obj) {
-            gen.log(`+ Found Team project`);
+            gen.log.ok(`Found Team project`);
             callback(error, obj);
             return;
          }
 
-         gen.log(`+ Creating ${gen.applicationName} Team Project`);
+         gen.log.ok(`Creating ${gen.applicationName} Team Project`);
 
          var teamProject = {};
 

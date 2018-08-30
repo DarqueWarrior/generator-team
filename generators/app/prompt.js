@@ -143,7 +143,7 @@ function queue(obj) {
          var result = obj.options.queue === undefined;
 
          if (result) {
-            obj.log(`  Getting Agent Queues...`);
+            obj.log.ok(`Getting Agent Queues...`);
          }
 
          return result;
@@ -200,6 +200,19 @@ function applicationName(obj) {
    };
 }
 
+function functionName(obj) {
+   return {
+      name: `functionName`,
+      type: `input`,
+      store: true,
+      message: `What is the name of your function?`,
+      validate: util.validateFunctionName,
+      when: answers => {
+         return obj.options.functionName === undefined && util.needsApiKey(answers, obj.options) === true;
+      }
+   };
+}
+
 function target(obj) {
    return {
       name: `target`,
@@ -208,7 +221,7 @@ function target(obj) {
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
       when: answers => {
-         return obj.options.target === undefined;
+         return obj.options.target === undefined && util.needsApiKey(answers, obj.options) === false;
       }
    };
 }
@@ -239,7 +252,7 @@ function azureSubList(obj) {
          var result = util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
 
          if (result) {
-            obj.log(`  Getting Azure subscriptions...`);
+            obj.log.ok(`Getting Azure subscriptions...`);
          }
 
          return result;
@@ -297,6 +310,19 @@ function servicePrincipalKey(obj) {
          return (util.isPaaS(answers, obj) && obj.options.servicePrincipalKey === undefined && !util.isVSTS(answers.tfs)) || (util.isVSTS(answers.tfs) && answers.creationMode === `Manual`);
       }
    };
+}
+
+function apiKey(obj) {
+   return {
+      type: `password`,
+      name: `apiKey`,
+      store: false,
+      message: `What is your NuGet apiKey?`,
+      validate: util.validateapiKey,
+      when: answers => {
+         return util.needsApiKey(answers, obj.options) && obj.options.apiKey === undefined;
+      }
+   }
 }
 
 // Docker
@@ -432,7 +458,7 @@ function installDep(obj) {
          }
       ],
       when: answers => {
-         return answers.type !== `aspFull` && obj.options.installDep === undefined;
+         return answers.type !== `aspFull` && answers.type !== `powershell` && obj.options.installDep === undefined;
       }
    };
 }
@@ -460,6 +486,7 @@ module.exports = {
    tfs: tfs,
    pat: pat,
    queue: queue,
+   apiKey: apiKey,
    target: target,
    groupId: groupId,
    tenantId: tenantId,
@@ -473,6 +500,7 @@ module.exports = {
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
    customFolder: customFolder,
+   functionName: functionName,
    creationMode: creationMode,
    azureSubInput: azureSubInput,
    dockerRegistry: dockerRegistry,
