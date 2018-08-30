@@ -46,6 +46,12 @@ function isDocker(value) {
    return value === `docker` || value === `dockerpaas` || value === `acilinux`;
 }
 
+function isWindowsAgent(queue) {
+   return (queue.indexOf(`Linux`) === -1 &&
+      queue.indexOf(`Ubuntu`) === -1 &&
+      queue.indexOf(`macOS`) === -1);
+}
+
 function getDockerRegistryServer(server) {
    let parts = url.parse(server);
 
@@ -175,8 +181,7 @@ function getAppTypes(answers) {
 
    // If this is not a Linux or Mac based agent also show
    // .NET Full
-   if (answers.queue.indexOf(`Linux`) === -1 &&
-      answers.queue.indexOf(`macOS`) === -1) {
+   if (isWindowsAgent(answers.queue)) {
       types.splice(1, 0, {
          name: `.NET Framework`,
          value: `aspFull`
@@ -306,7 +311,7 @@ function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
 }
 
-function validateapiKey(input) {
+function validateApiKey(input) {
    return validateRequired(input, `You must provide a apiKey`);
 }
 
@@ -1402,7 +1407,8 @@ module.exports = {
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
-   validateapiKey: validateapiKey,
+   isWindowsAgent: isWindowsAgent,
+   validateApiKey: validateApiKey,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
    needsDockerHost: needsDockerHost,

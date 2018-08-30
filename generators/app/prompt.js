@@ -318,7 +318,7 @@ function apiKey(obj) {
       name: `apiKey`,
       store: false,
       message: `What is your NuGet apiKey?`,
-      validate: util.validateapiKey,
+      validate: util.validateApiKey,
       when: answers => {
          return util.needsApiKey(answers, obj.options) && obj.options.apiKey === undefined;
       }

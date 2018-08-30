@@ -1195,8 +1195,8 @@ describe(`utility`, function () {
          assert.equal(`You must provide a name for your function`, util.validateFunctionName(null));
       });
 
-      it(`validateapiKey should return error`, function () {
-         assert.equal(`You must provide a apiKey`, util.validateapiKey(null));
+      it(`validateApiKey should return error`, function () {
+         assert.equal(`You must provide a apiKey`, util.validateApiKey(null));
       });
 
       it(`validateGroupID should return error`, function () {
