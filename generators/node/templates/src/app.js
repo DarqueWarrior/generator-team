@@ -4,10 +4,13 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var utils = require('./utility');
 var routes = require('./routes/homeController');
 
 var app = express();
+
+// application insights
+utils.initAppInsights();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -44,7 +47,7 @@ if (app.get('env') === 'development') {
 }
 
 // production error handler
-// no stacktraces leaked to user
+// no stack traces leaked to user
 app.use(function (err, req, res, next) {
    res.status(err.status || 500);
    res.render('error', {

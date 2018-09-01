@@ -58,6 +58,7 @@ module.exports = class extends Generator {
       root = `${this.applicationName}/src`;
 
       this.fs.copy(`${src}/app.js`, `${root}/app.js`);
+      this.fs.copy(`${src}/utility.js`, `${root}/utility.js`);
       this.fs.copy(`${src}/web.config`, `${root}/web.config`);
       this.fs.copy(`${src}/Dockerfile`, `${root}/Dockerfile`);
       this.fs.copy(`${src}/parameters.xml`, `${root}/parameters.xml`);

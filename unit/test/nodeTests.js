@@ -41,6 +41,7 @@ describe(`team:node docker`, function () {
          `nodeDemo/src/app.js`,
          `nodeDemo/package.json`,
          `nodeDemo/src/web.config`,
+         `nodeDemo/src/utility.js`,
          `nodeDemo/src/Dockerfile`,
          `nodeDemo/src/package.json`,
          `nodeDemo/src/parameters.xml`,
@@ -55,8 +56,8 @@ describe(`team:node docker`, function () {
       assert.fileContent(`nodeDemo/bower.json`, `"name": "nodedemo"`);
       assert.fileContent(`nodeDemo/package.json`, `"name": "nodedemo"`);
       assert.fileContent(`nodeDemo/src/package.json`, `"name": "nodedemo"`);
+      assert.fileContent(`nodeDemo/templates/website.json`, `"name": "appsettings"`);
       assert.noFileContent(`nodeDemo/templates/website.json`, `"javaVersion": "1.8"`);
-      assert.noFileContent(`nodeDemo/templates/website.json`, `"name": "appsettings"`);
       assert.noFileContent(`nodeDemo/templates/website.json`, `"javaContainer": "TOMCAT"`);
       assert.noFileContent(`nodeDemo/templates/website.json`, `"javaContainerVersion": "8.0"`);
       assert.fileContent(`nodeDemo/src/server.js`, "var debug = require('debug')('nodeDemo:server');");
