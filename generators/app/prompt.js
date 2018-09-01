@@ -208,7 +208,7 @@ function functionName(obj) {
       message: `What is the name of your function?`,
       validate: util.validateFunctionName,
       when: answers => {
-         return obj.options.functionName === undefined && util.needsapiKey(answers, obj.options) === true;
+         return obj.options.functionName === undefined && util.needsApiKey(answers, obj.options) === true;
       }
    };
 }
@@ -221,7 +221,7 @@ function target(obj) {
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
       when: answers => {
-         return obj.options.target === undefined && util.needsapiKey(answers, obj.options) === false;
+         return obj.options.target === undefined && util.needsApiKey(answers, obj.options) === false;
       }
    };
 }
@@ -318,9 +318,9 @@ function apiKey(obj) {
       name: `apiKey`,
       store: false,
       message: `What is your NuGet apiKey?`,
-      validate: util.validateapiKey,
+      validate: util.validateApiKey,
       when: answers => {
-         return util.needsapiKey(answers, obj.options) && obj.options.apiKey === undefined;
+         return util.needsApiKey(answers, obj.options) && obj.options.apiKey === undefined;
       }
    }
 }

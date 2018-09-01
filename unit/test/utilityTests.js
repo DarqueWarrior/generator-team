@@ -41,7 +41,7 @@ assert.windowsTargets = function (a) {
 
 describe(`utility`, function () {
 
-   context(`needsapiKey`, function () {
+   context(`needsApiKey`, function () {
       // Arrange
       let expected = true;
 
@@ -50,7 +50,7 @@ describe(`utility`, function () {
       };
 
       // Act
-      let actual = util.needsapiKey(answers, undefined);
+      let actual = util.needsApiKey(answers, undefined);
 
       // Assert
       assert.equal(expected, actual);
@@ -756,7 +756,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`needsDockerHost linux queue acilinux`, function () {
+   it(`needsDockerHost Hosted Linux Preview queue acilinux`, function () {
 
       // Arrange
       let expected = false;
@@ -765,6 +765,25 @@ describe(`utility`, function () {
 
       let options = {
          queue: `Hosted Linux Preview`,
+         target: `acilinux`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, options);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsDockerHost Hosted Ubuntu 1604 queue acilinux`, function () {
+
+      // Arrange
+      let expected = false;
+
+      let answers = {};
+
+      let options = {
+         queue: `Hosted Ubuntu 1604`,
          target: `acilinux`
       };
 
@@ -1176,8 +1195,8 @@ describe(`utility`, function () {
          assert.equal(`You must provide a name for your function`, util.validateFunctionName(null));
       });
 
-      it(`validateapiKey should return error`, function () {
-         assert.equal(`You must provide a apiKey`, util.validateapiKey(null));
+      it(`validateApiKey should return error`, function () {
+         assert.equal(`You must provide a apiKey`, util.validateApiKey(null));
       });
 
       it(`validateGroupID should return error`, function () {
