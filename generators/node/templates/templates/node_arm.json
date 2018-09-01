@@ -81,7 +81,19 @@
          "properties": {
             "name": "[parameters('webSiteName')]",
             "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-         }
+         },
+         "resources": [{
+            "apiVersion": "2015-08-01",
+            "name": "appsettings",
+            "type": "config",
+            "dependsOn": [
+               "[concat('Microsoft.Web/Sites/', parameters('webSiteName'))]",
+               "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
+            ],
+            "properties": {
+               "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+            }
+         }]
       },
       {
          "apiVersion": "2014-04-01",
@@ -314,7 +326,8 @@
             "displayName": "AppInsightsComponent"
          },
          "properties": {
-            "applicationId": "[parameters('webSiteName')]"
+            "applicationId": "[parameters('webSiteName')]",
+            "Application_Type": "Node.JS"
          }
       }
    ]

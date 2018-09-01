@@ -8,6 +8,7 @@
       "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file"
    },
    "dependencies": {
+      "applicationinsights": "^1.0.4",
       "body-parser": "^1.18.3",
       "cookie-parser": "~1.4.3",
       "debug": "^3.1.0",

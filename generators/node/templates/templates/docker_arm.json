@@ -70,7 +70,8 @@
          }
       }
    },
-   "resources": [{
+   "resources": [
+      {
          "apiVersion": "2015-08-01",
          "name": "[parameters('webSiteName')]",
          "type": "Microsoft.Web/sites",
@@ -88,21 +89,25 @@
             "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
             "kind": "WebApp"
          },
-         "resources": [{
-            "apiVersion": "2015-08-01",
-            "name": "appsettings",
-            "type": "config",
-            "dependsOn": [
-               "[concat('Microsoft.Web/Sites/', parameters('webSiteName'))]"
-            ],
-            "properties": {
-               "DOCKER_REGISTRY_SERVER_URL": "[parameters('containerregistry')]",
-               "DOCKER_REGISTRY_SERVER_USERNAME": "[parameters('containerregistry_username')]",
-               "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('containerregistry_password')]",
-               "DOCKER_CUSTOM_IMAGE_NAME": "[parameters('image_tag')]",
-               "PORT": "[parameters('image_port')]"
+         "resources": [
+            {
+               "apiVersion": "2015-08-01",
+               "name": "appsettings",
+               "type": "config",
+               "dependsOn": [
+                  "[concat('Microsoft.Web/Sites/', parameters('webSiteName'))]",
+                  "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
+               ],
+               "properties": {
+                  "DOCKER_REGISTRY_SERVER_URL": "[parameters('containerregistry')]",
+                  "DOCKER_REGISTRY_SERVER_USERNAME": "[parameters('containerregistry_username')]",
+                  "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('containerregistry_password')]",
+                  "DOCKER_CUSTOM_IMAGE_NAME": "[parameters('image_tag')]",
+                  "PORT": "[parameters('image_port')]",
+                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+               }
             }
-         }]
+         ]
       },
       {
          "apiVersion": "2015-08-01",
@@ -338,7 +343,8 @@
             "displayName": "AppInsightsComponent"
          },
          "properties": {
-            "applicationId": "[parameters('webSiteName')]"
+            "applicationId": "[parameters('webSiteName')]",
+            "Application_Type": "Node.JS"
          }
       }
    ]
