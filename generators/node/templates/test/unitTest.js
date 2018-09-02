@@ -1,7 +1,5 @@
 const sinon = require('sinon');
-const assert = require('assert');
 const request = require('supertest');
-const target = require('../src/server');
 const sinonTestFactory = require(`sinon-test`);
 const utils = require('../src/utility');
 const sinonTest = sinonTestFactory(sinon);
@@ -15,6 +13,8 @@ describe('unitTest', function () {
       trackEvent: function () { }
    });
 
+   // This has to be after we mock the call to initAppInsights or you will get
+   // an error about Instrumentation key not found
    const target = require('../src/server');
 
    it('index should return 200', sinonTest(function (done) {

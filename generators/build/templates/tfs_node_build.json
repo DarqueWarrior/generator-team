@@ -212,10 +212,6 @@
       }
    ],
    "variables": {
-      "APPINSIGHTS_INSTRUMENTATIONKEY": {
-         "value": "00000000-0000-0000-0000-000000000000",
-         "allowOverride": false
-      },
       "system.debug": {
          "value": "false",
          "allowOverride": true
