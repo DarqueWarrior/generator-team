@@ -211,6 +211,18 @@
                   "javaContainerVersion": "8.0"
                },
                "type": "config"
+            },
+            {
+               "apiVersion": "2015-08-01",
+               "name": "appsettings",
+               "type": "config",
+               "dependsOn": [
+                  "[concat('Microsoft.Web/sites/', parameters('webSiteName'), '/slots/stage')]",
+                  "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
+               ],
+               "properties": {
+                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+               }
             }
          ],
          "type": "Microsoft.Web/sites/slots"

@@ -19,6 +19,11 @@
             "West Europe"
          ]
       },
+      "websiteNodeVersion": {
+         "type": "string",
+         "minLength": 1,
+         "defaultValue": "6.9.1"
+      },
       "skuName": {
          "type": "string",
          "defaultValue": "F1",
@@ -82,18 +87,21 @@
             "name": "[parameters('webSiteName')]",
             "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
          },
-         "resources": [{
-            "apiVersion": "2015-08-01",
-            "name": "appsettings",
-            "type": "config",
-            "dependsOn": [
-               "[concat('Microsoft.Web/Sites/', parameters('webSiteName'))]",
-               "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
-            ],
-            "properties": {
-               "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+         "resources": [
+            {
+               "apiVersion": "2015-08-01",
+               "name": "appsettings",
+               "type": "config",
+               "dependsOn": [
+                  "[concat('Microsoft.Web/sites/', parameters('webSiteName'))]",
+                  "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
+               ],
+               "properties": {
+                  "WEBSITE_NODE_DEFAULT_VERSION": "[parameters('websiteNodeVersion')]",
+                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+               }
             }
-         }]
+         ]
       },
       {
          "apiVersion": "2014-04-01",
@@ -277,6 +285,21 @@
          "dependsOn": [
             "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
             "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+         ],
+         "resources": [
+            {
+               "apiVersion": "2015-08-01",
+               "name": "appsettings",
+               "type": "config",
+               "dependsOn": [
+                  "[concat('Microsoft.Web/sites/', parameters('webSiteName'), '/slots/stage')]",
+                  "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
+               ],
+               "properties": {
+                  "WEBSITE_NODE_DEFAULT_VERSION": "[parameters('websiteNodeVersion')]",
+                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+               }
+            }
          ]
       },
       {
