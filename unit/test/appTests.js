@@ -297,4 +297,55 @@ describe(`app:index`, function () {
             cleanUp();
          });
    });
+
+   it(`prompts using fake dependencies powershell`, function () {
+      let deps = [
+         [helpers.createDummyGenerator(), `team:asp`],
+         [helpers.createDummyGenerator(), `team:git`],
+         [helpers.createDummyGenerator(), `team:feed`],
+         [helpers.createDummyGenerator(), `team:java`],
+         [helpers.createDummyGenerator(), `team:nuget`],
+         [helpers.createDummyGenerator(), `team:build`],
+         [helpers.createDummyGenerator(), `team:docker`],
+         [helpers.createDummyGenerator(), `team:project`],
+         [helpers.createDummyGenerator(), `team:release`],
+         [helpers.createDummyGenerator(), `team:registry`],
+         [helpers.createDummyGenerator(), `team:powershell`]
+      ];
+
+      var cleanUp = function () {
+         util.getPools.restore();
+      };
+
+      return helpers.run(path.join(__dirname, `../../generators/app`))
+         .withGenerators(deps)
+         .withPrompts({
+            tfs: `vsts`,
+            type: `powershell`,
+            pat: `token`,
+            groupId: `demo`,
+            queue: `Default`,
+            target: `docker`,
+            installDep: `false`,
+            dockerHost: `dockerHost`,
+            dockerPorts: `dockerPorts`,
+            applicationName: `javaDemo`,
+            dockerCertPath: `dockerCertPath`,
+            dockerRegistry: `dockerRegistry`,
+            dockerRegistryId: `dockerRegistryId`,
+            dockerRegistryPassword: `dockerRegistryPassword`
+         })
+         .on(`error`, function (e) {
+            cleanUp();
+            assert.fail(e);
+         })
+         .on(`ready`, function (generator) {
+            // This is called right before `generator.run()` is called.
+            sinon.stub(util, `getPools`);
+         })
+         .on(`end`, function (e) {
+            cleanUp();
+         }
+      );
+   });
 });
