@@ -288,6 +288,7 @@
          ],
          "resources": [
             {
+               "condition": "[equals(parameters('skuName'), 'S1')]",
                "apiVersion": "2015-08-01",
                "name": "appsettings",
                "type": "config",
