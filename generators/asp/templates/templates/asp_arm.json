@@ -202,142 +202,6 @@
       },
       {
          "apiVersion": "2014-04-01",
-         "name": "[concat('ServerErrors ', parameters('webSiteName'))]",
-         "type": "Microsoft.Insights/alertrules",
-         "location": "[resourceGroup().location]",
-         "dependsOn": [
-            "[concat('Microsoft.Web/sites/', parameters('webSiteName'))]"
-         ],
-         "tags": {
-            "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]": "Resource",
-            "displayName": "ServerErrorsAlertRule"
-         },
-         "properties": {
-            "name": "[concat('ServerErrors ', parameters('webSiteName'))]",
-            "description": "[concat(parameters('webSiteName'), ' has some server errors, status code 5xx.')]",
-            "isEnabled": false,
-            "condition": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-               "dataSource": {
-                  "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                  "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]",
-                  "metricName": "Http5xx"
-               },
-               "operator": "GreaterThan",
-               "threshold": 0.0,
-               "windowSize": "PT5M"
-            },
-            "action": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-               "sendToServiceOwners": true,
-               "customEmails": []
-            }
-         }
-      },
-      {
-         "apiVersion": "2014-04-01",
-         "name": "[concat('ForbiddenRequests ', parameters('webSiteName'))]",
-         "type": "Microsoft.Insights/alertrules",
-         "location": "[resourceGroup().location]",
-         "dependsOn": [
-            "[concat('Microsoft.Web/sites/', parameters('webSiteName'))]"
-         ],
-         "tags": {
-            "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]": "Resource",
-            "displayName": "ForbiddenRequestsAlertRule"
-         },
-         "properties": {
-            "name": "[concat('ForbiddenRequests ', parameters('webSiteName'))]",
-            "description": "[concat(parameters('webSiteName'), ' has some requests that are forbidden, status code 403.')]",
-            "isEnabled": false,
-            "condition": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-               "dataSource": {
-                  "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                  "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('webSiteName'))]",
-                  "metricName": "Http403"
-               },
-               "operator": "GreaterThan",
-               "threshold": 0,
-               "windowSize": "PT5M"
-            },
-            "action": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-               "sendToServiceOwners": true,
-               "customEmails": []
-            }
-         }
-      },
-      {
-         "apiVersion": "2014-04-01",
-         "name": "[concat('CPUHigh ', parameters('hostingPlanName'))]",
-         "type": "Microsoft.Insights/alertrules",
-         "location": "[resourceGroup().location]",
-         "dependsOn": [
-            "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
-         ],
-         "tags": {
-            "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
-            "displayName": "CPUHighAlertRule"
-         },
-         "properties": {
-            "name": "[concat('CPUHigh ', parameters('hostingPlanName'))]",
-            "description": "[concat('The average CPU is high across all the instances of ', parameters('hostingPlanName'))]",
-            "isEnabled": false,
-            "condition": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-               "dataSource": {
-                  "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                  "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                  "metricName": "CpuPercentage"
-               },
-               "operator": "GreaterThan",
-               "threshold": 90,
-               "windowSize": "PT15M"
-            },
-            "action": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-               "sendToServiceOwners": true,
-               "customEmails": []
-            }
-         }
-      },
-      {
-         "apiVersion": "2014-04-01",
-         "name": "[concat('LongHttpQueue ', parameters('hostingPlanName'))]",
-         "type": "Microsoft.Insights/alertrules",
-         "location": "[resourceGroup().location]",
-         "dependsOn": [
-            "[concat('Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
-         ],
-         "tags": {
-            "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]": "Resource",
-            "displayName": "LongHttpQueueAlertRule"
-         },
-         "properties": {
-            "name": "[concat('LongHttpQueue ', parameters('hostingPlanName'))]",
-            "description": "[concat('The HTTP queue for the instances of ', parameters('hostingPlanName'), ' has a large number of pending requests.')]",
-            "isEnabled": false,
-            "condition": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.ThresholdRuleCondition",
-               "dataSource": {
-                  "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleMetricDataSource",
-                  "resourceUri": "[concat(resourceGroup().id, '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]",
-                  "metricName": "HttpQueueLength"
-               },
-               "operator": "GreaterThan",
-               "threshold": 100.0,
-               "windowSize": "PT5M"
-            },
-            "action": {
-               "odata.type": "Microsoft.Azure.Management.Insights.Models.RuleEmailAction",
-               "sendToServiceOwners": true,
-               "customEmails": []
-            }
-         }
-      },
-      {
-         "apiVersion": "2014-04-01",
          "name": "[parameters('webSiteName')]",
          "type": "Microsoft.Insights/components",
          "location": "[parameters('aiLocation')]",
@@ -351,6 +215,47 @@
          "properties": {
             "applicationId": "[parameters('webSiteName')]",
             "Application_Type": "web"
+         }
+      },
+      {
+         "apiVersion": "2015-05-01",
+         "name": "[concat(parameters('webSiteName'), 'Ping')]",
+         "type": "Microsoft.Insights/webtests",
+         "location": "[parameters('aiLocation')]",
+         "tags": {
+            "[concat('hidden-link:', resourceId('Microsoft.Insights/components/', parameters('webSiteName')))]": "Resource"
+         },
+         "dependsOn": [
+            "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
+         ],
+         "properties": {
+            "Name": "[concat(parameters('webSiteName'), 'Ping')]",
+            "Description": "Pings URL to make sure site is up.",
+            "Enabled": true,
+            "Frequency": 300,
+            "Timeout": 30,
+            "Kind": "ping",
+            "Locations": [
+               {
+                  "Id": "us-ca-sjc-azr"
+               },
+               {
+                  "Id": "us-il-ch1-azr"
+               },
+               {
+                  "Id": "us-tx-sn1-azr"
+               },
+               {
+                  "Id": "us-fl-mia-edge"
+               },
+               {
+                  "Id": "us-va-ash-azr"
+               }
+            ],
+            "Configuration": {
+               "WebTest": "[concat('<WebTest Name=\"ping\" Id=\"<%= webtest_guid %>\" Enabled=\"True\" CssProjectStructure=\"\" CssIteration=\"\" Timeout=\"0\" WorkItemIds=\"\" xmlns=\"http://microsoft.com/schemas/VisualStudio/TeamTest/2010\" Description=\"\" CredentialUserName=\"\" CredentialPassword=\"\" PreAuthenticate=\"True\" Proxy=\"default\" StopOnError=\"False\" RecordedResultFile=\"\" ResultsLocale=\"\"> <Items> <Request Method=\"GET\" Guid=\"a5f10126-e4cd-570d-961c-cea43999a200\" Version=\"1.1\" Url=\"http://', reference(resourceId('Microsoft.Web/sites/', parameters('webSiteName')), '2015-08-01').defaultHostName ,'\" ThinkTime=\"0\" Timeout=\"300\" ParseDependentRequests=\"True\" FollowRedirects=\"True\" RecordResult=\"True\" Cache=\"False\" ResponseTimeGoal=\"0\" Encoding=\"utf-8\" ExpectedHttpStatusCode=\"200\" ExpectedResponseUrl=\"\" ReportingName=\"\" IgnoreHttpStatusCode=\"False\" /></Items></WebTest>')]"
+            },
+            "SyntheticMonitorId": "Ping"
          }
       }
    ]

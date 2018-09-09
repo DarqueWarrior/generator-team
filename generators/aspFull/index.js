@@ -1,4 +1,3 @@
-const path = require('path');
 const mkdirp = require('mkdirp');
 const uuidV4 = require('uuid/v4');
 const argUtils = require(`../app/args`);
@@ -39,7 +38,8 @@ module.exports = class extends Generator {
          uuid1: uuidV4(),
          uuid2: uuidV4(),
          uuid3: uuidV4(),
-         name_lowercase: this.applicationName.toLowerCase()
+         name_lowercase: this.applicationName.toLowerCase(),
+         webtest_guid: uuidV4()
       };
 
       var src = this.sourceRoot();
@@ -91,7 +91,7 @@ module.exports = class extends Generator {
 
       this.fs.copyTpl(`${src}/Deploy-AzureResourceGroup.ps1`, `${root}/Deploy-AzureResourceGroup.ps1`, tokens);
       this.fs.copyTpl(`${src}/webapp.IaC.deployproj`, `${root}/${this.applicationName}.IaC.deployproj`, tokens);
-      this.fs.copy(`${src}/WebSite.json`, `${root}/WebSite.json`);
+      this.fs.copyTpl(`${src}/WebSite.json`, `${root}/WebSite.json`, tokens);
       this.fs.copy(`${src}/Deployment.targets`, `${root}/Deployment.targets`);
       this.fs.copy(`${src}/WebSite.parameters.json`, `${root}/WebSite.parameters.json`);
 
