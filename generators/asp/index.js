@@ -93,9 +93,9 @@ module.exports = class extends Generator {
       src = `${this.sourceRoot()}/templates`;
       root = `${this.applicationName}/templates`;
 
-      this.fs.copyTpl(`${src}/parameters.xml`, `${root}/parameters.xml`, tokens);
+      this.fs.copy(`${src}/parameters.xml`, `${root}/parameters.xml`);
 
-      this.fs.copy(`${src}/asp_arm.json`, `${root}/website.json`);
+      this.fs.copyTpl(`${src}/asp_arm.json`, `${root}/website.json`, tokens);
       this.fs.copy(`${src}/arm.parameters.json`, `${root}/website.parameters.json`);
 
       this.fs.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);

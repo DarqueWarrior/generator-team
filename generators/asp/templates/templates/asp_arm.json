@@ -185,14 +185,16 @@
             "apiVersion": "2015-08-01",
             "dependsOn": [
                "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
-               "[resourceId('Microsoft.Web/sites/slots', parameters('webSiteName'), 'stage')]"
+               "[resourceId('Microsoft.Web/sites/slots', parameters('webSiteName'), 'stage')]",
+               "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
             ],
             "tags": {
                "displayName": "appSettings"
             },
             "properties": {
                "WEBSITE_NODE_DEFAULT_VERSION": "[parameters('websiteNodeVersion')]",
-               "MSDEPLOY_RENAME_LOCKED_FILES": "1"
+               "MSDEPLOY_RENAME_LOCKED_FILES": "1",
+               "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
             }
          }],
          "dependsOn": [
