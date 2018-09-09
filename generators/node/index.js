@@ -1,4 +1,4 @@
-const path = require('path');
+const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);
 const prompts = require(`../app/prompt`);
@@ -41,6 +41,7 @@ module.exports = class extends Generator {
          name: this.applicationName,
          port: this.dockerPorts.split(':')[0],
          name_lowercase: this.applicationName.toLowerCase(),
+         webtest_guid: uuidV4()
       };
 
       var src = this.sourceRoot();
@@ -84,7 +85,7 @@ module.exports = class extends Generator {
       src = `${this.sourceRoot()}/templates`;
       root = `${this.applicationName}/templates`;
 
-      this.fs.copy(`${src}/node_arm.json`, `${root}/website.json`);
+      this.fs.copyTpl(`${src}/node_arm.json`, `${root}/website.json`, tokens);
       this.fs.copy(`${src}/arm.parameters.json`, `${root}/website.parameters.json`);
 
       this.fs.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);

@@ -1,4 +1,3 @@
-const path = require('path');
 const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);

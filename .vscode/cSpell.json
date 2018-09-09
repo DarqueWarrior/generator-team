@@ -7,10 +7,23 @@
     // words - list of words to be always considered correct
     "words": [
         "acilinux",
+        "APPINSIGHTS",
+        "appsettings",
+        "autoscalesettings",
+        "bundleconfig",
+        "cooldown",
         "dockerpaas",
+        "gitignore",
+        "guid",
+        "INSTRUMENTATIONKEY",
         "paas",
         "proxyquire",
+        "serverfarms",
         "vsts",
+        "webtest",
+        "webtests",
+        "wwwroot",
+        "xmlns",
         "xunit"
     ],
     // flagWords - list of words to be always considered incorrect
