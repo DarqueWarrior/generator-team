@@ -91,7 +91,7 @@ module.exports = class extends Generator {
       this.fs.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);
       this.fs.copyTpl(`${src}/acilinux_arm.parameters.json`, `${root}/acilinux.parameters.json`, tokens);
 
-      this.fs.copy(`${src}/docker_arm.json`, `${root}/docker.json`);
+      this.fs.copyTpl(`${src}/docker_arm.json`, `${root}/docker.json`, tokens);
       this.fs.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);
    }
 
