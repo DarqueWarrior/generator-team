@@ -412,7 +412,7 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find Docker Registry Service Endpoint`,
+            "message": `Could not find Docker Registry Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -485,7 +485,7 @@ function findPackageFeed(account, projectName, token, gen, callback) {
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find package feed`,
+            "message": `Could not find package feed`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -541,7 +541,7 @@ function findNuGetServiceEndpoint(account, projectId, token, gen, callback) {
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find NuGet Service Endpoint`,
+            "message": `Could not find NuGet Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -615,7 +615,7 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find Docker Service Endpoint`,
+            "message": `Could not find Docker Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -669,7 +669,7 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find Azure Service Endpoint`,
+            "message": `Could not find Azure Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -762,7 +762,7 @@ function findProject(account, project, token, gen, callback) {
       if (res.statusCode === 404) {
          // Returning a undefined project indicates it was not found
          callback({
-            "message": `x Project ${project} not found`,
+            "message": `Project ${project} not found`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -876,7 +876,7 @@ function findBuild(account, teamProject, token, target, callback) {
 
       if (!bld) {
          callback({
-            "message": `x Build ${name} not found`,
+            "message": `Build ${name} not found`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -923,7 +923,7 @@ function findRelease(args, callback) {
 
       if (!rel) {
          callback({
-            "message": `x Release ${name} not found`,
+            "message": `Release ${name} not found`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -1022,7 +1022,7 @@ function getPools(answers) {
 
          if (response.statusCode === 401) {
             reject({
-               "message": `x Check your personal access token: ${response.statusMessage}`,
+               "message": `Check your personal access token: ${response.statusMessage}`,
                "code": `Unauthorized`
             });
             return;

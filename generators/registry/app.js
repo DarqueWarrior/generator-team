@@ -29,7 +29,8 @@ function run(args, gen, done) {
          if (err) {
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
-            gen.env.error(err.message);
+            gen.log.info(err.message);
+            gen.env.error();
          }
       });
 }
