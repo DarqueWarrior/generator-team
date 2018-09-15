@@ -111,7 +111,7 @@
                   "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
                ],
                "properties": {
-                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+                  "APPLICATION_INSIGHTS_IKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
                }
             }
          ]
@@ -199,7 +199,7 @@
          "resources": [
             {
                "condition": "[equals(parameters('skuName'), 'S1')]",
-               "apiVersion": "2015-08-01",
+               "apiVersion": "2016-08-01",
                "dependsOn": [
                   "[resourceId('Microsoft.Web/sites', parameters('webSiteName'))]",
                   "[resourceId('Microsoft.Web/sites/slots', parameters('webSiteName'), 'stage')]"
@@ -214,7 +214,7 @@
             },
             {
                "condition": "[equals(parameters('skuName'), 'S1')]",
-               "apiVersion": "2015-08-01",
+               "apiVersion": "2016-08-01",
                "name": "appsettings",
                "type": "config",
                "dependsOn": [
@@ -222,7 +222,7 @@
                   "[concat('Microsoft.Insights/components/', parameters('webSiteName'))]"
                ],
                "properties": {
-                  "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+                  "APPLICATION_INSIGHTS_IKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
                }
             }
          ],

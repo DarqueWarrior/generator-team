@@ -46,6 +46,7 @@ module.exports = class extends Generator {
       var root = this.applicationName;
 
       // Root files
+      this.fs.copy(`${src}/README.md`, `${root}/README.md`);
       this.fs.copy(`${src}/gitignore`, `${root}/.gitignore`);
       this.fs.copy(`${src}/gitattributes`, `${root}/.gitattributes`);
       this.fs.copyTpl(`${src}/webapp.sln`, `${root}/${this.applicationName}.sln`, tokens);

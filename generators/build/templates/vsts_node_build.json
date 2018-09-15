@@ -16,13 +16,20 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "cwd": "",
-            "command": "install",
-            "arguments": "bower --allow-root"
+            "command": "custom",
+            "workingDir": "",
+            "verbose": "false",
+            "customCommand": "install bower --allow-root",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
       {
@@ -34,14 +41,13 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "bower",
-            "arguments": "install --allow-root",
-            "workingFolder": "",
-            "failOnStandardError": "false"
+            "script": "bower install --allow-root",
+            "workingDirectory": "",
+            "failOnStderr": "false"
          }
       },
       {
@@ -53,13 +59,20 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
             "command": "install",
-            "arguments": "",
-            "cwd": ""
+            "workingDir": "",
+            "verbose": "false",
+            "customCommand": "",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
       {
@@ -71,13 +84,20 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "command": "test",
-            "arguments": "-- --grep unit*",
-            "cwd": ""
+            "command": "custom",
+            "workingDir": "",
+            "verbose": "false",
+            "customCommand": "test",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
       {
@@ -95,6 +115,7 @@
          "inputs": {
             "testRunner": "JUnit",
             "testResultsFiles": "**/xunit.xml",
+            "searchFolder": "$(System.DefaultWorkingDirectory)",
             "mergeTestResults": "false",
             "testRunTitle": "Unit",
             "platform": "$(BuildPlatform)",
@@ -118,7 +139,8 @@
             "codeCoverageTool": "Cobertura",
             "summaryFileLocation": "$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml",
             "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
-            "additionalCodeCoverageFiles": ""
+            "additionalCodeCoverageFiles": "",
+            "failIfCoverageEmpty": "false"
          }
       },
       {
@@ -130,13 +152,20 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
             "command": "install",
-            "arguments": "",
-            "cwd": "src"
+            "workingDir": "src",
+            "verbose": "false",
+            "customCommand": "",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
       {
@@ -148,15 +177,15 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "d8b84976-e99a-4b86-b885-4849694435b0",
-            "versionSpec": "1.*",
+            "versionSpec": "2.*",
             "definitionType": "task"
          },
          "inputs": {
-            "rootFolder": "src",
+            "rootFolderOrFile": "src",
             "includeRootFolder": "false",
-            "archiveType": "default",
+            "archiveType": "zip",
             "tarCompression": "gz",
-            "archiveFile": "{{Project}}.zip",
+            "archiveFile": "nodedemo.zip",
             "replaceExistingArchive": "true"
          }
       },
@@ -180,7 +209,7 @@
             "OverWrite": "false",
             "flattenFolders": "false"
          }
-      }, 
+      },
       {
          "enabled": true,
          "continueOnError": false,
@@ -197,7 +226,9 @@
             "PathtoPublish": "$(build.artifactstagingdirectory)",
             "ArtifactName": "drop",
             "ArtifactType": "Container",
-            "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+            "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)",
+            "Parallel": "false",
+            "ParallelCount": "8"
          }
       }
    ],

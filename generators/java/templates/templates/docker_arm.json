@@ -102,7 +102,7 @@
                "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('containerregistry_password')]",
                "DOCKER_CUSTOM_IMAGE_NAME": "[parameters('image_tag')]",
                "PORT": "[parameters('image_port')]",
-               "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
+               "APPLICATION_INSIGHTS_IKEY": "[reference(resourceId('Microsoft.Insights/components', parameters('webSiteName')), '2014-04-01').InstrumentationKey]"
             }
          }]
       },

@@ -21,3 +21,5 @@
 ## The application is monitored by
 
 * [Application Insights](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-nodejs)
+
+To develop locally create an environment variable named APPINSIGHTS_INSTRUMENTATIONKEY and set it to the instrumentation key from Azure.

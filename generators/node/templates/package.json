@@ -5,7 +5,7 @@
    "main": "./src/server.js",
    "scripts": {
       "start": "node ./src/server.js",
-      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit-file"
+      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit --reporter-options output=xunit.xml"
    },
    "dependencies": {
       "applicationinsights": "^1.0.4",
@@ -24,7 +24,6 @@
       "proxyquire": "^2.1.0",
       "sinon": "^6.1.5",
       "sinon-test": "^2.2.1",
-      "supertest": "^3.1.0",
-      "xunit-file": "^1.0.0"
+      "supertest": "^3.1.0"
    }
 }
