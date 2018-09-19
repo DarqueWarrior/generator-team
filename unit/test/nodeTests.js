@@ -20,10 +20,10 @@ describe(`team:node docker`, function () {
          });
    });
 
-   it(`bower install should not be called`, function () {
-      assert.equal(0, spawnStub.withArgs(`bower`, [`install`], {
+   it(`yarn install should not be called`, function () {
+      assert.equal(0, spawnStub.withArgs(`yarn`, [`install`], {
          stdio: ['pipe', 'pipe', process.stderr]
-      }).callCount, `bower install was called`);
+      }).callCount, `yarn install was called`);
    });
 
    it(`npm install should not be called`, function () {
@@ -34,10 +34,8 @@ describe(`team:node docker`, function () {
 
    it(`files should be generated`, function () {
       assert.file([
-         `nodeDemo/.bowerrc`,
          `nodeDemo/README.md`,
          `nodeDemo/.gitignore`,
-         `nodeDemo/bower.json`,
          `nodeDemo/src/app.js`,
          `nodeDemo/package.json`,
          `nodeDemo/src/web.config`,
@@ -53,7 +51,6 @@ describe(`team:node docker`, function () {
          `nodeDemo/templates/acilinux.parameters.json`
       ]);
 
-      assert.fileContent(`nodeDemo/bower.json`, `"name": "nodedemo"`);
       assert.fileContent(`nodeDemo/package.json`, `"name": "nodedemo"`);
       assert.fileContent(`nodeDemo/src/package.json`, `"name": "nodedemo"`);
       assert.fileContent(`nodeDemo/templates/website.json`, `"name": "appsettings"`);
@@ -65,7 +62,7 @@ describe(`team:node docker`, function () {
 });
 
 describe(`team:node paas`, function () {
-   var bowerStub;
+   var yarnStub;
 
    before(function () {
       return helpers.run(path.join(__dirname, `../../generators/node/index.js`))
@@ -76,30 +73,27 @@ describe(`team:node paas`, function () {
          .on(`ready`, function (generator) {
             // This is called right before `generator.run()` is called
             // Stub the calls to spawnCommandSync
-            bowerStub = sinon.stub(generator, `spawnCommandSync`);
+            yarnStub = sinon.stub(generator, `spawnCommandSync`);
          });
    });
 
-   it(`bower install should be called`, function () {
+   it(`yarn install should be called`, function () {
       // Make sure the calls to install were made
-      assert(bowerStub.withArgs(`bower`, [`install`], {
+      assert(yarnStub.withArgs(`yarn`, [], {
          stdio: ['pipe', 'pipe', process.stderr]
-      }).calledOnce, `bower install not called once`);
+      }).calledOnce, `yarn install not called once`);
    });
 
-   it(`npm install should be called`, function () {
-      // Make sure the calls to install were made
-      assert(bowerStub.withArgs(`npm`, [`install`], {
+   it(`npm install should not be called`, function () {
+      assert.equal(0, spawnStub.withArgs(`npm`, [`install`], {
          stdio: ['pipe', 'pipe', process.stderr]
-      }).calledOnce, `npm install not called once`);
+      }).callCount, `npm install was called`);
    });
 
    it(`files should be generated`, function () {
       assert.file([
-         `.bowerrc`,
          `README.md`,
          `.gitignore`,
-         `bower.json`,
          `src/app.js`,
          `package.json`,
          `src/web.config`,
@@ -113,7 +107,6 @@ describe(`team:node paas`, function () {
          `templates/acilinux.parameters.json`
       ]);
 
-      assert.fileContent(`bower.json`, `"name": "nodedemo"`);
       assert.fileContent(`package.json`, `"name": "nodedemo"`);
       assert.fileContent(`src/package.json`, `"name": "nodedemo"`);
       assert.fileContent(`templates/acilinux.parameters.json`, `"value": "80"`);

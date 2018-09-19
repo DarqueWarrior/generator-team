@@ -48,10 +48,8 @@ module.exports = class extends Generator {
       var root = this.applicationName;
 
       // Root files
-      this.fs.copy(`${src}/.bowerrc`, `${root}/.bowerrc`);
       this.fs.copy(`${src}/README.md`, `${root}/README.md`);
       this.fs.copy(`${src}/gitignore`, `${root}/.gitignore`);
-      this.fs.copyTpl(`${src}/bower.json`, `${root}/bower.json`, tokens);
       this.fs.copyTpl(`${src}/package.json`, `${root}/package.json`, tokens);
 
       // Web App project
@@ -95,19 +93,14 @@ module.exports = class extends Generator {
       this.fs.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);
    }
 
-   // 7. Where installation are run (npm, bower)
+   // 7. Where installation are run (npm, yarn)
    install() {
       if (this.installDep === 'true') {
          process.chdir(this.applicationName);
 
-         this.log.ok(`Running bower install`);
+         this.log.ok(`Running yarn install`);
          // I don't want to see the output of this command
-         this.spawnCommandSync('bower', ['install'], {
-            stdio: ['pipe', 'pipe', process.stderr]
-         });
-
-         this.log.ok(`Running npm install`);
-         this.spawnCommandSync('npm', ['install'], {
+         this.spawnCommandSync('yarn', [], {
             stdio: ['pipe', 'pipe', process.stderr]
          });
       }

@@ -5,18 +5,22 @@
    "main": "./src/server.js",
    "scripts": {
       "start": "node ./src/server.js",
-      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit --reporter-options output=xunit.xml"
+      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit --reporter-options output=xunit.xml",
+      "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'src/public/lib', 'junction') } catch (e) { }\""
    },
    "dependencies": {
       "applicationinsights": "^1.0.4",
       "body-parser": "^1.18.3",
-      "bower": "^1.8.4",
       "cookie-parser": "~1.4.3",
       "debug": "^3.1.0",
       "express": "^4.16.3",
       "morgan": "^1.9.0",
       "pug": "^2.0.3",
-      "serve-favicon": "^2.5.0"
+      "serve-favicon": "^2.5.0",
+      "@bower_components/bootstrap": "twbs/bootstrap#3.3.6",
+      "@bower_components/jquery": "jquery/jquery-dist#2.2.3",
+      "@bower_components/jquery-validation": "jzaefferer/jquery-validation#1.15.0",
+      "@bower_components/jquery-validation-unobtrusive": "aspnet/jquery-validation-unobtrusive#3.2.6"
    },
    "devDependencies": {
       "istanbul": "^0.4.5",
@@ -25,5 +29,8 @@
       "sinon": "^6.1.5",
       "sinon-test": "^2.2.1",
       "supertest": "^3.1.0"
+   },
+   "engines": {
+      "yarn": ">= 1.0.0"
    }
 }

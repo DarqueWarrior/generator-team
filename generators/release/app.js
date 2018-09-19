@@ -301,7 +301,7 @@ function createRelease(args, gen, callback) {
 
             if (resp.statusCode >= 400) {
                status = "failed";
-               finished(new Error("x " + resp.body.message), null);
+               finished(new Error(resp.body), null);
             } else if (resp.statusCode >= 300) {
                status = "in progress";
                finished(err, null);
