@@ -916,7 +916,7 @@ function findRelease(args, callback) {
    });
 
    request(options, function (e, response, body) {
-      if (response.statusMessage !== 200) {
+      if (response.statusCode !== 200) {
          // The body is HTML
          var dom = cheerio.load(body);
          callback({
@@ -1078,7 +1078,7 @@ function loadProfiles() {
 // name or full URL.  So when you run Yo Team again it will
 // default to the full URL or account name and fail to find
 // the profile and prompt for the PAT.  Therefore, here you 
-// need to seach the profile name and URL 
+// need to search the profile name and URL 
 function searchProfiles(input) {
    let results = loadProfiles();
 
@@ -1135,20 +1135,23 @@ function extractInstance(input) {
    // When using VSTS we only want the account name but
    // people continue to give the entire url which will
    // cause issues later. So check to see if the value
-   // provided contains visualstudio.com and if so extract
-   // the account name and simply return that.
+   // provided contains visualstudio.com or dev.azure.com
+   // and if so extract the account name and simply return that.
 
-   // If you find visualstudio.com in the name the user most
-   // likely entered the entire URL instead of just the account name
-   // so lets extract it.
-   if (input.toLowerCase().match(/visualstudio.com/) === null) {
+   // If you find visualstudio.com or dev.azure.com in the name
+   // the user most likely entered the entire URL instead of just
+   // the account name so lets extract it.
+   if (input.match(/visualstudio.com/i) === null &&
+       input.match(/dev.azure.com/i) === null) {
       return input;
    }
 
-   var myRegexp = /([^/]+)\.visualstudio.com/;
+   var myRegexp = /([^/]+)\.visualstudio.com|dev.azure.com\/([^/]+)/i;
    var match = myRegexp.exec(input);
 
-   return match[1];
+   // The match for VSTS is in 1 and the match for Azure DevOps is in
+   // 2.  If we did not match VSTS we must of matched Azure DevOps.
+   return match[1] ? match[1] : match[2]
 }
 
 function needsRegistry(answers, options) {
