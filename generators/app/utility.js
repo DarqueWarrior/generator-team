@@ -3,6 +3,7 @@
 const fs = require('fs');
 const os = require('os');
 const url = require('url');
+const cheerio = require('cheerio');
 const request = require(`request`);
 const package = require('../../package.json');
 
@@ -915,6 +916,17 @@ function findRelease(args, callback) {
    });
 
    request(options, function (e, response, body) {
+      if (response.statusMessage !== 200) {
+         // The body is HTML
+         var dom = cheerio.load(body);
+         callback({
+            "message": `Server Error: ${dom(`title`).text()}`,
+            "code": `ServerError`
+         }, undefined);
+
+         return;
+      }
+
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
