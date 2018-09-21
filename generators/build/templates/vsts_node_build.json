@@ -36,7 +36,7 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run yarn",
+         "displayName": "Run yarn for tests",
          "refName": "run_yarn",
          "timeoutInMinutes": 0,
          "task": {
@@ -116,6 +116,24 @@
             "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
             "additionalCodeCoverageFiles": "",
             "failIfCoverageEmpty": "false"
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Run yarn for src",
+         "refName": "run_yarn",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
+            "versionSpec": "2.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "script": "../node_modules/yarn/lib/cli.js",
+            "workingDirectory": "src",
+            "failOnStderr": "false"
          }
       },
       {
