@@ -11,8 +11,8 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "npm install bower",
-         "refName": "install_bower",
+         "displayName": "Install yarn",
+         "refName": "install_yarn",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -22,15 +22,15 @@
          "inputs": {
             "cwd": "",
             "command": "install",
-            "arguments": "bower --allow-root"
+            "arguments": "yarn --allow-root"
          }
-      },
+      },      
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run bower",
-         "refName": "run_bower",
+         "displayName": "Run yarn for tests",
+         "refName": "npm_install_test",
          "timeoutInMinutes": 0,
          "task": {
             "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
@@ -38,28 +38,10 @@
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "bower",
-            "arguments": "install --allow-root",
+            "filename": "node",
+            "arguments": "./node_modules/yarn/lib/cli.js",
             "workingFolder": "",
-            "failOnStandardError": "false"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "npm install for test",
-         "refName": "npm_install_test",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "command": "install",
-            "arguments": "",
-            "cwd": ""
+            "failOnStandardError": false
          }
       },
       {
@@ -119,6 +101,25 @@
             "summaryFileLocation": "$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml",
             "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
             "additionalCodeCoverageFiles": ""
+         }
+      },
+      {
+         "enabled": true,
+         "continueOnError": false,
+         "alwaysRun": false,
+         "displayName": "Run yarn for src",
+         "refName": "npm_install_src",
+         "timeoutInMinutes": 0,
+         "task": {
+            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
+            "versionSpec": "1.*",
+            "definitionType": "task"
+         },
+         "inputs": {
+            "filename": "node",
+            "arguments": "./node_modules/yarn/lib/cli.js",
+            "workingFolder": "src",
+            "failOnStandardError": false
          }
       },
       {

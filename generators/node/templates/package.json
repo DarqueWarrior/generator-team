@@ -5,7 +5,7 @@
    "main": "./src/server.js",
    "scripts": {
       "start": "node ./src/server.js",
-      "test": "istanbul cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit --reporter-options output=xunit.xml",
+      "test": "node node_modules/istanbul/lib/cli.js cover --report cobertura --report lcov node_modules/mocha/bin/_mocha -- -R xunit -O output=unit.xml",
       "postinstall": "node -e \"try { require('fs').symlinkSync(require('path').resolve('node_modules/@bower_components'), 'src/public/lib', 'junction') } catch (e) { }\""
    },
    "dependencies": {
