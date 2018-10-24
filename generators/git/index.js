@@ -64,7 +64,7 @@ module.exports = class extends Generator {
          });
 
          // Log output as info
-         this.log.info(fs.readFileSync(gitLogFile).toString());
+         this.log.info(fs.readFileSync(gitLogFile).toString().trim());
 
          // Delete the log file.
          fs.unlinkSync(gitLogFile);
