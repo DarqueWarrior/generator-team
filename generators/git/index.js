@@ -1,5 +1,6 @@
 const fs = require(`fs`);
 const path = require(`path`);
+const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);
 const prompts = require(`../app/prompt`);
@@ -56,7 +57,11 @@ module.exports = class extends Generator {
          // git clone command below.  If I don't do this any string
          // written will not match the format of the rest of the data.
          // This way I can output it as info using yeoman log method.
-         var gitLogFile = path.join(process.cwd(), 'yoTeamGitLog.txt');
+         // The temp log filename needs to be unique.  So we gen a GUID 
+         // and use part of it in the name.
+         let uuid = uuidV4();
+         var gitLogFile = `yoTeamGitLog${uuid.substring(0, 8)}.txt`;
+         // var gitLogFile = path.join(process.cwd(), `yoTeamGitLog${uuid.substring(0, 8)}.txt`);
          var fd = fs.openSync(gitLogFile, 'w')
 
          this.spawnCommandSync(`git`, [`clone`, `-q`, url], {
@@ -65,9 +70,6 @@ module.exports = class extends Generator {
 
          // Log output as info
          this.log.info(fs.readFileSync(gitLogFile).toString().trim());
-
-         // Delete the log file.
-         fs.unlinkSync(gitLogFile);
       }
    }
 
