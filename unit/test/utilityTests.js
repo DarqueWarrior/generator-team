@@ -2254,14 +2254,14 @@ describe(`utility`, function () {
       };
 
       proxyApp.tryFindRelease(args, (err, obj) => {
-         assert.equal(err, null);
+         assert.notEqual(err, null);
          assert.equal(obj, undefined);
 
          done();
       });
    }));
 
-   it(`extractInstance from profile`, sinonTest(function () {
+   it(`extractInstance TFS from profile returns full url`, sinonTest(function () {
       // Arrange
       var profiles = `
       [
@@ -2299,7 +2299,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    }));
 
-   it(`extractInstance good`, function () {
+   it(`extractInstance for VSTS account name returns account only`, function () {
       // Arrange
       var expected = `vsts`;
 
@@ -2310,12 +2310,25 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`extractInstance account only`, function () {
+   it(`extractInstance for full VSTS url returns account only`, function () {
       // Arrange
       var expected = `vsts`;
 
       // Act
-      var actual = util.extractInstance(`https://vsts.visualstudio.com`);
+      // Make sure some of the letters are upper case. This makes
+      // sure the match is case insensitive.
+      var actual = util.extractInstance(`https://vsts.VisualStudio.com`);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`extractInstance for full AzureDevOps url returns account only`, function () {
+      // Arrange
+      var expected = `azDevOps`;
+
+      // Act
+      var actual = util.extractInstance(`https://dev.Azure.com/azDevOps`);
 
       // Assert
       assert.equal(expected, actual);
@@ -2865,6 +2878,13 @@ describe(`utility`, function () {
 
          // Assert
          assert.equal(expected, actual);
+      });
+
+      // This is required for users of both VSTeam and Yo Team
+      // VSTeam has already been updated to store dev.azure.com
+      // URLs in profiles. 
+      it(`get full URL for Azure DevOps for RM`, function() {
+
       });
 
       it(`get full URL for VSTS for RM`, function () {

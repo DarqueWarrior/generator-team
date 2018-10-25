@@ -1482,11 +1482,10 @@ describe(`release:app`, function () {
       // Act
       // I use the custom error validation method to call done
       // because my method is async 
-      assert.throws(function () {
-         proxyApp.findOrCreateRelease(args, logger, done);
-      }, function (e) {
+
+      proxyApp.findOrCreateRelease(args, logger, function (e) {
+         assert.notEqual(e, null);
          done();
-         return true;
       });
    }));
 });

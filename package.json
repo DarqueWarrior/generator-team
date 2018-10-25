@@ -51,26 +51,26 @@
    },
    "license": "MIT",
    "dependencies": {
-      "async": "^2.6.0",
+      "async": "^2.6.1",
       "node-env-file": "^0.1.8",
-      "pad": "^2.0.3",
-      "request": "^2.85.0",
-      "uuid": "^3.2.1",
+      "pad": "^2.2.1",
+      "request": "^2.88.0",
+      "uuid": "^3.3.2",
       "yeoman-generator": "^3.1.1",
-      "yosay": "^2.0.1"
+      "cheerio": "^1.0.0-rc.2",
+      "yosay": "^2.0.2"
    },
    "devDependencies": {
       "azure-arm-resource": "^3.1.1-preview",
-      "cheerio": "^1.0.0-rc.2",
       "fs-extra": "^5.0.0",
       "istanbul": "*",
       "jshint": "^2.9.6",
-      "mocha": "^5.0.5",
+      "mocha": "^5.2.0",
       "ms-rest-azure": "^2.5.7",
-      "proxyquire": "^2.0.1",
-      "sinon": "^4.4.8",
-      "sinon-test": "^2.1.3",
-      "yeoman-assert": "^3.1.0",
+      "proxyquire": "^2.1.0",
+      "sinon": "^4.5.0",
+      "sinon-test": "^2.3.0",
+      "yeoman-assert": "^3.1.1",
       "yeoman-test": "^1.8.0",
       "yo": "^2.0.5"
    }

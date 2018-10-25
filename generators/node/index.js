@@ -1,4 +1,4 @@
-const path = require('path');
+const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);
 const prompts = require(`../app/prompt`);
@@ -41,16 +41,15 @@ module.exports = class extends Generator {
          name: this.applicationName,
          port: this.dockerPorts.split(':')[0],
          name_lowercase: this.applicationName.toLowerCase(),
+         webtest_guid: uuidV4()
       };
 
       var src = this.sourceRoot();
       var root = this.applicationName;
 
       // Root files
-      this.fs.copy(`${src}/.bowerrc`, `${root}/.bowerrc`);
       this.fs.copy(`${src}/README.md`, `${root}/README.md`);
       this.fs.copy(`${src}/gitignore`, `${root}/.gitignore`);
-      this.fs.copyTpl(`${src}/bower.json`, `${root}/bower.json`, tokens);
       this.fs.copyTpl(`${src}/package.json`, `${root}/package.json`, tokens);
 
       // Web App project
@@ -58,6 +57,7 @@ module.exports = class extends Generator {
       root = `${this.applicationName}/src`;
 
       this.fs.copy(`${src}/app.js`, `${root}/app.js`);
+      this.fs.copy(`${src}/utility.js`, `${root}/utility.js`);
       this.fs.copy(`${src}/web.config`, `${root}/web.config`);
       this.fs.copy(`${src}/Dockerfile`, `${root}/Dockerfile`);
       this.fs.copy(`${src}/parameters.xml`, `${root}/parameters.xml`);
@@ -83,29 +83,24 @@ module.exports = class extends Generator {
       src = `${this.sourceRoot()}/templates`;
       root = `${this.applicationName}/templates`;
 
-      this.fs.copy(`${src}/node_arm.json`, `${root}/website.json`);
+      this.fs.copyTpl(`${src}/node_arm.json`, `${root}/website.json`, tokens);
       this.fs.copy(`${src}/arm.parameters.json`, `${root}/website.parameters.json`);
 
       this.fs.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);
       this.fs.copyTpl(`${src}/acilinux_arm.parameters.json`, `${root}/acilinux.parameters.json`, tokens);
 
-      this.fs.copy(`${src}/docker_arm.json`, `${root}/docker.json`);
+      this.fs.copyTpl(`${src}/docker_arm.json`, `${root}/docker.json`, tokens);
       this.fs.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);
    }
 
-   // 7. Where installation are run (npm, bower)
+   // 7. Where installation are run (npm, yarn)
    install() {
       if (this.installDep === 'true') {
          process.chdir(this.applicationName);
 
-         this.log.ok(`Running bower install`);
+         this.log.ok(`Running yarn install`);
          // I don't want to see the output of this command
-         this.spawnCommandSync('bower', ['install'], {
-            stdio: ['pipe', 'pipe', process.stderr]
-         });
-
-         this.log.ok(`Running npm install`);
-         this.spawnCommandSync('npm', ['install'], {
+         this.spawnCommandSync('yarn', [], {
             stdio: ['pipe', 'pipe', process.stderr]
          });
       }

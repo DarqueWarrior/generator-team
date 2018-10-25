@@ -206,8 +206,8 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
                      // Assert
                      // There are several conditions tested in parallel so the contents
                      // of stderr is non-deterministic so test both possible values
-                     assert.ok(stderr.indexOf(`x Could not find Docker Service Endpoint`) !== -1 ||
-                        stderr.indexOf(`x Could not find Docker Registry Service Endpoint`) !== -1);
+                     assert.ok(stderr.indexOf(`Could not find Docker Service Endpoint`) !== -1 ||
+                        stderr.indexOf(`Could not find Docker Registry Service Endpoint`) !== -1);
                   } else {
                      assert.fail("Build was created without Docker service endpoint");
                   }
@@ -243,7 +243,7 @@ describe(`Testing Docker builds without Docker service endpoint`, function () {
                         // Assert
                         // There are several conditions tested in parallel so the contents
                         // of stderr is non-deterministic so test both possible values
-                        assert.ok(stderr.indexOf(`x Could not find Docker Registry Service Endpoint`) !== -1);
+                        assert.ok(stderr.indexOf(`Could not find Docker Registry Service Endpoint`) !== -1);
                      } else {
                         assert.fail("Build was created without Docker service endpoint");
                      }

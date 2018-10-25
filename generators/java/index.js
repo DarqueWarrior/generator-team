@@ -1,4 +1,4 @@
-const path = require('path');
+const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);
 const prompts = require(`../app/prompt`);
@@ -46,7 +46,8 @@ module.exports = class extends Generator {
          name_lowercase: this.applicationName.toLowerCase(),
          groupId: this.groupId,
          namespace: `${this.groupId}.${this.applicationName}`,
-         tilesHeader: "<%@ taglib uri=&#39;http://tiles.apache.org/tags-tiles&#39; prefix=&#39;tiles&#39;%>"
+         tilesHeader: "<%@ taglib uri=&#39;http://tiles.apache.org/tags-tiles&#39; prefix=&#39;tiles&#39;%>",
+         webtest_guid: uuidV4()
       };
 
       var mainFolder = '/src/main/java/';
@@ -90,13 +91,13 @@ module.exports = class extends Generator {
 
       this.fs.copy(`${src}/parameters.xml`, `${root}/parameters.xml`);
 
-      this.fs.copy(`${src}/java_arm.json`, `${root}/website.json`);
+      this.fs.copyTpl(`${src}/java_arm.json`, `${root}/website.json`, tokens);
       this.fs.copy(`${src}/java_arm.parameters.json`, `${root}/website.parameters.json`);
 
       this.fs.copy(`${src}/acilinux_arm.json`, `${root}/acilinux.json`);
       this.fs.copyTpl(`${src}/acilinux_arm.parameters.json`, `${root}/acilinux.parameters.json`, tokens);
 
-      this.fs.copy(`${src}/docker_arm.json`, `${root}/docker.json`);
+      this.fs.copyTpl(`${src}/docker_arm.json`, `${root}/docker.json`, tokens);
       this.fs.copy(`${src}/docker_arm.parameters.json`, `${root}/docker.parameters.json`);
    }
 
