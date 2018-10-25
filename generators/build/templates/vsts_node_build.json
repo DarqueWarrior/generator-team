@@ -145,11 +145,11 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "d8b84976-e99a-4b86-b885-4849694435b0",
-            "versionSpec": "2.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "rootFolderOrFile": "src",
+            "rootFolder": "src",
             "includeRootFolder": "false",
             "archiveType": "zip",
             "tarCompression": "gz",
