@@ -84,12 +84,6 @@ describe(`team:node paas`, function () {
       }).calledOnce, `yarn install not called once`);
    });
 
-   it(`npm install should not be called`, function () {
-      assert.equal(0, spawnStub.withArgs(`npm`, [`install`], {
-         stdio: ['pipe', 'pipe', process.stderr]
-      }).callCount, `npm install was called`);
-   });
-
    it(`files should be generated`, function () {
       assert.file([
          `README.md`,

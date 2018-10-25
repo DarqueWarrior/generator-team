@@ -2254,14 +2254,14 @@ describe(`utility`, function () {
       };
 
       proxyApp.tryFindRelease(args, (err, obj) => {
-         assert.equal(err, null);
+         assert.notEqual(err, null);
          assert.equal(obj, undefined);
 
          done();
       });
    }));
 
-   it.only(`extractInstance TFS from profile returns full url`, sinonTest(function () {
+   it(`extractInstance TFS from profile returns full url`, sinonTest(function () {
       // Arrange
       var profiles = `
       [
@@ -2299,7 +2299,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    }));
 
-   it.only(`extractInstance for VSTS account name returns account only`, function () {
+   it(`extractInstance for VSTS account name returns account only`, function () {
       // Arrange
       var expected = `vsts`;
 
@@ -2310,7 +2310,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it.only(`extractInstance for full VSTS url returns account only`, function () {
+   it(`extractInstance for full VSTS url returns account only`, function () {
       // Arrange
       var expected = `vsts`;
 
@@ -2323,7 +2323,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it.only(`extractInstance for full AzureDevOps url returns account only`, function () {
+   it(`extractInstance for full AzureDevOps url returns account only`, function () {
       // Arrange
       var expected = `azDevOps`;
 
