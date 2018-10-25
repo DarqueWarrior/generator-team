@@ -1164,11 +1164,14 @@ function needsRegistry(answers, options) {
          answers.target === `acilinux` ||
          options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         options.target === `dockerpaas`);
+         options.target === `dockerpaas` ||
+         answers.target === `k8s` ||
+         options.target === `k8s`);
    } else {
       return (answers.target === `docker` ||
          answers.target === `acilinux` ||
-         answers.target === `dockerpaas`);
+         answers.target === `dockerpaas` ||
+         answers.target === `k8s`);
    }
 }
 
@@ -1185,7 +1188,9 @@ function needsDockerHost(answers, options) {
       paasRequiresHost = (answers.target === `dockerpaas` ||
          options.target === `dockerpaas` ||
          answers.target === `acilinux` ||
-         options.target === `acilinux`) &&
+         options.target === `acilinux` ||
+         answers.target === `k8s` ||
+         options.target === `k8s`) &&
          ((hasDockerTools(answers.queue) === false) &&
             (hasDockerTools(options.queue) === false));
    } else {

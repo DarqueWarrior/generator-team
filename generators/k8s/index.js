@@ -15,6 +15,10 @@ module.exports = class extends Generator {
       // These are position based arguments for this generator. If they are not provided
       // via the command line they will be queried during the prompting priority
       argUtils.applicationName(this);
+      argUtils.tfs(this);
+      argUtils.dockerHost(this);
+      argUtils.dockerCertPath(this);
+      argUtils.pat(this);
       // argUtils.kubeEndpoint(this);
       // argUtils.azureRegistryName(this);
       // argUtils.azureRegistryResourceGroup(this);
