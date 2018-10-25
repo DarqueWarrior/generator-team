@@ -19,5 +19,26 @@
    "editor.detectIndentation": false,
    "terminal.integrated.fontSize": 18,
    "editor.fontSize": 18,
-   "editor.wordWrap": false
+   "editor.wordWrap": false,
+   "cSpell.words": [
+      "APPINSIGHTS",
+      "IKEY",
+      "INSTRUMENTATIONKEY",
+      "appsettings",
+      "asax",
+      "autoscalesettings",
+      "bundleconfig",
+      "containerregistry",
+      "cooldown",
+      "deployproj",
+      "gitattributes",
+      "gitignore",
+      "guid",
+      "serverfarms",
+      "webapp",
+      "webtest",
+      "webtests",
+      "wwwroot",
+      "xmlns"
+   ]
 }

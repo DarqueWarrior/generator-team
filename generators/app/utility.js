@@ -3,6 +3,7 @@
 const fs = require('fs');
 const os = require('os');
 const url = require('url');
+const cheerio = require('cheerio');
 const request = require(`request`);
 const package = require('../../package.json');
 
@@ -44,6 +45,12 @@ String.prototype.replaceAll = function (search, replacement) {
 
 function isDocker(value) {
    return value === `docker` || value === `dockerpaas` || value === `acilinux`;
+}
+
+function isWindowsAgent(queue) {
+   return (queue.indexOf(`Linux`) === -1 &&
+      queue.indexOf(`Ubuntu`) === -1 &&
+      queue.indexOf(`macOS`) === -1);
 }
 
 function getDockerRegistryServer(server) {
@@ -178,8 +185,7 @@ function getAppTypes(answers) {
 
    // If this is not a Linux or Mac based agent also show
    // .NET Full
-   if (answers.queue.indexOf(`Linux`) === -1 &&
-      answers.queue.indexOf(`macOS`) === -1) {
+   if (isWindowsAgent(answers.queue)) {
       types.splice(1, 0, {
          name: `.NET Framework`,
          value: `aspFull`
@@ -309,7 +315,7 @@ function validateServicePrincipalKey(input) {
    return validateRequired(input, `You must provide a Service Principal Key`);
 }
 
-function validateapiKey(input) {
+function validateApiKey(input) {
    return validateRequired(input, `You must provide a apiKey`);
 }
 
@@ -327,8 +333,8 @@ function encodePat(pat) {
    // The personal access token must be 64 bit encoded to be used
    // with the REST API
 
-    let b = Buffer.from(`:` + pat);
-    return b.toString(`base64`);
+   let b = Buffer.from(`:` + pat);
+   return b.toString(`base64`);
 }
 
 function checkStatus(uri, token, gen, callback) {
@@ -410,7 +416,7 @@ function findDockerRegistryServiceEndpoint(account, projectId, dockerRegistry, t
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find Docker Registry Service Endpoint`,
+            "message": `Could not find Docker Registry Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -483,7 +489,7 @@ function findPackageFeed(account, projectName, token, gen, callback) {
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find package feed`,
+            "message": `Could not find package feed`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -539,7 +545,7 @@ function findNuGetServiceEndpoint(account, projectId, token, gen, callback) {
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find NuGet Service Endpoint`,
+            "message": `Could not find NuGet Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -613,7 +619,7 @@ function findDockerServiceEndpoint(account, projectId, dockerHost, token, gen, c
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find Docker Service Endpoint`,
+            "message": `Could not find Docker Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -667,7 +673,7 @@ function findAzureServiceEndpoint(account, projectId, sub, token, gen, callback)
 
       if (endpoint === undefined) {
          callback({
-            "message": `x Could not find Azure Service Endpoint`,
+            "message": `Could not find Azure Service Endpoint`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -760,7 +766,7 @@ function findProject(account, project, token, gen, callback) {
       if (res.statusCode === 404) {
          // Returning a undefined project indicates it was not found
          callback({
-            "message": `x Project ${project} not found`,
+            "message": `Project ${project} not found`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -874,7 +880,7 @@ function findBuild(account, teamProject, token, target, callback) {
 
       if (!bld) {
          callback({
-            "message": `x Build ${name} not found`,
+            "message": `Build ${name} not found`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -913,6 +919,17 @@ function findRelease(args, callback) {
    });
 
    request(options, function (e, response, body) {
+      if (response.statusCode !== 200) {
+         // The body is HTML
+         var dom = cheerio.load(body);
+         callback({
+            "message": `Server Error: ${dom(`title`).text()}`,
+            "code": `ServerError`
+         }, undefined);
+
+         return;
+      }
+
       var obj = JSON.parse(body);
 
       var rel = obj.value.find(function (i) {
@@ -921,7 +938,7 @@ function findRelease(args, callback) {
 
       if (!rel) {
          callback({
-            "message": `x Release ${name} not found`,
+            "message": `Release ${name} not found`,
             "code": `NotFound`
          }, undefined);
       } else {
@@ -1020,7 +1037,7 @@ function getPools(answers) {
 
          if (response.statusCode === 401) {
             reject({
-               "message": `x Check your personal access token: ${response.statusMessage}`,
+               "message": `Check your personal access token: ${response.statusMessage}`,
                "code": `Unauthorized`
             });
             return;
@@ -1064,7 +1081,7 @@ function loadProfiles() {
 // name or full URL.  So when you run Yo Team again it will
 // default to the full URL or account name and fail to find
 // the profile and prompt for the PAT.  Therefore, here you 
-// need to seach the profile name and URL 
+// need to search the profile name and URL 
 function searchProfiles(input) {
    let results = loadProfiles();
 
@@ -1121,20 +1138,23 @@ function extractInstance(input) {
    // When using VSTS we only want the account name but
    // people continue to give the entire url which will
    // cause issues later. So check to see if the value
-   // provided contains visualstudio.com and if so extract
-   // the account name and simply return that.
+   // provided contains visualstudio.com or dev.azure.com
+   // and if so extract the account name and simply return that.
 
-   // If you find visualstudio.com in the name the user most
-   // likely entered the entire URL instead of just the account name
-   // so lets extract it.
-   if (input.toLowerCase().match(/visualstudio.com/) === null) {
+   // If you find visualstudio.com or dev.azure.com in the name
+   // the user most likely entered the entire URL instead of just
+   // the account name so lets extract it.
+   if (input.match(/visualstudio.com/i) === null &&
+       input.match(/dev.azure.com/i) === null) {
       return input;
    }
 
-   var myRegexp = /([^/]+)\.visualstudio.com/;
+   var myRegexp = /([^/]+)\.visualstudio.com|dev.azure.com\/([^/]+)/i;
    var match = myRegexp.exec(input);
 
-   return match[1];
+   // The match for VSTS is in 1 and the match for Azure DevOps is in
+   // 2.  If we did not match VSTS we must of matched Azure DevOps.
+   return match[1] ? match[1] : match[2]
 }
 
 function needsRegistry(answers, options) {
@@ -1161,27 +1181,35 @@ function needsDockerHost(answers, options) {
       // answers.target will be undefined so test options
       isDocker = (answers.target === `docker` || options.target === `docker`);
 
-      // This will be true if the user did not select the Hosted Linux queue
+      // This will be true if the user did not select a Hosted Linux queue
       paasRequiresHost = (answers.target === `dockerpaas` ||
          options.target === `dockerpaas` ||
          answers.target === `acilinux` ||
          options.target === `acilinux`) &&
-         ((answers.queue === undefined || answers.queue.indexOf(`Linux`) === -1) &&
-            (options.queue === undefined || options.queue.indexOf(`Linux`) === -1));
+         ((hasDockerTools(answers.queue) === false) &&
+            (hasDockerTools(options.queue) === false));
    } else {
       // If you pass in the target on the command line 
       // answers.target will be undefined so test options
       isDocker = answers.target === `docker`;
 
       // This will be true the user did not select the Hosted Linux queue
-      paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux`) && answers.queue.indexOf(`Linux`) === -1;
+      paasRequiresHost = (answers.target === `dockerpaas` || answers.target === `acilinux`) && hasDockerTools(answers.queue) === false;
    }
 
    logMessage(`needsDockerHost returning = ${isDocker || paasRequiresHost}`);
    return (isDocker || paasRequiresHost);
 }
 
-function needsapiKey(answers, options) {
+function hasDockerTools(agent) {
+   if (agent == undefined) {
+      return false;
+   }
+
+   return agent.indexOf(`Linux`) !== -1 || agent.indexOf(`Ubuntu`) !== -1;
+}
+
+function needsApiKey(answers, options) {
    if (options !== undefined) {
       return (answers.type === `powershell` ||
          options.type === `powershell`);
@@ -1377,7 +1405,7 @@ module.exports = {
    logMessage: logMessage,
    getTargets: getTargets,
    getAppTypes: getAppTypes,
-   needsapiKey: needsapiKey,
+   needsApiKey: needsApiKey,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,
@@ -1397,7 +1425,8 @@ module.exports = {
    reconcileValue: reconcileValue,
    searchProfiles: searchProfiles,
    tryFindProject: tryFindProject,
-   validateapiKey: validateapiKey,
+   isWindowsAgent: isWindowsAgent,
+   validateApiKey: validateApiKey,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
    needsDockerHost: needsDockerHost,

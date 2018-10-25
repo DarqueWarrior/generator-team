@@ -43,7 +43,7 @@ assert.windowsTargets = function (a) {
 
 describe(`utility`, function () {
 
-   context(`needsapiKey`, function () {
+   context(`needsApiKey`, function () {
       // Arrange
       let expected = true;
 
@@ -52,7 +52,7 @@ describe(`utility`, function () {
       };
 
       // Act
-      let actual = util.needsapiKey(answers, undefined);
+      let actual = util.needsApiKey(answers, undefined);
 
       // Assert
       assert.equal(expected, actual);
@@ -758,7 +758,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`needsDockerHost linux queue acilinux`, function () {
+   it(`needsDockerHost Hosted Linux Preview queue acilinux`, function () {
 
       // Arrange
       let expected = false;
@@ -767,6 +767,25 @@ describe(`utility`, function () {
 
       let options = {
          queue: `Hosted Linux Preview`,
+         target: `acilinux`
+      };
+
+      // Act
+      let actual = util.needsDockerHost(answers, options);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`needsDockerHost Hosted Ubuntu 1604 queue acilinux`, function () {
+
+      // Arrange
+      let expected = false;
+
+      let answers = {};
+
+      let options = {
+         queue: `Hosted Ubuntu 1604`,
          target: `acilinux`
       };
 
@@ -1178,8 +1197,8 @@ describe(`utility`, function () {
          assert.equal(`You must provide a name for your function`, util.validateFunctionName(null));
       });
 
-      it(`validateapiKey should return error`, function () {
-         assert.equal(`You must provide a apiKey`, util.validateapiKey(null));
+      it(`validateApiKey should return error`, function () {
+         assert.equal(`You must provide a apiKey`, util.validateApiKey(null));
       });
 
       it(`validateGroupID should return error`, function () {
@@ -2237,14 +2256,14 @@ describe(`utility`, function () {
       };
 
       proxyApp.tryFindRelease(args, (err, obj) => {
-         assert.equal(err, null);
+         assert.notEqual(err, null);
          assert.equal(obj, undefined);
 
          done();
       });
    }));
 
-   it(`extractInstance from profile`, sinonTest(function () {
+   it(`extractInstance TFS from profile returns full url`, sinonTest(function () {
       // Arrange
       var profiles = `
       [
@@ -2282,7 +2301,7 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    }));
 
-   it(`extractInstance good`, function () {
+   it(`extractInstance for VSTS account name returns account only`, function () {
       // Arrange
       var expected = `vsts`;
 
@@ -2293,12 +2312,25 @@ describe(`utility`, function () {
       assert.equal(expected, actual);
    });
 
-   it(`extractInstance account only`, function () {
+   it(`extractInstance for full VSTS url returns account only`, function () {
       // Arrange
       var expected = `vsts`;
 
       // Act
-      var actual = util.extractInstance(`https://vsts.visualstudio.com`);
+      // Make sure some of the letters are upper case. This makes
+      // sure the match is case insensitive.
+      var actual = util.extractInstance(`https://vsts.VisualStudio.com`);
+
+      // Assert
+      assert.equal(expected, actual);
+   });
+
+   it(`extractInstance for full AzureDevOps url returns account only`, function () {
+      // Arrange
+      var expected = `azDevOps`;
+
+      // Act
+      var actual = util.extractInstance(`https://dev.Azure.com/azDevOps`);
 
       // Assert
       assert.equal(expected, actual);
@@ -2848,6 +2880,13 @@ describe(`utility`, function () {
 
          // Assert
          assert.equal(expected, actual);
+      });
+
+      // This is required for users of both VSTeam and Yo Team
+      // VSTeam has already been updated to store dev.azure.com
+      // URLs in profiles. 
+      it(`get full URL for Azure DevOps for RM`, function() {
+
       });
 
       it(`get full URL for VSTS for RM`, function () {

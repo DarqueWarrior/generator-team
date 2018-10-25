@@ -65,6 +65,16 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 
 ## August 2018
 
+### 0.4.9
+
+Does not require Docker Host when Hosted Ubuntu Agent is selected.
+
+Node sub generator changes
+
+- Wires up Application Insights
+- All packages were updated
+- Home controller implements IoC to ease testing
+
 ### 0.4.8
 
 Merge [Pull Request](https://github.com/DarqueWarrior/generator-team/pull/27) from [Maxime Eglem](https://github.com/MaximeEglem) which included the following:

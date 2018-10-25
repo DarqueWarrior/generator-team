@@ -53,7 +53,7 @@ function run(args, gen, done) {
             },
             function (inParallel) {
                // Get the package management feed
-               if (util.needsapiKey({}, args)) {
+               if (util.needsApiKey({}, args)) {
                   util.findPackageFeed(args.tfs, teamProject.name, token, gen, function (err, feed) {
                      moduleFeed = feed;
                      inParallel(err, moduleFeed);
@@ -64,7 +64,7 @@ function run(args, gen, done) {
             },
             function (inParallel) {
                // Get the PowerShell Gallery connection
-               if (util.needsapiKey({}, args)) {
+               if (util.needsApiKey({}, args)) {
                   util.findNuGetServiceEndpoint(args.tfs, teamProject.id, token, gen, function (err, conn) {
                      powerShellGallery = conn;
                      inParallel(err, powerShellGallery);
@@ -143,7 +143,8 @@ function run(args, gen, done) {
       if (err) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.env.error(err.message);
+         gen.log.info(err.message);
+         gen.env.error();
       }
    });
 }
@@ -300,7 +301,7 @@ function createRelease(args, gen, callback) {
 
             if (resp.statusCode >= 400) {
                status = "failed";
-               finished(new Error("x " + resp.body.message), null);
+               finished(new Error(resp.body), null);
             } else if (resp.statusCode >= 300) {
                status = "in progress";
                finished(err, null);
