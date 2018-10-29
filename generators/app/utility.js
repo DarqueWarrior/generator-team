@@ -44,7 +44,7 @@ String.prototype.replaceAll = function (search, replacement) {
 };
 
 function isDocker(value) {
-   return value === `docker` || value === `dockerpaas` || value === `acilinux`;
+   return value === `docker` || value === `dockerpaas` || value === `acilinux` || value === `k8s`;
 }
 
 function isWindowsAgent(queue) {

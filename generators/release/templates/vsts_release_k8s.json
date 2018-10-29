@@ -1,0 +1,139 @@
+{
+   "name": "{{ReleaseDefName}}",
+   "variables": {
+      "system.debug": {
+         "value": "false"
+      }
+   },
+   "environments": [
+      {
+         "name": "Dev",
+         "rank": 1,
+         "variables": {},
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "parallelExecution": {
+                  "parallelExecutionType": "none"
+               },
+               "skipArtifactsDownload": false,
+               "artifactsDownloadInput": {
+                  "downloadInputs": [{
+                     "artifactItems": [],
+                     "alias": "{{BuildName}}",
+                     "artifactType": "Build",
+                     "artifactDownloadMode": "All"
+                  }]
+               },
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false,
+               "timeoutInMinutes": 0,
+               "jobCancelTimeoutInMinutes": 1,
+               "condition": "succeeded()",
+               "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+               "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
+               "version": "0.*",
+               "name": "Install Helm 2.8.2",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "helmVersion": "2.8.2",
+                  "checkLatestHelmVersion": "true",
+                  "installKubeCtl": "true",
+                  "kubectlVersion": "1.8.9",
+                  "checkLatestKubeCtl": "true"
+               }
+            }]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": false,
+            "badgeEnabled": false,
+            "autoLinkWorkItems": false,
+            "pullRequestDeploymentEnabled": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "ReleaseStarted",
+               "conditionType": 1,
+               "value": ""
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      }
+   ],
+   "artifacts": [
+      {
+         "sourceId": "{{ProjectId}}:{{BuildId}}",
+         "type": "Build",
+         "alias": "{{BuildName}}",
+         "definitionReference": {
+            "defaultVersionType": {
+            "id": "latestType",
+            "name": "Latest"
+            },
+            "definition": {
+               "id": "{{BuildId}}",
+               "name": "{{BuildName}}"
+            },
+            "project": {
+               "id": "{{ProjectId}}",
+               "name": "{{ProjectName}}"
+            }
+         },
+         "isPrimary": true
+      }
+   ],
+   "triggers": [
+      {
+         "artifactAlias": "{{BuildName}}",
+         "triggerType": 1
+      }
+   ],
+   "releaseNameFormat": "Release-$(rev:r)",
+   "retentionPolicy": null
+}
