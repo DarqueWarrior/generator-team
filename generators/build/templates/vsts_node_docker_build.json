@@ -236,7 +236,7 @@
          },
          "inputs": {
             "SourceFolder": "templates/",
-            "Contents": "**/*.json",
+            "Contents": "/**",
             "TargetFolder": "$(Build.StagingDirectory)/pub/templates/",
             "CleanTargetFolder": "false",
             "OverWrite": "true",

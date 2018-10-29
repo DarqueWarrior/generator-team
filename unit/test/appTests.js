@@ -8,6 +8,7 @@ describe(`app:index`, function () {
    it(`arguments using fake dependencies dockerpaas linux`, function () {
       // Arrange
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -58,6 +59,7 @@ describe(`app:index`, function () {
    it(`arguments using fake dependencies paas`, function () {
       // Arrange
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -107,6 +109,7 @@ describe(`app:index`, function () {
    it(`arguments using fake dependencies aspFull paas`, function () {
       // Arrange
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:aspFull`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -155,6 +158,7 @@ describe(`app:index`, function () {
 
    it(`prompts using fake dependencies paas`, function () {
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -200,6 +204,7 @@ describe(`app:index`, function () {
    it(`arguments using fake dependencies docker`, function () {
       // Arrange
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:node`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -248,6 +253,7 @@ describe(`app:index`, function () {
 
    it(`prompts using fake dependencies docker`, function () {
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -300,6 +306,7 @@ describe(`app:index`, function () {
 
    it(`prompts using fake dependencies powershell`, function () {
       let deps = [
+         [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
@@ -346,6 +353,6 @@ describe(`app:index`, function () {
          .on(`end`, function (e) {
             cleanUp();
          }
-      );
+         );
    });
 });

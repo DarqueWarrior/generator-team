@@ -6,18 +6,18 @@ replicaCount: 3
 
 image:
   # Repository URL
-  repository: <%= containerRegistry %>
+  repository: <%= dockerRegistryId %>
 
   # Container image name
-  imageName: <%= name %>
-  tag: 0.0.1
+  imageName: <%= name_lowercase %>
+  tag: latest
   pullPolicy: Always
 
-imagePullSecrets: <%= imagePullSecrets %>
+imagePullSecret: <%= imagePullSecret %>
 
 service:
-  type: ClusterIP
-  port: 80
+  type: LoadBalancer
+  port: <%= dockerPorts %>
 
 ingress:
   enabled: false

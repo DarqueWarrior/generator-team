@@ -59,11 +59,16 @@ function getDockerRegistryServer(server) {
    return parts.host;
 }
 
-function getImageNamespace(registryId, endPoint) {
+// Qualify the image name with the dockerRegistryId for docker hub
+// or the server name for other registries. 
+function getImageNamespace(registryId, url) {
+   // Default to the username for the registry. This is what we would
+   // use for DockerHub.
    let dockerNamespace = registryId ? registryId.toLowerCase() : null;
 
-   if (endPoint && endPoint.authorization && !isDockerHub(endPoint.authorization.parameters.registry)) {
-      dockerNamespace = getDockerRegistryServer(endPoint.authorization.parameters.registry);
+   // If the endpoint was provided see if this docker hub or not.
+   if (!isDockerHub(url)) {
+      dockerNamespace = getDockerRegistryServer(url);
    }
 
    return dockerNamespace;
@@ -241,6 +246,14 @@ function validateRequired(input, msg) {
 
 function validatePortMapping(input) {
    return validateRequired(input, `You must provide a Port Mapping`);
+}
+
+function validateClusterName(input) {
+   return validateRequired(input, `You must provide a Cluster name`);
+}
+
+function validateClusterResourceGroup(input) {
+   return validateRequired(input, `You must provide a Cluster resource group name`);
 }
 
 function validateGroupID(input) {
@@ -1050,7 +1063,7 @@ function getPools(answers) {
 }
 
 function isDockerHub(dockerRegistry) {
-   return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
+   return dockerRegistry ? dockerRegistry.toLowerCase().match(/index.docker.io/) !== null : true;
 }
 
 function loadProfiles() {
@@ -1232,12 +1245,15 @@ function isPaaS(answers, cmdLnInput) {
          answers.target === `acilinux` ||
          cmdLnInput.options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.options.target === `dockerpaas`);
+         cmdLnInput.options.target === `dockerpaas` ||
+         answers.target === `k8s` ||
+         cmdLnInput.options.target === `k8s`);
    } else {
       return (answers.target === `paas` ||
          answers.target === `paasslots` ||
          answers.target === `acilinux` ||
-         answers.target === `dockerpaas`);
+         answers.target === `dockerpaas` ||
+         answers.target === `k8s`);
    }
 }
 
@@ -1382,6 +1398,10 @@ function getFullURL(instance, includeCollection, subDomain) {
    return vstsURL;
 }
 
+function isKubernetes(target) {
+   return target === 'k8s';
+}
+
 module.exports = {
 
    // Exports the portions of the file we want to share with files that require
@@ -1422,6 +1442,7 @@ module.exports = {
    getPATPrompt: getPATPrompt,
    tryFindBuild: tryFindBuild,
    addUserAgent: addUserAgent,
+   isKubernetes: isKubernetes,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
    findAllQueues: findAllQueues,
@@ -1434,6 +1455,7 @@ module.exports = {
    validateApiKey: validateApiKey,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
+   findPackageFeed: findPackageFeed,
    needsDockerHost: needsDockerHost,
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
@@ -1444,9 +1466,9 @@ module.exports = {
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    tryFindPackageFeed: tryFindPackageFeed,
-   findPackageFeed: findPackageFeed,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
+   validateClusterName: validateClusterName,
    validateDockerHubID: validateDockerHubID,
    isExtensionInstalled: isExtensionInstalled,
    validateFunctionName: validateFunctionName,
@@ -1455,10 +1477,10 @@ module.exports = {
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
+   getDockerRegistryServer: getDockerRegistryServer,
    validateApplicationName: validateApplicationName,
    findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
-   getDockerRegistryServer: getDockerRegistryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
    validateServicePrincipalID: validateServicePrincipalID,
@@ -1467,6 +1489,7 @@ module.exports = {
    validatePersonalAccessToken: validatePersonalAccessToken,
    tryFindNuGetServiceEndpoint: tryFindNuGetServiceEndpoint,
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
+   validateClusterResourceGroup: validateClusterResourceGroup,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
    tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint

@@ -154,7 +154,7 @@
          },
          "inputs": {
             "SourceFolder": "",
-            "Contents": "templates/*.*",
+            "Contents": "templates/**",
             "TargetFolder": "$(build.artifactstagingdirectory)",
             "CleanTargetFolder": "false",
             "OverWrite": "false",

@@ -1,6 +1,12 @@
 {
    "name": "{{ReleaseDefName}}",
    "variables": {
+      "ClusterResourceGroup": {
+         "value": "{{ClusterResourceGroup}}"
+      },
+      "ClusterName": {
+         "value": "{{ClusterName}}"
+      },
       "system.debug": {
          "value": "false"
       }
@@ -72,6 +78,96 @@
                   "installKubeCtl": "true",
                   "kubectlVersion": "1.8.9",
                   "checkLatestKubeCtl": "true"
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm init",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "init",
+                  "chartType": "Name",
+                  "chartName": "",
+                  "chartPath": "",
+                  "version": "",
+                  "releaseName": "",
+                  "overrideValues": "",
+                  "valueFile": "",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm upgrade",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "upgrade",
+                  "chartType": "FilePath",
+                  "chartName": "",
+                  "chartPath": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart",
+                  "version": "",
+                  "releaseName": "{{ProjectLowerCase}}",
+                  "overrideValues": "image.tag=$(Build.BuildId)",
+                  "valueFile": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart/values.yaml",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
                }
             }]
          }],

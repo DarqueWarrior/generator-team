@@ -9,7 +9,7 @@ describe(`team:k8s`, function () {
 
    before(function () {
       return helpers.run(path.join(__dirname, `../../generators/k8s`))
-         .withArguments([`k8sTest`])
+         .withArguments([`k8sTest`, `DockerRegistry`, `DockerRegistryId`, `3000`, `pullSecret`])
          .on(`error`, function (e) {
             assert.fail(e);
          })
@@ -32,10 +32,12 @@ describe(`team:k8s`, function () {
          `k8sTest/chart/k8sTest/templates/NOTES.txt`
       ]);
 
-      assert.fileContent(`k8sTest/chart/k8sTest/values.yaml`, `imageName: k8sTest`);
+      assert.fileContent(`k8sTest/chart/k8sTest/values.yaml`, `imageName: k8stest`);
+      assert.fileContent(`k8sTest/chart/k8sTest/values.yaml`, `port: 3000`);
       assert.fileContent(`k8sTest/chart/k8sTest/Chart.yaml`, `name: k8sTest`);
       assert.fileContent(`k8sTest/chart/k8sTest/templates/_helpers.tpl`, `define "k8sTest.name"`);
       assert.fileContent(`k8sTest/chart/k8sTest/templates/configmap.yaml`, `myvalue: k8sTest`);
+      assert.fileContent(`k8sTest/chart/k8sTest/templates/deployment.yaml`, `containerPort: 3000`);
       assert.fileContent(`k8sTest/chart/k8sTest/templates/deployment.yaml`, `template "k8sTest.fullname"`);
       assert.fileContent(`k8sTest/chart/k8sTest/templates/service.yaml`, `template "k8sTest.fullname"`);
       assert.fileContent(`k8sTest/chart/k8sTest/templates/NOTES.txt`, `template "k8sTest.fullname"`);

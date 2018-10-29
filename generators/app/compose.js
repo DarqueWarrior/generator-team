@@ -4,12 +4,12 @@ function addRelease(obj) {
 
    var queue = obj.queue;
 
-   if (util.isPaaS(obj) && util.isWindowsAgent(queue) === false) {      
+   if (util.isPaaS(obj) && util.isWindowsAgent(queue) === false) {
       // Inform user that if they selected Hosted Linux agent Hosted VS2017
       // will be used for release. The release requires AZPowerShell which is
       // not on the Linux build machine
       obj.log.info(`${queue} will be used for build and Hosted VS2017 for release.`);
-      
+
       queue = `Hosted VS2017`;
    }
 
@@ -18,7 +18,7 @@ function addRelease(obj) {
          queue, obj.target,
       obj.azureSub,
       obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
-      obj.dockerRegistryPassword, obj.pat, obj.customFolder
+      obj.dockerRegistryPassword, obj.pat, obj.customFolder, obj.clusterName, obj.clusterResourceGroup
       ]
    });
 }
@@ -130,7 +130,19 @@ function addNuGet(obj) {
    });
 }
 
+function addK8s(obj) {
+   if (obj.target === `k8s`) {
+      obj.composeWith(`team:k8s`, {
+         arguments: [obj.applicationName,
+         obj.dockerRegistry, obj.dockerRegistryId, obj.dockerPorts,
+         obj.imagePullSecret
+         ]
+      });
+   }
+}
+
 module.exports = {
+   addK8s: addK8s,
    addGit: addGit,
    addFeed: addFeed,
    addNuGet: addNuGet,

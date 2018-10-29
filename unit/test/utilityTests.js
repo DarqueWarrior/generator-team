@@ -1002,13 +1002,7 @@ describe(`utility`, function () {
       let expected = "images.azure.io";
 
       // Act
-      let actual = util.getImageNamespace(null, {
-         authorization: {
-            parameters: {
-               registry: `http://images.azure.io`
-            }
-         }
-      });
+      let actual = util.getImageNamespace(null, `http://images.azure.io`);
 
       // Assert
       assert.equal(expected, actual);
@@ -1019,13 +1013,7 @@ describe(`utility`, function () {
       let expected = "images.azure.io";
 
       // Act
-      let actual = util.getImageNamespace(`imageNamespace`, {
-         authorization: {
-            parameters: {
-               registry: `http://images.azure.io`
-            }
-         }
-      });
+      let actual = util.getImageNamespace(`imageNamespace`, `http://images.azure.io`);
 
       // Assert
       assert.equal(expected, actual);
@@ -1513,7 +1501,7 @@ describe(`utility`, function () {
       }));
    });
 
-   context.only(`docker`, function () {
+   context(`docker`, function () {
       it(`isDocker paas`, function () {
          // Arrange
          var expected = false;
@@ -2661,6 +2649,21 @@ describe(`utility`, function () {
          let actual = util.isPaaS({}, {
             options: {
                target: `docker`
+            }
+         });
+
+         // Assert
+         assert.equal(actual, expected);
+      });
+
+      it(`isPaaS k8s true from cmdLnInput`, function () {
+         // Arrange
+         let expected = true;
+
+         // Act
+         let actual = util.isPaaS({}, {
+            options: {
+               target: `k8s`
             }
          });
 

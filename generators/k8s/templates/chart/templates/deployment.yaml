@@ -22,10 +22,13 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}/{{ .Values.image.imageName }}:{{ .Values.image.tag }}"
+          env:
+          - name: PORT
+            value: "{{ .Values.service.port }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -49,5 +52,5 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
-      imagePullSecrets:
-      - name: {{ .Values.imagePullSecrets }}
+      imagePullSecret:
+      - name: {{ .Values.imagePullSecret }}

@@ -69,7 +69,11 @@ module.exports = class extends Generator {
          });
 
          // Log output as info
-         this.log.info(fs.readFileSync(gitLogFile).toString().trim());
+         let output = fs.readFileSync(gitLogFile).toString().trim();
+
+         if (output != '') {
+            this.log.info(output);
+         }
       }
    }
 

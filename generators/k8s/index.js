@@ -14,10 +14,13 @@ module.exports = class extends Generator {
       // via the command line they will be queried during the prompting priority
       argUtils.applicationName(this);
       argUtils.dockerRegistry(this);
-      argUtils.imagePullSecrets(this);
+      argUtils.dockerRegistryId(this);
+      argUtils.dockerPorts(this);
+      argUtils.imagePullSecret(this);
 
       // If user is running this sub-generator, they are deploying to Kubernetes
-      this.target = 'k8s';
+      //this.target = 'k8s';
+      this.options.target = 'k8s';
    }
 
    // 2. Where you prompt users for options (where you'd call this.prompt())
@@ -30,13 +33,17 @@ module.exports = class extends Generator {
       return this.prompt([
          prompts.applicationName(this),
          prompts.dockerRegistry(this),
-         prompts.imagePullSecrets(this)
+         prompts.dockerRegistryUsername(this),
+         prompts.dockerPorts(this),
+         prompts.imagePullSecret(this)
       ]).then(function (answers) {
          // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
          // of the generator
+         this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
-         this.imagePullSecrets = util.reconcileValue(cmdLnInput.options.imagePullSecrets, answers.imagePullSecrets, ``);
+         this.imagePullSecret = util.reconcileValue(cmdLnInput.options.imagePullSecret, answers.imagePullSecret, ``);
+         this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
       }.bind(this));
    }
 
@@ -44,15 +51,20 @@ module.exports = class extends Generator {
    writing() {
       // let acrServer = this.azureRegistryName.toLowerCase() + ".azurecr.io";
 
+      // Qualify the image name with the dockerRegistryId for docker hub
+      // or the server name for other registries. 
+      let dockerNamespace = util.getImageNamespace(this.dockerRegistryId, this.dockerRegistry);
+
       var tokens = {
          name: this.applicationName,
-         containerRegistry: this.dockerRegistry,
-         imagePullSecrets: this.imagePullSecrets,
+         dockerPorts: this.dockerPorts,
+         dockerRegistryId: dockerNamespace,
+         imagePullSecret: this.imagePullSecret,
          name_lowercase: this.applicationName.toLowerCase()
       };
 
       var src = `${this.sourceRoot()}/chart`;
-      var root = `${this.applicationName}/chart/${this.applicationName}`;
+      var root = `${this.applicationName}/templates/chart`;
 
       // Folder chart
       this.fs.copyTpl(`${src}/values.yaml`, `${root}/values.yaml`, tokens);
