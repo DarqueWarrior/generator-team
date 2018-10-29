@@ -1513,7 +1513,7 @@ describe(`utility`, function () {
       }));
    });
 
-   context(`docker`, function () {
+   context.only(`docker`, function () {
       it(`isDocker paas`, function () {
          // Arrange
          var expected = false;
@@ -1564,6 +1564,17 @@ describe(`utility`, function () {
 
          // Act
          var actual = util.isDocker(`dockerpaas`);
+
+         // Assert
+         assert.equal(expected, actual);
+      });
+
+      it(`isDocker k8s`, function () {
+         // Arrange
+         var expected = true;
+
+         // Act
+         var actual = util.isDocker(`k8s`);
 
          // Assert
          assert.equal(expected, actual);
