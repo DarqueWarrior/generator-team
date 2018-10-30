@@ -136,10 +136,15 @@ function getTargets(answers) {
          }, {
             name: `Docker Host`,
             value: `docker`
-         }, {
-            name: `Kubernetes`,
-            value: `k8s`
          }];
+
+         // Only supported on Azure DevOps
+         if (isVSTS(answers.tfs)) {
+            targets.push({
+               name: `Kubernetes`,
+               value: `k8s`
+            });
+         }
 
          // TODO: Investigate if we need to remove these
          // options. I think you can offer paas and paasslots
@@ -1158,7 +1163,7 @@ function extractInstance(input) {
    // the user most likely entered the entire URL instead of just
    // the account name so lets extract it.
    if (input.match(/visualstudio.com/i) === null &&
-       input.match(/dev.azure.com/i) === null) {
+      input.match(/dev.azure.com/i) === null) {
       return input;
    }
 

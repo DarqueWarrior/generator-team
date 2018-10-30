@@ -391,6 +391,22 @@ function runTests(iteration) {
                inParallel();
             },
             function (inParallel) {
+               if (iteration.target === `k8s`) {
+                  let release = iteration.applicationName.toLowerCase();
+                  util.log(`delete helm release: ${release}`);
+                  
+                  var helm = cp.spawnSync(`helm`, [`delete`, `--purge`, release], {
+                     stdio: 'pipe',
+                     encoding: 'utf-8'
+                  });
+   
+                  util.log(`helm output: ${helm.output}`);
+                  inParallel();
+               } else {
+                  inParallel();
+               }
+            },
+            function (inParallel) {
                if (iteration.target !== `docker`) {
                   util.log(`delete resource group: ${iteration.applicationName}Dev`);
                   azure.deleteResourceGroup(`${iteration.applicationName}Dev`, inParallel);

@@ -2,7 +2,7 @@
 // is not on TFS.
 const docker = require('./_docker');
 
-describe(`K8s (Linux) using Hosted Ubuntu 1604 queue`, function () {
+describe(`Node K8s (Linux) using Hosted Ubuntu 1604 queue`, function () {
    "use strict";
 
    docker.runTests({
