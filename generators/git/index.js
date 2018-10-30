@@ -61,7 +61,6 @@ module.exports = class extends Generator {
          // and use part of it in the name.
          let uuid = uuidV4();
          var gitLogFile = `yoTeamGitLog${uuid.substring(0, 8)}.txt`;
-         // var gitLogFile = path.join(process.cwd(), `yoTeamGitLog${uuid.substring(0, 8)}.txt`);
          var fd = fs.openSync(gitLogFile, 'w')
 
          this.spawnCommandSync(`git`, [`clone`, `-q`, url], {
@@ -74,6 +73,8 @@ module.exports = class extends Generator {
          if (output != '') {
             this.log.info(output);
          }
+
+         fs.unlinkSync(gitLogFile);
       }
    }
 

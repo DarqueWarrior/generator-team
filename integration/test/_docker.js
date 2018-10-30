@@ -6,6 +6,7 @@ const azure = require(`./_azure`);
 const uuidV4 = require('uuid/v4');
 const cheerio = require('cheerio');
 const request = require('request');
+const cp = require('child_process');
 const env = require('node-env-file');
 const assert = require(`yeoman-assert`);
 const exec = require('child_process').exec;
@@ -38,6 +39,11 @@ var servicePrincipalId = process.env.SERVICE_PRINCIPAL_ID || ` `;
 var servicePrincipalKey = process.env.SERVICE_PRINCIPAL_KEY || ` `;
 var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
 var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
+
+// K8s
+var clusterName = process.env.CLUSTER_NAME || ` `;
+var imagePullSecret = process.env.IMAGE_PULL_SECRET || ` `;
+var clusterResourceGroup = process.env.CLUSTER_RESOURCE_GROUP || ` `;
 
 // The number of levels up from the folder the test are executed in to the 
 // folder where the repository was cloned.  This is not the same when run locally
@@ -76,7 +82,8 @@ function runTests(iteration) {
             let cmd = `yo team ${iteration.appType} ${iteration.applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
                `"${tenantId}" "${servicePrincipalId}" "${iteration.queue}" ${iteration.target} ${installDep} ` +
                `"${iteration.groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
+               `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}" ` +
+               `"${imagePullSecret}" "${clusterName}" "${clusterResourceGroup}"`;
 
             util.log(`run command: ${cmd}`);
 
@@ -265,8 +272,57 @@ function runTests(iteration) {
             );
          });
 
-         if (iteration.target !== `docker`) {
-            // Retry test up to 10 times
+         if (iteration.target === 'k8s') {
+            // Retry test up to 30 times
+            // Some sites take a while to jit.
+            this.retries(30);
+
+            it(`dev site should be accessible`, function (done) {
+               let svc = iteration.applicationName.toLowerCase();
+               util.log(`looking for service name ${svc}`);
+
+               var kubeCtl = cp.spawnSync(`kubectl`, [`get`, `svc`, svc, `-o`, "jsonpath='{.status.loadBalancer.ingress[0].ip}'"], {
+                  stdio: 'pipe',
+                  encoding: 'utf-8'
+               });
+
+               util.log(`kubectl output: ${kubeCtl.output}`);
+
+               // position 2 holds the error output
+               assert.ifError(kubeCtl.output[2]);
+
+               let fullUrl = 'http://' + kubeCtl.output[1].replace(/'/g, "");
+
+               // Sleep before calling again. If you have too many
+               // test running at the same time VSTS will start to 
+               // Timeout. Might be DOS protection.
+               setTimeout(function () {
+                  util.log(`trying to access ${fullUrl}`);
+                  try {
+                     request({
+                        url: fullUrl
+                     }, function (err, res, body) {
+                        if (err) {
+                           // We want the test to try again.
+                           return;
+                        }
+
+                        var dom = cheerio.load(body);
+                        util.log(`Page Title:\r\n${dom(`title`).text()}`);
+                        assert.equal(dom(`title`).text(), `${iteration.title}`);
+                        util.log(`+ dev site should be accessible`);
+
+                        done();
+                     });
+
+                  } catch (error) {
+                     // We want the test to try again.
+                  }
+               }, 30000 + Math.floor((Math.random() * 1000) + 1));
+            });
+         }
+         else if (iteration.target !== `docker`) {
+            // Retry test up to 30 times
             // Some sites take a while to jit.
             this.retries(30);
 

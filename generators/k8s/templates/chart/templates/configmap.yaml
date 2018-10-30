@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-configmap
 data:
-  myvalue: <%= name %>
+  myvalue: <%= name_lowercase %>

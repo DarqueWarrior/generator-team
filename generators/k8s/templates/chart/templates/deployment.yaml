@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "<%= name %>.fullname" . }}
+  name: {{ template "<%= name_lowercase %>.fullname" . }}
   labels:
-    app: {{ template "<%= name %>.name" . }}
-    chart: {{ template "<%= name %>.chart" . }}
+    app: {{ template "<%= name_lowercase %>.name" . }}
+    chart: {{ template "<%= name_lowercase %>.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "<%= name %>.name" . }}
+      app: {{ template "<%= name_lowercase %>.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "<%= name %>.name" . }}
+        app: {{ template "<%= name_lowercase %>.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
