@@ -76,7 +76,7 @@
          },
          "inputs": {
             "testRunner": "JUnit",
-            "testResultsFiles": "**/unit.xml",
+            "testResultsFiles": "unit.xml",
             "mergeTestResults": "false",
             "testRunTitle": "",
             "platform": "",
