@@ -22,24 +22,23 @@ describe(`team:k8s`, function () {
 
    it(`files should be generated`, function () {
       assert.file([
-         `k8sTest/chart/k8sTest/values.yaml`,
-         `k8sTest/chart/k8sTest/Chart.yaml`,
-         `k8sTest/chart/k8sTest/.helmignore`,
-         `k8sTest/chart/k8sTest/templates/_helpers.tpl`,
-         `k8sTest/chart/k8sTest/templates/configmap.yaml`,
-         `k8sTest/chart/k8sTest/templates/deployment.yaml`,
-         `k8sTest/chart/k8sTest/templates/service.yaml`,
-         `k8sTest/chart/k8sTest/templates/NOTES.txt`
+         `k8sTest/templates/chart/values.yaml`,
+         `k8sTest/templates/chart/Chart.yaml`,
+         `k8sTest/templates/chart/.helmignore`,
+         `k8sTest/templates/chart/templates/_helpers.tpl`,
+         `k8sTest/templates/chart/templates/configmap.yaml`,
+         `k8sTest/templates/chart/templates/deployment.yaml`,
+         `k8sTest/templates/chart/templates/service.yaml`,
+         `k8sTest/templates/chart/templates/NOTES.txt`
       ]);
 
-      assert.fileContent(`k8sTest/chart/k8sTest/values.yaml`, `imageName: k8stest`);
-      assert.fileContent(`k8sTest/chart/k8sTest/values.yaml`, `port: 3000`);
-      assert.fileContent(`k8sTest/chart/k8sTest/Chart.yaml`, `name: k8sTest`);
-      assert.fileContent(`k8sTest/chart/k8sTest/templates/_helpers.tpl`, `define "k8sTest.name"`);
-      assert.fileContent(`k8sTest/chart/k8sTest/templates/configmap.yaml`, `myvalue: k8sTest`);
-      assert.fileContent(`k8sTest/chart/k8sTest/templates/deployment.yaml`, `containerPort: 3000`);
-      assert.fileContent(`k8sTest/chart/k8sTest/templates/deployment.yaml`, `template "k8sTest.fullname"`);
-      assert.fileContent(`k8sTest/chart/k8sTest/templates/service.yaml`, `template "k8sTest.fullname"`);
-      assert.fileContent(`k8sTest/chart/k8sTest/templates/NOTES.txt`, `template "k8sTest.fullname"`);
+      assert.fileContent(`k8sTest/templates/chart/values.yaml`, `imageName: k8stest`);
+      assert.fileContent(`k8sTest/templates/chart/values.yaml`, `port: 3000`);
+      assert.fileContent(`k8sTest/templates/chart/Chart.yaml`, `name: k8stest`);
+      assert.fileContent(`k8sTest/templates/chart/templates/_helpers.tpl`, `define "k8stest.name"`);
+      assert.fileContent(`k8sTest/templates/chart/templates/configmap.yaml`, `myvalue: k8stest`);
+      assert.fileContent(`k8sTest/templates/chart/templates/deployment.yaml`, `template "k8stest.fullname"`);
+      assert.fileContent(`k8sTest/templates/chart/templates/service.yaml`, `template "k8stest.fullname"`);
+      assert.fileContent(`k8sTest/templates/chart/templates/NOTES.txt`, `template "k8stest.fullname"`);
    });
 });
