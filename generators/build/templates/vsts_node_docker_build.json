@@ -23,7 +23,7 @@
             "command": "custom",
             "workingDir": "",
             "verbose": "false",
-            "customCommand": "install yarn --allow-root",
+            "customCommand": "install -g yarn@1.10.1 --allow-root",
             "customRegistry": "useNpmrc",
             "customFeed": "",
             "customEndpoint": "",
@@ -45,7 +45,7 @@
             "definitionType": "task"
          },
          "inputs": {
-            "script": "node ./node_modules/yarn/lib/cli.js",
+            "script": "yarn",
             "workingDirectory": "",
             "failOnStderr": "false"
          }
@@ -89,7 +89,7 @@
          },
          "inputs": {
             "testRunner": "JUnit",
-            "testResultsFiles": "**/unit.xml",
+            "testResultsFiles": "unit.xml",
             "searchFolder": "$(System.DefaultWorkingDirectory)",
             "mergeTestResults": "false",
             "testRunTitle": "Unit",
@@ -131,7 +131,7 @@
             "definitionType": "task"
          },
          "inputs": {
-            "script": "node ../node_modules/yarn/lib/cli.js",
+            "script": "yarn",
             "workingDirectory": "src",
             "failOnStderr": "false"
          }
