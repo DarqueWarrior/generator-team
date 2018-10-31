@@ -7,7 +7,7 @@ describe(`Java K8s (Linux) using Hosted Ubuntu 1604 queue`, function () {
 
    docker.runTests({
       appType: `java`,
-      appName: `javaACITest`,
+      appName: `javaK8sTest`,
       target: `k8s`,
       queue: `Hosted Ubuntu 1604`,
       groupId: `integrationTest`,
