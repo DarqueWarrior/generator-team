@@ -22,7 +22,7 @@
          "inputs": {
             "cwd": "",
             "command": "install",
-            "arguments": "yarn --allow-root"
+            "arguments": "-g yarn@1.10.1 --allow-root"
          }
       },      
       {
@@ -38,8 +38,8 @@
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "node",
-            "arguments": "./node_modules/yarn/lib/cli.js",
+            "filename": "yarn",
+            "arguments": "",
             "workingFolder": "",
             "failOnStandardError": false
          }
@@ -116,8 +116,8 @@
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "node",
-            "arguments": "../node_modules/yarn/lib/cli.js",
+            "filename": "yarn",
+            "arguments": "",
             "workingFolder": "src",
             "failOnStandardError": false
          }
