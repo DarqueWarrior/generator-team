@@ -278,7 +278,7 @@ function runTests(iteration) {
             this.retries(30);
 
             it(`dev site should be accessible`, function (done) {
-               let svc = iteration.applicationName.toLowerCase();
+               let svc = iteration.applicationName.toLowerCase() + `-dev`;
                util.log(`looking for service name ${svc}`);
 
                var kubeCtl = cp.spawnSync(`kubectl`, [`get`, `svc`, svc, `-o`, "jsonpath='{.status.loadBalancer.ingress[0].ip}'"], {
@@ -392,7 +392,7 @@ function runTests(iteration) {
             },
             function (inParallel) {
                if (iteration.target === `k8s`) {
-                  let release = iteration.applicationName.toLowerCase();
+                  let release = iteration.applicationName.toLowerCase() + `-dev`;
                   util.log(`delete helm release: ${release}`);
                   
                   var helm = cp.spawnSync(`helm`, [`delete`, `--purge`, release], {
