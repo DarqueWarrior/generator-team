@@ -222,7 +222,7 @@ function getPATPrompt(answers) {
 }
 
 function getInstancePrompt() {
-   return `Enter VSTS account name\n  ({account}.visualstudio.com)\n  Or full TFS URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)\n  Or name of a stored Profile?`;
+   return `Enter Service account name\n  (dev.azure.com/{account} or \n  {account}.visualstudio.com)\n  Or full Server URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)\n  Or name of a stored Profile?`;
 }
 
 function getDefaultPortMapping(answers) {

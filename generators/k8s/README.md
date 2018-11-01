@@ -6,7 +6,6 @@ The k8s sub-generator generates the template files needed to deploy a web applic
 1. [Installing](#installing)
 2. [Prerequisites](#prerequisites)
 3. [Getting Started](#gettingStarted)
-4. [Usage](#usage)
 
 ## Installing <a name="installing"></a>
 
@@ -73,64 +72,8 @@ Along with an Azure Subscription and a Azure DevOps Project, a few things have t
 
 ## Getting Started <a name="gettingStarted"></a>
 
-To start the sub-generator, run
+To start type
 
    ```PowerShell
-   yo team:k8s
+   yo team
    ```
-
-## Usage <a name="usage"></a>
-
-The Generator will prompt you to:
-
-1. Enter the name of the **Azure DevOps profile**.
-
-   - Denoted by **{account}** in `{account}.visualstudio.com`
-   - Denoted by **{account}** in `dev.azure.com/{account}`
-
-2. Enter the **PAT** denoted with the profile
-
-   - The PAT can be found under the security tab in the Azure DevOps profile or by going to `https://{account}.visualstudio.com/_details/security/tokens` or `https://dev.azure.com/{account}/_usersSettings/tokens`
-
-3. Select the preferred **agent queue**
-
-   - This will be the agent that runs the build and release tasks
-
-4. Enter the name of the **Application**
-
-   - Denoted by **{applicationName}** in `https://{account}.visualstudio.com/{applicationName}`
-
-5. Select to deploy to either **AKS** or **ACS**
-
-6. Select an **Azure subscription**
-
-7. Enter the name of the **azure container registry** that the images will be pulled from, and the **resource group** the container is located in
-
-   - Both can be found by running:
-
-      ```
-      az acr list 
-      ```
-8. Enter the name of the **image pull secret**
-   
-   - The name can be found by running:
-
-      ```
-      kubectl get secrets
-      ```
-
-9. Enter the **name** and **resource group** of your Kubernetes Cluster
-
-   - Both can be found by running:
-
-      ```
-      az aks list
-      ```
-
-10. Enter the path of your Kubernetes Config file
-    
-      - Enter the path to the config file. For example, if the config file is located in the `.kube` directory, enter:
-   
-         ```
-         /home/user/.kube
-         ```
