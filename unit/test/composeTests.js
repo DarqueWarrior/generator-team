@@ -1,8 +1,5 @@
-const fs = require(`fs`);
 const sinon = require(`sinon`);
 const assert = require(`assert`);
-const proxyquire = require(`proxyquire`);
-const package = require('../../package.json');
 const sinonTestFactory = require(`sinon-test`);
 const compose = require(`../../generators/app/compose`);
 
@@ -102,7 +99,25 @@ describe(`compose`, function () {
          assert.equal(called, true);
       }));
 
+      it(`powershell`, sinonTest(function () {
+         let called = false;
+         let target = {
+            type: `powershell`,
+            applicationName: `powershellTest`,
+            functionName: `show-gitrepo`,
+            composeWith: function () {
+               called = true;
+               assert.equal(arguments.length, 2, `call to composeWith has wrong number of arguments`);
+               assert.equal(arguments[0], `team:powershell`, `wrong generator`);
+               assert.equal(arguments[1].arguments.length, 2, `object has wrong number of properties`);
+               assert.equal(arguments[1].arguments[0], `powershellTest`, `object has wrong applicationName`);
+               assert.equal(arguments[1].arguments[1], `show-gitrepo`, `object has wrong applicationName`);
+            }
+         };
 
+         compose.addLanguage(target);
 
+         assert.equal(called, true);
+      }));
    });
 });

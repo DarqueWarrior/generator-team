@@ -26,6 +26,8 @@ module.exports = class extends Generator {
       argUtils.dockerRegistryPassword(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
+      argUtils.clusterName(this);
+      argUtils.clusterResourceGroup(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -49,7 +51,9 @@ module.exports = class extends Generator {
          prompts.dockerRegistry(this),
          prompts.dockerRegistryUsername(this),
          prompts.dockerRegistryPassword(this),
-         prompts.dockerPorts(this)
+         prompts.dockerPorts(this),
+         prompts.clusterName(this),
+         prompts.clusterResourceGroup(this)
       ]).then(function (answers) {
          // Transfer answers (a) to global object (cmdLnInput) for use in the rest
          // of the generator
@@ -60,11 +64,13 @@ module.exports = class extends Generator {
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
          this.azureSub = util.reconcileValue(cmdLnInput.options.azureSub, answers.azureSub, ``);
          this.dockerHost = util.reconcileValue(cmdLnInput.options.dockerHost, answers.dockerHost, ``);
+         this.clusterName = util.reconcileValue(cmdLnInput.options.clusterName, answers.clusterName, ``);
          this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
+         this.clusterResourceGroup = util.reconcileValue(cmdLnInput.options.clusterResourceGroup, answers.clusterResourceGroup, ``);
          this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
       }.bind(this));
    }
@@ -95,7 +101,9 @@ module.exports = class extends Generator {
                releaseJson: release,
                azureSub: _this.azureSub,
                appName: _this.applicationName,
-               project: _this.applicationName
+               project: _this.applicationName,
+               clusterName: _this.clusterName,
+               clusterResourceGroup: _this.clusterResourceGroup
             };
 
             if (util.needsRegistry(_this)) {

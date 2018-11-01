@@ -21,17 +21,17 @@ function isVSTS(instance) {
 }
 
 function protectMsg(msg) {
-   let secrets = [process.env.PAT,
-   process.env.DOCKER_REGISTRY_PASSWORD,
-   process.env.SERVICE_PRINCIPAL_KEY,
-   process.env.SERVICE_PRINCIPAL_ID,
-   process.env.AZURE_SUB,
-   process.env.DOCKER_CERT_PATH,
-   process.env.AZURE_SUB_ID,
-   process.env.AZURE_SECRET,
-   process.env.DOCKER_HOST,
-   process.env.AZURE_TENANT_ID,
-   process.env.API_KEY];
+   let secrets = [process.env.PAT || `somethingThatWillNotMatch`,
+   process.env.DOCKER_REGISTRY_PASSWORD || `somethingThatWillNotMatch`,
+   process.env.SERVICE_PRINCIPAL_KEY || `somethingThatWillNotMatch`,
+   process.env.SERVICE_PRINCIPAL_ID || `somethingThatWillNotMatch`,
+   process.env.AZURE_SUB || `somethingThatWillNotMatch`,
+   process.env.DOCKER_CERT_PATH || `somethingThatWillNotMatch`,
+   process.env.AZURE_SUB_ID || `somethingThatWillNotMatch`,
+   process.env.AZURE_SECRET || `somethingThatWillNotMatch`,
+   process.env.DOCKER_HOST || `somethingThatWillNotMatch`,
+   process.env.AZURE_TENANT_ID || `somethingThatWillNotMatch`,
+   process.env.API_KEY || `somethingThatWillNotMatch`];
 
    secrets.forEach(function (secret) {
       msg = msg.replaceAll(secret, '*****');

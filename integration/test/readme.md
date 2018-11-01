@@ -26,7 +26,20 @@ DOCKER_REGISTRY=
 DOCKER_HOST=
 DOCKER_CERT_PATH=
 DOCKER_REGISTRY_PASSWORD=
+
+# The space is required
 DOCKER_PORTS="80 "
+
+# K8s
+# Name of your AKS cluster
+CLUSTER_NAME=
+
+# The name of the pre-configured pull secret in the cluster for your
+# Azure Container Registry
+IMAGE_PULL_SECRET=
+
+# The resource group of your AKS
+CLUSTER_RESOURCE_GROUP=
 ```
 
 When setting the port you have to use a space after the value or it will be parsed as a

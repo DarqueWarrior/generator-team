@@ -10,7 +10,7 @@ function run(gen, callback) {
       if (e) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.log.info(err.message);
+         gen.log.info(e.message);
          gen.env.error();
       }
 

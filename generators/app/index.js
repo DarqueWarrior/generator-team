@@ -40,6 +40,9 @@ module.exports = class extends Generator {
       argUtils.functionName(this);
       argUtils.apiKey(this);
       argUtils.customFolder(this);
+      argUtils.imagePullSecret(this);
+      argUtils.clusterName(this);
+      argUtils.clusterResourceGroup(this);
    }
 
    // 1. Your initialization methods (checking current project state, getting configs, etc)
@@ -80,6 +83,9 @@ module.exports = class extends Generator {
          prompts.dockerRegistry(this),
          prompts.dockerRegistryUsername(this),
          prompts.dockerRegistryPassword(this),
+         prompts.imagePullSecret(this),
+         prompts.clusterName(this),
+         prompts.clusterResourceGroup(this),
          prompts.dockerPorts(this),
          prompts.groupId(this),
          prompts.installDep(this)
@@ -110,15 +116,18 @@ module.exports = class extends Generator {
          this.installDep = util.reconcileValue(cmdLnInput.options.installDep, answers.installDep);
          this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
          this.dockerHost = util.reconcileValue(cmdLnInput.options.dockerHost, answers.dockerHost, ``);
+         this.clusterName = util.reconcileValue(cmdLnInput.options.clusterName, answers.clusterName, ``);
          this.functionName = util.reconcileValue(cmdLnInput.options.functionName, answers.functionName);
          this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.dockerCertPath = util.reconcileValue(cmdLnInput.options.dockerCertPath, answers.dockerCertPath, ``);
+         this.imagePullSecret = util.reconcileValue(cmdLnInput.options.imagePullSecret, answers.imagePullSecret, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
+         this.clusterResourceGroup = util.reconcileValue(cmdLnInput.options.clusterResourceGroup, answers.clusterResourceGroup, ``);
          this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
       }.bind(this));
    }
@@ -134,6 +143,7 @@ module.exports = class extends Generator {
       }
       
       compose.addLanguage(this);
+      compose.addK8s(this);
       compose.addDockerHost(this);
       compose.addRegistry(this);
       compose.addAzure(this);

@@ -36,6 +36,9 @@ module.exports = class extends Generator {
       argUtils.servicePrincipalKey(this);
       argUtils.pat(this);
       argUtils.customFolder(this);
+      argUtils.imagePullSecret(this);
+      argUtils.clusterName(this);
+      argUtils.clusterResourceGroup(this);
    }
 
    // 2. Where you prompt users for options (where you`d call this.prompt())
@@ -66,6 +69,9 @@ module.exports = class extends Generator {
          prompts.dockerRegistry(this),
          prompts.dockerRegistryUsername(this),
          prompts.dockerRegistryPassword(this),
+         prompts.imagePullSecret(this),
+         prompts.clusterName(this),
+         prompts.clusterResourceGroup(this),
          prompts.dockerPorts(this),
       ]).then(function (answers) {
          // Transfer answers (answers) to global object (cmdLnInput) for use in the rest
@@ -81,13 +87,16 @@ module.exports = class extends Generator {
          this.azureSubId = util.reconcileValue(cmdLnInput.options.azureSubId, answers.azureSubId, ``);
          this.dockerHost = util.reconcileValue(cmdLnInput.options.dockerHost, answers.dockerHost, ``);
          this.dockerPorts = util.reconcileValue(cmdLnInput.options.dockerPorts, answers.dockerPorts, ``);
+         this.clusterName = util.reconcileValue(cmdLnInput.options.clusterName, answers.clusterName, ``);
          this.customFolder = util.reconcileValue(cmdLnInput.options.customFolder, answers.customFolder, ``);
          this.dockerRegistry = util.reconcileValue(cmdLnInput.options.dockerRegistry, answers.dockerRegistry, ``);
          this.dockerCertPath = util.reconcileValue(cmdLnInput.options.dockerCertPath, answers.dockerCertPath, ``);
+         this.imagePullSecret = util.reconcileValue(cmdLnInput.options.imagePullSecret, answers.imagePullSecret, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
+         this.clusterResourceGroup = util.reconcileValue(cmdLnInput.options.clusterResourceGroup, answers.clusterResourceGroup, ``);
          this.dockerRegistryPassword = util.reconcileValue(cmdLnInput.options.dockerRegistryPassword, answers.dockerRegistryPassword, ``);
       }.bind(this));
    }
@@ -102,6 +111,7 @@ module.exports = class extends Generator {
          compose.addFeed(this);
       }
       
+      compose.addK8s(this);
       compose.addRegistry(this);
       compose.addAzure(this);
       compose.addBuild(this);

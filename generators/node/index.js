@@ -50,7 +50,9 @@ module.exports = class extends Generator {
       // Root files
       this.fs.copy(`${src}/README.md`, `${root}/README.md`);
       this.fs.copy(`${src}/gitignore`, `${root}/.gitignore`);
+      this.fs.copyTpl(`${src}/Gruntfile.js`, `${root}/Gruntfile.js`, tokens);
       this.fs.copyTpl(`${src}/package.json`, `${root}/package.json`, tokens);
+      this.fs.copyTpl(`${src}/package-lock.json`, `${root}/package-lock.json`, tokens);
 
       // Web App project
       src = `${this.sourceRoot()}/src`;
@@ -62,6 +64,7 @@ module.exports = class extends Generator {
       this.fs.copy(`${src}/Dockerfile`, `${root}/Dockerfile`);
       this.fs.copy(`${src}/parameters.xml`, `${root}/parameters.xml`);
       this.fs.copyTpl(`${src}/package.json`, `${root}/package.json`, tokens);
+      this.fs.copyTpl(`${src}/package-lock.json`, `${root}/package-lock.json`, tokens);
 
       this.fs.copy(`${src}/public`, `${root}/public`);
       this.fs.copy(`${src}/routes`, `${root}/routes`);

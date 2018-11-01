@@ -11,8 +11,8 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Install yarn",
-         "refName": "install_yarn",
+         "displayName": "NPM Install for Test",
+         "refName": "npm_install_for_test",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
@@ -22,26 +22,33 @@
          "inputs": {
             "cwd": "",
             "command": "install",
-            "arguments": "yarn --allow-root"
+            "arguments": ""
          }
-      },      
+      },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run yarn for tests",
-         "refName": "yarn_install_test",
+         "displayName": "grunt ",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "1.*",
+            "id": "521d1e15-f5fb-4b73-a93b-b2fe88a9a286",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "node",
-            "arguments": "./node_modules/yarn/lib/cli.js",
-            "workingFolder": "",
-            "failOnStandardError": false
+            "gruntFile": "Gruntfile.js",
+            "targets": "",
+            "arguments": "",
+            "cwd": "",
+            "gruntCli": "node_modules/grunt-cli/bin/grunt",
+            "publishJUnitResults": "false",
+            "testResultsFiles": "**/TEST-*.xml",
+            "testRunTitle": "",
+            "enableCodeCoverage": "false",
+            "testFramework": "Mocha",
+            "srcFiles": "",
+            "testFiles": "test/*.js"
          }
       },
       {
@@ -76,7 +83,7 @@
          },
          "inputs": {
             "testRunner": "JUnit",
-            "testResultsFiles": "**/unit.xml",
+            "testResultsFiles": "unit.xml",
             "mergeTestResults": "false",
             "testRunTitle": "",
             "platform": "",
@@ -107,19 +114,18 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "Run yarn for src",
-         "refName": "yarn_install_src",
+         "displayName": "NPM Install for Src",
+         "refName": "npm_install_src",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
-            "versionSpec": "1.*",
+            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "node",
-            "arguments": "../node_modules/yarn/lib/cli.js",
-            "workingFolder": "src",
-            "failOnStandardError": false
+            "cwd": "src",
+            "command": "install",
+            "arguments": ""
          }
       },
       {
@@ -240,7 +246,7 @@
          },
          "inputs": {
             "SourceFolder": "",
-            "Contents": "templates/*.*",
+            "Contents": "templates/**",
             "TargetFolder": "$(Build.StagingDirectory)/drop",
             "CleanTargetFolder": "false",
             "OverWrite": "false"

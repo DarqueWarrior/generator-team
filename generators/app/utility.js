@@ -44,7 +44,7 @@ String.prototype.replaceAll = function (search, replacement) {
 };
 
 function isDocker(value) {
-   return value === `docker` || value === `dockerpaas` || value === `acilinux`;
+   return value === `docker` || value === `dockerpaas` || value === `acilinux` || value === `k8s`;
 }
 
 function isWindowsAgent(queue) {
@@ -59,11 +59,16 @@ function getDockerRegistryServer(server) {
    return parts.host;
 }
 
-function getImageNamespace(registryId, endPoint) {
+// Qualify the image name with the dockerRegistryId for docker hub
+// or the server name for other registries. 
+function getImageNamespace(registryId, url) {
+   // Default to the username for the registry. This is what we would
+   // use for DockerHub.
    let dockerNamespace = registryId ? registryId.toLowerCase() : null;
 
-   if (endPoint && endPoint.authorization && !isDockerHub(endPoint.authorization.parameters.registry)) {
-      dockerNamespace = getDockerRegistryServer(endPoint.authorization.parameters.registry);
+   // If the endpoint was provided see if this docker hub or not.
+   if (!isDockerHub(url)) {
+      dockerNamespace = getDockerRegistryServer(url);
    }
 
    return dockerNamespace;
@@ -132,6 +137,14 @@ function getTargets(answers) {
             name: `Docker Host`,
             value: `docker`
          }];
+
+         // Only supported on Azure DevOps
+         if (isVSTS(answers.tfs)) {
+            targets.push({
+               name: `Kubernetes`,
+               value: `k8s`
+            });
+         }
 
          // TODO: Investigate if we need to remove these
          // options. I think you can offer paas and paasslots
@@ -209,7 +222,7 @@ function getPATPrompt(answers) {
 }
 
 function getInstancePrompt() {
-   return `Enter VSTS account name\n  ({account}.visualstudio.com)\n  Or full TFS URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)\n  Or name of a stored Profile?`;
+   return `Enter Service account name\n  (dev.azure.com/{account} or \n  {account}.visualstudio.com)\n  Or full Server URL including collection\n  (http://tfs:8080/tfs/DefaultCollection)\n  Or name of a stored Profile?`;
 }
 
 function getDefaultPortMapping(answers) {
@@ -238,6 +251,14 @@ function validateRequired(input, msg) {
 
 function validatePortMapping(input) {
    return validateRequired(input, `You must provide a Port Mapping`);
+}
+
+function validateClusterName(input) {
+   return validateRequired(input, `You must provide a Cluster name`);
+}
+
+function validateClusterResourceGroup(input) {
+   return validateRequired(input, `You must provide a Cluster resource group name`);
 }
 
 function validateGroupID(input) {
@@ -1047,7 +1068,7 @@ function getPools(answers) {
 }
 
 function isDockerHub(dockerRegistry) {
-   return dockerRegistry.toLowerCase().match(/index.docker.io/) !== null;
+   return dockerRegistry ? dockerRegistry.toLowerCase().match(/index.docker.io/) !== null : true;
 }
 
 function loadProfiles() {
@@ -1142,7 +1163,7 @@ function extractInstance(input) {
    // the user most likely entered the entire URL instead of just
    // the account name so lets extract it.
    if (input.match(/visualstudio.com/i) === null &&
-       input.match(/dev.azure.com/i) === null) {
+      input.match(/dev.azure.com/i) === null) {
       return input;
    }
 
@@ -1161,11 +1182,14 @@ function needsRegistry(answers, options) {
          answers.target === `acilinux` ||
          options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         options.target === `dockerpaas`);
+         options.target === `dockerpaas` ||
+         answers.target === `k8s` ||
+         options.target === `k8s`);
    } else {
       return (answers.target === `docker` ||
          answers.target === `acilinux` ||
-         answers.target === `dockerpaas`);
+         answers.target === `dockerpaas` ||
+         answers.target === `k8s`);
    }
 }
 
@@ -1182,7 +1206,9 @@ function needsDockerHost(answers, options) {
       paasRequiresHost = (answers.target === `dockerpaas` ||
          options.target === `dockerpaas` ||
          answers.target === `acilinux` ||
-         options.target === `acilinux`) &&
+         options.target === `acilinux` ||
+         answers.target === `k8s` ||
+         options.target === `k8s`) &&
          ((hasDockerTools(answers.queue) === false) &&
             (hasDockerTools(options.queue) === false));
    } else {
@@ -1224,12 +1250,15 @@ function isPaaS(answers, cmdLnInput) {
          answers.target === `acilinux` ||
          cmdLnInput.options.target === `acilinux` ||
          answers.target === `dockerpaas` ||
-         cmdLnInput.options.target === `dockerpaas`);
+         cmdLnInput.options.target === `dockerpaas` ||
+         answers.target === `k8s` ||
+         cmdLnInput.options.target === `k8s`);
    } else {
       return (answers.target === `paas` ||
          answers.target === `paasslots` ||
          answers.target === `acilinux` ||
-         answers.target === `dockerpaas`);
+         answers.target === `dockerpaas` ||
+         answers.target === `k8s`);
    }
 }
 
@@ -1374,6 +1403,10 @@ function getFullURL(instance, includeCollection, subDomain) {
    return vstsURL;
 }
 
+function isKubernetes(target) {
+   return target === 'k8s';
+}
+
 module.exports = {
 
    // Exports the portions of the file we want to share with files that require
@@ -1414,6 +1447,7 @@ module.exports = {
    getPATPrompt: getPATPrompt,
    tryFindBuild: tryFindBuild,
    addUserAgent: addUserAgent,
+   isKubernetes: isKubernetes,
    getUserAgent: getUserAgent,
    needsRegistry: needsRegistry,
    findAllQueues: findAllQueues,
@@ -1426,6 +1460,7 @@ module.exports = {
    validateApiKey: validateApiKey,
    validateGroupID: validateGroupID,
    extractInstance: extractInstance,
+   findPackageFeed: findPackageFeed,
    needsDockerHost: needsDockerHost,
    validateAzureSub: validateAzureSub,
    getInstancePrompt: getInstancePrompt,
@@ -1436,9 +1471,9 @@ module.exports = {
    validateDockerHost: validateDockerHost,
    validateAzureSubID: validateAzureSubID,
    tryFindPackageFeed: tryFindPackageFeed,
-   findPackageFeed: findPackageFeed,
    validatePortMapping: validatePortMapping,
    validateProfileName: validateProfileName,
+   validateClusterName: validateClusterName,
    validateDockerHubID: validateDockerHubID,
    isExtensionInstalled: isExtensionInstalled,
    validateFunctionName: validateFunctionName,
@@ -1447,10 +1482,10 @@ module.exports = {
    getDefaultPortMapping: getDefaultPortMapping,
    validateAzureTenantID: validateAzureTenantID,
    validateDockerRegistry: validateDockerRegistry,
+   getDockerRegistryServer: getDockerRegistryServer,
    validateApplicationName: validateApplicationName,
    findNuGetServiceEndpoint: findNuGetServiceEndpoint,
    findAzureServiceEndpoint: findAzureServiceEndpoint,
-   getDockerRegistryServer: getDockerRegistryServer,
    findDockerServiceEndpoint: findDockerServiceEndpoint,
    validateDockerHubPassword: validateDockerHubPassword,
    validateServicePrincipalID: validateServicePrincipalID,
@@ -1459,6 +1494,7 @@ module.exports = {
    validatePersonalAccessToken: validatePersonalAccessToken,
    tryFindNuGetServiceEndpoint: tryFindNuGetServiceEndpoint,
    tryFindDockerServiceEndpoint: tryFindDockerServiceEndpoint,
+   validateClusterResourceGroup: validateClusterResourceGroup,
    validateDockerCertificatePath: validateDockerCertificatePath,
    findDockerRegistryServiceEndpoint: findDockerRegistryServiceEndpoint,
    tryFindDockerRegistryServiceEndpoint: tryFindDockerRegistryServiceEndpoint

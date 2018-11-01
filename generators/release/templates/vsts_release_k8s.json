@@ -1,0 +1,643 @@
+{
+   "name": "{{ReleaseDefName}}",
+   "variables": {
+      "ClusterResourceGroup": {
+         "value": "{{ClusterResourceGroup}}"
+      },
+      "ClusterName": {
+         "value": "{{ClusterName}}"
+      },
+      "system.debug": {
+         "value": "false"
+      }
+   },
+   "environments": [
+      {
+         "name": "Dev",
+         "rank": 1,
+         "variables": {
+            "HelmReleaseName": {
+               "value": "{{ProjectLowerCase}}-dev"
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "parallelExecution": {
+                  "parallelExecutionType": "none"
+               },
+               "skipArtifactsDownload": false,
+               "artifactsDownloadInput": {
+                  "downloadInputs": [{
+                     "artifactItems": [],
+                     "alias": "{{BuildName}}",
+                     "artifactType": "Build",
+                     "artifactDownloadMode": "All"
+                  }]
+               },
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false,
+               "timeoutInMinutes": 0,
+               "jobCancelTimeoutInMinutes": 1,
+               "condition": "succeeded()",
+               "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+               "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
+               "version": "0.*",
+               "name": "Install Helm 2.8.2",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "helmVersion": "2.8.2",
+                  "checkLatestHelmVersion": "true",
+                  "installKubeCtl": "true",
+                  "kubectlVersion": "1.8.9",
+                  "checkLatestKubeCtl": "true"
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm init",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "init",
+                  "chartType": "Name",
+                  "chartName": "",
+                  "chartPath": "",
+                  "version": "",
+                  "releaseName": "",
+                  "overrideValues": "",
+                  "valueFile": "",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm upgrade",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "upgrade",
+                  "chartType": "FilePath",
+                  "chartName": "",
+                  "chartPath": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart",
+                  "version": "",
+                  "releaseName": "$(HelmReleaseName)",
+                  "overrideValues": "image.tag=$(Build.BuildId)",
+                  "valueFile": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart/values.yaml",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            }]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": false,
+            "badgeEnabled": false,
+            "autoLinkWorkItems": false,
+            "pullRequestDeploymentEnabled": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "ReleaseStarted",
+               "conditionType": 1,
+               "value": ""
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      },
+      {
+         "name": "QA",
+         "rank": 2,
+         "variables": {
+            "HelmReleaseName": {
+               "value": "{{ProjectLowerCase}}-qa"
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": false,
+                  "isNotificationOn": false,
+                  "approver": {
+                     "id": "{{ApproverId}}",
+                     "displayName": "{{ApproverDisplayName}}",
+                     "uniqueName": "{{ApproverUniqueName}}"
+                  }
+               }
+            ],
+            "approvalOptions": {
+               "requiredApproverCount": 0,
+               "releaseCreatorCanBeApprover": true
+            }
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "parallelExecution": {
+                  "parallelExecutionType": "none"
+               },
+               "skipArtifactsDownload": false,
+               "artifactsDownloadInput": {
+                  "downloadInputs": [{
+                     "artifactItems": [],
+                     "alias": "{{BuildName}}",
+                     "artifactType": "Build",
+                     "artifactDownloadMode": "All"
+                  }]
+               },
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false,
+               "timeoutInMinutes": 0,
+               "jobCancelTimeoutInMinutes": 1,
+               "condition": "succeeded()",
+               "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+               "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
+               "version": "0.*",
+               "name": "Install Helm 2.8.2",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "helmVersion": "2.8.2",
+                  "checkLatestHelmVersion": "true",
+                  "installKubeCtl": "true",
+                  "kubectlVersion": "1.8.9",
+                  "checkLatestKubeCtl": "true"
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm init",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "init",
+                  "chartType": "Name",
+                  "chartName": "",
+                  "chartPath": "",
+                  "version": "",
+                  "releaseName": "",
+                  "overrideValues": "",
+                  "valueFile": "",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm upgrade",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "upgrade",
+                  "chartType": "FilePath",
+                  "chartName": "",
+                  "chartPath": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart",
+                  "version": "",
+                  "releaseName": "$(HelmReleaseName)",
+                  "overrideValues": "image.tag=$(Build.BuildId)",
+                  "valueFile": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart/values.yaml",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            }]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": false,
+            "badgeEnabled": false,
+            "autoLinkWorkItems": false,
+            "pullRequestDeploymentEnabled": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "Dev",
+               "conditionType": 2,
+               "value": "4"
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      },
+      {
+         "name": "Prod",
+         "rank": 3,
+         "variables": {
+            "HelmReleaseName": {
+               "value": "{{ProjectLowerCase}}-prod"
+            }
+         },
+         "preDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": false,
+                  "isNotificationOn": false,
+                  "approver": {
+                     "id": "{{ApproverId}}",
+                     "displayName": "{{ApproverDisplayName}}",
+                     "uniqueName": "{{ApproverUniqueName}}"
+                  }
+               }
+            ],
+            "approvalOptions": {
+               "requiredApproverCount": 0,
+               "releaseCreatorCanBeApprover": true
+            }
+         },
+         "deployStep": {},
+         "postDeployApprovals": {
+            "approvals": [
+               {
+                  "rank": 1,
+                  "isAutomated": true,
+                  "isNotificationOn": false
+               }
+            ]
+         },
+         "deployPhases": [{
+            "deploymentInput": {
+               "parallelExecution": {
+                  "parallelExecutionType": "none"
+               },
+               "skipArtifactsDownload": false,
+               "artifactsDownloadInput": {
+                  "downloadInputs": [{
+                     "artifactItems": [],
+                     "alias": "{{BuildName}}",
+                     "artifactType": "Build",
+                     "artifactDownloadMode": "All"
+                  }]
+               },
+               "queueId": "{{QueueId}}",
+               "demands": [],
+               "enableAccessToken": false,
+               "timeoutInMinutes": 0,
+               "jobCancelTimeoutInMinutes": 1,
+               "condition": "succeeded()",
+               "overrideInputs": {}
+            },
+            "rank": 1,
+            "phaseType": 1,
+            "name": "Run on agent",
+            "workflowTasks": [{
+               "taskId": "068d5909-43e6-48c5-9e01-7c8a94816220",
+               "version": "0.*",
+               "name": "Install Helm 2.8.2",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "helmVersion": "2.8.2",
+                  "checkLatestHelmVersion": "true",
+                  "installKubeCtl": "true",
+                  "kubectlVersion": "1.8.9",
+                  "checkLatestKubeCtl": "true"
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm init",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "init",
+                  "chartType": "Name",
+                  "chartName": "",
+                  "chartPath": "",
+                  "version": "",
+                  "releaseName": "",
+                  "overrideValues": "",
+                  "valueFile": "",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            },
+            {
+               "taskId": "afa7d54d-537b-4dc8-b60a-e0eeea2c9a87",
+               "version": "0.*",
+               "name": "helm upgrade",
+               "refName": "",
+               "enabled": true,
+               "alwaysRun": false,
+               "continueOnError": false,
+               "timeoutInMinutes": 0,
+               "definitionType": "task",
+               "overrideInputs": {},
+               "condition": "succeeded()",
+               "inputs": {
+                  "connectionType": "Azure Resource Manager",
+                  "azureSubscriptionEndpoint": "{{ConnectedServiceID}}",
+                  "azureResourceGroup": "$(ClusterResourceGroup)",
+                  "kubernetesCluster": "$(ClusterName)",
+                  "kubernetesServiceEndpoint": "",
+                  "namespace": "",
+                  "command": "upgrade",
+                  "chartType": "FilePath",
+                  "chartName": "",
+                  "chartPath": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart",
+                  "version": "",
+                  "releaseName": "$(HelmReleaseName)",
+                  "overrideValues": "image.tag=$(Build.BuildId)",
+                  "valueFile": "$(System.DefaultWorkingDirectory)/{{BuildName}}/drop/chart/values.yaml",
+                  "destination": "$(Build.ArtifactStagingDirectory)",
+                  "canaryimage": "false",
+                  "upgradetiller": "true",
+                  "updatedependency": "false",
+                  "save": "true",
+                  "install": "true",
+                  "recreate": "false",
+                  "resetValues": "false",
+                  "force": "false",
+                  "waitForExecution": "true",
+                  "arguments": "",
+                  "enableTls": "false",
+                  "caCert": "",
+                  "certificate": "",
+                  "privatekey": "",
+                  "tillernamespace": ""
+               }
+            }]
+         }],
+         "environmentOptions": {
+            "emailNotificationType": "OnlyOnFailure",
+            "emailRecipients": "release.environment.owner;release.creator",
+            "skipArtifactsDownload": false,
+            "timeoutInMinutes": 0,
+            "enableAccessToken": false,
+            "publishDeploymentStatus": false,
+            "badgeEnabled": false,
+            "autoLinkWorkItems": false,
+            "pullRequestDeploymentEnabled": false
+         },
+         "demands": [],
+         "conditions": [
+            {
+               "name": "QA",
+               "conditionType": 2,
+               "value": "4"
+            }
+         ],
+         "executionPolicy": {
+            "concurrencyCount": 0,
+            "queueDepthCount": 0
+         },
+         "schedules": [],
+         "retentionPolicy": {
+            "daysToKeep": 30,
+            "releasesToKeep": 3,
+            "retainBuild": true
+         }
+      }
+   ],
+   "artifacts": [
+      {
+         "sourceId": "{{ProjectId}}:{{BuildId}}",
+         "type": "Build",
+         "alias": "{{BuildName}}",
+         "definitionReference": {
+            "defaultVersionType": {
+            "id": "latestType",
+            "name": "Latest"
+            },
+            "definition": {
+               "id": "{{BuildId}}",
+               "name": "{{BuildName}}"
+            },
+            "project": {
+               "id": "{{ProjectId}}",
+               "name": "{{ProjectName}}"
+            }
+         },
+         "isPrimary": true
+      }
+   ],
+   "triggers": [
+      {
+         "artifactAlias": "{{BuildName}}",
+         "triggerType": 1
+      }
+   ],
+   "releaseNameFormat": "Release-$(rev:r)",
+   "retentionPolicy": null
+}

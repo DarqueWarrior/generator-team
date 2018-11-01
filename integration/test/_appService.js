@@ -38,11 +38,13 @@ function requestSite(applicationName, env, title, cb) {
          timeout: 60000
       }, function (err, res, body) {
          if (!err) {
+            util.log(`${url} loaded`);
             var dom = cheerio.load(body);
             assert.equal(dom(`title`).text(), `${title}`);
 
             cb(err, res, body);
          } else {
+            util.log(`1st attempt failed ${url}`);
             setTimeout(function () {
                // Try one more time. I bet this was Azure AppService Docker timing out.
                request({
@@ -52,6 +54,7 @@ function requestSite(applicationName, env, title, cb) {
                   timeout: 60000
                }, function (err, res, body) {
                   if (!err) {
+                     util.log(`${url} loaded`);
                      var dom = cheerio.load(body);
                      assert.equal(dom(`title`).text(), `${title}`);
                   }
@@ -100,6 +103,11 @@ function runTests(iteration) {
    var pat = process.env.PAT || ` `;
    var doNotCleanUp = process.env.DO_NOT_CLEAN_UP;
 
+   // K8s
+   var imagePullSecret = ` `;
+   var clusterName = ` `;
+   var clusterResourceGroup = ` `;
+
    // The number of levels up from the folder the test are executed in to the 
    // folder where the repository was cloned.  This is not the same when run locally
    // vs. run on a build machine. 
@@ -114,7 +122,9 @@ function runTests(iteration) {
          let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
             `"${tenantId}" "${servicePrincipalId}" "${queue}" "${target}" ${installDep} ` +
             `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" ` +
+            `"${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}" ` +
+            `"${imagePullSecret}" "${clusterName}" "${clusterResourceGroup}"`;
 
          util.log(`run command: ${cmd}`);
 

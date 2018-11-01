@@ -118,6 +118,7 @@ function run(args, gen, done) {
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
+            clusterName: args.clusterName,
             dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             dockerRegistry: args.dockerRegistry,
@@ -126,6 +127,7 @@ function run(args, gen, done) {
             dockerRegistryId: args.dockerRegistryId,
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
+            clusterResourceGroup: args.clusterResourceGroup,
             endpoint: azureEndpoint ? azureEndpoint.id : null,
             dockerRegistryPassword: args.dockerRegistryPassword
          };
@@ -235,7 +237,9 @@ function createRelease(args, gen, callback) {
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
-   let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, args.dockerRegistryEndpoint);
+   let endPoint = args.dockerRegistryEndpoint;
+   let url = (endPoint && endPoint.authorization) ? endPoint.authorization.parameters.registry : undefined;
+   let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, url);
 
    // Azure website names have to be unique.  So we gen a GUID and addUserAgent
    // a portion to the site name to help with that.
@@ -266,7 +270,9 @@ function createRelease(args, gen, callback) {
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
-      '{{ReleaseDefName}}': releaseDefName
+      '{{ReleaseDefName}}': releaseDefName,
+      '{{ClusterName}}': args.clusterName,
+      '{{ClusterResourceGroup}}': args.clusterResourceGroup
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');

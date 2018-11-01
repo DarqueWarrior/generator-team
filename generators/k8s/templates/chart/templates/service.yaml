@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "<%= name_lowercase %>.fullname" . }}
+  labels:
+    app: {{ template "<%= name_lowercase %>.name" . }}
+    chart: {{ template "<%= name_lowercase %>.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "<%= name_lowercase %>.name" . }}
+    release: {{ .Release.Name }}
