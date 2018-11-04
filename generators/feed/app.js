@@ -33,7 +33,8 @@ function run(args, gen, done) {
          if (err) {
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
-            gen.env.error(err.message);
+            gen.log.info(err.message);
+            gen.env.error();
          }
       });
 }
@@ -82,7 +83,8 @@ function createPackageFeed(account, project, token, gen, callback) {
             if (response.statusCode >= 400) {
                // To get the stacktrace run with the --debug built-in option when 
                // running the generator.
-               gen.env.error("x " + response.body.message.replace('\n', ' '));
+               gen.log.info("x " + response.body.message.replace('\n', ' '));
+               gen.env.error();
             }
 
             let tmp = body.find(function (i) {
@@ -121,7 +123,8 @@ function createPackageFeed(account, project, token, gen, callback) {
             if (response.statusCode >= 400) {
                // To get the stacktrace run with the --debug built-in option when 
                // running the generator.
-               gen.env.error("x " + response.body.message.replace('\n', ' '));
+               gen.log.info(response.body.message.replace('\n', ' '));
+               gen.env.error();
             }
 
             let tmp = body.value.find(function (i) {
@@ -138,7 +141,8 @@ function createPackageFeed(account, project, token, gen, callback) {
       if (err) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.env.error(err.message);
+         gen.log.info(err.message);
+         gen.env.error();
       }
 
       var options = util.addUserAgent({
@@ -191,7 +195,8 @@ function createPackageFeed(account, project, token, gen, callback) {
          if (response.statusCode >= 400) {
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
-            gen.env.error("x " + response.body.message.replace('\n', ' '));
+            gen.log.info(response.body.message.replace('\n', ' '));
+            gen.env.error();
          }
 
          callback(error, body);

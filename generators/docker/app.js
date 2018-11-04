@@ -36,7 +36,8 @@ function run(args, gen, done) {
          if (err) {
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
-            gen.env.error(err.message);
+            gen.log.info(err.message);
+            gen.env.error();
          }
       });
 }
@@ -79,7 +80,8 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
    async.map([ca, key, cert], fs.readFile, function (err, results) {
 
       if (results[0] === undefined) {
-         gen.env.error("x No files found. Check path to docker certs.");
+         gen.log.info("No files found. Check path to docker certs.");
+         gen.env.error();
       }
 
       caContents = results[0].toString();
@@ -94,15 +96,15 @@ function createDockerServiceEndpoint(account, projectId, dockerHost, dockerCertP
          qs: { 'api-version': util.SERVICE_ENDPOINTS_API_VERSION },
          body: {
             authorization:
-               {
-                  parameters: {
-                     cacert: caContents,
-                     cert: certContents,
-                     certificate: '',
-                     key: keyContents
-                  },
-                  scheme: 'Certificate'
+            {
+               parameters: {
+                  cacert: caContents,
+                  cert: certContents,
+                  certificate: '',
+                  key: keyContents
                },
+               scheme: 'Certificate'
+            },
             data: {},
             name: 'Docker',
             type: 'dockerhost',

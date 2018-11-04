@@ -55,7 +55,7 @@ function run(args, gen, done) {
          // PowerShell requires the latest version of build because it uses
          // stages. We are setting target to powershell here so it can be
          // tested in findOrCreateBuild below
-         if (args.type === 'powershell') {            
+         if (args.type === 'powershell') {
             args.target = args.type;
 
             // Pass in all the queues because we need one macOS, Linux and Windows for PowerShell
@@ -79,7 +79,8 @@ function run(args, gen, done) {
          if (err) {
             // To get the stacktrace run with the --debug built-in option when 
             // running the generator.
-            gen.env.error(err.message);
+            gen.log.info(err.message);
+            gen.env.error();
          }
       }
    );
@@ -141,7 +142,9 @@ function createBuild(account, teamProject, packageName, token, queues,
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
-   let dockerNamespace = util.getImageNamespace(dockerRegistryId, dockerRegistryEndpoint);
+   let endPoint = dockerRegistryEndpoint;
+   let url = (endPoint && endPoint.authorization) ? endPoint.authorization.parameters.registry : undefined;
+   let dockerNamespace = util.getImageNamespace(dockerRegistryId, url);
 
    // Load the template and replace values.
    var contents = fs.readFileSync(filename, 'utf8');
@@ -201,6 +204,8 @@ function createBuild(account, teamProject, packageName, token, queues,
           }else{
               gen.env.error("x " + response.body.message.replace('\n', ' '));
           }
+         gen.log.info(response.body.message.replace('\n', ' '));
+         gen.env.error();
       }
 
       callback(error, body);

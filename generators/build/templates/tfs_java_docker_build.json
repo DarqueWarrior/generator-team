@@ -153,7 +153,7 @@
          },
          "inputs": {
             "SourceFolder": "",
-            "Contents": "templates/*.*",
+            "Contents": "templates/**",
             "TargetFolder": "$(Build.StagingDirectory)/drop",
             "CleanTargetFolder": "false",
             "OverWrite": "false"

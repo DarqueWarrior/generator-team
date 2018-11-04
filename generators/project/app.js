@@ -5,12 +5,13 @@ const util = require('../app/utility');
 
 function run(gen, callback) {
    "use strict";
-   
+
    findOrCreateProject(gen, function (e, tp) {
       if (e) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.env.error(e.message);
+         gen.log.info(e.message);
+         gen.env.error();
       }
 
       callback(e);

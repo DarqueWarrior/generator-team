@@ -201,6 +201,27 @@ function gitAction(obj) {
    });
 }
 
+function imagePullSecret(obj) {
+   obj.argument(`imagePullSecret`, {
+      required: false,
+      desc: `Kubernetes Secret name to pull from`
+   });
+}
+
+function clusterName(obj) {
+   obj.argument(`clusterName`, {
+      required: false,
+      desc: `Kubernetes cluster name`
+   });
+}
+
+function clusterResourceGroup(obj) {
+   obj.argument(`clusterResourceGroup`, {
+      required: false,
+      desc: `Kubernetes cluster resource group name`
+   });
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -218,6 +239,7 @@ module.exports = {
    installDep: installDep,
    dockerHost: dockerHost,
    dockerPorts: dockerPorts,
+   clusterName: clusterName,
    customFolder: customFolder,
    functionName: functionName,
    dockerCertPath: dockerCertPath,
@@ -226,8 +248,10 @@ module.exports = {
    applicationXamarinType: applicationXamarinType,
    applicationName: applicationName,
    packageName: packageName,
+   imagePullSecret: imagePullSecret,
    dockerRegistryId: dockerRegistryId,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
+   clusterResourceGroup: clusterResourceGroup,
    dockerRegistryPassword: dockerRegistryPassword,
 };

@@ -11,55 +11,51 @@
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "npm install bower",
-         "refName": "install_bower",
+         "displayName": "NPM Install for Test",
+         "refName": "npm_install_for_test",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
-            "definitionType": "task"
-         },
-         "inputs": {
-            "cwd": "",
-            "command": "install",
-            "arguments": "bower --allow-root"
-         }
-      },
-      {
-         "enabled": true,
-         "continueOnError": false,
-         "alwaysRun": false,
-         "displayName": "Run bower",
-         "refName": "run_bower",
-         "timeoutInMinutes": 0,
-         "task": {
-            "id": "d9bafed4-0b18-4f58-968d-86655b4d2ce9",
             "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "filename": "bower",
-            "arguments": "install --allow-root",
-            "workingFolder": "",
-            "failOnStandardError": "false"
+            "command": "custom",
+            "workingDir": "",
+            "verbose": "false",
+            "customCommand": "install",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "npm install for test",
-         "refName": "npm_install_test",
+         "displayName": "grunt ",
          "timeoutInMinutes": 0,
          "task": {
-            "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
+            "id": "521d1e15-f5fb-4b73-a93b-b2fe88a9a286",
             "versionSpec": "0.*",
             "definitionType": "task"
          },
          "inputs": {
-            "command": "install",
+            "gruntFile": "Gruntfile.js",
+            "targets": "",
             "arguments": "",
-            "cwd": ""
+            "cwd": "",
+            "gruntCli": "node_modules/grunt-cli/bin/grunt",
+            "publishJUnitResults": "false",
+            "testResultsFiles": "**/TEST-*.xml",
+            "testRunTitle": "",
+            "enableCodeCoverage": "false",
+            "testFramework": "Mocha",
+            "srcFiles": "",
+            "testFiles": "test/*.js"
          }
       },
       {
@@ -71,13 +67,20 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "command": "test",
-            "arguments": "-- --grep unit*",
-            "cwd": ""
+            "command": "custom",
+            "workingDir": "",
+            "verbose": "false",
+            "customCommand": "test",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
       {
@@ -89,17 +92,18 @@
          "timeoutInMinutes": 0,
          "task": {
             "id": "0b0f01ed-7dde-43ff-9cbb-e48954daf9b1",
-            "versionSpec": "2.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
             "testRunner": "JUnit",
-            "testResultsFiles": "**/xunit.xml",
+            "testResultsFiles": "unit.xml",
+            "searchFolder": "$(System.DefaultWorkingDirectory)",
             "mergeTestResults": "false",
             "testRunTitle": "Unit",
             "platform": "$(BuildPlatform)",
             "configuration": "$(BuildConfiguration)",
-            "publishRunAttachments": "true"
+            "publishRunAttachments": "false"
          }
       },
       {
@@ -118,28 +122,36 @@
             "codeCoverageTool": "Cobertura",
             "summaryFileLocation": "$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml",
             "reportDirectory": "$(Build.SourcesDirectory)/coverage/lcov-report",
-            "additionalCodeCoverageFiles": ""
+            "additionalCodeCoverageFiles": "",
+            "failIfCoverageEmpty": "false"
          }
       },
       {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
-         "displayName": "npm install",
-         "refName": "npm_install",
+         "displayName": "NPM Install for Src",
+         "refName": "npm_install_for_src",
          "timeoutInMinutes": 0,
          "task": {
             "id": "fe47e961-9fa8-4106-8639-368c022d43ad",
-            "versionSpec": "0.*",
+            "versionSpec": "1.*",
             "definitionType": "task"
          },
          "inputs": {
-            "command": "install",
-            "arguments": "",
-            "cwd": "src"
+            "command": "custom",
+            "workingDir": "src",
+            "verbose": "false",
+            "customCommand": "install",
+            "customRegistry": "useNpmrc",
+            "customFeed": "",
+            "customEndpoint": "",
+            "publishRegistry": "useExternalRegistry",
+            "publishFeed": "",
+            "publishEndpoint": ""
          }
       },
-       {
+      {
          "enabled": true,
          "continueOnError": false,
          "alwaysRun": false,
@@ -239,7 +251,7 @@
          },
          "inputs": {
             "SourceFolder": "templates/",
-            "Contents": "**/*.json",
+            "Contents": "**",
             "TargetFolder": "$(Build.StagingDirectory)/pub/templates/",
             "CleanTargetFolder": "false",
             "OverWrite": "true",
@@ -266,15 +278,17 @@
          }
       }
    ],
-   "triggers": [{
-      "branchFilters": [
-         "+refs/heads/master"
-      ],
-      "pathFilters": [],
-      "batchChanges": false,
-      "maxConcurrentBuildsPerBranch": 1,
-      "triggerType": "continuousIntegration"
-   }],
+   "triggers": [
+      {
+         "branchFilters": [
+            "+refs/heads/master"
+         ],
+         "pathFilters": [],
+         "batchChanges": false,
+         "maxConcurrentBuildsPerBranch": 1,
+         "triggerType": "continuousIntegration"
+      }
+   ],
    "variables": {
       "system.debug": {
          "value": "false",

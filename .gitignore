@@ -18,6 +18,7 @@ unit.xml
 **/vsts.env
 **/vstsLinux.env
 .yo-rc.json
+**/k8s.env
 
 
 

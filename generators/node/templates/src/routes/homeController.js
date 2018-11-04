@@ -1,17 +1,26 @@
 var express = require('express');
-var router = express.Router();
+var utils = require('../utility');
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-   res.render('index', { title: 'Home Page' });
-});
+// application insights
+let client = utils.initAppInsights();
+let key = process.env.APPINSIGHTS_INSTRUMENTATIONKEY;
 
-router.get('/contact', function (req, res, next) {
-   res.render('contact', { title: 'Contact', message: 'Your contact page.' });
-});
+module.exports = function (app) {
+   var router = express.Router();
 
-router.get('/about', function (req, res, next) {
-   res.render('about', { title: 'About', message: 'Your application description page.' });
-});
+   /* GET home page. */
+   router.get('/', function (req, res) {
+      res.render('index', { title: 'Home Page', instrumentationKey: key });
+   });
 
-module.exports = router;
+   router.get('/contact', function (req, res) {
+      res.render('contact', { title: 'Contact', message: 'Your contact page.', instrumentationKey: key });
+   });
+
+   router.get('/about', function (req, res) {
+      res.render('about', { title: 'About', message: 'Your application description page.', instrumentationKey: key });
+   });
+
+   // Mount route as "/"
+   app.use('/', router);
+};

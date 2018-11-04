@@ -221,7 +221,7 @@ function functionName(obj) {
       message: `What is the name of your function?`,
       validate: util.validateFunctionName,
       when: answers => {
-         return obj.options.functionName === undefined && util.needsapiKey(answers, obj.options) === true;
+         return obj.options.functionName === undefined && util.needsApiKey(answers, obj.options) === true;
       }
    };
 }
@@ -246,7 +246,7 @@ function target(obj) {
       message: `Where would you like to deploy?`,
       choices: util.getTargets,
       when: answers => {
-         return obj.options.target === undefined && util.needsapiKey(answers, obj.options) === false;
+         return obj.options.target === undefined && util.needsApiKey(answers, obj.options) === false;
       }
    };
 }
@@ -343,9 +343,9 @@ function apiKey(obj) {
       name: `apiKey`,
       store: false,
       message: `What is your NuGet apiKey?`,
-      validate: util.validateapiKey,
+      validate: util.validateApiKey,
       when: answers => {
-         return util.needsapiKey(answers, obj.options) && obj.options.apiKey === undefined;
+         return util.needsApiKey(answers, obj.options) && obj.options.apiKey === undefined;
       }
    }
 }
@@ -439,7 +439,7 @@ function groupId(obj) {
       message: "What is your Group ID?",
       validate: util.validateGroupID,
       when: answers => {
-         return answers.type === `java` && obj.options.groupId === undefined;
+         return (answers.type === `java` || obj.type === `java`) && obj.options.groupId === undefined;
       }
    };
 }
@@ -507,6 +507,49 @@ function gitAction(obj) {
    };
 }
 
+// K8s
+function imagePullSecret(obj) {
+   return {
+      name: `imagePullSecret`,
+      type: `input`,
+      store: true,
+      message: `What is the name of your pull secret?`,
+      validate: util.validateImagePullSecret,
+      when: answers => {
+         let kube = util.isKubernetes(answers.target ? answers.target : obj.options.target);
+         let defined = obj.options.imagePullSecret === undefined;
+
+         return kube && defined;
+      }
+   };
+}
+
+function clusterName(obj) {
+   return {
+      name: `clusterName`,
+      type: `input`,
+      store: true,
+      message: "What is your cluster name?",
+      validate: util.validateClusterName,
+      when: answers => {
+         return (answers.target === `k8s` || obj.target === `k8s`) && obj.options.clusterName === undefined;
+      }
+   };
+}
+
+function clusterResourceGroup(obj) {
+   return {
+      name: `clusterResourceGroup`,
+      type: `input`,
+      store: true,
+      message: "What is your cluster resource group name?",
+      validate: util.validateClusterResourceGroup,
+      when: answers => {
+         return (answers.target === `k8s` || obj.target === `k8s`) && obj.options.clusterResourceGroup === undefined;
+      }
+   };
+}
+
 module.exports = {
    tfs: tfs,
    pat: pat,
@@ -522,6 +565,7 @@ module.exports = {
    dockerHost: dockerHost,
    tfsVersion: tfsVersion,
    profileName: profileName,
+   clusterName: clusterName,
    dockerPorts: dockerPorts,
    azureSubList: azureSubList,
    customFolder: customFolder,
@@ -534,8 +578,10 @@ module.exports = {
    applicationXamarinType: applicationXamarinType,
    applicationName: applicationName,
    packageName: packageName,
+   imagePullSecret: imagePullSecret,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,
+   clusterResourceGroup: clusterResourceGroup,
    dockerRegistryPassword: dockerRegistryPassword,
    dockerRegistryUsername: dockerRegistryUsername
 };

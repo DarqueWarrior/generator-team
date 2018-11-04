@@ -59,6 +59,11 @@ function runTests(iteration) {
    var dockerRegistryId = process.env.DOCKER_REGISTRY_USERNAME || ` `;
    var dockerRegistryPassword = process.env.DOCKER_REGISTRY_PASSWORD || ` `;
 
+   // K8s
+   var imagePullSecret = ` `;
+   var clusterName = ` `;
+   var clusterResourceGroup = ` `;
+
    // The number of levels up from the folder the test are executed in to the 
    // folder where the repository was cloned.  This is not the same when run locally
    // vs. run on a build machine. 
@@ -73,7 +78,9 @@ function runTests(iteration) {
          let cmd = `yo team ${applicationType} ${applicationName} ${tfs} ${azureSub} "${azureSubId}" ` +
             `"${tenantId}" "${servicePrincipalId}" "${queue}" "${target}" ${installDep} ` +
             `"${groupId}" "${dockerHost}" "${dockerCertPath}" "${dockerRegistry}" ` +
-            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" "${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}"`;
+            `"${dockerRegistryId}" "${dockerPorts}" "${dockerRegistryPassword}" ` +
+            `"${servicePrincipalKey}" ${pat} "${functionName}" "${apiKey}" "${customFolder}" ` +
+            `"${imagePullSecret}" "${clusterName}" "${clusterResourceGroup}"`;
 
          testUtils.log(`run command: ${cmd}`);
 

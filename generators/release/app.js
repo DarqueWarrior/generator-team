@@ -53,7 +53,7 @@ function run(args, gen, done) {
             },
             function (inParallel) {
                // Get the package management feed
-               if (util.needsapiKey({}, args)) {
+               if (util.needsApiKey({}, args)) {
                   util.findPackageFeed(args.tfs, teamProject.name, token, gen, function (err, feed) {
                      moduleFeed = feed;
                      inParallel(err, moduleFeed);
@@ -64,7 +64,7 @@ function run(args, gen, done) {
             },
             function (inParallel) {
                // Get the PowerShell Gallery connection
-               if (util.needsapiKey({}, args)) {
+               if (util.needsApiKey({}, args)) {
                   util.findNuGetServiceEndpoint(args.tfs, teamProject.id, token, gen, function (err, conn) {
                      powerShellGallery = conn;
                      inParallel(err, powerShellGallery);
@@ -118,6 +118,7 @@ function run(args, gen, done) {
             approverId: approverId,
             teamProject: teamProject,
             template: args.releaseJson,
+            clusterName: args.clusterName,
             dockerPorts: args.dockerPorts,
             dockerHostEndpoint: dockerEndpoint,
             dockerRegistry: args.dockerRegistry,
@@ -126,6 +127,7 @@ function run(args, gen, done) {
             dockerRegistryId: args.dockerRegistryId,
             approverDisplayName: approverDisplayName,
             dockerRegistryEndpoint: dockerRegistryEndpoint,
+            clusterResourceGroup: args.clusterResourceGroup,
             endpoint: azureEndpoint ? azureEndpoint.id : null,
             dockerRegistryPassword: args.dockerRegistryPassword
          };
@@ -143,7 +145,8 @@ function run(args, gen, done) {
       if (err) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.env.error(err.message);
+         gen.log.info(err.message);
+         gen.env.error();
       }
    });
 }
@@ -237,7 +240,9 @@ function createRelease(args, gen, callback) {
 
    // Qualify the image name with the dockerRegistryId for docker hub
    // or the server name for other registries. 
-   let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, args.dockerRegistryEndpoint);
+   let endPoint = args.dockerRegistryEndpoint;
+   let url = (endPoint && endPoint.authorization) ? endPoint.authorization.parameters.registry : undefined;
+   let dockerNamespace = util.getImageNamespace(args.dockerRegistryId, url);
 
    // Azure website names have to be unique.  So we gen a GUID and addUserAgent
    // a portion to the site name to help with that.
@@ -268,7 +273,9 @@ function createRelease(args, gen, callback) {
       '{{containerregistry_username}}': args.dockerRegistryId,
       '{{containerregistry_password}}': args.dockerRegistryPassword,
       '{{dockerRegistryEndpoint}}': args.dockerRegistryEndpoint ? args.dockerRegistryEndpoint.id : null,
-      '{{ReleaseDefName}}': releaseDefName
+      '{{ReleaseDefName}}': releaseDefName,
+      '{{ClusterName}}': args.clusterName,
+      '{{ClusterResourceGroup}}': args.clusterResourceGroup
    };
 
    var contents = fs.readFileSync(args.template, 'utf8');
@@ -310,6 +317,7 @@ function createRelease(args, gen, callback) {
                   message = "! Make sure the Apple App Store extension is installed (by Microsoft)";
                }
                 finished(new Error("x " + resp.body.message), null);
+               finished(new Error(resp.body), null);
             } else if (resp.statusCode >= 300) {
                status = "in progress";
                finished(err, null);

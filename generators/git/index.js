@@ -1,4 +1,6 @@
+const fs = require(`fs`);
 const path = require(`path`);
+const uuidV4 = require('uuid/v4');
 const util = require(`../app/utility`);
 const argUtils = require(`../app/args`);
 const prompts = require(`../app/prompt`);
@@ -46,14 +48,33 @@ module.exports = class extends Generator {
          // and commit.
          this.log.ok(`Cloning repository ${util.getFullURL(this.tfs)}/_git/${this.applicationName}`);
 
-         // By adding the PAT right after https:// I can clone a repo without 
-         // asking user for creds
+         // By adding the PAT right after https:// I can clone a repository without 
+         // asking user for credentials 
          let url = `${util.getFullURL(this.tfs)}/_git/${this.applicationName}`;
          url = url.replace(`https://`, `https://${this.pat}@`);
 
+         // Using a temp log file to redirect the output of the 
+         // git clone command below.  If I don't do this any string
+         // written will not match the format of the rest of the data.
+         // This way I can output it as info using yeoman log method.
+         // The temp log filename needs to be unique.  So we gen a GUID 
+         // and use part of it in the name.
+         let uuid = uuidV4();
+         var gitLogFile = `yoTeamGitLog${uuid.substring(0, 8)}.txt`;
+         var fd = fs.openSync(gitLogFile, 'w')
+
          this.spawnCommandSync(`git`, [`clone`, `-q`, url], {
-            stdio: ['pipe', 'pipe', process.stderr]
+            stdio: ['pipe', 'pipe', fd]
          });
+
+         // Log output as info
+         let output = fs.readFileSync(gitLogFile).toString().trim();
+
+         if (output != '') {
+            this.log.info(output);
+         }
+
+         fs.unlinkSync(gitLogFile);
       }
    }
 

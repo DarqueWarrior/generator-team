@@ -65,7 +65,24 @@ You can debug the generator using [VS Code](http://code.visualstudio.com/). You 
 
 ## Revision history
 
+## October 2018
+
+### 0.4.10
+
+Supports K8s
+
 ## August 2018
+
+### 0.4.9
+
+Does not require Docker Host when Hosted Ubuntu Agent is selected.
+
+Node sub generator changes
+
+- Wires up Application Insights
+- Switched to Yarn
+- All packages were updated
+- Home controller implements IoC to ease testing
 
 ### 0.4.8
 
