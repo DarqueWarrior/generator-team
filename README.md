@@ -51,7 +51,41 @@ It allows you to deploy to the following platforms:
 
 `npm install generator-team`
 
-You can read how to use it at [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
+
+## Usage 
+Yo team is written in such a manner that it will prompt you for variables it needs if the were not passed as paramaters.
+Interactive usage: `yo team`, this wil run all the yo team functionality in interactive mode.
+ 
+ The team generator usages smaller generators to do the brunt work
+
+ If you want to use yo team in a more fine grained way, you can discover the underlying generators using the `yo --generators` command the output typically looks like
+
+ ```
+ > yo --generators
+Available Generators:
+
+  team
+    asp
+    aspFull
+    azure
+    build
+    docker
+    feed
+    git
+    java
+    k8s
+    node
+    nuget
+    pipeline
+    powershell
+    profile
+    project
+    registry
+    release
+ ```
+
+
+Another source for how to use yo team is at: [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
 
 ## To test
 
