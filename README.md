@@ -83,8 +83,6 @@ Available Generators:
     registry
     release
  ```
-
-
 Another source for how to use yo team is at: [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
 
 ## To test
