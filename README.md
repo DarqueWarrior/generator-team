@@ -87,7 +87,10 @@ Available Generators:
 
 If you only want to create a project in Azure DevOps you can call
 
-`yo team:project --applicationName $projectName --tfs $organizationUrl --pat $azureDevOpsPersonalAccessToken`
+`yo team:project --applicationName $projectName --tfs $organizationName --pat $azureDevOpsPersonalAccessToken`
+
+*IMPORTANT: the organization name must be the name of organization as used in the url (i.e. dev.azure.com/ORGANIZATION/project) not the full URL, otherwise it will not work*
+
 Another source for how to use yo team is at: [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
 
 ## To test
