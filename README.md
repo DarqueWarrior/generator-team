@@ -57,9 +57,9 @@ It allows you to deploy to the following platforms:
 Yo team is written in such a manner that it will prompt you for variables it needs if the were not passed as paramaters.
 Interactive usage: `yo team`, this wil run all the yo team functionality in interactive mode.
  
- The team generator usages smaller generators to do the brunt work
+The team generator uses smaller generators to do the brunt work
 
- If you want to use yo team in a more fine grained way, you can discover the underlying generators using the `yo --generators` command the output typically looks like
+If you want to use yo team in a more fine grained way, you can discover the underlying generators using the `yo --generators` command the output typically looks like
 
  ```
  > yo --generators
@@ -85,11 +85,17 @@ Available Generators:
     release
  ```
 
-If you only want to create a project in Azure DevOps you can call
+If you want use yo team from the commandline, you can discover the parameters that are needed to call a subgenerator by using -h e.g.: `yo team:project -h`
+
+IMPORTANT: the organization name (-tfs parameter) must be the namepart of the organization as used in the url (i.e. dev.azure.com/**ORGANIZATION**/) not the full URL!
+
+For example: if you only want to create a project in Azure DevOps you can call
 
 `yo team:project --applicationName $projectName --tfs $organizationName --pat $azureDevOpsPersonalAccessToken`
 
-*IMPORTANT: the organization name must be the name of organization as used in the url (i.e. dev.azure.com/ORGANIZATION/project) not the full URL, otherwise it will not work*
+If you want to add a pipeline to the create project, you can use
+
+`yo team:pipeline --applicationName $projectName --tfs $organizationName --pat $azureDevOpsPersonalAccessToken --type $appType --queue $agentQueue --target $deployTarget --azureSubId $azureSubscriptionId --servicePrincipalId $servicePrincipleID --servicePrincipalKey $servicePrincipalKey --azureSub $azureSubscriptionName --tenantId $azureAdTenantId`
 
 Another source for how to use yo team is at: [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
 
