@@ -54,7 +54,7 @@ It allows you to deploy to the following platforms:
 
 ## Usage 
 
-Yo team is written in such a manner that it will prompt you for variables it needs if the were not passed as paramaters.
+Yo team is written in such a manner that it will prompt you for variables it needs if they were not passed as paramaters.
 Interactive usage: `yo team`, this wil run all the yo team functionality in interactive mode.
  
 The team generator uses smaller generators to do the brunt work
@@ -96,6 +96,13 @@ For example: if you only want to create a project in Azure DevOps you can call
 If you want to add a pipeline to the create project, you can use
 
 `yo team:pipeline --applicationName $projectName --tfs $organizationName --pat $azureDevOpsPersonalAccessToken --type $appType --queue $agentQueue --target $deployTarget --azureSubId $azureSubscriptionId --servicePrincipalId $servicePrincipleID --servicePrincipalKey $servicePrincipalKey --azureSub $azureSubscriptionName --tenantId $azureAdTenantId`
+
+The `-appType` parameter describes the kind of App you want to create (it's also the name of a generator):
+* aspFull, .Net Core application
+* java, Java application
+* powershell, Powershell module
+* etc.
+
 
 Another source for how to use yo team is at: [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
 
