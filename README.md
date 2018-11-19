@@ -53,6 +53,7 @@ It allows you to deploy to the following platforms:
 
 
 ## Usage 
+
 Yo team is written in such a manner that it will prompt you for variables it needs if the were not passed as paramaters.
 Interactive usage: `yo team`, this wil run all the yo team functionality in interactive mode.
  
@@ -83,6 +84,10 @@ Available Generators:
     registry
     release
  ```
+
+If you only want to create a project in Azure DevOps you can call
+
+`yo team:project --applicationName $projectName --tfs $organizationUrl --pat $azureDevOpsPersonalAccessToken`
 Another source for how to use yo team is at: [DonovanBrown.com](http://donovanbrown.com/post/yo-Team).
 
 ## To test
