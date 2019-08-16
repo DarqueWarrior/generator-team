@@ -45,6 +45,10 @@ describe(`team:asp docker`, function () {
       assert.fileContent(`aspUnitTest/src/aspUnitTest/Dockerfile`, `ENTRYPOINT dotnet aspUnitTest.dll`);
       assert.fileContent(`aspUnitTest/src/aspUnitTest/aspUnitTest.csproj`, `<TargetFramework>netcoreapp2.0</TargetFramework>`);
    });
+
+   after(function () {
+      spawnStub.restore();
+   });
 });
 
 describe(`team:asp paas`, function () {
