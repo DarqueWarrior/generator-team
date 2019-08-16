@@ -298,10 +298,7 @@ function createRelease(args, gen, callback) {
    // infinite loop on this code waiting on RM to become ready.
    var status = '';
 
-   async.whilst(
-      function () {
-         return status !== 'failed' && status !== 'succeeded';
-      },
+   async.doWhilst(      
       function (finished) {
          request(options, function (err, resp, body) {
 
@@ -316,6 +313,9 @@ function createRelease(args, gen, callback) {
                finished(err, body);
             }
          });
+      },
+      function () {
+         return status !== 'failed' && status !== 'succeeded';
       },
       function (err, results) {
          callback(err, results);

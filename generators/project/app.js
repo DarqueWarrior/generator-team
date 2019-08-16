@@ -52,16 +52,16 @@ function findOrCreateProject(gen, callback) {
                var status = '';
 
                // Wait for Team Services to report that the project was created.
-               // Use whilst to keep calling the the REST API until the status is
+               // Use doWhilst to keep calling the the REST API until the status is
                // either failed or succeeded.
-               async.whilst(
-                  function () { return status !== 'failed' && status !== 'succeeded'; },
+               async.doWhilst(
                   function (finished) {
                      util.checkStatus(teamProject.url, token, gen, function (err, stat) {
                         status = stat.status;
                         finished(err);
                      });
                   },
+                  function () { return status !== 'failed' && status !== 'succeeded'; },
                   thisSeries
                );
             },

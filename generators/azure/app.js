@@ -137,20 +137,20 @@ function createAzureServiceEndpoint(account, projectId, sub, token, gen, callbac
 
          var status = '';
 
-         async.whilst(
-            function () { return status !== 'Failed' && status !== 'Ready'; },
+         async.doWhilst(
             function (finished) {
                util.checkStatus(url, token, gen, function (err, ep) {
-
+                  
                   if (!err) {
                      // When there is an error ep may be undefined and 
                      // this line would throw
                      status = ep.operationStatus.state;
                   }
-
+                  
                   finished(err, ep);
                });
             },
+            function () { return status !== 'Failed' && status !== 'Ready'; },
             function (err, body) {
 
                if (!err && body.operationStatus.state === 'Failed') {
