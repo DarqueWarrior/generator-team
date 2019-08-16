@@ -51,6 +51,7 @@ describe(`app:index`, function () {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
+         .withLocalConfig({ lang: 'en' }) // Mock the local config
          .on(`error`, function (e) {
             assert.fail(e);
          });
@@ -63,8 +64,8 @@ describe(`app:index`, function () {
          [helpers.createDummyGenerator(), `team:asp`],
          [helpers.createDummyGenerator(), `team:git`],
          [helpers.createDummyGenerator(), `team:feed`],
-         [helpers.createDummyGenerator(), `team:azure`],
          [helpers.createDummyGenerator(), `team:nuget`],
+         [helpers.createDummyGenerator(), `team:azure`],
          [helpers.createDummyGenerator(), `team:build`],
          [helpers.createDummyGenerator(), `team:project`],
          [helpers.createDummyGenerator(), `team:release`],
@@ -101,6 +102,7 @@ describe(`app:index`, function () {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
+         .withLocalConfig({ lang: 'en' }) // Mock the local config
          .on(`error`, function (e) {
             assert.fail(e);
          });
@@ -151,6 +153,7 @@ describe(`app:index`, function () {
             dockerRegistry, dockerRegistryId, dockerPorts, dockerRegistryPassword,
             servicePrincipalKey, pat
          ])
+         .withLocalConfig({ lang: 'en' }) // Mock the local config
          .on(`error`, function (e) {
             assert.fail(e);
          });
@@ -304,7 +307,7 @@ describe(`app:index`, function () {
          });
    });
 
-   it(`prompts using fake dependencies powershell`, function () {
+   it.only(`prompts using fake dependencies powershell`, function () {
       let deps = [
          [helpers.createDummyGenerator(), `team:k8s`],
          [helpers.createDummyGenerator(), `team:asp`],
@@ -318,6 +321,7 @@ describe(`app:index`, function () {
          [helpers.createDummyGenerator(), `team:release`],
          [helpers.createDummyGenerator(), `team:registry`],
          [helpers.createDummyGenerator(), `team:powershell`]
+         //path.join(__dirname, `../../generators/powershell`) // Real Dependency
       ];
 
       var cleanUp = function () {
@@ -352,7 +356,6 @@ describe(`app:index`, function () {
          })
          .on(`end`, function (e) {
             cleanUp();
-         }
-         );
+         });
    });
 });
