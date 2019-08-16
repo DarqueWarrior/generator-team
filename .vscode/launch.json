@@ -39,7 +39,7 @@
          "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
          "args": [
             "-u",
-            "tdd",
+            "bdd",
             "--timeout",
             "999999",
             "--colors",
@@ -55,7 +55,7 @@
          "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
          "args": [
             "-u",
-            "tdd",
+            "bdd",
             "--timeout",
             "999999",
             "--colors",
