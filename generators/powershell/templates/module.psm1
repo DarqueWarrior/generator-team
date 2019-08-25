@@ -1,22 +1,11 @@
-# Dot sources all the files in Public and Internal
+# Dot sources all the files in Public, Private and Classes
 # Then reads the file names in Public and exports them
 # as the fucntions for the module.
-# To export an alias you have to manually add it to the 
+# To export an alias you have to manually add it to the
 # Export-ModuleMember below.
-# The module manifest still needs to be updated for best
-# performance it does not use wildcard exports.
-$functionFolders = @('Public', 'Internal', 'Classes')
-ForEach ($folder in $functionFolders) {
-   $folderPath = Join-Path -Path $PSScriptRoot -ChildPath $folder
-   If (Test-Path -Path $folderPath) {
-      Write-Verbose -Message "Importing from $folder"
-      $functions = Get-ChildItem -Path $folderPath -Filter '*.ps1' 
-      ForEach ($function in $functions) {
-         Write-Verbose -Message "  Importing $($function.BaseName)"
-         . $($function.FullName)
-      }
-   }    
-}
+# The module manifest is using wildcard exports for functions
+# and alias so you only have to name the files correctly.
 
-$publicFunctions = (Get-ChildItem -Path "$PSScriptRoot\Public" -Filter '*.ps1').BaseName
-Export-ModuleMember -Function $publicFunctions
+# Files are built using a script in the root folder
+. "$PSScriptRoot\<%= name %>.classes.ps1"
+. "$PSScriptRoot\<%= name %>.functions.ps1"

@@ -10,7 +10,7 @@ module.exports = class extends Generator {
       // Calling the super constructor is important so our generator is correctly set up
       super(args, opts);
 
-      // Order is important 
+      // Order is important
       argUtils.applicationName(this);
       argUtils.functionName(this);
    }
@@ -54,30 +54,54 @@ module.exports = class extends Generator {
 
       this.fs.copy(`${src}/readme.md`, `${root}/readme.md`);
       this.fs.copy(`${src}/gitignore`, `${root}/.gitignore`);
-      this.fs.copy(`${src}/module.psm1`, `${root}/${this.applicationName}.psm1`);
+      this.fs.copy(`${src}/Merge-File.ps1`, `${root}/Merge-File.ps1`);
+      this.fs.copyTpl(`${src}/Build-Module.ps1`, `${root}/Build-Module.ps1`, tokens);
+
+      root = `${this.applicationName}/Source`;
+
+      this.fs.copyTpl(`${src}/module.psm1`, `${root}/${this.applicationName}.psm1`, tokens);
       this.fs.copyTpl(`${src}/module.psd1`, `${root}/${this.applicationName}.psd1`, tokens);
-      
+      this.fs.copyTpl(`${src}/_functions.json`, `${root}/_functions.json`, tokens);
+
       // Classes
       src = `${this.sourceRoot()}/Classes`;
-      root = `${this.applicationName}/Classes`;
+      root = `${this.applicationName}/Source/Classes`;
 
-      this.fs.copy(`${src}/Classes.ps1`, `${root}/Classes.ps1`);
+      this.fs.copyTpl(`${src}/_classes.json`, `${root}/_classes.json`, tokens);
 
-      // Internal
-      src = `${this.sourceRoot()}/Internal`;
-      root = `${this.applicationName}/Internal`;
+      // Formats
+      src = `${this.sourceRoot()}/Formats`;
+      root = `${this.applicationName}/Source/Formats`;
 
-      this.fs.copyTpl(`${src}/Internal.ps1`, `${root}/Internal.ps1`, tokens);
-      
+      this.fs.copyTpl(`${src}/_formats.json`, `${root}/_formats.json`, tokens);
+
+      // Private
+      src = `${this.sourceRoot()}/Private`;
+      root = `${this.applicationName}/Source/Private`;
+
+      this.fs.copyTpl(`${src}/Common.ps1`, `${root}/Common.ps1`, tokens);
+
       // Public
       src = `${this.sourceRoot()}/Public`;
-      root = `${this.applicationName}/Public`;
+      root = `${this.applicationName}/Source/Public`;
 
       this.fs.copyTpl(`${src}/function.ps1`, `${root}/${this.functionName}.ps1`, tokens);
 
+      // Types
+      src = `${this.sourceRoot()}/Types`;
+      root = `${this.applicationName}/Source/Types`;
+
+      this.fs.copyTpl(`${src}/_types.json`, `${root}/_types.json`, tokens);
+
+      // About
+      src = `${this.sourceRoot()}/en-US`;
+      root = `${this.applicationName}/Source/en-US`;
+
+      this.fs.copyTpl(`${src}/about.help.txt`, `${root}/about_${this.applicationName}.help.txt`, tokens);
+
       // Tests
       src = `${this.sourceRoot()}/Tests`;
-      root = `${this.applicationName}/Tests`;
+      root = `${this.applicationName}/unit/test`;
 
       this.fs.copyTpl(`${src}/function.tests.ps1`, `${root}/${this.functionName}.tests.ps1`, tokens);
 
@@ -91,7 +115,6 @@ module.exports = class extends Generator {
       this.fs.copyTpl(`${src}/function.md`, `${root}/${this.functionName}.md`, tokens);
       this.fs.copyTpl(`${src}/index.md`, `${root}/index.md`, tokens);
       this.fs.copyTpl(`${src}/readme.md`, `${root}/readme.md`, tokens);
-      this.fs.copyTpl(`${src}/about.md`, `${root}/about_${this.applicationName}.md`, tokens);
       this.fs.copy(`${src}/gen-help.ps1`, `${root}/gen-help.ps1`);
    }
 };

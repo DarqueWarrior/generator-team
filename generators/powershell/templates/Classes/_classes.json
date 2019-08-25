@@ -1,0 +1,5 @@
+{
+   "outputFile": "<%= name %>.classes.ps1",
+   "fileType": "classes",
+   "files": []
+}

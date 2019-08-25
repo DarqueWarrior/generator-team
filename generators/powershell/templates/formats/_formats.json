@@ -1,0 +1,5 @@
+{
+   "outputFile": "<%= name %>.format.ps1xml",
+   "fileType": "formats",
+   "files": []
+}

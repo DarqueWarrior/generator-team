@@ -19,12 +19,20 @@ foreach ($file in $files) {
    # to avoid sending any unwanted data down the pipeline.
    $null = $sb.Append("### [$($file.BaseName)]($($file.Name))`r`n`r`n")
    $null = $sb.Append("<!-- #include ""./synopsis/$($file.Name)"" -->`r`n`r`n")
+
+   # I found files where the name of the file did not match the top most
+   # title in the file. This will cause issues trying to load help for that
+   # function. So test that you can find # {FileName} in the file.
+   $stringToFind = "# $($file.BaseName)"
+   if ($null -eq $(Get-ChildItem $($file.Name) | Select-String $stringToFind)) {
+      Write-Error "Title cannot be found in $($file.Name). Make sure the first header is # $($file.BaseName)`n$($File.Directory)\$File" -ErrorAction Stop
+   }
 }
 
 Set-Content -Path files.md -Value $sb.ToString()
 
 Write-Output 'Merging Markdown files'
-if(-not (Get-Module Trackyon.Markdown -ListAvailable)) {
+if (-not (Get-Module Trackyon.Markdown -ListAvailable)) {
    Write-Verbose 'Installing Trackyon.Markdown'
    Install-Module Trackyon.Markdown -Scope CurrentUser -Force
 }
@@ -33,12 +41,12 @@ merge-markdown $PSScriptRoot $PSScriptRoot\..\docs
 
 Write-Output 'Creating new file'
 
-if(-not (Get-Module platyPS -ListAvailable)) {
+if (-not (Get-Module platyPS -ListAvailable)) {
    Write-Verbose 'Installing platyPS'
    Install-Module platyPS -Scope CurrentUser -Force
 }
 
-New-ExternalHelp ..\docs -OutputPath ..\en-US -Force
+New-ExternalHelp ..\docs -OutputPath ..\Source\en-US -Force
 
 # Run again and strip header
 Write-Output 'Cleaning doc files for publishing'
