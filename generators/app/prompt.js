@@ -1,4 +1,4 @@
-// Many of the generators use the same prompts in their prompting stage so 
+// Many of the generators use the same prompts in their prompting stage so
 // these functions make it easy to reuse in other generators.
 // This removed a lot of duplicate code and makes sure the prompts are all
 // handled in the same way in each generator.
@@ -37,7 +37,7 @@ function tfsVersion(obj) {
       choices: util.getTFSVersion,
       message: `Select an API Version.`,
       when: answers => {
-         // You don't need this if you are just listing or deleting a 
+         // You don't need this if you are just listing or deleting a
          // profile
          if (answers.profileCmd === `list` || answers.profileCmd === `delete`) {
             return false;
@@ -97,7 +97,7 @@ function tfs(obj) {
             answers.tfs = obj.options.tfs;
          }
 
-         // You don't need this if you are just listing or deleting a 
+         // You don't need this if you are just listing or deleting a
          // profile
          if (answers.profileCmd === `list` || answers.profileCmd === `delete`) {
             return false;
@@ -116,7 +116,7 @@ function pat(obj) {
       message: util.getPATPrompt,
       validate: util.validatePersonalAccessToken,
       when: answers => {
-         // You don't need this if you are just listing or deleting a 
+         // You don't need this if you are just listing or deleting a
          // profile
          if (answers.profileCmd === `list` || answers.profileCmd === `delete`) {
             return false;
@@ -208,7 +208,7 @@ function functionName(obj) {
       message: `What is the name of your function?`,
       validate: util.validateFunctionName,
       when: answers => {
-         return obj.options.functionName === undefined && util.needsApiKey(answers, obj.options) === true;
+         return obj.options.functionName === undefined;
       }
    };
 }
@@ -427,13 +427,13 @@ function creationMode(obj) {
       message: "Select a Service Principal Creation Mode",
       default: `Automatic`,
       choices: [{
-            name: `Automatic`,
-            value: `Automatic`
-         },
-         {
-            name: `Manual`,
-            value: `Manual`
-         }
+         name: `Automatic`,
+         value: `Automatic`
+      },
+      {
+         name: `Manual`,
+         value: `Manual`
+      }
       ],
       when: answers => {
          return util.isPaaS(answers, obj) && obj.options.azureSub === undefined && util.isVSTS(answers.tfs);
@@ -449,13 +449,13 @@ function installDep(obj) {
       message: "Install dependencies?",
       default: `false`,
       choices: [{
-            name: `Yes`,
-            value: `true`
-         },
-         {
-            name: `No`,
-            value: `false`
-         }
+         name: `Yes`,
+         value: `true`
+      },
+      {
+         name: `No`,
+         value: `false`
+      }
       ],
       when: answers => {
          return answers.type !== `aspFull` && answers.type !== `powershell` && obj.options.installDep === undefined;
