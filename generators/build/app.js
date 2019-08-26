@@ -77,7 +77,7 @@ function run(args, gen, done) {
          }
 
          if (err) {
-            // To get the stacktrace run with the --debug built-in option when 
+            // To get the stacktrace run with the --debug built-in option when
             // running the generator.
             gen.log.info(err.message);
             gen.env.error();
@@ -126,7 +126,7 @@ function createBuild(account, teamProject, token, queues,
       let temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted vs2017') !== -1; });
       windows = temp.id;
 
-      temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted linux') !== -1; });
+      temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted ubuntu') !== -1; });
       linux = temp.id;
 
       temp = queues.find(function (i) { return i.name.toLowerCase().indexOf('hosted macos') !== -1; });
@@ -141,7 +141,7 @@ function createBuild(account, teamProject, token, queues,
    }
 
    // Qualify the image name with the dockerRegistryId for docker hub
-   // or the server name for other registries. 
+   // or the server name for other registries.
    let endPoint = dockerRegistryEndpoint;
    let url = (endPoint && endPoint.authorization) ? endPoint.authorization.parameters.registry : undefined;
    let dockerNamespace = util.getImageNamespace(dockerRegistryId, url);
@@ -192,7 +192,7 @@ function createBuild(account, teamProject, token, queues,
    request(options, function (error, response, body) {
       // Check the response for errors
       if (response.statusCode >= 400) {
-         // To get the stacktrace run with the --debug built-in option when 
+         // To get the stacktrace run with the --debug built-in option when
          // running the generator.
          gen.log.info(response.body.message.replace('\n', ' '));
          gen.env.error();
@@ -232,7 +232,7 @@ function getBuild(args, callback) {
 
 module.exports = {
 
-   // Exports the portions of the file we want to share with files that require 
+   // Exports the portions of the file we want to share with files that require
    // it.
 
    run: run,
