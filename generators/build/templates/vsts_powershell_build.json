@@ -25,6 +25,31 @@
                   "enabled": true,
                   "continueOnError": false,
                   "alwaysRun": false,
+                  "displayName": "Build Module",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "filePath",
+                     "filePath": "Build-Module.ps1",
+                     "arguments": "",
+                     "script": "# Write your PowerShell commands here.\n\nWrite-Host \"Hello World\"\n",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "pwsh": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
                   "displayName": "Install Dependencies",
                   "timeoutInMinutes": 0,
                   "condition": "succeeded()",
@@ -37,7 +62,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\dist\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -85,7 +110,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "Import-Module .\\*.psd1\nInvoke-Pester -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml -passthru",
+                     "script": "Import-Module .\\dist\\*.psd1\nInvoke-Pester -Script .\\unit -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml -passthru",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -140,6 +165,31 @@
                   "enabled": true,
                   "continueOnError": false,
                   "alwaysRun": false,
+                  "displayName": "Build Module",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "filePath",
+                     "filePath": "Build-Module.ps1",
+                     "arguments": "",
+                     "script": "# Write your PowerShell commands here.\n\nWrite-Host \"Hello World\"\n",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "pwsh": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
                   "displayName": "Install Dependencies",
                   "timeoutInMinutes": 0,
                   "condition": "succeeded()",
@@ -152,7 +202,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\dist\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -200,7 +250,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "Import-Module .\\*.psd1\nInvoke-Pester -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml -passthru",
+                     "script": "Import-Module .\\dist\\*.psd1\nInvoke-Pester -Script .\\unit -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml -passthru",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -255,6 +305,31 @@
                   "enabled": true,
                   "continueOnError": false,
                   "alwaysRun": false,
+                  "displayName": "Build Module",
+                  "timeoutInMinutes": 0,
+                  "condition": "succeeded()",
+                  "task": {
+                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
+                     "versionSpec": "2.*",
+                     "definitionType": "task"
+                  },
+                  "inputs": {
+                     "targetType": "filePath",
+                     "filePath": "Build-Module.ps1",
+                     "arguments": "-buildHelp",
+                     "script": "# Write your PowerShell commands here.\n\nWrite-Host \"Hello World\"\n",
+                     "errorActionPreference": "stop",
+                     "failOnStderr": "false",
+                     "ignoreLASTEXITCODE": "false",
+                     "pwsh": "false",
+                     "workingDirectory": ""
+                  }
+               },
+               {
+                  "environment": {},
+                  "enabled": true,
+                  "continueOnError": false,
+                  "alwaysRun": false,
                   "displayName": "Update Build Number",
                   "timeoutInMinutes": 0,
                   "condition": "succeeded()",
@@ -267,35 +342,11 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "$b = $(Build.BuildId)\n$c = Get-Content .\\*.psd1\n$v = $c -match 'ModuleVersion'\n\"$v\" -match '\\d+\\.\\d+\\.\\d+' | Out-Null\n$v = \"$($matches[0]).$b\"\nWrite-Host \"##vso[build.updatebuildnumber]$v\"",
+                     "script": "$b = $(Build.BuildId)\n$c = Get-Content .\\dist\\*.psd1\n$v = $c -match 'ModuleVersion'\n\"$v\" -match '\\d+\\.\\d+\\.\\d+' | Out-Null\n$v = \"$($matches[0]).$b\"\nWrite-Host \"##vso[build.updatebuildnumber]$v\"",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
                      "workingDirectory": ""
-                  }
-               },
-               {
-                  "environment": {},
-                  "enabled": true,
-                  "continueOnError": false,
-                  "alwaysRun": false,
-                  "displayName": "Build Help",
-                  "timeoutInMinutes": 0,
-                  "condition": "succeeded()",
-                  "task": {
-                     "id": "e213ff0f-5d5c-4791-802d-52ea3e7be1f1",
-                     "versionSpec": "2.*",
-                     "definitionType": "task"
-                  },
-                  "inputs": {
-                     "targetType": "filePath",
-                     "filePath": ".docs/gen-help.ps1",
-                     "arguments": "-verbose",
-                     "script": "# Write your powershell commands here.\n\nWrite-Host \"Hello World\"\n\n# Use the environment variables input below to pass secret variables to this script.",
-                     "errorActionPreference": "stop",
-                     "failOnStderr": "false",
-                     "ignoreLASTEXITCODE": "false",
-                     "workingDirectory": ".docs"
                   }
                },
                {
@@ -315,7 +366,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
+                     "script": "# Load the psd1 file so you can read the required modules and install them\n$manifest = Import-PowerShellDataFile .\\dist\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -363,7 +414,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "# Has to happen in this task for it to take effect\n# Load the psd1 file so you can read the required modules and import them\n$manifest = Import-PowerShellDataFile .\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}\n\n$r = Invoke-ScriptAnalyzer –Path . –Recurse | Where-Object severity -eq \"Warning\"\n$r | ForEach-Object {Write-Host \"##vso[task.logissue type=$($_.Severity);sourcepath=$($_.ScriptPath);linenumber=$($_.Line);columnnumber=$($_.Column);]$($_.Message)\"}",
+                     "script": "# Has to happen in this task for it to take effect\n# Load the psd1 file so you can read the required modules and import them\n$manifest = Import-PowerShellDataFile .\\dist\\*.psd1\n\n# Install each module\nif ($manifest.RequiredModules) {\n   $manifest.RequiredModules | ForEach-Object { Install-Module -Name $_ -Repository PSGallery -F -Scope CurrentUser }\n}\n\n$r = Invoke-ScriptAnalyzer –Path .\\dist\\ –Recurse | Where-Object severity -eq \"Warning\"\n$r | ForEach-Object {Write-Host \"##vso[task.logissue type=$($_.Severity);sourcepath=$($_.ScriptPath);linenumber=$($_.Line);columnnumber=$($_.Column);]$($_.Message)\"}",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -411,7 +462,7 @@
                      "targetType": "inline",
                      "filePath": "",
                      "arguments": "",
-                     "script": "Import-Module .\\*.psd1\nInvoke-Pester -CodeCoverage *.ps*1 -CodeCoverageOutputFile coverage.xml -CodeCoverageOutputFileFormat JaCoCo -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml",
+                     "script": "Import-Module .\\dist\\*.psd1\nInvoke-Pester -Script .\\unit -CodeCoverage .\\dist\\*.ps*1 -CodeCoverageOutputFile coverage.xml -CodeCoverageOutputFileFormat JaCoCo -EnableExit -Strict -OutputFile test-results.xml -OutputFormat NUnitXml\n",
                      "errorActionPreference": "stop",
                      "failOnStderr": "false",
                      "ignoreLASTEXITCODE": "false",
@@ -477,8 +528,8 @@
                      "definitionType": "task"
                   },
                   "inputs": {
-                     "SourceFolder": "",
-                     "Contents": "*.psd1\n*.psm1\nREADME.md\n.gitignore\nen-US\\**\nPublic\\**\nClasses\\**\nInternal\\**\nformats\\**\ntypes\\**",
+                     "SourceFolder": "./dist",
+                     "Contents": "**",
                      "TargetFolder": "$(build.artifactstagingdirectory)/module",
                      "CleanTargetFolder": "false",
                      "OverWrite": "false",

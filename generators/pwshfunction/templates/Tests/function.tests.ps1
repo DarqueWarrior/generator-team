@@ -1,6 +1,6 @@
 Set-StrictMode -Version Latest
 
-. "$PSScriptRoot\..\Public\<%= functionName %>.ps1"
+. "$PSScriptRoot\..\..\Source\Public\<%= functionName %>.ps1"
 
 Describe '<%= functionName %>' {
    Context 'Execute' {

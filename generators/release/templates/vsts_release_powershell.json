@@ -2,9 +2,6 @@
    "name": "{{ReleaseDefName}}",
    "source": 2,
    "variables": {
-      "EMAIL": {
-         "value": "dlbm3@hotmail.com"
-      },
       "NuGetApiKey": {
          "value": null,
          "isSecret": true
@@ -12,9 +9,6 @@
       "PKG_PAT": {
          "value": null,
          "isSecret": true
-      },
-      "REPO_URL": {
-         "value": "https://loecda.pkgs.visualstudio.com/_packaging/markdownmerge/nuget/v2"
       }
    },
    "environments": [
@@ -65,7 +59,7 @@
                   {
                      "environment": {},
                      "taskId": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
-                     "version": "0.*",
+                     "version": "1.*",
                      "name": "Use NuGet 4.7.0",
                      "refName": "",
                      "enabled": true,
@@ -356,7 +350,7 @@
                   {
                      "environment": {},
                      "taskId": "2c65196a-54fd-4a02-9be8-d9d1837b7c5d",
-                     "version": "0.*",
+                     "version": "1.*",
                      "name": "Use NuGet 4.7.0",
                      "refName": "",
                      "enabled": true,

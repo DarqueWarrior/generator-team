@@ -1,1 +1,3 @@
 .docs/files.md
+dist/
+unit/results.xml

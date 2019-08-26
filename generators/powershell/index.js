@@ -70,8 +70,8 @@ module.exports = class extends Generator {
       this.fs.copyTpl(`${src}/_classes.json`, `${root}/_classes.json`, tokens);
 
       // Formats
-      src = `${this.sourceRoot()}/Formats`;
-      root = `${this.applicationName}/Source/Formats`;
+      src = `${this.sourceRoot()}/formats`;
+      root = `${this.applicationName}/Source/formats`;
 
       this.fs.copyTpl(`${src}/_formats.json`, `${root}/_formats.json`, tokens);
 
@@ -82,8 +82,8 @@ module.exports = class extends Generator {
       this.fs.copyTpl(`${src}/Common.ps1`, `${root}/Common.ps1`, tokens);
 
       // Types
-      src = `${this.sourceRoot()}/Types`;
-      root = `${this.applicationName}/Source/Types`;
+      src = `${this.sourceRoot()}/types`;
+      root = `${this.applicationName}/Source/types`;
 
       this.fs.copyTpl(`${src}/_types.json`, `${root}/_types.json`, tokens);
 
