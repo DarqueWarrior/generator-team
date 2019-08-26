@@ -42,7 +42,16 @@
                   },
                   "skipArtifactsDownload": false,
                   "artifactsDownloadInput": {
-                     "downloadInputs": []
+                     "downloadInputs": [
+                        {
+                           "alias": "{{BuildName}}",
+                           "artifactType": "Build",
+                           "artifactDownloadMode": "Selective",
+                           "artifactItems": [
+                              "Module/**"
+                           ]
+                        }
+                     ]
                   },
                   "queueId": "{{QueueId}}",
                   "demands": [],
@@ -333,7 +342,16 @@
                   },
                   "skipArtifactsDownload": false,
                   "artifactsDownloadInput": {
-                     "downloadInputs": []
+                     "downloadInputs": [
+                        {
+                           "alias": "{{BuildName}}",
+                           "artifactType": "Build",
+                           "artifactDownloadMode": "Selective",
+                           "artifactItems": [
+                              "Module/**"
+                           ]
+                        }
+                     ]
                   },
                   "queueId": "{{QueueId}}",
                   "demands": [],
