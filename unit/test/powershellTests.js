@@ -6,22 +6,17 @@ function verifyFiles() {
    assert.file([
       `./Trackyon.Git/.docs/common/description.md`,
       `./Trackyon.Git/.docs/common/header.md`,
-      `./Trackyon.Git/.docs/synopsis/Show-GitRepo.md`,
-      `./Trackyon.Git/.docs/about_Trackyon.Git.md`,
       `./Trackyon.Git/.docs/gen-help.ps1`,
-      `./Trackyon.Git/.docs/Show-GitRepo.md`,
       `./Trackyon.Git/.docs/index.md`,
       `./Trackyon.Git/.docs/readme.md`,
       `./Trackyon.Git/Source/Classes/_classes.json`,
       `./Trackyon.Git/Source/formats/_formats.json`,
       `./Trackyon.Git/Source/Private/common.ps1`,
-      `./Trackyon.Git/Source/Public/Show-GitRepo.ps1`,
       `./Trackyon.Git/Source/types/_types.json`,
       `./Trackyon.Git/Source/_functions.json`,
       `./Trackyon.Git/Source/Trackyon.Git.psd1`,
       `./Trackyon.Git/Source/Trackyon.Git.psm1`,
       `./Trackyon.Git/Source/en-US/about_Trackyon.Git.help.txt`,
-      `./Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`,
       `./Trackyon.Git/.gitignore`,
       `./Trackyon.Git/readme.md`,
       `./Trackyon.Git/Build-Module.ps1`,
@@ -30,13 +25,12 @@ function verifyFiles() {
 }
 
 function verifyPsd1Content() {
-   assert.fileContent(`Trackyon.Git/Source/Trackyon.Git.psd1`, `RootModule = 'Trackyon.Git.psm1'`);
-   assert.fileContent(`Trackyon.Git/Source/Trackyon.Git.psd1`, `FunctionsToExport = @('Show-GitRepo')`);
+   assert.fileContent(`Trackyon.Git/Source/Trackyon.Git.psd1`, `RootModule        = 'Trackyon.Git.psm1'`);
    assert.fileContent(`Trackyon.Git/Source/Trackyon.Git.psd1`, `# .ExternalHelp Trackyon.Git-Help.xml`);
    assert.fileContent(`Trackyon.Git/Source/Trackyon.Git.psd1`, `# Module manifest for module 'Trackyon.Git'`);
 }
 
-describe.only(`team:powershell with prompts`, function () {
+describe(`team:powershell with prompts`, function () {
    before(function () {
       return helpers.run(path.join(__dirname, `../../generators/powershell`))
          .withPrompts({
@@ -65,17 +59,6 @@ describe.only(`team:powershell with prompts`, function () {
       assert.fileContent(`Trackyon.Git/.docs/common/header.md`, `Module Name: Trackyon.Git`);
    });
 
-   it(`about.md file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/.docs/about_Trackyon.Git.md`, `# Trackyon.Git`);
-      assert.fileContent(`Trackyon.Git/.docs/about_Trackyon.Git.md`, `## about_Trackyon.Git`);
-   });
-
-   it(`help file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/.docs/Show-GitRepo.md`, `# Show-GitRepo`);
-      assert.fileContent(`Trackyon.Git/.docs/Show-GitRepo.md`, `Show-GitRepo [<CommonParameters>]`);
-      assert.fileContent(`Trackyon.Git/.docs/Show-GitRepo.md`, `<!-- #include "./Synopsis/Show-GitRepo.md" -->`);
-   });
-
    it(`index.md file should have correct content`, function () {
       assert.fileContent(`Trackyon.Git/.docs/index.md`, `## Trackyon.Git Functions`);
    });
@@ -84,16 +67,6 @@ describe.only(`team:powershell with prompts`, function () {
       assert.fileContent(`Trackyon.Git/.docs/readme.md`, `# Trackyon.Git Help`);
       assert.fileContent(`Trackyon.Git/.docs/readme.md`, `[Trackyon.Git](../en-US/about_Trackyon.Git.help.txt)`);
       assert.fileContent(`Trackyon.Git/.docs/readme.md`, `Learn about the goals of Trackyon.Git`);
-   });
-
-   it(`test file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`, `. "$PSScriptRoot\\..\\Public\\Show-GitRepo.ps1"`);
-      assert.fileContent(`Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`, `Describe 'Show-GitRepo' {`);
-      assert.fileContent(`Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`, `{ Show-GitRepo } | Should Not Throw`);
-   });
-
-   it(`function file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/Source/Public/Show-GitRepo.ps1`, `function Show-GitRepo {`);
    });
 
    it(`build-module.ps1 file should have correct content`, function () {
@@ -127,17 +100,6 @@ describe(`team:powershell with arguments`, function () {
       assert.fileContent(`Trackyon.Git/.docs/common/header.md`, `Module Name: Trackyon.Git`);
    });
 
-   it(`about.md file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/.docs/about_Trackyon.Git.md`, `# Trackyon.Git`);
-      assert.fileContent(`Trackyon.Git/.docs/about_Trackyon.Git.md`, `## about_Trackyon.Git`);
-   });
-
-   it(`help file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/.docs/Show-GitRepo.md`, `# Show-GitRepo`);
-      assert.fileContent(`Trackyon.Git/.docs/Show-GitRepo.md`, `Show-GitRepo [<CommonParameters>]`);
-      assert.fileContent(`Trackyon.Git/.docs/Show-GitRepo.md`, `<!-- #include "./Synopsis/Show-GitRepo.md" -->`);
-   });
-
    it(`index.md file should have correct content`, function () {
       assert.fileContent(`Trackyon.Git/.docs/index.md`, `## Trackyon.Git Functions`);
    });
@@ -146,15 +108,5 @@ describe(`team:powershell with arguments`, function () {
       assert.fileContent(`Trackyon.Git/.docs/readme.md`, `# Trackyon.Git Help`);
       assert.fileContent(`Trackyon.Git/.docs/readme.md`, `[Trackyon.Git](../en-US/about_Trackyon.Git.help.txt)`);
       assert.fileContent(`Trackyon.Git/.docs/readme.md`, `Learn about the goals of Trackyon.Git`);
-   });
-
-   it(`test file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`, `. "$PSScriptRoot\\..\\Public\\Show-GitRepo.ps1"`);
-      assert.fileContent(`Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`, `Describe 'Show-GitRepo' {`);
-      assert.fileContent(`Trackyon.Git/unit/test/Show-GitRepo.tests.ps1`, `{ Show-GitRepo } | Should Not Throw`);
-   });
-
-   it(`function file should have correct content`, function () {
-      assert.fileContent(`Trackyon.Git/Source/Public/Show-GitRepo.ps1`, `function Show-GitRepo {`);
    });
 });

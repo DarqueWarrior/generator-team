@@ -141,6 +141,16 @@ function addK8s(obj) {
    }
 }
 
+function addPwshFunction(obj) {
+   if (obj.type === `powershell`) {
+      obj.composeWith(`team:pwshfunction`, {
+         arguments: [obj.applicationName,
+         obj.functionName
+         ]
+      });
+   }
+}
+
 module.exports = {
    addK8s: addK8s,
    addGit: addGit,
@@ -152,5 +162,6 @@ module.exports = {
    addRelease: addRelease,
    addRegistry: addRegistry,
    addLanguage: addLanguage,
-   addDockerHost: addDockerHost
+   addDockerHost: addDockerHost,
+   addPwshFunction: addPwshFunction
 };

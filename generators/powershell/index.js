@@ -81,12 +81,6 @@ module.exports = class extends Generator {
 
       this.fs.copyTpl(`${src}/Common.ps1`, `${root}/Common.ps1`, tokens);
 
-      // Public
-      src = `${this.sourceRoot()}/Public`;
-      root = `${this.applicationName}/Source/Public`;
-
-      this.fs.copyTpl(`${src}/function.ps1`, `${root}/${this.functionName}.ps1`, tokens);
-
       // Types
       src = `${this.sourceRoot()}/Types`;
       root = `${this.applicationName}/Source/Types`;
@@ -99,20 +93,12 @@ module.exports = class extends Generator {
 
       this.fs.copyTpl(`${src}/about.help.txt`, `${root}/about_${this.applicationName}.help.txt`, tokens);
 
-      // Tests
-      src = `${this.sourceRoot()}/Tests`;
-      root = `${this.applicationName}/unit/test`;
-
-      this.fs.copyTpl(`${src}/function.tests.ps1`, `${root}/${this.functionName}.tests.ps1`, tokens);
-
       // .docs
       src = `${this.sourceRoot()}/.docs`;
       root = `${this.applicationName}/.docs`;
 
       this.fs.copyTpl(`${src}/common/header.md`, `${root}/common/header.md`, tokens);
       this.fs.copy(`${src}/common/description.md`, `${root}/common/description.md`, tokens);
-      this.fs.copyTpl(`${src}/synopsis/function.md`, `${root}/synopsis/${this.functionName}.md`, tokens);
-      this.fs.copyTpl(`${src}/function.md`, `${root}/${this.functionName}.md`, tokens);
       this.fs.copyTpl(`${src}/index.md`, `${root}/index.md`, tokens);
       this.fs.copyTpl(`${src}/readme.md`, `${root}/readme.md`, tokens);
       this.fs.copy(`${src}/gen-help.ps1`, `${root}/gen-help.ps1`);

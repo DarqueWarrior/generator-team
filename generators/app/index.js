@@ -47,7 +47,7 @@ module.exports = class extends Generator {
 
    // 1. Your initialization methods (checking current project state, getting configs, etc)
    initializing() {
-      // Store all the values collected from the command line so we can pass to 
+      // Store all the values collected from the command line so we can pass to
       // sub generators. I also use this to determine which data I still need to
       // prompt for.
 
@@ -92,13 +92,13 @@ module.exports = class extends Generator {
       ]).then(function (answers) {
          // Transfer answers to global object for use in the rest of the generator
 
-         // When passing in parameter from the command line passing in more than are 
+         // When passing in parameter from the command line passing in more than are
          // needed can cause issues.  When using the prompts data is not asked for that
          // is not needed and the code works on the assumption that if you provided it
          // I needed it which is not always the case. For example, if you are using the
          // Hosted Linux queue you should not provide a Docker Host. But if you do
          // it will mess things up. So I am going to try and determine if I need to clear
-         // additional information that was provided but not required. 
+         // additional information that was provided but not required.
          if (!util.needsDockerHost(answers, cmdLnInput.options)) {
             answers.dockerHost = undefined;
             cmdLnInput.dockerHost = undefined;
@@ -141,8 +141,9 @@ module.exports = class extends Generator {
          compose.addNuGet(this);
          compose.addFeed(this);
       }
-      
+
       compose.addLanguage(this);
+      compose.addPwshFunction(this);
       compose.addK8s(this);
       compose.addDockerHost(this);
       compose.addRegistry(this);
