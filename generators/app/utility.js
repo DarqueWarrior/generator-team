@@ -120,6 +120,11 @@ function getTargets(answers) {
             name: `Azure App Service (Deployment Slots)`,
             value: `paasslots`
          }];
+      } else if (answers.type === `xamarin`) {
+          targets = [{
+              name: `App Center`,
+              value: `appcenter`
+          }];
       } else {
          targets = [{
             name: `Azure App Service`,
@@ -174,6 +179,9 @@ function getAppTypes(answers) {
    }, {
       name: `Java`,
       value: `java`
+   }, {
+       name: `Xamarin`,
+       value: `xamarin`
    }
       // , {
       //    name: `Custom`,
@@ -219,6 +227,16 @@ function getPATPrompt(answers) {
    }
 
    return `What is your TFS Personal Access Token?`;
+}
+
+function getXamarinTypes(answers) {
+    return [{
+        name: `Xamarin Forms`,
+        value: `forms`
+    }, {
+        name: `Xamarin Native`,
+        value: `native`
+    }];
 }
 
 function getInstancePrompt() {
@@ -1436,6 +1454,7 @@ module.exports = {
    getTargets: getTargets,
    getAppTypes: getAppTypes,
    needsApiKey: needsApiKey,
+   getXamarinTypes: getXamarinTypes,
    checkStatus: checkStatus,
    findProject: findProject,
    findRelease: findRelease,

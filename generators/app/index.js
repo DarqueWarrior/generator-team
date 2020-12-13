@@ -19,7 +19,9 @@ module.exports = class extends Generator {
       // These are position based arguments for this generator. If they are not provided
       // via the command line they will be queried during the prompting priority
       argUtils.applicationType(this);
+      argUtils.applicationXamarinType(this);
       argUtils.applicationName(this);
+      argUtils.packageName(this);
       argUtils.tfs(this);
       argUtils.azureSub(this);
       argUtils.azureSubId(this);
@@ -66,7 +68,9 @@ module.exports = class extends Generator {
          prompts.pat(this),
          prompts.queue(this),
          prompts.applicationType(this),
+         prompts.applicationXamarinType(this),
          prompts.applicationName(this),
+         prompts.packageName(this),
          prompts.customFolder(this),
          prompts.target(this),
          prompts.azureSubInput(this),
@@ -107,6 +111,7 @@ module.exports = class extends Generator {
          this.pat = util.reconcileValue(cmdLnInput.options.pat, answers.pat);
          this.tfs = util.reconcileValue(cmdLnInput.options.tfs, answers.tfs);
          this.type = util.reconcileValue(cmdLnInput.options.type, answers.type);
+         this.xamarinType = util.reconcileValue(answers.xamarinType, cmdLnInput.xamarinType);
          this.queue = util.reconcileValue(cmdLnInput.options.queue, answers.queue);
          this.apiKey = util.reconcileValue(cmdLnInput.options.apiKey, answers.apiKey);
          this.target = util.reconcileValue(cmdLnInput.options.target, answers.target);
@@ -125,6 +130,7 @@ module.exports = class extends Generator {
          this.imagePullSecret = util.reconcileValue(cmdLnInput.options.imagePullSecret, answers.imagePullSecret, ``);
          this.applicationName = util.reconcileValue(cmdLnInput.options.applicationName, answers.applicationName, ``);
          this.dockerRegistryId = util.reconcileValue(cmdLnInput.options.dockerRegistryId, answers.dockerRegistryId, ``);
+         this.packageName = util.reconcileValue(cmdLnInput.options.packageName, answers.packageName, ``);
          this.servicePrincipalId = util.reconcileValue(cmdLnInput.options.servicePrincipalId, answers.servicePrincipalId, ``);
          this.servicePrincipalKey = util.reconcileValue(cmdLnInput.options.servicePrincipalKey, answers.servicePrincipalKey, ``);
          this.clusterResourceGroup = util.reconcileValue(cmdLnInput.options.clusterResourceGroup, answers.clusterResourceGroup, ``);

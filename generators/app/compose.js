@@ -25,7 +25,7 @@ function addRelease(obj) {
 
 function addBuild(obj) {
    obj.composeWith(`team:build`, {
-      arguments: [obj.type, obj.applicationName, obj.tfs,
+      arguments: [obj.type, obj.applicationName, obj.packageName, obj.tfs,
       obj.queue, obj.target,
       obj.dockerHost, obj.dockerRegistry, obj.dockerRegistryId,
       obj.pat, obj.customFolder
@@ -89,6 +89,18 @@ function addLanguage(obj) {
             arguments: [obj.applicationName, obj.groupId, obj.installDep, obj.dockerPorts]
          });
          break;
+
+       case `xamarin`:
+           if(obj.xamarinType === 'native'){
+               obj.composeWith(generator, {
+                   arguments: [obj.applicationName, obj.packageName]
+               });
+           }else{
+               obj.composeWith(`team:xamarinForms`, {
+                   arguments: [obj.applicationName, obj.packageName]
+               });
+           }
+           break;
 
       case `powershell`:
          obj.composeWith(generator, {

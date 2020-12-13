@@ -66,7 +66,7 @@ function run(args, gen, done) {
                return i.name.toLowerCase() === args.queue.toLowerCase();
             });
 
-            findOrCreateBuild(args.tfs, teamProject, token, queue.id, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
+            findOrCreateBuild(args.tfs, teamProject, args.packageName, token, queue.id, dockerEndpoint, dockerRegistryEndpoint, args.dockerRegistryId, args.buildJson, args.target, gen, mainSeries);
          }
       }
    ],
@@ -86,7 +86,7 @@ function run(args, gen, done) {
    );
 }
 
-function findOrCreateBuild(account, teamProject, token, queue,
+function findOrCreateBuild(account, teamProject, packageName, token, queue,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
@@ -97,7 +97,7 @@ function findOrCreateBuild(account, teamProject, token, queue,
       }
 
       if (!bld) {
-         createBuild(account, teamProject, token, queue,
+         createBuild(account, teamProject, packageName, token, queue,
             dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
             filename, target, gen, callback);
       } else {
@@ -107,7 +107,7 @@ function findOrCreateBuild(account, teamProject, token, queue,
    });
 }
 
-function createBuild(account, teamProject, token, queues,
+function createBuild(account, teamProject, packageName, token, queues,
    dockerHostEndpoint, dockerRegistryEndpoint, dockerRegistryId,
    filename, target, gen, callback) {
    'use strict';
@@ -150,6 +150,7 @@ function createBuild(account, teamProject, token, queues,
    var contents = fs.readFileSync(filename, 'utf8');
    var tokens = {
       '{{BuildDefName}}': buildDefName,
+      '{{PackageName}}': packageName,
       '{{TFS}}': account,
       '{{Project}}': teamProject.name,
       '{{QueueId}}': selected,
@@ -194,8 +195,16 @@ function createBuild(account, teamProject, token, queues,
       if (response.statusCode >= 400) {
          // To get the stacktrace run with the --debug built-in option when 
          // running the generator.
-         gen.log.info(response.body.message.replace('\n', ' '));
-         gen.env.error();
+          if(!util.isDocker(target)){
+              if(body.message.includes("42284b34-be85-4034-890f-8755ad9f6249") ||
+                  body.message.includes("77f3c5c9-713f-4eb6-bd73-42324109ea2e"))
+              {
+                  gen.log.info("! Make sure the Mobile App Tasks for iOS and Android extension is installed (by James Montemagno)");
+              }
+          }else{
+              gen.log.info(response.body.message.replace('\n', ' '));
+              gen.env.error();
+          }
       }
 
       callback(error, body);

@@ -174,6 +174,19 @@ function applicationType(obj) {
    };
 }
 
+function applicationXamarinType(obj) {
+    return {
+        name: `xamarinType`,
+        type: `list`,
+        store: true,
+        message: `What Xamarin application do you want to create?`,
+        choices: util.getXamarinTypes,
+        when: answers => {
+            return answers.type === `xamarin`;
+        }
+    };
+}
+
 function customFolder(obj) {
    return {
       name: `customFolder`,
@@ -211,6 +224,18 @@ function functionName(obj) {
          return obj.options.functionName === undefined && util.needsApiKey(answers, obj.options) === true;
       }
    };
+}
+
+function packageName(obj) {
+    return {
+        name: `packageName`,
+        type: `input`,
+        store: true,
+        message: `What is the name of your package? (com.company)`,
+        when: answers => {
+            return obj.options.packageName === undefined && answers.type === `xamarin`;
+        }
+    };
 }
 
 function target(obj) {
@@ -458,7 +483,7 @@ function installDep(obj) {
          }
       ],
       when: answers => {
-         return answers.type !== `aspFull` && answers.type !== `powershell` && obj.options.installDep === undefined;
+         return answers.type !== `xamarin` && answers.type !== `aspFull` && answers.type !== `powershell` && obj.options.installDep === undefined;
       }
    };
 }
@@ -550,7 +575,9 @@ module.exports = {
    dockerRegistry: dockerRegistry,
    dockerCertPath: dockerCertPath,
    applicationType: applicationType,
+   applicationXamarinType: applicationXamarinType,
    applicationName: applicationName,
+   packageName: packageName,
    imagePullSecret: imagePullSecret,
    servicePrincipalId: servicePrincipalId,
    servicePrincipalKey: servicePrincipalKey,

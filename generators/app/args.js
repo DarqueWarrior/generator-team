@@ -29,8 +29,15 @@ function tfsVersion(obj) {
 function applicationType(obj) {
    obj.argument(`type`, {
       required: false,
-      desc: `Project type to create (asp, node, java or aspFull)`
+      desc: `Project type to create (asp, node, java, aspFull or xamarin)`
    });
+}
+
+function applicationXamarinType(obj) {
+    obj.argument(`xamarinType`, {
+        required: false,
+        desc: `Xamarin type to create (Xamarin.Forms, Xamarin.iOS and Xamarin.Droid)`
+    });
 }
 
 function applicationName(obj) {
@@ -45,6 +52,13 @@ function functionName(obj) {
       required: false,
       desc: `Name of the function`
    });
+}
+
+function packageName(obj) {
+    obj.argument(`packageName`, {
+        required: false,
+        desc: `name of the package`
+    });
 }
 
 function customFolder(obj) {
@@ -231,7 +245,9 @@ module.exports = {
    dockerCertPath: dockerCertPath,
    dockerRegistry: dockerRegistry,
    applicationType: applicationType,
+   applicationXamarinType: applicationXamarinType,
    applicationName: applicationName,
+   packageName: packageName,
    imagePullSecret: imagePullSecret,
    dockerRegistryId: dockerRegistryId,
    servicePrincipalId: servicePrincipalId,

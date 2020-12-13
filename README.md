@@ -19,6 +19,7 @@ generator-team is a [Yeoman](http://yeoman.io/) generator that creates a complet
 - Node using Pug and bootstrap
 - ASP.net Core using Razor and bootstrap
 - ASP.net Full Framework using Razor and bootstrap
+- Xamarin iOS and Xamarin Android
 
 It allows you to deploy to the following platforms:
 
@@ -26,6 +27,7 @@ It allows you to deploy to the following platforms:
 - [Docker](https://www.docker.com/) to private host
 - [Docker](https://www.docker.com/) images in [Azure App Service on Linux](https://docs.microsoft.com/en-us/azure/app-service-web/app-service-linux-intro)
 - [Azure Container Instances](https://docs.microsoft.com/en-us/azure/container-instances/)
+- [App Center](https://appcenter.ms/)
 
 ## Requirements
 

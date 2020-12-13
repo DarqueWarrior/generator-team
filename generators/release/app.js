@@ -186,6 +186,8 @@ function getRelease(args, callback) {
 
                   if (args.target === `paasslots`) {
                      release = `vsts_release_slots.json`;
+                  } else if (args.target === `appcenter`) {
+                     release = `vsts_release_xamarin.json`;
                   } else {
                      // see if they support load tests or not
                      if (args.removeloadTest) {
@@ -200,7 +202,8 @@ function getRelease(args, callback) {
             } else {
                if (args.target === `paasslots`) {
                   release = `vsts_release_slots.json`;
-               } else {
+               }
+               else {
                   release = `tfs_release.json`;
                }
             }
@@ -307,6 +310,11 @@ function createRelease(args, gen, callback) {
 
             if (resp.statusCode >= 400) {
                status = "failed";
+               let message = resp.body.message;
+               if(body.message.includes("Resign IPA file"))
+               {
+                  message = "! Make sure the Apple App Store extension is installed (by Microsoft)";
+               }
                finished(new Error(resp.body), null);
             } else if (resp.statusCode >= 300) {
                status = "in progress";
