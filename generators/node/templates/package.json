@@ -15,7 +15,7 @@
       "debug": "^3.1.0",
       "express": "^4.16.3",
       "jquery": "^3.3.1",
-      "jquery-validation": "^1.15.0",
+      "jquery-validation": "^1.19.3",
       "jquery-validation-unobtrusive": "^3.2.6",
       "morgan": "^1.9.0",
       "node-fs-extra": "^0.8.2",
