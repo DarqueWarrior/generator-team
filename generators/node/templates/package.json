@@ -20,7 +20,7 @@
       "morgan": "^1.9.0",
       "node-fs-extra": "^0.8.2",
       "popper.js": "^1.14.4",
-      "pug": "^2.0.3",
+      "pug": "^3.0.1",
       "serve-favicon": "^2.5.0"
    },
    "devDependencies": {
