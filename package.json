@@ -52,7 +52,7 @@
    },
    "license": "MIT",
    "dependencies": {
-      "async": "^2.6.1",
+      "async": "^3.2.2",
       "node-env-file": "^0.1.8",
       "pad": "^2.2.1",
       "request": "^2.88.0",
